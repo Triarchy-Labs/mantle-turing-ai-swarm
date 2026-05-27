@@ -1,0 +1,21 @@
+[package]
+name = "swarm-engine"
+version = "0.1.0"
+edition = "2021"
+description = "Main orchestrator — wires brain + titan + hive + chain into autonomous swarm"
+
+[dependencies]
+tokio = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+chrono = { workspace = true }
+dotenvy = { workspace = true }
+axum = { workspace = true }
+
+# Internal crates
+ouroboros-brain = { path = "../ouroboros-brain" }
+titan-core = { path = "../titan-core" }
+hive-intel = { path = "../hive-intel" }
+mantle-chain = { path = "../mantle-chain" }
