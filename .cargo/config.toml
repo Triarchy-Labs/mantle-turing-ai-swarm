@@ -1,0 +1,7 @@
+# ═══ ГИПЕРЗВУК: Target CPU ═══
+# Активирует AVX2/FMA/SSE4.2 для Ryzen.
+# LLVM автовекторизует циклы в turbo.rs, indicators.rs!
+# SIMD 4x cosine sim, Welford stats, Monte Carlo → native speed.
+
+[build]
+rustflags = ["-C", "target-cpu=native"]

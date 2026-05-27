@@ -1,0 +1,11 @@
+.env
+target/
+node_modules/
+dashboard/dist/
+contracts/out/
+contracts/cache/
+contracts/lib/
+x402_memory.db/
+data/
+*.db
+*.log
