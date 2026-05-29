@@ -4421,7 +4421,11 @@ dependencies = [
  "tracing",
  "tracing-subscriber",
  "x402-consensus",
+ "x402-liquidator",
+ "x402-memory",
+ "x402-polymarket",
  "x402-risk",
+ "x402-sniper",
 ]
 
 [[package]]
