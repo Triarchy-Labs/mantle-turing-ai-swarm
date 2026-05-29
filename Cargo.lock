@@ -4420,6 +4420,8 @@ dependencies = [
  "tokio",
  "tracing",
  "tracing-subscriber",
+ "x402-consensus",
+ "x402-risk",
 ]
 
 [[package]]
