@@ -12,7 +12,6 @@ tracing = { workspace = true }
 tracing-subscriber = { workspace = true }
 chrono = { workspace = true }
 dotenvy = { workspace = true }
-axum = { workspace = true }
 
 # Internal crates
 ouroboros-brain = { path = "../ouroboros-brain" }
