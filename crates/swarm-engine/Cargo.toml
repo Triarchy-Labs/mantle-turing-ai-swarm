@@ -13,8 +13,12 @@ tracing-subscriber = { workspace = true }
 chrono = { workspace = true }
 dotenvy = { workspace = true }
 
-# Internal crates
+# All 4 dimensions
 ouroboros-brain = { path = "../ouroboros-brain" }
 titan-core = { path = "../titan-core" }
 hive-intel = { path = "../hive-intel" }
 mantle-chain = { path = "../mantle-chain" }
+
+# X402 agents
+x402-consensus = { path = "../x402-consensus" }
+x402-risk = { path = "../x402-risk" }
