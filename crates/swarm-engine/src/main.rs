@@ -404,6 +404,22 @@ async fn decision_cycle<P: alloy::providers::Provider>(
         live_market_data().await
     };
 
+    // D3: Hive Mind — Cross-Asset Correlation Matrix (portfolio risk awareness)
+    if market_data.len() >= 2 {
+        let mut pnl_series = std::collections::HashMap::new();
+        for d in &market_data {
+            // Use recent price changes as PnL proxy for correlation
+            pnl_series.insert(d.symbol.clone(), vec![d.price, d.price * (1.0 + d.price_24h_change / 100.0)]);
+        }
+        let pairs = hive_intel::correlation::build_correlation_matrix(&pnl_series, 0.5);
+        for pair in &pairs {
+            if pair.pearson_r.abs() > 0.7 {
+                tracing::info!("📊 CORRELATION: {} ↔ {} r={:.2} ({})",
+                    pair.symbol_a, pair.symbol_b, pair.pearson_r, pair.strength.as_str());
+            }
+        }
+    }
+
     for data in &market_data {
         state.symbols.insert(data.symbol.clone(), data.clone());
 
