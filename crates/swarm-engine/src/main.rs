@@ -709,7 +709,6 @@ async fn main() {
             t.pipeline_stage = 13;
 
             // Debates — extract from consensus results
-            let now_ts = chrono::Utc::now().timestamp();
             t.debates = state.consensus.iter().flat_map(|entry| {
                 let r = entry.value();
                 let mut debates = Vec::new();
@@ -748,8 +747,8 @@ async fn main() {
             for entry in state.consensus.iter() {
                 let r = entry.value();
                 let sd = state.symbols.get(&r.symbol);
-                let price = sd.map(|s| s.price).unwrap_or(0.0);
-                let vol = sd.map(|s| s.volume_24h).unwrap_or(0.0);
+                let price = sd.as_ref().map(|s| s.price).unwrap_or(0.0);
+                let vol = sd.as_ref().map(|s| s.volume_24h).unwrap_or(0.0);
 
                 logs.push(telemetry::LogTelemetry {
                     timestamp: r.timestamp - 30,
