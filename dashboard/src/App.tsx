@@ -98,6 +98,8 @@ export default function App() {
 	// Derive values: live telemetry > local fallback
 	const cycle = telem.connected ? telem.cycle : localCycle;
 	const uptime = telem.connected ? telem.uptimeSecs : localUptime;
+	// Sync pipeline stage from telemetry when not running local animation
+	const effectiveStage = analysisRunning ? activeStage : (telem.connected ? telem.pipelineStage : activeStage);
 
 	// Orb state cycling
 	useEffect(() => {
@@ -115,7 +117,6 @@ export default function App() {
 
 	const fmtUptime = `${Math.floor(uptime / 3600)}h ${Math.floor((uptime % 3600) / 60)}m ${uptime % 60}s`;
 	const nowDate = new Date();
-	const now = nowDate.toLocaleTimeString('en-US', { hour12: false });
 	const logTime = (off: number) => {
 		const d = new Date(nowDate.getTime() - (10 - off) * 5000);
 		return d.toLocaleTimeString('en-US', { hour12: false });
@@ -255,7 +256,7 @@ export default function App() {
 					<div className="card-title"><Zap size={16} style={{ color: 'var(--accent-hover)' }} /> SYNAPTIC DECISION PIPELINE</div>
 					<div role="list" style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
 						{pipelineStages.map((s, idx) => {
-							const st = idx < activeStage ? 'done' : idx === activeStage ? 'active' : 'pending';
+							const st = idx < effectiveStage ? 'done' : idx === effectiveStage ? 'active' : 'pending';
 							return (
 							<div key={s.n} role="listitem" style={{
 								display: 'flex', justifyContent: 'space-between', alignItems: 'center',
