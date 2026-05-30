@@ -45,3 +45,4 @@ pub mod api;
 pub mod hive_engine;
 pub mod boost;
 pub mod snapshot;
+pub mod benchmark;

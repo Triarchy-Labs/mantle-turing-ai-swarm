@@ -26,6 +26,7 @@ pub struct TelemetryState {
     pub cycle: u64,
     pub symbols: Vec<SymbolTelemetry>,
     pub paper_stats: Option<PaperStats>,
+    pub benchmark: Option<BenchmarkTelemetry>,
     pub pipeline: &'static str,
     pub agent_id: u64,
     pub chain_id: u64,
@@ -59,6 +60,15 @@ pub struct PaperStats {
     pub balance: f64,
 }
 
+/// AI vs Human benchmark telemetry.
+#[derive(Debug, Clone, Serialize, Default)]
+pub struct BenchmarkTelemetry {
+    pub total_cycles: u64,
+    pub agreements: u64,
+    pub agreement_rate: f64,
+    pub ai_avg_confidence: f64,
+}
+
 /// Shared telemetry state handle.
 pub type TelemetryHandle = Arc<RwLock<TelemetryState>>;
 
@@ -81,6 +91,7 @@ pub fn spawn_server(handle: TelemetryHandle) {
         let h2 = handle.clone();
         let h3 = handle.clone();
         let h4 = handle.clone();
+        let h5 = handle.clone();
 
         let app = Router::new()
             .route("/", get(move || {
@@ -132,6 +143,13 @@ pub fn spawn_server(handle: TelemetryHandle) {
                         })
                     }).collect();
                     Json(regimes)
+                }
+            }))
+            .route("/benchmark", get(move || {
+                let h = h5.clone();
+                async move {
+                    let state = h.read().await;
+                    Json(state.benchmark.clone().unwrap_or_default())
                 }
             }));
 
