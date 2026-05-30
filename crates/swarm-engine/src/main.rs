@@ -31,6 +31,7 @@ use hive_intel::affective::{ewma_confidence, risk_appetite};
 use x402_consensus::engine::{Action, AgentVote, PolicyGovernor};
 use x402_risk::engine::{AtrStops, MarketRegime, RiskGate};
 use x402_memory::engine::create_liquidation_edge;
+use mantle_chain::onchain::{encode_verdict_log, encode_add_reputation, AGENT_TOKEN_ID};
 
 use std::path::PathBuf;
 use std::sync::Arc;
@@ -434,9 +435,22 @@ async fn decision_cycle(
             &factors_summary,
         );
 
-        // D5: Mantle Chain — (Phase 2: live execution via x402-sniper)
+        // D5: Mantle Chain — On-chain verdict logging + reputation
+        let verdict_calldata = encode_verdict_log(
+            &data.symbol,
+            &format!("{}", verdict.decision),
+            verdict.score,
+            verdict.confidence,
+            &format!("{:?}", regime),
+            cycle,
+        );
+        let _rep_calldata = encode_add_reputation(
+            (verdict.score.abs() * 100.0) as u64,
+        );
         tracing::info!("🚀 EXECUTE [{}]: {} ${:.2} | score={:.2} conf={:.1}% | regime={:?}",
             data.symbol, verdict.decision, final_size, verdict.score, verdict.confidence, regime);
+        tracing::info!("⛓️  ON-CHAIN [{}]: verdict_log={}B reputation_delta={} agent=#{}",
+            data.symbol, verdict_calldata.len(), (verdict.score.abs() * 100.0) as u64, AGENT_TOKEN_ID);
 
         store_result(state, data, &verdict, &debate, true);
     }
@@ -516,8 +530,10 @@ async fn main() {
     let risk = RiskGate::new(1000.0);
     tracing::info!("⚡ D4 X402: PolicyGovernor(3v) + RiskGate(Kelly/Kill/Bucket) + HyperEdge Memory");
 
-    // D5: Mantle Chain (provider ready, execution in Phase 2)
-    tracing::info!("⛓️ D5 Mantle: Chain 5000 provider ready (sniper/liquidator armed for Phase 2)");
+    // D5: Mantle Chain
+    let _mantle_provider = mantle_chain::provider::create_provider(mantle_chain::provider::MANTLE_RPC);
+    tracing::info!("⛓️ D5 Mantle: Chain 5000 provider ready | ERC8004={} | Agent #{}",
+        mantle_chain::onchain::ERC8004_REGISTRY, AGENT_TOKEN_ID);
 
     // State
     let state = Arc::new(SwarmState::new());
@@ -525,7 +541,7 @@ async fn main() {
         std::env::var("CYCLE_INTERVAL_SECS").ok().and_then(|v| v.parse().ok()).unwrap_or(60));
 
     tracing::info!("🚀 Full Memory Stack: L0(DashMap)→L1(OWM+Hybrid)→L2(DecisionMemory)→L3(HyperEdge)→L4(Paper)");
-    tracing::info!("🚀 Pipeline: Data→Debate→ML→Recall→Judge→Entry→Consensus→Risk→Paper→Journal→Chain");
+    tracing::info!("🚀 Pipeline: Data→Regime→Debate→ML→Recall→Judge→PreTrade→Entry→Consensus→Risk→Paper→Journal→Chain");
     tracing::info!("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
 
     loop {
