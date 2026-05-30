@@ -23,7 +23,7 @@ export class WebGLErrorBoundary extends Component<Props, State> {
 				}}>
 					<div style={{ color: 'var(--accent)', fontFamily: 'var(--font-mono)', fontSize: '0.75rem', opacity: 0.5, textAlign: 'center' }}>
 						<div style={{ marginBottom: '8px', fontSize: '1.2rem' }}>⬡</div>
-						3D ЯДРО: КОНТЕКСТ ПОТЕРЯН
+						3D CORE: CONTEXT LOST
 						<div style={{ fontSize: '0.65rem', opacity: 0.4, marginTop: '4px' }}>{this.state.error}</div>
 					</div>
 				</div>

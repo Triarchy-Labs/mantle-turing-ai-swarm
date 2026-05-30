@@ -12,47 +12,47 @@ type ViewMode = 'IPC' | 'ERC8004';
 
 /* ── Market data ── */
 const marketData = [
-	{ sym: 'MNT', price: '$0.7833', vol: '$1,248,092', change: '+4.58%', up: true, conf: 82.5, verdict: 'ПОКУПАТЬ' },
-	{ sym: 'WMNT', price: '$0.7841', vol: '$842,104', change: '+4.64%', up: true, conf: 78.4, verdict: 'ПОКУПАТЬ' },
-	{ sym: 'ETH', price: '$3,224.03', vol: '$41,209,500', change: '-1.75%', up: false, conf: 55.6, verdict: 'УДЕРЖИВАТЬ' },
+	{ sym: 'MNT', price: '$0.7833', vol: '$1,248,092', change: '+4.58%', up: true, conf: 82.5, verdict: 'BUY' },
+	{ sym: 'WMNT', price: '$0.7841', vol: '$842,104', change: '+4.64%', up: true, conf: 78.4, verdict: 'BUY' },
+	{ sym: 'ETH', price: '$3,224.03', vol: '$41,209,500', change: '-1.75%', up: false, conf: 55.6, verdict: 'HOLD' },
 ];
 
 /* ── Pipeline stages ── */
 const pipelineStages = [
-	{ n: '01', label: 'СБОР РЫНОЧНЫХ ДАННЫХ', status: 'done' },
-	{ n: '02', label: 'ОПРЕДЕЛЕНИЕ РЕЖИМА ТРЕНДА', status: 'done' },
-	{ n: '03', label: 'СИНАПТИЧЕСКИЕ ДЕБАТЫ ИИ', status: 'done' },
-	{ n: '04', label: 'ЛОКАЛЬНЫЙ ML ПРОГНОЗ', status: 'done' },
-	{ n: '05', label: 'ВЕКТОРНЫЙ ПОИСК В АРХИВЕ', status: 'done' },
-	{ n: '06', label: 'ВЗВЕШЕННЫЙ ФАКТОРНЫЙ СУДЬЯ', status: 'done' },
-	{ n: '07', label: 'ПРЕДВАРИТЕЛЬНЫЙ АУДИТ', status: 'done' },
-	{ n: '08', label: 'ОПРЕДЕЛЕНИЕ ТОЧКИ ВХОДА', status: 'done' },
-	{ n: '09', label: 'СВАРМ-КОНСЕНСУС ОРДЕРОВ', status: 'done' },
-	{ n: '10', label: 'АНАЛИЗ РИСКОВОЙ МАТРИЦЫ', status: 'done' },
-	{ n: '11', label: 'СИНТЕТИЧЕСКАЯ СИМУЛЯЦИЯ', status: 'active' },
-	{ n: '12', label: 'СИНАПТИЧЕСКОЕ ЖУРНАЛИРОВАНИЕ', status: 'pending' },
-	{ n: '13', label: 'ЗАПИСЬ ТРАНЗАКЦИИ ON-CHAIN', status: 'pending' },
+	{ n: '01', label: 'MARKET DATA INGESTION', status: 'done' },
+	{ n: '02', label: 'TREND REGIME DETECTION', status: 'done' },
+	{ n: '03', label: 'SYNAPTIC AI DEBATE', status: 'done' },
+	{ n: '04', label: 'LOCAL ML PREDICTION', status: 'done' },
+	{ n: '05', label: 'VECTOR ARCHIVE SEARCH', status: 'done' },
+	{ n: '06', label: 'WEIGHTED FACTOR JUDGE', status: 'done' },
+	{ n: '07', label: 'PRE-EXECUTION AUDIT', status: 'done' },
+	{ n: '08', label: 'ENTRY POINT DETECTION', status: 'done' },
+	{ n: '09', label: 'SWARM ORDER CONSENSUS', status: 'done' },
+	{ n: '10', label: 'RISK MATRIX ANALYSIS', status: 'done' },
+	{ n: '11', label: 'SYNTHETIC SIMULATION', status: 'active' },
+	{ n: '12', label: 'SYNAPTIC LOGGING', status: 'pending' },
+	{ n: '13', label: 'ON-CHAIN TX COMMIT', status: 'pending' },
 ];
 
 /* ── Synaptic debate ── */
 const debates = [
-	{ agent: 'Veldora (Синтез)', color: '#a855f7', msg: 'Объём торгов вырос на 14% за 4 часа. Вектор движения подтверждает BUY.', time: new Date().toLocaleTimeString('ru') },
-	{ agent: 'Zegion (Исполнитель)', color: '#00f5ff', msg: 'Необходимо подтвердить глубину ликвидности в пулах Agni до входа в ордер.', time: new Date().toLocaleTimeString('ru') },
-	{ agent: 'Diablo (Архитектор)', color: '#00d4ff', msg: 'Индикатор SMA(20) пересёк SMA(50) вверх. Сильный импульс к покупке MNT.', time: new Date().toLocaleTimeString('ru') },
+	{ agent: 'Veldora (Synthesis)', color: '#a855f7', msg: 'Trade volume surged 14% in 4h. Movement vector confirms BUY signal.', time: new Date().toLocaleTimeString('en-US', { hour12: false }) },
+	{ agent: 'Zegion (Executor)', color: '#00f5ff', msg: 'Must verify liquidity depth on Agni pools before order entry.', time: new Date().toLocaleTimeString('en-US', { hour12: false }) },
+	{ agent: 'Diablo (Architect)', color: '#00d4ff', msg: 'SMA(20) crossed above SMA(50). Strong bullish impulse for MNT.', time: new Date().toLocaleTimeString('en-US', { hour12: false }) },
 ];
 
 /* ── Log entries ── */
 const logEntries = [
-	{ ts: '', tag: '[СИНАПС]', msg: 'Veldora (Синтез): Объём торгов вырос на 14% за 4 часа. Вектор д...', type: '' },
-	{ ts: '', tag: '[АНАЛИЗ]', msg: 'Индекс силы тренда MNT составляет 72.3%. Рыночный режим: Восходящий.', type: '' },
-	{ ts: '', tag: '[СИНАПС]', msg: 'Запуск конкурс-арбитра между Diablo и Zegion...', type: '' },
-	{ ts: '', tag: '[ML]', msg: 'Локальный ML-прогноз завершён. Вероятность роста актива: 81.2%', type: '' },
-	{ ts: '', tag: '[БАЗА]', msg: 'Найден схожий паттерн за 2026-05-27 в векторной базе. Успешность: 89%', type: 'success' },
-	{ ts: '', tag: '[СУДЬЯ]', msg: 'Семь факторов проанализировано. Финальный вердикт: BUY с весом 1.75.', type: '' },
-	{ ts: '', tag: '[АУДИТ]', msg: 'Проверка проскальзывания и фронтраннинг-рисков: все проверки пройдены.', type: 'success' },
-	{ ts: '', tag: '[ТОЧКА]', msg: 'Оптимальная точка входа определена: $0.7852. Запуск сварм ордеров.', type: '' },
-	{ ts: '', tag: '[КОНСЕНСУС]', msg: 'Swarm Consensus достигнут: BUY с вероятностью 82.5%.', type: 'success' },
-	{ ts: '', tag: '[РИСКИ]', msg: 'Проверка риск-лимитов: отклонение маржи < 2%. Риски отсутствуют.', type: '' },
+	{ ts: '', tag: '[SYNAPSE]', msg: 'Veldora (Synthesis): Trade volume surged 14% in 4h. Vector confirms...', type: '' },
+	{ ts: '', tag: '[ANALYSIS]', msg: 'MNT trend strength index at 72.3%. Market regime: Bullish.', type: '' },
+	{ ts: '', tag: '[SYNAPSE]', msg: 'Launching arbiter contest between Diablo and Zegion...', type: '' },
+	{ ts: '', tag: '[ML]', msg: 'Local ML prediction complete. Asset growth probability: 81.2%', type: '' },
+	{ ts: '', tag: '[VECTOR]', msg: 'Similar pattern found from 2026-05-27 in vector archive. Success: 89%', type: 'success' },
+	{ ts: '', tag: '[JUDGE]', msg: 'Seven factors analyzed. Final verdict: BUY with weight 1.75.', type: '' },
+	{ ts: '', tag: '[AUDIT]', msg: 'Slippage and front-running risk checks: all passed.', type: 'success' },
+	{ ts: '', tag: '[ENTRY]', msg: 'Optimal entry point detected: $0.7852. Launching swarm orders.', type: '' },
+	{ ts: '', tag: '[CONSENSUS]', msg: 'Swarm Consensus reached: BUY with 82.5% probability.', type: 'success' },
+	{ ts: '', tag: '[RISK]', msg: 'Risk limit checks passed: margin deviation < 2%. No risks.', type: '' },
 ];
 
 /* ── Orbiting tech cards around 3D stone ── */
@@ -128,8 +128,8 @@ export default function App() {
 		return () => clearInterval(t);
 	}, []);
 
-	const fmtUptime = `${Math.floor(uptime / 3600)}ч ${Math.floor((uptime % 3600) / 60)}м ${uptime % 60}с`;
-	const now = new Date().toLocaleTimeString('ru', { hour12: false });
+	const fmtUptime = `${Math.floor(uptime / 3600)}h ${Math.floor((uptime % 3600) / 60)}m ${uptime % 60}s`;
+	const now = new Date().toLocaleTimeString('en-US', { hour12: false });
 
 	if (!mounted) return null;
 
@@ -149,10 +149,10 @@ export default function App() {
 				<div>
 					<div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
 						<Layers size={22} className="green-sweep-text" />
-						<h1>МАТРИЦА АКТИВНОСТИ MANTLE AI SWARM <span className="lusion-btn connect-state-true" style={{ fontSize: '11px', padding: '3px 8px', verticalAlign: 'middle', marginLeft: '10px' }}>V4.2 LIVE</span></h1>
+						<h1>MANTLE AI SWARM ACTIVITY MATRIX <span className="lusion-btn connect-state-true" style={{ fontSize: '11px', padding: '3px 8px', verticalAlign: 'middle', marginLeft: '10px' }}>V4.2 LIVE</span></h1>
 					</div>
 					<p style={{ marginTop: '6px', fontSize: '0.8rem', fontFamily: 'var(--font-mono)', opacity: 0.7 }}>
-						12 контейнеров · 23,809 строк кода на Rust · 6 слоев принятия решений · Блокчейн Mantle
+						12 containers · 23,809 lines of Rust · 6 decision layers · Mantle Blockchain
 					</p>
 				</div>
 				<div className="toggle-group" style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
@@ -163,17 +163,17 @@ export default function App() {
 						<Shield size={14} style={{ verticalAlign: 'middle', marginRight: '6px' }} />[ ERC-8004 ]
 					</button>
 					<div className="lusion-btn connect-state-true" style={{ cursor: 'default' }}>
-						<span style={{ marginRight: '8px' }}>●</span>АВТОНОМНЫЙ РЕЖИМ · ЦИКЛ {cycle}
+						<span style={{ marginRight: '8px' }}>●</span>AUTONOMOUS MODE · CYCLE {cycle}
 					</div>
 				</div>
 			</header>
 
 			{/* ═══ STATS GRID ═══ */}
 			<div className="metrics">
-				<div className="glass metric"><h3><Cpu size={14} style={{ color: 'var(--accent)' }} /> Текущий такт (Cycle)</h3><div className="val cyan">{cycle}</div></div>
-				<div className="glass metric"><h3><Activity size={14} style={{ color: 'var(--accent-hover)' }} /> Время непрерывной работы</h3><div className="val green">{fmtUptime}</div></div>
-				<div className="glass metric"><h3><Zap size={14} style={{ color: 'var(--accent-hover)' }} /> Синтетический доход (PNL)</h3><div className="val green">$1,444.91</div></div>
-				<div className="glass metric"><h3><Globe size={14} style={{ color: 'var(--accent-hover)' }} /> Процент побед (Win Rate)</h3><div className="val green">75.7%</div></div>
+				<div className="glass metric"><h3><Cpu size={14} style={{ color: 'var(--accent)' }} /> Current Cycle</h3><div className="val cyan">{cycle}</div></div>
+				<div className="glass metric"><h3><Activity size={14} style={{ color: 'var(--accent-hover)' }} /> Uptime</h3><div className="val green">{fmtUptime}</div></div>
+				<div className="glass metric"><h3><Zap size={14} style={{ color: 'var(--accent-hover)' }} /> Synthetic PNL</h3><div className="val green">$1,444.91</div></div>
+				<div className="glass metric"><h3><Globe size={14} style={{ color: 'var(--accent-hover)' }} /> Win Rate</h3><div className="val green">75.7%</div></div>
 			</div>
 
 			{/* ═══ MAIN GRID: Market + Synaptic Core ═══ */}
@@ -181,12 +181,12 @@ export default function App() {
 
 				{/* LEFT: Market Monitoring */}
 				<div className="glass events-section">
-					<div className="card-title"><TrendingUp size={16} style={{ color: 'var(--accent-hover)' }} /> АКТИВНЫЙ РЫНОЧНЫЙ МОНИТОРИНГ</div>
+					<div className="card-title"><TrendingUp size={16} style={{ color: 'var(--accent-hover)' }} /> LIVE MARKET MONITORING</div>
 					{marketData.map(m => (
 						<div key={m.sym} className="event-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderRadius: '12px', background: 'var(--glass-bg)', border: '1px solid var(--border)', marginBottom: '14px', transition: 'all 0.3s ease' }}>
 							<div>
 								<div style={{ fontSize: '19px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>{m.sym}</div>
-								<div style={{ fontSize: '11px', color: 'var(--foreground)', opacity: 0.5 }}>Объем 24ч: {m.vol}</div>
+								<div style={{ fontSize: '11px', color: 'var(--foreground)', opacity: 0.5 }}>Vol 24h: {m.vol}</div>
 							</div>
 							<div style={{ fontSize: '24px', fontWeight: 700, fontFamily: 'var(--font-mono)', color: 'var(--accent)' }}>{m.price}</div>
 							<div className={`badge ${m.up ? 'ok' : 'fail'}`}>{m.change}</div>
@@ -199,7 +199,7 @@ export default function App() {
 
 				{/* RIGHT: Synaptic Core — 3D Stone with orbiting tech cards */}
 				<div className="glass" style={{ padding: '20px', position: 'relative', overflow: 'visible' }}>
-					<div className="card-title"><Eye size={16} style={{ color: 'var(--accent)' }} /> СИНАПТИЧЕСКОЕ ЯДРО SWARM CORE</div>
+					<div className="card-title"><Eye size={16} style={{ color: 'var(--accent)' }} /> SYNAPTIC CORE — SWARM BRAIN</div>
 
 					{/* 3D Architecture — compact */}
 					<div style={{ width: '100%', height: '420px', position: 'relative', borderRadius: '12px', overflow: 'hidden' }}>
@@ -211,7 +211,7 @@ export default function App() {
 							}}>
 								<div style={{ color: 'var(--accent)', fontFamily: 'var(--font-mono)', fontSize: '0.8rem', opacity: 0.6, textAlign: 'center' }}>
 									<div style={{ marginBottom: '8px', animation: 'pulse 2s infinite' }}>◈</div>
-									ЗАГРУЗКА 3D МОДЕЛИ...
+									LOADING 3D MODEL...
 								</div>
 							</div>
 						}>
@@ -246,7 +246,7 @@ export default function App() {
 			<div className="grid-main" style={{ marginTop: '24px' }}>
 				{/* Pipeline */}
 				<div className="glass events-section">
-					<div className="card-title"><Zap size={16} style={{ color: 'var(--accent-hover)' }} /> КОНВЕЙЕР СИНАПТИЧЕСКОГО АНАЛИЗА (DECISION PIPELINE)</div>
+					<div className="card-title"><Zap size={16} style={{ color: 'var(--accent-hover)' }} /> SYNAPTIC DECISION PIPELINE</div>
 					<div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
 						{pipelineStages.map(s => (
 							<div key={s.n} style={{
@@ -267,7 +267,7 @@ export default function App() {
 									color: s.status === 'done' ? 'var(--accent-hover)' : s.status === 'active' ? 'var(--accent)' : 'var(--foreground)',
 									opacity: s.status === 'pending' ? 0.3 : 1,
 								}}>
-									{s.status === 'done' ? 'ГОТОВО' : s.status === 'active' ? 'ОБРАБОТКА' : 'ОЖИДАНИЕ'}
+									{s.status === 'done' ? 'DONE' : s.status === 'active' ? 'PROCESSING' : 'PENDING'}
 								</span>
 							</div>
 						))}
@@ -277,7 +277,7 @@ export default function App() {
 				{/* Synaptic Debate + Network Registry */}
 				<div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
 					<div className="glass" style={{ padding: '20px' }}>
-						<div className="card-title"><Network size={16} style={{ color: 'var(--accent)' }} /> СИНАПТИЧЕСКИЙ АРБИТРАЖ РЕШЕНИЙ</div>
+						<div className="card-title"><Network size={16} style={{ color: 'var(--accent)' }} /> SYNAPTIC DECISION ARBITRAGE</div>
 						<div style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxHeight: '230px', overflowY: 'auto' }}>
 							{debates.map((d, i) => (
 								<div key={i} style={{
@@ -296,11 +296,11 @@ export default function App() {
 
 					{/* Network Registry */}
 					<div className="glass" style={{ padding: '20px' }}>
-						<div className="card-title"><Globe size={16} style={{ color: 'var(--accent-hover)' }} /> СЕТЕВОЙ РЕЕСТР (ON-CHAIN)</div>
+						<div className="card-title"><Globe size={16} style={{ color: 'var(--accent-hover)' }} /> NETWORK REGISTRY (ON-CHAIN)</div>
 						<div style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-							<div>Реестр контрактов: <span style={{ color: 'var(--accent)' }}>0xFA0b…8383</span></div>
-							<div>Идентификатор NFT: <span style={{ color: 'var(--accent-hover)' }}>#1 Identity NFT</span></div>
-							<div>Сетевой провайдер: <span style={{ color: 'var(--accent-hover)' }}>5000 (Mantle Mainnet)</span></div>
+							<div>Contract Registry: <span style={{ color: 'var(--accent)' }}>0xFA0b…8383</span></div>
+							<div>NFT Identifier: <span style={{ color: 'var(--accent-hover)' }}>#1 Identity NFT</span></div>
+							<div>Network Provider: <span style={{ color: 'var(--accent-hover)' }}>5000 (Mantle Mainnet)</span></div>
 						</div>
 					</div>
 				</div>
@@ -308,7 +308,7 @@ export default function App() {
 
 			{/* ═══ LOG STREAM ═══ */}
 			<div className="glass" style={{ padding: '20px', marginTop: '24px' }}>
-				<div className="card-title"><Terminal size={16} /> ЖУРНАЛ СИНАПТИЧЕСКОЙ АКТИВНОСТИ ЛОГОВ</div>
+				<div className="card-title"><Terminal size={16} /> SYNAPTIC ACTIVITY LOG</div>
 				<div ref={logRef} style={{
 					height: '250px', overflowY: 'auto', fontFamily: 'var(--font-mono)', fontSize: '12px', lineHeight: 1.8,
 					padding: '16px', background: 'rgba(4,4,6,0.9)', border: '1px solid var(--border)', borderRadius: '12px',
@@ -326,15 +326,15 @@ export default function App() {
 
 			{/* ═══ CONTROL BAR ═══ */}
 			<div className="control-bar">
-				<button className="lusion-btn-primary">[ ЗАПУСТИТЬ СИНАПТИЧЕСКИЙ АНАЛИЗ ]</button>
-				<button className="lusion-btn connect-btn-hover-fx"><span>[ ЭМУЛИРОВАТЬ ОНЧЕЙН-МИНТ ]</span></button>
+				<button className="lusion-btn-primary">[ LAUNCH SYNAPTIC ANALYSIS ]</button>
+				<button className="lusion-btn connect-btn-hover-fx"><span>[ EMULATE ON-CHAIN MINT ]</span></button>
 			</div>
 
 			{/* ═══ FOOTER ═══ */}
 			<div className="glass footer-bar">
-				<span>Сборка: v4.2-триархия · Реактор →</span>
-				<span style={{ color: 'var(--accent-hover)' }}>⬡ СИСТЕМА АКТИВНА · ДОМЕН MANTLE</span>
-				<span>Последнее обновление: {now}</span>
+				<span>Build: v4.2-triarchy · Reactor →</span>
+				<span style={{ color: 'var(--accent-hover)' }}>⬡ SYSTEM ACTIVE · MANTLE DOMAIN</span>
+				<span>Last Update: {now}</span>
 			</div>
 
 			{/* Theme switcher */}
