@@ -1,17 +1,11 @@
 import { useState, useEffect, useRef, Suspense, useCallback } from 'react';
-import { Activity, Zap, Globe, Terminal, Network, Layers, Cpu, Eye, TrendingUp } from 'lucide-react';
+import { Activity, Zap, Globe, Terminal, Network, Layers, Cpu, Eye, TrendingUp, Wifi, WifiOff } from 'lucide-react';
 import './index.css';
 import LiquidGlassShader from './components/LiquidGlassShader';
 import { AnimatedArchitecture } from './components/AnimatedArchitecture';
 import CustomCursor from './components/CustomCursor';
 import { WebGLErrorBoundary } from './components/WebGLErrorBoundary';
-
-/* ── Market data ── */
-const marketData = [
-	{ sym: 'MNT', price: '$0.7833', vol: '$1,248,092', change: '+4.58%', up: true, conf: 82.5, verdict: 'BUY' },
-	{ sym: 'WMNT', price: '$0.7841', vol: '$842,104', change: '+4.64%', up: true, conf: 78.4, verdict: 'BUY' },
-	{ sym: 'ETH', price: '$3,224.03', vol: '$41,209,500', change: '-1.75%', up: false, conf: 55.6, verdict: 'HOLD' },
-];
+import { useTelemetry } from './hooks/useTelemetry';
 
 /* ── Pipeline stages ── */
 const pipelineStages = [
@@ -96,10 +90,9 @@ function AgentOrb({ state = 'idle' }: { state?: 'idle' | 'thinking' | 'working' 
 }
 
 export default function App() {
+	const telem = useTelemetry();
 	const [theme, setTheme] = useState<'dark' | 'light'>('dark');
 	const [mounted, setMounted] = useState(false);
-	const [cycle, setCycle] = useState(42);
-	const [uptime, setUptime] = useState(0);
 	const [orbState, setOrbState] = useState<'idle' | 'thinking' | 'working'>('idle');
 	const [activeStage, setActiveStage] = useState(10);
 	const [analysisRunning, setAnalysisRunning] = useState(false);
@@ -112,12 +105,18 @@ export default function App() {
 		document.body.style.backgroundColor = theme === 'dark' ? '#010204' : '#fafafa';
 	}, [theme]);
 
-	// Cycle counter & uptime
+	// Fallback cycle counter & uptime when backend offline
+	const [localCycle, setLocalCycle] = useState(42);
+	const [localUptime, setLocalUptime] = useState(0);
 	useEffect(() => {
-		const t = setInterval(() => setCycle(c => c + 1), 30000);
-		const u = setInterval(() => setUptime(s => s + 1), 1000);
+		const t = setInterval(() => setLocalCycle(c => c + 1), 30000);
+		const u = setInterval(() => setLocalUptime(s => s + 1), 1000);
 		return () => { clearInterval(t); clearInterval(u); };
 	}, []);
+
+	// Derive values: live telemetry > local fallback
+	const cycle = telem.connected ? telem.cycle : localCycle;
+	const uptime = telem.connected ? telem.uptimeSecs : localUptime;
 
 	// Orb state cycling
 	useEffect(() => {
@@ -186,8 +185,9 @@ export default function App() {
 					</p>
 				</div>
 				<div className="toggle-group" style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-					<div className="lusion-btn connect-state-true" style={{ cursor: 'default' }}>
-						<span style={{ marginRight: '8px' }}>●</span>AUTONOMOUS MODE · CYCLE {cycle}
+					<div className={`lusion-btn ${telem.connected ? 'connect-state-true' : ''}`} style={{ cursor: 'default', fontSize: '11px' }}>
+						{telem.connected ? <Wifi size={12} style={{ marginRight: '6px' }} /> : <WifiOff size={12} style={{ marginRight: '6px', opacity: 0.5 }} />}
+						{telem.connected ? 'LIVE' : 'MOCK'} · CYCLE {cycle}
 					</div>
 				</div>
 			</header>
@@ -197,8 +197,8 @@ export default function App() {
 			<section className="metrics" aria-label="Key Performance Metrics">
 				<div className="glass metric"><h3><Cpu size={14} style={{ color: 'var(--accent)' }} /> Current Cycle</h3><div className="val cyan">{cycle}</div></div>
 				<div className="glass metric"><h3><Activity size={14} style={{ color: 'var(--accent-hover)' }} /> Uptime</h3><div className="val green">{fmtUptime}</div></div>
-				<div className="glass metric"><h3><Zap size={14} style={{ color: 'var(--accent-hover)' }} /> Synthetic PNL</h3><div className="val green">$1,444.91</div></div>
-				<div className="glass metric"><h3><Globe size={14} style={{ color: 'var(--accent-hover)' }} /> Win Rate</h3><div className="val green">75.7%</div></div>
+				<div className="glass metric"><h3><Zap size={14} style={{ color: 'var(--accent-hover)' }} /> Synthetic PNL</h3><div className="val green">{telem.pnl}</div></div>
+				<div className="glass metric"><h3><Globe size={14} style={{ color: 'var(--accent-hover)' }} /> Win Rate</h3><div className="val green">{telem.winRate}</div></div>
 			</section>
 
 			{/* ═══ MAIN GRID: Market + Synaptic Core ═══ */}
@@ -206,8 +206,8 @@ export default function App() {
 
 				{/* LEFT: Market Monitoring */}
 				<div className="glass events-section" role="region" aria-label="Live Market Data">
-					<div className="card-title"><TrendingUp size={16} style={{ color: 'var(--accent-hover)' }} /> LIVE MARKET MONITORING</div>
-					{marketData.map(m => (
+					<div className="card-title"><TrendingUp size={16} style={{ color: 'var(--accent-hover)' }} /> LIVE MARKET MONITORING {telem.connected && <span style={{ fontSize: '9px', color: 'var(--accent-success)', marginLeft: '8px' }}>● LIVE</span>}</div>
+					{telem.markets.map(m => (
 						<div key={m.sym} className="event-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderRadius: '12px', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', marginBottom: '14px', transition: 'all 0.3s ease', cursor: 'pointer' }}>
 							<div>
 								<div style={{ fontSize: '19px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>{m.sym}</div>
@@ -326,9 +326,9 @@ export default function App() {
 					<div className="glass" style={{ padding: '20px' }}>
 						<div className="card-title"><Globe size={16} style={{ color: 'var(--accent-hover)' }} /> NETWORK REGISTRY (ON-CHAIN)</div>
 						<div style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-							<div>Contract Registry: <span style={{ color: 'var(--accent)' }}>0xFA0b…8383</span></div>
-							<div>NFT Identifier: <span style={{ color: 'var(--accent-hover)' }}>#1 Identity NFT</span></div>
-							<div>Network Provider: <span style={{ color: 'var(--accent-hover)' }}>5000 (Mantle Mainnet)</span></div>
+							<div>Contract Registry: <span style={{ color: 'var(--accent)' }}>{telem.registryAddress}</span></div>
+							<div>NFT Identifier: <span style={{ color: 'var(--accent-hover)' }}>#{telem.agentId} Identity NFT</span></div>
+							<div>Network Provider: <span style={{ color: 'var(--accent-hover)' }}>{telem.chainId} (Mantle Mainnet)</span></div>
 						</div>
 					</div>
 				</div>
