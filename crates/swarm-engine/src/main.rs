@@ -10,6 +10,8 @@
 //!           DQS → PreTradeRisk → Entry → Consensus → RiskGate →
 //!           PaperTrade → DecisionJournal → IPC Telemetry → (Chain Execute)
 
+mod telemetry;
+
 use ouroboros_brain::{
     config::{load_models, load_prompts, ModelsFile, PromptsFile},
     judge::{chief_judge_v2, load_thresholds, JudgeInput, JudgeVerdict, ThresholdsConfig},
@@ -597,13 +599,58 @@ async fn main() {
     let interval = std::time::Duration::from_secs(
         std::env::var("CYCLE_INTERVAL_SECS").ok().and_then(|v| v.parse().ok()).unwrap_or(60));
 
+    // Telemetry HTTP server
+    let telem = telemetry::new_handle();
+    telemetry::spawn_server(telem.clone());
+
     tracing::info!("🚀 Full Memory Stack: L0(DashMap)→L1(OWM+Hybrid)→L2(DecisionMemory)→L3(HyperEdge)→L4(Paper)");
     tracing::info!("🚀 Pipeline: Data→Regime→Debate→ML→Recall→Judge→PreTrade→Entry→Consensus→Risk→Paper→Journal→Chain");
     tracing::info!("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
 
+    let start_time = std::time::Instant::now();
+    let mut cycle_count: u64 = 0;
+
     loop {
+        cycle_count += 1;
         decision_cycle(&client, &debate_pool, &prompts, &models, &thresholds,
             &state, &ml_model, &risk, &paper, &trade_memories, &decision_mem).await;
+
+        // Update telemetry state after each cycle
+        {
+            let mut t = telem.write().await;
+            t.cycle = cycle_count;
+            t.uptime_secs = start_time.elapsed().as_secs();
+            t.symbols = state.consensus.iter().map(|entry| {
+                let r = entry.value();
+                telemetry::SymbolTelemetry {
+                    symbol: r.symbol.clone(),
+                    price: state.symbols.get(&r.symbol).map(|s| s.price).unwrap_or(0.0),
+                    price_change_24h: state.symbols.get(&r.symbol).map(|s| s.price_24h_change).unwrap_or(0.0),
+                    regime: "live".into(),
+                    regime_confidence: r.confidence,
+                    verdict: format!("{}", r.final_verdict),
+                    score: r.judge_score,
+                    confidence: r.confidence,
+                    volume_24h: state.symbols.get(&r.symbol).map(|s| s.volume_24h).unwrap_or(0.0),
+                    buy_sell_ratio: 0.0,
+                    liquidity_usd: state.symbols.get(&r.symbol).map(|s| s.open_interest).unwrap_or(0.0),
+                    on_chain_logged: true,
+                }
+            }).collect();
+
+            let pe = paper.lock().unwrap();
+            if !pe.pnl_history.is_empty() {
+                let s = pe.stats();
+                t.paper_stats = Some(telemetry::PaperStats {
+                    total_trades: s.total_trades as u64,
+                    win_rate: s.win_rate,
+                    total_pnl: s.total_pnl,
+                    max_drawdown: s.max_drawdown,
+                    balance: pe.balance,
+                });
+            }
+        }
+
         tracing::info!("💤 Next in {}s...", interval.as_secs());
         tokio::time::sleep(interval).await;
     }
