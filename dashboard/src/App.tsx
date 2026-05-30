@@ -15,19 +15,19 @@ const marketData = [
 
 /* ── Pipeline stages ── */
 const pipelineStages = [
-	{ n: '01', label: 'MARKET DATA INGESTION', status: 'done' },
-	{ n: '02', label: 'TREND REGIME DETECTION', status: 'done' },
-	{ n: '03', label: 'SYNAPTIC AI DEBATE', status: 'done' },
-	{ n: '04', label: 'LOCAL ML PREDICTION', status: 'done' },
-	{ n: '05', label: 'VECTOR ARCHIVE SEARCH', status: 'done' },
-	{ n: '06', label: 'WEIGHTED FACTOR JUDGE', status: 'done' },
-	{ n: '07', label: 'PRE-EXECUTION AUDIT', status: 'done' },
-	{ n: '08', label: 'ENTRY POINT DETECTION', status: 'done' },
-	{ n: '09', label: 'SWARM ORDER CONSENSUS', status: 'done' },
-	{ n: '10', label: 'RISK MATRIX ANALYSIS', status: 'done' },
-	{ n: '11', label: 'SYNTHETIC SIMULATION', status: 'active' },
-	{ n: '12', label: 'SYNAPTIC LOGGING', status: 'pending' },
-	{ n: '13', label: 'ON-CHAIN TX COMMIT', status: 'pending' },
+	{ n: '01', label: 'MARKET DATA INGESTION' },
+	{ n: '02', label: 'TREND REGIME DETECTION' },
+	{ n: '03', label: 'SYNAPTIC AI DEBATE' },
+	{ n: '04', label: 'LOCAL ML PREDICTION' },
+	{ n: '05', label: 'VECTOR ARCHIVE SEARCH' },
+	{ n: '06', label: 'WEIGHTED FACTOR JUDGE' },
+	{ n: '07', label: 'PRE-EXECUTION AUDIT' },
+	{ n: '08', label: 'ENTRY POINT DETECTION' },
+	{ n: '09', label: 'SWARM ORDER CONSENSUS' },
+	{ n: '10', label: 'RISK MATRIX ANALYSIS' },
+	{ n: '11', label: 'SYNTHETIC SIMULATION' },
+	{ n: '12', label: 'SYNAPTIC LOGGING' },
+	{ n: '13', label: 'ON-CHAIN TX COMMIT' },
 ];
 
 /* ── Synaptic debate ── */
@@ -103,6 +103,7 @@ export default function App() {
 	const [orbState, setOrbState] = useState<'idle' | 'thinking' | 'working'>('idle');
 	const [activeStage, setActiveStage] = useState(10);
 	const [analysisRunning, setAnalysisRunning] = useState(false);
+	const [footerTime, setFooterTime] = useState(new Date().toLocaleTimeString('en-US', { hour12: false }));
 	const logRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
@@ -123,6 +124,12 @@ export default function App() {
 		const states: Array<'idle' | 'thinking' | 'working'> = ['idle', 'thinking', 'working'];
 		let i = 0;
 		const t = setInterval(() => { i = (i + 1) % 3; setOrbState(states[i]); }, 5000);
+		return () => clearInterval(t);
+	}, []);
+
+	// Footer clock — updates every second independently
+	useEffect(() => {
+		const t = setInterval(() => setFooterTime(new Date().toLocaleTimeString('en-US', { hour12: false })), 1000);
 		return () => clearInterval(t);
 	}, []);
 
@@ -299,7 +306,7 @@ export default function App() {
 				<div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
 					<div className="glass" style={{ padding: '20px' }}>
 						<div className="card-title"><Network size={16} style={{ color: 'var(--accent)' }} /> SYNAPTIC DECISION ARBITRAGE</div>
-						<div style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxHeight: '230px', overflowY: 'auto' }}>
+						<div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
 							{debates.map((d, i) => (
 								<div key={i} style={{
 									background: 'rgba(10,10,18,0.4)', border: '1px solid rgba(255,255,255,0.03)',
@@ -357,7 +364,7 @@ export default function App() {
 			<div className="glass footer-bar">
 				<span>Build: v4.2-triarchy · Reactor →</span>
 				<span style={{ color: 'var(--accent-hover)' }}>⬡ SYSTEM ACTIVE · MANTLE DOMAIN</span>
-				<span>Last Update: {now}</span>
+				<span>Last Update: {footerTime}</span>
 			</div>
 
 			{/* Theme switcher */}
