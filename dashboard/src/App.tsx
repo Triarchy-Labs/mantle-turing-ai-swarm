@@ -325,7 +325,7 @@ export default function App() {
 						</div>
 					</div>
 				</div>
-			</div>
+			</section>
 
 			{/* ═══ LOG STREAM ═══ */}
 			<div className="glass" style={{ padding: '20px', marginTop: '24px' }} role="log" aria-live="polite" aria-label="Synaptic Activity Log">
