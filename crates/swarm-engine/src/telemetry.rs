@@ -25,7 +25,11 @@ pub struct TelemetryState {
     pub version: &'static str,
     pub uptime_secs: u64,
     pub cycle: u64,
+    pub pipeline_stage: u32,
+    pub pipeline_total: u32,
     pub symbols: Vec<SymbolTelemetry>,
+    pub debates: Vec<DebateTelemetry>,
+    pub log_entries: Vec<LogTelemetry>,
     pub paper_stats: Option<PaperStats>,
     pub benchmark: Option<BenchmarkTelemetry>,
     pub pipeline: &'static str,
@@ -70,14 +74,34 @@ pub struct BenchmarkTelemetry {
     pub ai_avg_confidence: f64,
 }
 
+/// Per-symbol debate telemetry (bull/bear arguments).
+#[derive(Debug, Clone, Serialize, Default)]
+pub struct DebateTelemetry {
+    pub symbol: String,
+    pub agent: String,
+    pub message: String,
+    pub role: String,  // "bull", "bear", "macro"
+    pub timestamp: i64,
+}
+
+/// Log stream entry for real-time activity feed.
+#[derive(Debug, Clone, Serialize, Default)]
+pub struct LogTelemetry {
+    pub timestamp: i64,
+    pub tag: String,
+    pub message: String,
+    pub level: String,  // "info", "success", "warn"
+}
+
 /// Shared telemetry state handle.
 pub type TelemetryHandle = Arc<RwLock<TelemetryState>>;
 
 /// Create a new telemetry handle with default state.
 pub fn new_handle() -> TelemetryHandle {
     Arc::new(RwLock::new(TelemetryState {
-        version: "v4.1-onchain",
+        version: "v4.2-triarchy",
         pipeline: "Data→Regime→Debate→ML→Recall→Judge→PreTrade→Entry→Consensus→Risk→Paper→Journal→Chain",
+        pipeline_total: 13,
         agent_id: 1,
         chain_id: 5000,
         registry_address: "0xFA0b5036aF9770B370B33CeBBb42d1E626338383",
