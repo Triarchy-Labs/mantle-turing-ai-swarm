@@ -30,6 +30,7 @@ use hive_intel::recall::{
 use hive_intel::hybrid_recall::hybrid_blend;
 use hive_intel::regime::{classify_regime, MarketRegime as HiveRegime};
 use hive_intel::affective::{ewma_confidence, risk_appetite};
+use hive_intel::benchmark::{SmaCrossover, BenchmarkResult, BenchmarkStats};
 use x402_consensus::engine::{Action, AgentVote, PolicyGovernor};
 use x402_risk::engine::{AtrStops, MarketRegime, RiskGate};
 use x402_memory::engine::create_liquidation_edge;
@@ -337,6 +338,8 @@ async fn decision_cycle(
     state: &SwarmState, ml: &LocalModel, risk: &RiskGate,
     paper: &Mutex<PaperEngine>, trade_memories: &Mutex<Vec<RawMemory>>,
     decision_mem: &DecisionMemory,
+    sma_engines: &Mutex<std::collections::HashMap<String, SmaCrossover>>,
+    bench_stats: &Mutex<BenchmarkStats>,
 ) {
     let cycle = state.increment_cycle();
     tracing::info!("━━━ CYCLE {} ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", cycle);
@@ -433,6 +436,42 @@ async fn decision_cycle(
         let verdict = chief_judge_v2(&input, thresholds);
         let e = match verdict.decision { Verdict::Buy => "🟢", Verdict::Sell => "🔴", Verdict::Hold => "⚪" };
         tracing::info!("{} Judge [{}]: {} | score={:.2} conf={:.1}%", e, data.symbol, verdict.decision, verdict.score, verdict.confidence);
+
+        // ═══ AI vs HUMAN BENCHMARK ═══
+        {
+            let mut engines = sma_engines.lock().unwrap();
+            let sma = engines.entry(data.symbol.clone()).or_insert_with(|| {
+                let mut s = SmaCrossover::default_config();
+                s.seed_synthetic(data.price, data.price_24h_change);
+                s
+            });
+            let human_sig = sma.signal(data.price);
+            let ai_verdict_str = format!("{}", verdict.decision);
+            let agreement = (ai_verdict_str == human_sig.verdict)
+                || (ai_verdict_str == "Hold" && human_sig.verdict == "HOLD");
+
+            let result = BenchmarkResult {
+                ai_verdict: ai_verdict_str.clone(),
+                human_verdict: human_sig.verdict.clone(),
+                ai_score: verdict.score,
+                human_score: human_sig.score,
+                ai_confidence: verdict.confidence,
+                agreement,
+                ai_inference_ms: 0,
+                cycle: state.cycle_count.load(std::sync::atomic::Ordering::Relaxed),
+                symbol: data.symbol.clone(),
+                price: data.price,
+            };
+
+            let mut stats = bench_stats.lock().unwrap();
+            stats.update(&result);
+
+            let vs = if agreement { "🤝" } else { "⚔️" };
+            tracing::info!("{} Benchmark [{}]: AI={} vs Human={} (SMA:{:.4}/{:.4}) | {}",
+                vs, data.symbol, ai_verdict_str, human_sig.verdict,
+                human_sig.sma_short, human_sig.sma_long, human_sig.reason);
+        }
+
         if !past_ctx.is_empty() {
             tracing::info!("📜 Decision Memory [{}]: {} chars of past context injected", data.symbol, past_ctx.len());
         }
@@ -610,10 +649,15 @@ async fn main() {
     let start_time = std::time::Instant::now();
     let mut cycle_count: u64 = 0;
 
+    // AI vs Human Benchmark
+    let sma_engines: Mutex<std::collections::HashMap<String, SmaCrossover>> = Mutex::new(std::collections::HashMap::new());
+    let bench_stats: Mutex<BenchmarkStats> = Mutex::new(BenchmarkStats::default());
+
     loop {
         cycle_count += 1;
         decision_cycle(&client, &debate_pool, &prompts, &models, &thresholds,
-            &state, &ml_model, &risk, &paper, &trade_memories, &decision_mem).await;
+            &state, &ml_model, &risk, &paper, &trade_memories, &decision_mem,
+            &sma_engines, &bench_stats).await;
 
         // Update telemetry state after each cycle
         {
@@ -647,6 +691,17 @@ async fn main() {
                     total_pnl: s.total_pnl,
                     max_drawdown: s.max_drawdown,
                     balance: pe.balance,
+                });
+            }
+
+            // Benchmark stats
+            let bs = bench_stats.lock().unwrap();
+            if bs.total_cycles > 0 {
+                t.benchmark = Some(telemetry::BenchmarkTelemetry {
+                    total_cycles: bs.total_cycles,
+                    agreements: bs.agreements,
+                    agreement_rate: if bs.total_cycles > 0 { bs.agreements as f64 / bs.total_cycles as f64 } else { 0.0 },
+                    ai_avg_confidence: bs.ai_avg_confidence,
                 });
             }
         }
