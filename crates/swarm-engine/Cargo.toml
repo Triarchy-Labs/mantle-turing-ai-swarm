@@ -28,3 +28,5 @@ x402-liquidator = { path = "../x402-liquidator" }
 x402-polymarket = { path = "../x402-polymarket" }
 # D5: Mantle Chain
 mantle-chain = { path = "../mantle-chain" }
+# Telemetry HTTP
+axum = { workspace = true }
