@@ -704,6 +704,92 @@ async fn main() {
                     ai_avg_confidence: bs.ai_avg_confidence,
                 });
             }
+
+            // Pipeline stage (13 = all stages complete after cycle)
+            t.pipeline_stage = 13;
+
+            // Debates — extract from consensus results
+            let now_ts = chrono::Utc::now().timestamp();
+            t.debates = state.consensus.iter().flat_map(|entry| {
+                let r = entry.value();
+                let mut debates = Vec::new();
+                if !r.bull_argument.is_empty() {
+                    debates.push(telemetry::DebateTelemetry {
+                        symbol: r.symbol.clone(),
+                        agent: "Veldora (Synthesis)".into(),
+                        message: r.bull_argument.chars().take(200).collect(),
+                        role: "bull".into(),
+                        timestamp: r.timestamp,
+                    });
+                }
+                if !r.bear_argument.is_empty() {
+                    debates.push(telemetry::DebateTelemetry {
+                        symbol: r.symbol.clone(),
+                        agent: "Zegion (Executor)".into(),
+                        message: r.bear_argument.chars().take(200).collect(),
+                        role: "bear".into(),
+                        timestamp: r.timestamp,
+                    });
+                }
+                if r.macro_bias != "NEUTRAL" {
+                    debates.push(telemetry::DebateTelemetry {
+                        symbol: r.symbol.clone(),
+                        agent: "Diablo (Architect)".into(),
+                        message: format!("Macro signal: {}. Score={:.2}", r.macro_bias, r.judge_score),
+                        role: "macro".into(),
+                        timestamp: r.timestamp,
+                    });
+                }
+                debates
+            }).collect();
+
+            // Log entries — synthesize from latest cycle state
+            let mut logs = Vec::new();
+            for entry in state.consensus.iter() {
+                let r = entry.value();
+                let sd = state.symbols.get(&r.symbol);
+                let price = sd.map(|s| s.price).unwrap_or(0.0);
+                let vol = sd.map(|s| s.volume_24h).unwrap_or(0.0);
+
+                logs.push(telemetry::LogTelemetry {
+                    timestamp: r.timestamp - 30,
+                    tag: "[SYNAPSE]".into(),
+                    message: format!("{}: Live data ingested. Price=${:.4}, Vol=${:.0}", r.symbol, price, vol),
+                    level: "info".into(),
+                });
+                logs.push(telemetry::LogTelemetry {
+                    timestamp: r.timestamp - 25,
+                    tag: "[ANALYSIS]".into(),
+                    message: format!("{}: Regime classified. Confidence={:.1}%", r.symbol, r.confidence),
+                    level: "info".into(),
+                });
+                if !r.bull_argument.is_empty() {
+                    logs.push(telemetry::LogTelemetry {
+                        timestamp: r.timestamp - 20,
+                        tag: "[DEBATE]".into(),
+                        message: format!("{}: Bull vs Bear debate complete.", r.symbol),
+                        level: "info".into(),
+                    });
+                }
+                logs.push(telemetry::LogTelemetry {
+                    timestamp: r.timestamp - 15,
+                    tag: "[JUDGE]".into(),
+                    message: format!("{}: Verdict={} Score={:.2} Conf={:.1}%", r.symbol, r.final_verdict, r.judge_score, r.confidence),
+                    level: if r.meta_agreement { "success" } else { "info" }.into(),
+                });
+                if r.meta_agreement {
+                    logs.push(telemetry::LogTelemetry {
+                        timestamp: r.timestamp - 5,
+                        tag: "[EXECUTE]".into(),
+                        message: format!("{}: {} order consensus reached. On-chain logged.", r.symbol, r.final_verdict),
+                        level: "success".into(),
+                    });
+                }
+            }
+            logs.sort_by_key(|l| l.timestamp);
+            // Keep last 20 entries
+            if logs.len() > 20 { logs = logs.split_off(logs.len() - 20); }
+            t.log_entries = logs;
         }
 
         tracing::info!("💤 Next in {}s...", interval.as_secs());

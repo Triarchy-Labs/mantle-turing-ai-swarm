@@ -24,27 +24,8 @@ const pipelineStages = [
 	{ n: '13', label: 'ON-CHAIN TX COMMIT' },
 ];
 
-/* ── Synaptic debate ── */
-const debates = [
-	{ agent: 'Veldora (Synthesis)', color: '#a855f7', msg: 'Trade volume surged 14% in 4h. Movement vector confirms BUY signal.', time: new Date().toLocaleTimeString('en-US', { hour12: false }) },
-	{ agent: 'Zegion (Executor)', color: '#00f5ff', msg: 'Must verify liquidity depth on Agni pools before order entry.', time: new Date().toLocaleTimeString('en-US', { hour12: false }) },
-	{ agent: 'Diablo (Architect)', color: '#00d4ff', msg: 'SMA(20) crossed above SMA(50). Strong bullish impulse for MNT.', time: new Date().toLocaleTimeString('en-US', { hour12: false }) },
-];
+/* ── Debates & logs now come from useTelemetry hook ── */
 
-/* ── Log entries (staggered timestamps) ── */
-const LOG_OFFSETS = [47, 42, 38, 33, 27, 22, 17, 12, 6, 1];
-const logEntries = [
-	{ off: 0, tag: '[SYNAPSE]', msg: 'Veldora (Synthesis): Trade volume surged 14% in 4h. Vector confirms...', type: '' },
-	{ off: 1, tag: '[ANALYSIS]', msg: 'MNT trend strength index at 72.3%. Market regime: Bullish.', type: '' },
-	{ off: 2, tag: '[SYNAPSE]', msg: 'Launching arbiter contest between Diablo and Zegion...', type: '' },
-	{ off: 3, tag: '[ML]', msg: 'Local ML prediction complete. Asset growth probability: 81.2%', type: '' },
-	{ off: 4, tag: '[VECTOR]', msg: 'Similar pattern found from 2026-05-27 in vector archive. Success: 89%', type: 'success' },
-	{ off: 5, tag: '[JUDGE]', msg: 'Seven factors analyzed. Final verdict: BUY with weight 1.75.', type: '' },
-	{ off: 6, tag: '[AUDIT]', msg: 'Slippage and front-running risk checks: all passed.', type: 'success' },
-	{ off: 7, tag: '[ENTRY]', msg: 'Optimal entry point detected: $0.7852. Launching swarm orders.', type: '' },
-	{ off: 8, tag: '[CONSENSUS]', msg: 'Swarm Consensus reached: BUY with 82.5% probability.', type: 'success' },
-	{ off: 9, tag: '[RISK]', msg: 'Risk limit checks passed: margin deviation < 2%. No risks.', type: '' },
-];
 
 /* ── Orbiting tech cards around 3D stone ── */
 const techCards = [
@@ -136,7 +117,7 @@ export default function App() {
 	const nowDate = new Date();
 	const now = nowDate.toLocaleTimeString('en-US', { hour12: false });
 	const logTime = (off: number) => {
-		const d = new Date(nowDate.getTime() - LOG_OFFSETS[off] * 1000);
+		const d = new Date(nowDate.getTime() - (10 - off) * 5000);
 		return d.toLocaleTimeString('en-US', { hour12: false });
 	};
 
@@ -307,7 +288,7 @@ export default function App() {
 					<div className="glass" style={{ padding: '20px' }}>
 						<div className="card-title"><Network size={16} style={{ color: 'var(--accent)' }} /> SYNAPTIC DECISION ARBITRAGE</div>
 						<div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-							{debates.map((d, i) => (
+							{telem.debates.map((d, i) => (
 								<div key={i} style={{
 									background: 'rgba(10,10,18,0.4)', border: '1px solid rgba(255,255,255,0.03)',
 									borderLeft: `3px solid ${d.color}`, borderRadius: '8px', padding: '12px', fontSize: '12px', lineHeight: 1.5,
@@ -342,7 +323,7 @@ export default function App() {
 					padding: '16px', background: 'rgba(4,4,6,0.9)', border: '1px solid var(--border)', borderRadius: '12px',
 					boxShadow: 'inset 0 2px 10px rgba(0,0,0,0.8)',
 				}}>
-					{logEntries.map((l, i) => (
+					{telem.logs.map((l, i) => (
 						<div key={i} style={{ display: 'flex', gap: '12px', color: 'var(--foreground)', opacity: 0.7, borderBottom: '1px solid rgba(255,255,255,0.01)', padding: '2px 0' }}>
 							<span style={{ color: 'var(--foreground)', opacity: 0.3, minWidth: '90px' }}>{logTime(l.off)}</span>
 							<span style={{ color: l.type === 'success' ? 'var(--accent-hover)' : 'var(--accent)', fontWeight: 700, minWidth: '100px' }}>{l.tag}</span>
