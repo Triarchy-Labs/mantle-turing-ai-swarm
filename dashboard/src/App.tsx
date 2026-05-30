@@ -1,82 +1,346 @@
-import { useState } from 'react'
-import { Activity, Shield, Zap, Globe, Terminal, Network } from 'lucide-react'
-import './index.css'
+"use client";
 
-type ViewMode = 'IPC' | 'ERC8004'
+import { useState, useEffect, useRef, Suspense } from 'react';
+import { Activity, Shield, Zap, Globe, Terminal, Network, RefreshCw, Layers, Cpu, Eye, TrendingUp, TrendingDown } from 'lucide-react';
+import './index.css';
+import LiquidGlassShader from './components/LiquidGlassShader';
+import { AnimatedArchitecture } from './components/AnimatedArchitecture';
+import CustomCursor from './components/CustomCursor';
+import { WebGLErrorBoundary } from './components/WebGLErrorBoundary';
 
-const onChainEvents = [
-  { id: '1', agentId: 'ERC8004:#1', target: '0x3a9f…8b21', sentiment: 105, success: true, time: '2m ago' },
-  { id: '2', agentId: 'ERC8004:#1', target: '0x71bc…11a0', sentiment: 112, success: true, time: '15m ago' },
-  { id: '3', agentId: 'ERC8004:#2', target: '0x99aa…ff10', sentiment: 95, success: true, time: '1h ago' },
-  { id: '4', agentId: 'ERC8004:#1', target: '0xdead…beef', sentiment: 87, success: false, time: '3h ago' },
-]
+type ViewMode = 'IPC' | 'ERC8004';
 
-const ipcEvents = [
-  { id: '1', agentId: 'liquidator', target: 'mmap://x402_state', sentiment: 0, success: true, time: '200μs' },
-  { id: '2', agentId: 'sniper', target: 'mmap://x402_state', sentiment: 0, success: true, time: '150μs' },
-  { id: '3', agentId: 'polymarket', target: 'ws://oracle', sentiment: 0, success: true, time: '1.2ms' },
-]
+/* ── Market data ── */
+const marketData = [
+	{ sym: 'MNT', price: '$0.7833', vol: '$1,248,092', change: '+4.58%', up: true, conf: 82.5, verdict: 'ПОКУПАТЬ' },
+	{ sym: 'WMNT', price: '$0.7841', vol: '$842,104', change: '+4.64%', up: true, conf: 78.4, verdict: 'ПОКУПАТЬ' },
+	{ sym: 'ETH', price: '$3,224.03', vol: '$41,209,500', change: '-1.75%', up: false, conf: 55.6, verdict: 'УДЕРЖИВАТЬ' },
+];
 
-function App() {
-  const [view, setView] = useState<ViewMode>('ERC8004')
-  const events = view === 'ERC8004' ? onChainEvents : ipcEvents
+/* ── Pipeline stages ── */
+const pipelineStages = [
+	{ n: '01', label: 'СБОР РЫНОЧНЫХ ДАННЫХ', status: 'done' },
+	{ n: '02', label: 'ОПРЕДЕЛЕНИЕ РЕЖИМА ТРЕНДА', status: 'done' },
+	{ n: '03', label: 'СИНАПТИЧЕСКИЕ ДЕБАТЫ ИИ', status: 'done' },
+	{ n: '04', label: 'ЛОКАЛЬНЫЙ ML ПРОГНОЗ', status: 'done' },
+	{ n: '05', label: 'ВЕКТОРНЫЙ ПОИСК В АРХИВЕ', status: 'done' },
+	{ n: '06', label: 'ВЗВЕШЕННЫЙ ФАКТОРНЫЙ СУДЬЯ', status: 'done' },
+	{ n: '07', label: 'ПРЕДВАРИТЕЛЬНЫЙ АУДИТ', status: 'done' },
+	{ n: '08', label: 'ОПРЕДЕЛЕНИЕ ТОЧКИ ВХОДА', status: 'done' },
+	{ n: '09', label: 'СВАРМ-КОНСЕНСУС ОРДЕРОВ', status: 'done' },
+	{ n: '10', label: 'АНАЛИЗ РИСКОВОЙ МАТРИЦЫ', status: 'done' },
+	{ n: '11', label: 'СИНТЕТИЧЕСКАЯ СИМУЛЯЦИЯ', status: 'active' },
+	{ n: '12', label: 'СИНАПТИЧЕСКОЕ ЖУРНАЛИРОВАНИЕ', status: 'pending' },
+	{ n: '13', label: 'ЗАПИСЬ ТРАНЗАКЦИИ ON-CHAIN', status: 'pending' },
+];
 
-  return (
-    <>
-      <header className="header">
-        <div>
-          <h1>X402 Swarm Intelligence</h1>
-          <p><span className="status-dot live"></span>Mantle Network — AI Agent Execution Layer</p>
-        </div>
-        <div className="toggle-group">
-          <button className={`toggle-btn ${view === 'IPC' ? 'active' : ''}`} onClick={() => setView('IPC')}>
-            <Terminal size={14} /> L0 IPC
-          </button>
-          <button className={`toggle-btn ${view === 'ERC8004' ? 'active' : ''}`} onClick={() => setView('ERC8004')}>
-            <Shield size={14} /> ERC-8004
-          </button>
-        </div>
-      </header>
+/* ── Synaptic debate ── */
+const debates = [
+	{ agent: 'Veldora (Синтез)', color: '#a855f7', msg: 'Объём торгов вырос на 14% за 4 часа. Вектор движения подтверждает BUY.', time: new Date().toLocaleTimeString('ru') },
+	{ agent: 'Zegion (Исполнитель)', color: '#00f5ff', msg: 'Необходимо подтвердить глубину ликвидности в пулах Agni до входа в ордер.', time: new Date().toLocaleTimeString('ru') },
+	{ agent: 'Diablo (Архитектор)', color: '#00d4ff', msg: 'Индикатор SMA(20) пересёк SMA(50) вверх. Сильный импульс к покупке MNT.', time: new Date().toLocaleTimeString('ru') },
+];
 
-      <div className="metrics">
-        <div className="glass metric">
-          <h3><Activity size={13} /> Total Liquidations</h3>
-          <div className="val">1,402</div>
-        </div>
-        <div className="glass metric">
-          <h3><Zap size={13} /> Swarm Reputation</h3>
-          <div className="val">8,950</div>
-        </div>
-        <div className="glass metric">
-          <h3><Globe size={13} /> Network</h3>
-          <div className="val cyan">Connected</div>
-        </div>
-        <div className="glass metric">
-          <h3><Network size={13} /> Active Agents</h3>
-          <div className="val">2</div>
-        </div>
-      </div>
+/* ── Log entries ── */
+const logEntries = [
+	{ ts: '', tag: '[СИНАПС]', msg: 'Veldora (Синтез): Объём торгов вырос на 14% за 4 часа. Вектор д...', type: '' },
+	{ ts: '', tag: '[АНАЛИЗ]', msg: 'Индекс силы тренда MNT составляет 72.3%. Рыночный режим: Восходящий.', type: '' },
+	{ ts: '', tag: '[СИНАПС]', msg: 'Запуск конкурс-арбитра между Diablo и Zegion...', type: '' },
+	{ ts: '', tag: '[ML]', msg: 'Локальный ML-прогноз завершён. Вероятность роста актива: 81.2%', type: '' },
+	{ ts: '', tag: '[БАЗА]', msg: 'Найден схожий паттерн за 2026-05-27 в векторной базе. Успешность: 89%', type: 'success' },
+	{ ts: '', tag: '[СУДЬЯ]', msg: 'Семь факторов проанализировано. Финальный вердикт: BUY с весом 1.75.', type: '' },
+	{ ts: '', tag: '[АУДИТ]', msg: 'Проверка проскальзывания и фронтраннинг-рисков: все проверки пройдены.', type: 'success' },
+	{ ts: '', tag: '[ТОЧКА]', msg: 'Оптимальная точка входа определена: $0.7852. Запуск сварм ордеров.', type: '' },
+	{ ts: '', tag: '[КОНСЕНСУС]', msg: 'Swarm Consensus достигнут: BUY с вероятностью 82.5%.', type: 'success' },
+	{ ts: '', tag: '[РИСКИ]', msg: 'Проверка риск-лимитов: отклонение маржи < 2%. Риски отсутствуют.', type: '' },
+];
 
-      <div className="glass events-section">
-        <h2>{view === 'ERC8004' ? 'On-Chain AI Inferences' : 'L0 IPC Memory-Mapped Logs'}</h2>
-        <div className="events">
-          {events.map(ev => (
-            <div className="event-row" key={ev.id}>
-              <div><span className="event-label">Agent</span><div className="event-val cyan">{ev.agentId}</div></div>
-              <div><span className="event-label">Target</span><div className="event-val">{ev.target}</div></div>
-              <div><span className="event-label">{view === 'ERC8004' ? 'Sentiment' : 'Latency'}</span>
-                <div className="event-val">{view === 'ERC8004' ? `${ev.sentiment / 100}x` : ev.time}</div>
-              </div>
-              <div><span className="event-label">Status</span>
-                <span className={`badge ${ev.success ? 'ok' : 'fail'}`}>{ev.success ? 'OK' : 'FAIL'}</span>
-              </div>
-              <div><span className="event-label">Time</span><div className="event-val" style={{color:'var(--text-secondary)'}}>{ev.time}</div></div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </>
-  )
+/* ── Orbiting tech cards around 3D stone ── */
+const techCards = [
+	{ label: 'ERC-8004', desc: 'Swarm Identity NFT', angle: 0 },
+	{ label: 'Curl-Noise', desc: 'GPGPU Particle Physics', angle: 60 },
+	{ label: 'IPC mmap()', desc: 'Zero-Copy L0 Shared Memory', angle: 120 },
+	{ label: '6-Layer Brain', desc: 'Multi-Agent Decision Engine', angle: 180 },
+	{ label: 'Rust WASM', desc: '12-Container Architecture', angle: 240 },
+	{ label: 'Mantle L2', desc: 'Low-Fee On-Chain Settlement', angle: 300 },
+];
+
+/* ── AgentOrb ── */
+function AgentOrb({ state = 'idle' }: { state?: 'idle' | 'thinking' | 'working' }) {
+	const [blink, setBlink] = useState(false);
+	useEffect(() => {
+		const t = setInterval(() => { setBlink(true); setTimeout(() => setBlink(false), 200); }, 3500);
+		return () => clearInterval(t);
+	}, []);
+	const orbClass = `agent-orb ${state}`;
+	const eyeH = state === 'working' ? 10 : state === 'thinking' ? 30 : 38;
+	const eyeR = state === 'working' ? '4px' : '12px';
+	const eyeBg = state === 'working' ? 'var(--accent-hover)' : '#fff';
+	const eyeShadow = state === 'working' ? '0 0 15px var(--accent-hover)' : '0 0 10px rgba(255,255,255,0.8)';
+	return (
+		<div className={orbClass}>
+			{['left', 'right'].map(side => (
+				<div key={side} style={{
+					width: 24, height: blink ? 2 : eyeH, background: eyeBg,
+					borderRadius: eyeR, position: 'relative', overflow: 'hidden',
+					transition: 'all 0.15s ease-out', boxShadow: eyeShadow,
+					marginTop: blink ? 18 : 0,
+				}}>
+					{state !== 'working' && !blink && (
+						<div style={{
+							width: 10, height: 10, background: '#040406', borderRadius: '50%',
+							position: 'absolute', top: 'calc(50% - 5px)', left: 'calc(50% - 5px)',
+						}} />
+					)}
+				</div>
+			))}
+		</div>
+	);
 }
 
-export default App
+export default function App() {
+	const [view, setView] = useState<ViewMode>('ERC8004');
+	const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+	const [mounted, setMounted] = useState(false);
+	const [cycle, setCycle] = useState(42);
+	const [uptime, setUptime] = useState(0);
+	const [orbState, setOrbState] = useState<'idle' | 'thinking' | 'working'>('idle');
+	const logRef = useRef<HTMLDivElement>(null);
+
+	useEffect(() => {
+		setMounted(true);
+		document.documentElement.setAttribute('data-theme', theme);
+		document.body.style.backgroundColor = theme === 'dark' ? '#010204' : '#fafafa';
+	}, [theme]);
+
+	// Cycle counter & uptime
+	useEffect(() => {
+		const t = setInterval(() => setCycle(c => c + 1), 30000);
+		const u = setInterval(() => setUptime(s => s + 1), 1000);
+		return () => { clearInterval(t); clearInterval(u); };
+	}, []);
+
+	// Orb state cycling
+	useEffect(() => {
+		const states: Array<'idle' | 'thinking' | 'working'> = ['idle', 'thinking', 'working'];
+		let i = 0;
+		const t = setInterval(() => { i = (i + 1) % 3; setOrbState(states[i]); }, 5000);
+		return () => clearInterval(t);
+	}, []);
+
+	const fmtUptime = `${Math.floor(uptime / 3600)}ч ${Math.floor((uptime % 3600) / 60)}м ${uptime % 60}с`;
+	const now = new Date().toLocaleTimeString('ru', { hour12: false });
+
+	if (!mounted) return null;
+
+	return (
+		<>
+			{/* GPGPU Particle Background */}
+			<WebGLErrorBoundary fallback={null}>
+				<LiquidGlassShader theme={theme} />
+			</WebGLErrorBoundary>
+			<CustomCursor />
+
+			{/* Vignette overlay */}
+			<div style={{ position: 'fixed', inset: 0, background: 'radial-gradient(circle at center, transparent 30%, rgba(4,4,6,0.8) 100%)', zIndex: -98, pointerEvents: 'none' }} />
+
+			{/* ═══ HEADER ═══ */}
+			<header className="header glass snake-border">
+				<div>
+					<div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+						<Layers size={22} className="green-sweep-text" />
+						<h1>МАТРИЦА АКТИВНОСТИ MANTLE AI SWARM <span className="lusion-btn connect-state-true" style={{ fontSize: '11px', padding: '3px 8px', verticalAlign: 'middle', marginLeft: '10px' }}>V4.2 LIVE</span></h1>
+					</div>
+					<p style={{ marginTop: '6px', fontSize: '0.8rem', fontFamily: 'var(--font-mono)', opacity: 0.7 }}>
+						12 контейнеров · 23,809 строк кода на Rust · 6 слоев принятия решений · Блокчейн Mantle
+					</p>
+				</div>
+				<div className="toggle-group" style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+					<button className={`lusion-btn ${view === 'IPC' ? 'connect-state-true' : ''}`} onClick={() => setView('IPC')}>
+						<Terminal size={14} style={{ verticalAlign: 'middle', marginRight: '6px' }} />[ L0 IPC ]
+					</button>
+					<button className={`lusion-btn ${view === 'ERC8004' ? 'connect-state-true' : ''}`} onClick={() => setView('ERC8004')}>
+						<Shield size={14} style={{ verticalAlign: 'middle', marginRight: '6px' }} />[ ERC-8004 ]
+					</button>
+					<div className="lusion-btn connect-state-true" style={{ cursor: 'default' }}>
+						<span style={{ marginRight: '8px' }}>●</span>АВТОНОМНЫЙ РЕЖИМ · ЦИКЛ {cycle}
+					</div>
+				</div>
+			</header>
+
+			{/* ═══ STATS GRID ═══ */}
+			<div className="metrics">
+				<div className="glass metric"><h3><Cpu size={14} style={{ color: 'var(--accent)' }} /> Текущий такт (Cycle)</h3><div className="val cyan">{cycle}</div></div>
+				<div className="glass metric"><h3><Activity size={14} style={{ color: 'var(--accent-hover)' }} /> Время непрерывной работы</h3><div className="val green">{fmtUptime}</div></div>
+				<div className="glass metric"><h3><Zap size={14} style={{ color: 'var(--accent-hover)' }} /> Синтетический доход (PNL)</h3><div className="val green">$1,444.91</div></div>
+				<div className="glass metric"><h3><Globe size={14} style={{ color: 'var(--accent-hover)' }} /> Процент побед (Win Rate)</h3><div className="val green">75.7%</div></div>
+			</div>
+
+			{/* ═══ MAIN GRID: Market + Synaptic Core ═══ */}
+			<div className="grid-main">
+
+				{/* LEFT: Market Monitoring */}
+				<div className="glass events-section">
+					<div className="card-title"><TrendingUp size={16} style={{ color: 'var(--accent-hover)' }} /> АКТИВНЫЙ РЫНОЧНЫЙ МОНИТОРИНГ</div>
+					{marketData.map(m => (
+						<div key={m.sym} className="event-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderRadius: '12px', background: 'var(--glass-bg)', border: '1px solid var(--border)', marginBottom: '14px', transition: 'all 0.3s ease' }}>
+							<div>
+								<div style={{ fontSize: '19px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>{m.sym}</div>
+								<div style={{ fontSize: '11px', color: 'var(--foreground)', opacity: 0.5 }}>Объем 24ч: {m.vol}</div>
+							</div>
+							<div style={{ fontSize: '24px', fontWeight: 700, fontFamily: 'var(--font-mono)', color: 'var(--accent)' }}>{m.price}</div>
+							<div className={`badge ${m.up ? 'ok' : 'fail'}`}>{m.change}</div>
+							<div className={`lusion-btn ${m.up ? 'connect-state-true' : ''}`} style={{ fontSize: '11px', padding: '4px 12px' }}>
+								{m.verdict}<br /><span style={{ fontSize: '10px', opacity: 0.7 }}>{m.conf}%</span>
+							</div>
+						</div>
+					))}
+				</div>
+
+				{/* RIGHT: Synaptic Core — 3D Stone with orbiting tech cards */}
+				<div className="glass" style={{ padding: '20px', position: 'relative', overflow: 'visible' }}>
+					<div className="card-title"><Eye size={16} style={{ color: 'var(--accent)' }} /> СИНАПТИЧЕСКОЕ ЯДРО SWARM CORE</div>
+
+					{/* 3D Architecture — compact */}
+					<div style={{ width: '100%', height: '420px', position: 'relative', borderRadius: '12px', overflow: 'hidden' }}>
+						<Suspense fallback={
+							<div style={{
+								width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+								background: 'rgba(5,5,12,0.8)', borderRadius: '12px',
+								border: '1px solid rgba(0,212,255,0.15)'
+							}}>
+								<div style={{ color: 'var(--accent)', fontFamily: 'var(--font-mono)', fontSize: '0.8rem', opacity: 0.6, textAlign: 'center' }}>
+									<div style={{ marginBottom: '8px', animation: 'pulse 2s infinite' }}>◈</div>
+									ЗАГРУЗКА 3D МОДЕЛИ...
+								</div>
+							</div>
+						}>
+							<WebGLErrorBoundary>
+							<AnimatedArchitecture theme={theme} />
+						</WebGLErrorBoundary>
+						</Suspense>
+					</div>
+
+					{/* Orbiting tech cards */}
+					<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginTop: '12px' }}>
+						{techCards.map(tc => (
+							<div key={tc.label} className="snake-border" style={{
+								padding: '8px 12px', background: 'rgba(0,0,0,0.4)', borderRadius: '8px',
+								border: '1px solid var(--border)', backdropFilter: 'blur(8px)',
+								fontSize: '10px', fontFamily: 'var(--font-mono)', transition: 'all 0.3s ease',
+							}}>
+								<div style={{ color: 'var(--accent-hover)', fontWeight: 700, marginBottom: '2px' }}>{tc.label}</div>
+								<div style={{ color: 'var(--foreground)', opacity: 0.6 }}>{tc.desc}</div>
+							</div>
+						))}
+					</div>
+
+					{/* Agent Orb */}
+					<div style={{ display: 'flex', justifyContent: 'center', padding: '16px 0', borderTop: '1px solid var(--border)', marginTop: '12px' }}>
+						<AgentOrb state={orbState} />
+					</div>
+				</div>
+			</div>
+
+			{/* ═══ PIPELINE + DEBATE ═══ */}
+			<div className="grid-main" style={{ marginTop: '24px' }}>
+				{/* Pipeline */}
+				<div className="glass events-section">
+					<div className="card-title"><Zap size={16} style={{ color: 'var(--accent-hover)' }} /> КОНВЕЙЕР СИНАПТИЧЕСКОГО АНАЛИЗА (DECISION PIPELINE)</div>
+					<div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+						{pipelineStages.map(s => (
+							<div key={s.n} style={{
+								display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+								padding: '8px 14px', borderRadius: '8px', fontFamily: 'var(--font-mono)', fontSize: '12px',
+								background: s.status === 'active' ? 'rgba(0,255,85,0.05)' : 'rgba(15,15,25,0.3)',
+								border: `1px solid ${s.status === 'active' ? 'var(--accent-hover)' : 'rgba(255,255,255,0.03)'}`,
+								boxShadow: s.status === 'active' ? '0 0 15px rgba(0,255,85,0.08)' : 'none',
+								transform: s.status === 'active' ? 'scale(1.01)' : 'none',
+								transition: 'all 0.3s ease',
+							}}>
+								<div style={{ display: 'flex', gap: '10px' }}>
+									<span style={{ color: s.status === 'active' ? 'var(--accent-hover)' : 'var(--foreground)', opacity: s.status === 'pending' ? 0.3 : 0.5 }}>[{s.n}]</span>
+									<span style={{ color: s.status === 'done' ? 'var(--accent-hover)' : s.status === 'active' ? '#fff' : 'var(--foreground)', opacity: s.status === 'pending' ? 0.4 : 1, fontWeight: s.status === 'active' ? 700 : 400 }}>{s.label}</span>
+								</div>
+								<span style={{
+									fontSize: '11px', textTransform: 'uppercase', fontWeight: 700,
+									color: s.status === 'done' ? 'var(--accent-hover)' : s.status === 'active' ? 'var(--accent)' : 'var(--foreground)',
+									opacity: s.status === 'pending' ? 0.3 : 1,
+								}}>
+									{s.status === 'done' ? 'ГОТОВО' : s.status === 'active' ? 'ОБРАБОТКА' : 'ОЖИДАНИЕ'}
+								</span>
+							</div>
+						))}
+					</div>
+				</div>
+
+				{/* Synaptic Debate + Network Registry */}
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+					<div className="glass" style={{ padding: '20px' }}>
+						<div className="card-title"><Network size={16} style={{ color: 'var(--accent)' }} /> СИНАПТИЧЕСКИЙ АРБИТРАЖ РЕШЕНИЙ</div>
+						<div style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxHeight: '230px', overflowY: 'auto' }}>
+							{debates.map((d, i) => (
+								<div key={i} style={{
+									background: 'rgba(10,10,18,0.4)', border: '1px solid rgba(255,255,255,0.03)',
+									borderLeft: `3px solid ${d.color}`, borderRadius: '8px', padding: '12px', fontSize: '12px', lineHeight: 1.5,
+								}}>
+									<div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', fontFamily: 'var(--font-mono)', fontSize: '11px', fontWeight: 700 }}>
+										<span style={{ color: d.color }}>{d.agent}</span>
+										<span style={{ color: 'var(--foreground)', opacity: 0.3 }}>{d.time}</span>
+									</div>
+									<div style={{ color: 'var(--foreground)', opacity: 0.8 }}>{d.msg}</div>
+								</div>
+							))}
+						</div>
+					</div>
+
+					{/* Network Registry */}
+					<div className="glass" style={{ padding: '20px' }}>
+						<div className="card-title"><Globe size={16} style={{ color: 'var(--accent-hover)' }} /> СЕТЕВОЙ РЕЕСТР (ON-CHAIN)</div>
+						<div style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+							<div>Реестр контрактов: <span style={{ color: 'var(--accent)' }}>0xFA0b…8383</span></div>
+							<div>Идентификатор NFT: <span style={{ color: 'var(--accent-hover)' }}>#1 Identity NFT</span></div>
+							<div>Сетевой провайдер: <span style={{ color: 'var(--accent-hover)' }}>5000 (Mantle Mainnet)</span></div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			{/* ═══ LOG STREAM ═══ */}
+			<div className="glass" style={{ padding: '20px', marginTop: '24px' }}>
+				<div className="card-title"><Terminal size={16} /> ЖУРНАЛ СИНАПТИЧЕСКОЙ АКТИВНОСТИ ЛОГОВ</div>
+				<div ref={logRef} style={{
+					height: '250px', overflowY: 'auto', fontFamily: 'var(--font-mono)', fontSize: '12px', lineHeight: 1.8,
+					padding: '16px', background: 'rgba(4,4,6,0.9)', border: '1px solid var(--border)', borderRadius: '12px',
+					boxShadow: 'inset 0 2px 10px rgba(0,0,0,0.8)',
+				}}>
+					{logEntries.map((l, i) => (
+						<div key={i} style={{ display: 'flex', gap: '12px', color: 'var(--foreground)', opacity: 0.7, borderBottom: '1px solid rgba(255,255,255,0.01)', padding: '2px 0' }}>
+							<span style={{ color: 'var(--foreground)', opacity: 0.3, minWidth: '90px' }}>{now}</span>
+							<span style={{ color: l.type === 'success' ? 'var(--accent-hover)' : 'var(--accent)', fontWeight: 700, minWidth: '100px' }}>{l.tag}</span>
+							<span>{l.msg}</span>
+						</div>
+					))}
+				</div>
+			</div>
+
+			{/* ═══ CONTROL BAR ═══ */}
+			<div className="control-bar">
+				<button className="lusion-btn-primary">[ ЗАПУСТИТЬ СИНАПТИЧЕСКИЙ АНАЛИЗ ]</button>
+				<button className="lusion-btn connect-btn-hover-fx"><span>[ ЭМУЛИРОВАТЬ ОНЧЕЙН-МИНТ ]</span></button>
+			</div>
+
+			{/* ═══ FOOTER ═══ */}
+			<div className="glass footer-bar">
+				<span>Сборка: v4.2-триархия · Реактор →</span>
+				<span style={{ color: 'var(--accent-hover)' }}>⬡ СИСТЕМА АКТИВНА · ДОМЕН MANTLE</span>
+				<span>Последнее обновление: {now}</span>
+			</div>
+
+			{/* Theme switcher */}
+			<button onClick={() => setTheme(t => t === 'dark' ? 'light' : 'dark')} className="lusion-btn connect-btn-hover-fx" style={{ position: 'fixed', bottom: '25px', right: '25px', zIndex: 100 }}>
+				<span>{theme === 'dark' ? '◉ DARK' : '◌ LIGHT'}</span>
+			</button>
+		</>
+	);
+}
