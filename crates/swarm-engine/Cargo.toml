@@ -12,6 +12,7 @@ tracing = { workspace = true }
 tracing-subscriber = { workspace = true }
 chrono = { workspace = true }
 dotenvy = { workspace = true }
+alloy = { workspace = true }
 
 # D1: Ouroboros Brain
 ouroboros-brain = { path = "../ouroboros-brain" }

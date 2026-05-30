@@ -308,11 +308,25 @@ export default function App() {
 					<div className="glass" style={{ padding: '20px' }}>
 						<div className="card-title"><Globe size={16} style={{ color: 'var(--accent-hover)' }} /> NETWORK REGISTRY (ON-CHAIN)</div>
 						<div style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-							<div>Contract Registry: <span style={{ color: 'var(--accent)' }}>{telem.registryAddress}</span></div>
-							<div>NFT Identifier: <span style={{ color: 'var(--accent-hover)' }}>#{telem.agentId} Identity NFT</span></div>
-							<div>Network Provider: <span style={{ color: 'var(--accent-hover)' }}>{telem.chainId} (Mantle Mainnet)</span></div>
-						</div>
+						<div>Contract Registry: <span style={{ color: 'var(--accent)' }}>{telem.registryAddress}</span></div>
+						<div>NFT Identifier: <span style={{ color: 'var(--accent-hover)' }}>#{telem.agentId} Identity NFT</span></div>
+						<div>Network Provider: <span style={{ color: 'var(--accent-hover)' }}>{telem.chainId} (Mantle Mainnet)</span></div>
+						<div>TX Mode: <span style={{ color: telem.liveMode ? '#00ff88' : 'var(--accent-hover)' }}>
+							{telem.liveMode ? '◉ LIVE BROADCAST' : '○ DRY-RUN (calldata only)'}
+						</span></div>
+						{telem.txHashes.length > 0 && (
+							<div style={{ marginTop: '8px', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '8px' }}>
+								<div style={{ marginBottom: '6px', opacity: 0.5 }}>On-Chain Transactions:</div>
+								{telem.txHashes.slice(-5).map((hash, i) => (
+									<a key={i} href={`https://explorer.mantle.xyz/tx/${hash}`} target="_blank" rel="noopener noreferrer"
+										style={{ color: 'var(--accent)', display: 'block', fontSize: '11px', opacity: 0.8, textDecoration: 'none', marginBottom: '2px' }}>
+										→ {hash.slice(0, 10)}…{hash.slice(-8)}
+									</a>
+								))}
+							</div>
+						)}
 					</div>
+				</div>
 				</div>
 			</section>
 

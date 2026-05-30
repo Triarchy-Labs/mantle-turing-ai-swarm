@@ -34,7 +34,8 @@ use hive_intel::benchmark::{SmaCrossover, BenchmarkResult, BenchmarkStats};
 use x402_consensus::engine::{Action, AgentVote, PolicyGovernor};
 use x402_risk::engine::{AtrStops, MarketRegime, RiskGate};
 use x402_memory::engine::create_liquidation_edge;
-use mantle_chain::onchain::{encode_verdict_log, encode_add_reputation, AGENT_TOKEN_ID};
+use mantle_chain::onchain::{encode_verdict_log, encode_add_reputation, AGENT_TOKEN_ID, DEPLOYMENT_WALLET};
+use mantle_chain::wallet::{broadcast_verdict, broadcast_reputation};
 
 use std::path::PathBuf;
 use std::sync::Arc;
@@ -332,7 +333,7 @@ fn log_memory_edge(symbol: &str, verdict: Verdict, score: f64) {
 // DECISION CYCLE — ALL DIMENSIONS
 // ═══════════════════════════════════════════════════════════
 
-async fn decision_cycle(
+async fn decision_cycle<P: alloy::providers::Provider>(
     client: &OpenRouterClient, debate_pool: &ModelPool,
     prompts: &PromptsFile, models: &ModelsFile, thresholds: &ThresholdsConfig,
     state: &SwarmState, ml: &LocalModel, risk: &RiskGate,
@@ -340,6 +341,8 @@ async fn decision_cycle(
     decision_mem: &DecisionMemory,
     sma_engines: &Mutex<std::collections::HashMap<String, SmaCrossover>>,
     bench_stats: &Mutex<BenchmarkStats>,
+    signed_provider: &Option<P>,
+    tx_hashes: &Mutex<Vec<String>>,
 ) {
     let cycle = state.increment_cycle();
     tracing::info!("━━━ CYCLE {} ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", cycle);
@@ -542,13 +545,38 @@ async fn decision_cycle(
             &format!("{:?}", regime),
             cycle,
         );
-        let _rep_calldata = encode_add_reputation(
-            (verdict.score.abs() * 100.0) as u64,
-        );
+        let rep_delta = (verdict.score.abs() * 100.0) as u64;
+        let _rep_calldata = encode_add_reputation(rep_delta);
+
         tracing::info!("🚀 EXECUTE [{}]: {} ${:.2} | score={:.2} conf={:.1}% | regime={:?}",
             data.symbol, verdict.decision, final_size, verdict.score, verdict.confidence, regime);
-        tracing::info!("⛓️  ON-CHAIN [{}]: verdict_log={}B reputation_delta={} agent=#{}",
-            data.symbol, verdict_calldata.len(), (verdict.score.abs() * 100.0) as u64, AGENT_TOKEN_ID);
+
+        // Live on-chain broadcast (if MANTLE_PRIVATE_KEY is set)
+        if let Some(provider) = signed_provider {
+            // Broadcast verdict as self-addressed tx with calldata
+            match broadcast_verdict(
+                provider, DEPLOYMENT_WALLET,
+                &data.symbol, &format!("{}", verdict.decision),
+                verdict.score, verdict.confidence, &format!("{:?}", regime), cycle,
+            ).await {
+                Ok(hash) => {
+                    tracing::info!("⛓️  TX CONFIRMED [{}]: verdict → {}", data.symbol, hash);
+                    tx_hashes.lock().unwrap().push(hash);
+                }
+                Err(e) => tracing::warn!("⛓️  TX FAILED [{}]: {}", data.symbol, e),
+            }
+            // Broadcast reputation increment
+            match broadcast_reputation(provider, rep_delta).await {
+                Ok(hash) => {
+                    tracing::info!("⛓️  TX CONFIRMED: reputation +{} → {}", rep_delta, hash);
+                    tx_hashes.lock().unwrap().push(hash);
+                }
+                Err(e) => tracing::warn!("⛓️  REP TX FAILED: {}", e),
+            }
+        } else {
+            tracing::info!("⛓️  ON-CHAIN [{}]: verdict_log={}B rep_delta={} agent=#{} (dry-run, set MANTLE_PRIVATE_KEY to broadcast)",
+                data.symbol, verdict_calldata.len(), rep_delta, AGENT_TOKEN_ID);
+        }
 
         store_result(state, data, &verdict, &debate, true);
     }
@@ -628,9 +656,19 @@ async fn main() {
     let risk = RiskGate::new(1000.0);
     tracing::info!("⚡ D4 X402: PolicyGovernor(3v) + RiskGate(Kelly/Kill/Bucket) + HyperEdge Memory");
 
-    // D5: Mantle Chain
+    // D5: Mantle Chain — signed provider (optional, for live tx broadcast)
+    let signed_provider = match mantle_chain::wallet::create_signed_provider(mantle_chain::provider::MANTLE_RPC) {
+        Ok(p) => {
+            tracing::info!("⛓️  D5 Mantle: LIVE TX MODE — signed provider ready");
+            Some(p)
+        }
+        Err(e) => {
+            tracing::warn!("⛓️  D5 Mantle: DRY-RUN MODE — {} (set MANTLE_PRIVATE_KEY for live txs)", e);
+            None
+        }
+    };
     let _mantle_provider = mantle_chain::provider::create_provider(mantle_chain::provider::MANTLE_RPC);
-    tracing::info!("⛓️ D5 Mantle: Chain 5000 provider ready | ERC8004={} | Agent #{}",
+    tracing::info!("⛓️  D5 Mantle: Chain 5000 provider ready | ERC8004={} | Agent #{}",
         mantle_chain::onchain::ERC8004_REGISTRY, AGENT_TOKEN_ID);
 
     // State
@@ -653,17 +691,22 @@ async fn main() {
     let sma_engines: Mutex<std::collections::HashMap<String, SmaCrossover>> = Mutex::new(std::collections::HashMap::new());
     let bench_stats: Mutex<BenchmarkStats> = Mutex::new(BenchmarkStats::default());
 
+    // Tx hash tracking for telemetry
+    let tx_hashes: Mutex<Vec<String>> = Mutex::new(Vec::new());
+
     loop {
         cycle_count += 1;
         decision_cycle(&client, &debate_pool, &prompts, &models, &thresholds,
             &state, &ml_model, &risk, &paper, &trade_memories, &decision_mem,
-            &sma_engines, &bench_stats).await;
+            &sma_engines, &bench_stats, &signed_provider, &tx_hashes).await;
 
         // Update telemetry state after each cycle
         {
             let mut t = telem.write().await;
             t.cycle = cycle_count;
             t.uptime_secs = start_time.elapsed().as_secs();
+            t.live_mode = signed_provider.is_some();
+            t.tx_hashes = tx_hashes.lock().unwrap().clone();
             t.symbols = state.consensus.iter().map(|entry| {
                 let r = entry.value();
                 telemetry::SymbolTelemetry {
