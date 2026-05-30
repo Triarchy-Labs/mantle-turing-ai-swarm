@@ -71,57 +71,53 @@ fn mock_market_data() -> Vec<SymbolData> {
     ]
 }
 
-/// Fetch live market data from DexScreener, falling back to mock on failure.
+/// Fetch live market data from DexScreener with FULL signal enrichment.
+/// Populates ALL SymbolData fields from real API response.
 async fn live_market_data() -> Vec<SymbolData> {
     let mut data = Vec::new();
-    let ts = chrono::Utc::now().timestamp();
 
-    // Fetch MNT
-    match mantle_chain::dex::fetch_live_price("MNT").await {
-        Ok(price) => {
-            tracing::info!("📡 LIVE MNT @ ${:.4} (DexScreener)", price);
-            data.push(SymbolData {
-                symbol: "MNT".into(), price, price_24h_change: 0.0,
-                volume_24h: 0.0, volume_ratio: 1.0,
-                funding_rate: 0.0, open_interest: 0.0,
-                oi_change_pct: 0.0, timestamp: ts,
-            });
-        }
-        Err(e) => {
-            tracing::warn!("⚠️ MNT live price failed: {e}, using mock");
-            data.push(SymbolData {
-                symbol: "MNT".into(), price: 0.82, price_24h_change: -3.2,
-                volume_24h: 45_000_000.0, volume_ratio: 1.8,
-                funding_rate: -0.0004, open_interest: 120_000_000.0,
-                oi_change_pct: -2.1, timestamp: ts,
-            });
-        }
-    }
+    for sym in &["MNT", "WETH"] {
+        match mantle_chain::dex::fetch_rich_data(sym).await {
+            Ok(d) => {
+                // Derive synthetic signals from DexScreener data
+                let volume_ratio = d.volume_acceleration().max(0.1).min(5.0);
+                // Synthetic funding rate: h1 change scaled to perp funding convention
+                let funding_rate = d.price_change_h1 / 100.0 * 0.01;
+                // Buy/sell imbalance as OI proxy (>1 = net long, <1 = net short)
+                let bs_ratio = d.buy_sell_ratio();
+                let oi_change = (bs_ratio - 1.0) * 10.0; // scale to %
 
-    // Fetch WETH
-    match mantle_chain::dex::fetch_live_price("WETH").await {
-        Ok(price) => {
-            tracing::info!("📡 LIVE WETH @ ${:.2} (DexScreener)", price);
-            data.push(SymbolData {
-                symbol: "WETH".into(), price, price_24h_change: 0.0,
-                volume_24h: 0.0, volume_ratio: 1.0,
-                funding_rate: 0.0, open_interest: 0.0,
-                oi_change_pct: 0.0, timestamp: ts,
-            });
-        }
-        Err(e) => {
-            tracing::warn!("⚠️ WETH live price failed: {e}, using mock");
-            data.push(SymbolData {
-                symbol: "WETH".into(), price: 2650.0, price_24h_change: 1.4,
-                volume_24h: 180_000_000.0, volume_ratio: 1.2,
-                funding_rate: 0.0001, open_interest: 890_000_000.0,
-                oi_change_pct: 0.8, timestamp: ts,
-            });
+                tracing::info!(
+                    "📡 LIVE {} @ ${:.4} | 24h:{:+.2}% | vol:${:.0} | B/S:{:.2} | liq:${:.0}k | dex:{}",
+                    d.symbol, d.price, d.price_change_h24, d.volume_h24,
+                    bs_ratio, d.liquidity_usd / 1000.0, d.dex_id
+                );
+
+                data.push(SymbolData {
+                    symbol: d.symbol.clone(),
+                    price: d.price,
+                    price_24h_change: d.price_change_h24,
+                    volume_24h: d.volume_h24,
+                    volume_ratio,
+                    funding_rate,
+                    open_interest: d.liquidity_usd,  // use liquidity as OI proxy
+                    oi_change_pct: oi_change,
+                    timestamp: d.timestamp,
+                });
+            }
+            Err(e) => {
+                tracing::warn!("⚠️ {} live fetch failed: {e}, using mock", sym);
+                let mock = mock_market_data();
+                if let Some(m) = mock.iter().find(|m| m.symbol == *sym) {
+                    data.push(m.clone());
+                }
+            }
         }
     }
 
     data
 }
+
 
 // ═══════════════════════════════════════════════════════════
 // REGIME DETECTION — 4-State Market Classifier

@@ -115,28 +115,64 @@ pub async fn fetch_token_balance<P: Provider>(
 // LIVE MARKET DATA — RPC-based price fetch for swarm pipeline
 // ═══════════════════════════════════════════════════════════
 
-/// MarketDataPoint — live on-chain data for a single token.
-#[derive(Debug, Clone)]
-pub struct MarketDataPoint {
+/// Rich market data from DexScreener — feeds regime detector + judge.
+#[derive(Debug, Clone, serde::Serialize)]
+pub struct DexScreenerData {
     pub symbol: String,
     pub price: f64,
-    pub wallet_balance: f64,
+    pub price_change_h1: f64,
+    pub price_change_h6: f64,
+    pub price_change_h24: f64,
+    pub volume_h24: f64,
+    pub volume_h6: f64,
+    pub volume_h1: f64,
+    pub buys_h24: u64,
+    pub sells_h24: u64,
+    pub liquidity_usd: f64,
+    pub dex_id: String,
+    pub pair_address: String,
     pub timestamp: i64,
 }
 
-/// Fetch live MNT price from a known oracle or DEX pool.
+impl DexScreenerData {
+    /// Buy/sell ratio as a sentiment indicator.
+    /// > 1.0 = more buys (bullish), < 1.0 = more sells (bearish).
+    pub fn buy_sell_ratio(&self) -> f64 {
+        if self.sells_h24 == 0 { return 2.0; }
+        self.buys_h24 as f64 / self.sells_h24 as f64
+    }
+
+    /// Volume-to-liquidity ratio — measures trading intensity.
+    /// > 0.1 = active, > 0.5 = very active, > 1.0 = extremely active.
+    pub fn volume_intensity(&self) -> f64 {
+        if self.liquidity_usd < 1.0 { return 0.0; }
+        self.volume_h24 / self.liquidity_usd
+    }
+
+    /// Hourly volume acceleration — is volume picking up?
+    /// > 1.0 = accelerating, < 1.0 = decelerating.
+    pub fn volume_acceleration(&self) -> f64 {
+        if self.volume_h6 < 1.0 { return 1.0; }
+        // h1 volume * 6 vs h6 volume (normalized to same timeframe)
+        (self.volume_h1 * 6.0) / self.volume_h6
+    }
+}
+
+/// Fetch rich market data from DexScreener for a given token.
 ///
-/// Strategy: Read the WMNT/USDC pool reserves to derive spot price.
-/// Fallback: Use a public API endpoint (CoinGecko/DexScreener).
-pub async fn fetch_live_price(symbol: &str) -> Result<f64, String> {
-    // Use DexScreener API for Mantle token prices (free, no key required)
-    let pair_query = match symbol.to_uppercase().as_str() {
-        "MNT" | "WMNT" => "mantle/0x78c1b0C915c4FAA5FffA6CAbf0219DA63d7f4cb8",
-        "WETH" | "ETH" => "mantle/0xdEAddEaDdeadDEadDEADDEaddEADDEAddead1111",
+/// Extracts: price, 24h/6h/1h change, volume, buy/sell txns, liquidity, dex_id.
+/// Uses the highest-liquidity Mantle pair.
+pub async fn fetch_rich_data(symbol: &str) -> Result<DexScreenerData, String> {
+    let token_addr = match symbol.to_uppercase().as_str() {
+        "MNT" | "WMNT" => WMNT,
+        "WETH" | "ETH" => WETH,
         _ => return Err(format!("unknown symbol: {symbol}")),
     };
 
-    let url = format!("https://api.dexscreener.com/latest/dex/tokens/{}", pair_query.split('/').last().unwrap_or(""));
+    let url = format!(
+        "https://api.dexscreener.com/latest/dex/tokens/{}",
+        token_addr
+    );
 
     let resp = reqwest::Client::new()
         .get(&url)
@@ -149,42 +185,62 @@ pub async fn fetch_live_price(symbol: &str) -> Result<f64, String> {
         .await
         .map_err(|e| format!("DexScreener parse failed: {e}"))?;
 
-    // Extract price from first pair
-    if let Some(pairs) = json.get("pairs").and_then(|p| p.as_array()) {
-        if let Some(first) = pairs.first() {
-            if let Some(price_str) = first.get("priceUsd").and_then(|p| p.as_str()) {
-                return price_str.parse::<f64>()
-                    .map_err(|e| format!("price parse: {e}"));
-            }
-        }
-    }
+    let pairs = json.get("pairs")
+        .and_then(|p| p.as_array())
+        .ok_or_else(|| "No pairs in response".to_string())?;
 
-    Err(format!("No price data for {symbol}"))
-}
+    // Find highest-liquidity Mantle pair
+    let best = pairs.iter()
+        .filter(|p| p.get("chainId").and_then(|c| c.as_str()) == Some("mantle"))
+        .max_by(|a, b| {
+            let liq_a = a.pointer("/liquidity/usd").and_then(|v| v.as_f64()).unwrap_or(0.0);
+            let liq_b = b.pointer("/liquidity/usd").and_then(|v| v.as_f64()).unwrap_or(0.0);
+            liq_a.partial_cmp(&liq_b).unwrap_or(std::cmp::Ordering::Equal)
+        })
+        .ok_or_else(|| format!("No Mantle pairs for {symbol}"))?;
 
-/// Fetch comprehensive live market data for a token.
-/// Combines on-chain balance + external price feed.
-pub async fn fetch_market_data<P: Provider>(
-    provider: &P,
-    symbol: &str,
-    wallet: &str,
-) -> Result<MarketDataPoint, String> {
-    let price = fetch_live_price(symbol).await.unwrap_or(0.0);
+    let price = best.get("priceUsd")
+        .and_then(|p| p.as_str())
+        .and_then(|s| s.parse::<f64>().ok())
+        .unwrap_or(0.0);
 
-    let balance = if symbol.to_uppercase() == "MNT" || symbol.to_uppercase() == "WMNT" {
-        fetch_mnt_balance(provider, wallet).await.unwrap_or(0.0)
-    } else if let Some(token_addr) = token_address(symbol) {
-        fetch_token_balance(provider, token_addr, wallet).await.unwrap_or(0.0)
-    } else {
-        0.0
-    };
+    let price_change_h1 = best.pointer("/priceChange/h1").and_then(|v| v.as_f64()).unwrap_or(0.0);
+    let price_change_h6 = best.pointer("/priceChange/h6").and_then(|v| v.as_f64()).unwrap_or(0.0);
+    let price_change_h24 = best.pointer("/priceChange/h24").and_then(|v| v.as_f64()).unwrap_or(0.0);
 
-    Ok(MarketDataPoint {
-        symbol: symbol.to_string(),
+    let volume_h24 = best.pointer("/volume/h24").and_then(|v| v.as_f64()).unwrap_or(0.0);
+    let volume_h6 = best.pointer("/volume/h6").and_then(|v| v.as_f64()).unwrap_or(0.0);
+    let volume_h1 = best.pointer("/volume/h1").and_then(|v| v.as_f64()).unwrap_or(0.0);
+
+    let buys_h24 = best.pointer("/txns/h24/buys").and_then(|v| v.as_u64()).unwrap_or(0);
+    let sells_h24 = best.pointer("/txns/h24/sells").and_then(|v| v.as_u64()).unwrap_or(0);
+
+    let liquidity_usd = best.pointer("/liquidity/usd").and_then(|v| v.as_f64()).unwrap_or(0.0);
+
+    let dex_id = best.get("dexId").and_then(|d| d.as_str()).unwrap_or("unknown").to_string();
+    let pair_address = best.get("pairAddress").and_then(|d| d.as_str()).unwrap_or("").to_string();
+
+    Ok(DexScreenerData {
+        symbol: symbol.to_uppercase(),
         price,
-        wallet_balance: balance,
+        price_change_h1,
+        price_change_h6,
+        price_change_h24,
+        volume_h24,
+        volume_h6,
+        volume_h1,
+        buys_h24,
+        sells_h24,
+        liquidity_usd,
+        dex_id,
+        pair_address,
         timestamp: chrono::Utc::now().timestamp(),
     })
+}
+
+/// Simple price-only fetch (backward compat).
+pub async fn fetch_live_price(symbol: &str) -> Result<f64, String> {
+    fetch_rich_data(symbol).await.map(|d| d.price)
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -213,18 +269,48 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_fetch_live_price_mnt() {
-        // This test hits the real DexScreener API
-        match fetch_live_price("MNT").await {
-            Ok(price) => {
-                assert!(price > 0.0, "MNT price should be > 0");
-                assert!(price < 100.0, "MNT price sanity check");
-                println!("MNT live price: ${:.4}", price);
+    async fn test_fetch_rich_data_mnt() {
+        match fetch_rich_data("MNT").await {
+            Ok(data) => {
+                assert!(data.price > 0.0, "MNT price should be > 0");
+                assert!(data.price < 100.0, "MNT price sanity check");
+                println!("═══ DexScreener Rich Data ═══");
+                println!("  Symbol:     {}", data.symbol);
+                println!("  Price:      ${:.4}", data.price);
+                println!("  24h Change: {:.2}%", data.price_change_h24);
+                println!("  6h Change:  {:.2}%", data.price_change_h6);
+                println!("  1h Change:  {:.2}%", data.price_change_h1);
+                println!("  Volume 24h: ${:.2}", data.volume_h24);
+                println!("  Volume 6h:  ${:.2}", data.volume_h6);
+                println!("  Volume 1h:  ${:.2}", data.volume_h1);
+                println!("  Buys 24h:   {}", data.buys_h24);
+                println!("  Sells 24h:  {}", data.sells_h24);
+                println!("  Liquidity:  ${:.2}", data.liquidity_usd);
+                println!("  DEX:        {}", data.dex_id);
+                println!("  Pair:       {}", data.pair_address);
+                println!("  B/S Ratio:  {:.3}", data.buy_sell_ratio());
+                println!("  Vol Intens: {:.3}", data.volume_intensity());
+                println!("  Vol Accel:  {:.3}", data.volume_acceleration());
             }
             Err(e) => {
-                // Network errors acceptable in CI
-                println!("Skipping live price test: {e}");
+                println!("Skipping live data test: {e}");
             }
         }
+    }
+
+    #[test]
+    fn test_dex_screener_data_methods() {
+        let data = DexScreenerData {
+            symbol: "MNT".into(), price: 0.65,
+            price_change_h1: 0.3, price_change_h6: -0.26, price_change_h24: 2.33,
+            volume_h24: 261589.82, volume_h6: 34040.51, volume_h1: 10562.38,
+            buys_h24: 165, sells_h24: 253,
+            liquidity_usd: 3621492.55,
+            dex_id: "agni".into(), pair_address: "0xtest".into(),
+            timestamp: 0,
+        };
+        assert!((data.buy_sell_ratio() - 0.652).abs() < 0.01);
+        assert!((data.volume_intensity() - 0.0722).abs() < 0.01);
+        assert!(data.volume_acceleration() > 0.0);
     }
 }
