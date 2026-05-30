@@ -1,8 +1,9 @@
 # Mantle AI Swarm — Autonomous Trading Intelligence
 
-> 12-crate Rust workspace. 22,000+ LOC. Zero external databases.
-> LLM consensus engine + neural trading brain + collective intelligence + on-chain execution.
-> Built for Mantle Network. Designed for the Turing Test.
+> 12-crate Rust workspace. 22,895 LOC. Zero external databases.
+> 6 Intelligence Layers. 4-state regime detection. 5-filter pre-trade risk engine.
+> LLM consensus + neural brain + collective intelligence + on-chain execution.
+> Built for the Mantle Turing Test Hackathon 2026.
 
 ## Architecture
 
@@ -35,37 +36,45 @@
 
 | Crate | LOC | Role |
 |-------|-----|------|
-| **ouroboros-brain** | 3,987 | LLM consensus: multi-model debate, 15-factor judge, decision memory, circuit breaker |
+| **ouroboros-brain** | 3,987 | LLM consensus: multi-model debate, 15-factor judge, decision memory, circuit breaker, pre-trade risk engine (5 institutional filters) |
 | **titan-core** | 4,465 | Neural trading brain: 8-gate entry pipeline, Kelly risk sizing, trailing SL, position recovery |
-| **hive-intel** | 11,991 | Collective intelligence: 40 cognitive modules, SIMD turbo, ML local (<1μs), backtester, paper engine |
+| **hive-intel** | 11,991 | Collective intelligence: 40+ cognitive modules, SIMD turbo, ML local (<1μs), regime detection (4-state HMM), affective memory (EWMA), hybrid recall (OWM+SIMD+anti-survivorship), paper engine |
 | **mantle-chain** | 118 | Alloy 2.0 on-chain adapter for Mantle (Chain 5000) |
-| **swarm-engine** | 30 | Main orchestrator wiring all dimensions |
+| **swarm-engine** | 490 | Main orchestrator — v4 pipeline with 6 intelligence layers |
 | **x402-consensus** | 398 | PolicyGovernor — 4-voter consensus engine for trade decisions |
-| **x402-risk** | 555 | Kelly sizing, KillSwitch, ATR stops, BucketCap risk management |
+| **x402-risk** | 555 | Regime-aware Kelly sizing, KillSwitch, ATR stops, BucketCap risk management |
 | **x402-polymarket** | 83 | Gamma API — live prediction market sentiment oracle |
 | **x402-memory** | 124 | HyperEdge graph + sled DB persistent memory |
 | **x402-sniper** | 524 | DEX execution + x402 bounty protocol client |
 | **x402-liquidator** | 111 | On-chain flash liquidation via ILendingPool |
 | **core-ipc** | 75 | mmap-based zero-copy inter-agent communication |
 
-## The Swarm Decision Flow
+## The v4 Decision Pipeline (6 Intelligence Layers)
 
 ```
-Market Signal → Ouroboros Debate (Bull vs Bear LLM)
-                     ↓
-              15-Factor Judge (scoring engine)
-                     ↓
-              Titan Entry Pipeline (8 gates)
-                     ↓
-              Hive Mind Validation (ML + memory + DQS)
-                     ↓
-              X402 Consensus Vote (4 agents agree?)
-                     ↓
-              Risk Gate (Kelly sizing + KillSwitch)
-                     ↓
-              Mantle Chain Execution (on-chain tx)
-                     ↓
-              Reputation Update (ERC-8004 NFT)
+Market Data
+    ↓
+╔═ REGIME DETECTION (4-state HMM: TrendingUp/Down/Ranging/Volatile) ═╗
+    ↓
+╔═ OUROBOROS LLM DEBATE (Bull vs Bear, 3 models, 5 vendors) ═╗
+    ↓
+╔═ HIVE MIND ML (7-feature LogReg <1μs + Hybrid Recall + EWMA Affective) ═╗
+    ↓
+╔═ 15-FACTOR JUDGE (TOML-configurable scoring engine) ═╗
+    ↓
+╔═ PRE-TRADE RISK (5 institutional filters: drawdown/streak/correlation/cap/confidence) ═╗
+    ↓
+╔═ TITAN ENTRY (8-gate pipeline: daily loss, symbol streak, imbalance, margin) ═╗
+    ↓
+╔═ X402 CONSENSUS (PolicyGovernor: signal + trend + macro = 3-voter majority) ═╗
+    ↓
+╔═ RISK GATE (Regime-aware Kelly × PreTrade factor × Risk Appetite dampening) ═╗
+    ↓
+╔═ PAPER TRADE (ATR 1.5× stops, 2:1 R:R, circuit breaker) ═╗
+    ↓
+╔═ DECISION JOURNAL (self-learning memory → future prompt injection) ═╗
+    ↓
+╔═ MANTLE CHAIN (ERC-8004 reputation update + on-chain tx logging) ═╗
 ```
 
 ## 15-Factor Judge (Ouroboros)
@@ -88,16 +97,26 @@ Market Signal → Ouroboros Debate (Bull vs Bear LLM)
 | 14 | HiveMind Memory | Pattern recall | ±3.0 |
 | 15 | Meta Judge | Independent LLM | ±1.0 |
 
+## Memory Stack (5 Layers)
+
+| Layer | Technology | Purpose |
+|-------|-----------|--------|
+| **L0** | `DashMap` + `Arc` | Real-time state (lock-free, in-memory) |
+| **L1** | Hybrid Recall (OWM + SIMD cosine + anti-survivorship) | Episodic trade memory with forced negative inclusion |
+| **L2** | Decision Memory (LLM journal) | Self-learning trade journal → prompt injection |
+| **L3** | HyperEdge Graph (sled DB) | Persistent on-chain event memory |
+| **L4** | Paper Engine (SL/TP/circuit breaker) | Simulation with ATR-based risk |
+
 ## Performance
 
 | Feature | Metric |
 |---------|--------|
 | ML local inference | < 1μs (logistic regression) |
 | SIMD cosine similarity | 4x speedup (AVX2) |
-| Memory Castle lookups | O(1) DashMap |
-| IPC latency | ~150μs (mmap zero-copy) |
+| Regime detection | 4-state HMM classifier |
+| Memory recall | Hybrid OWM+Vector blend |
+| Position sizing | 3-factor damped Kelly (regime × pretrade × appetite) |
 | Binary size (release) | LTO fat + strip + panic=abort |
-| Test coverage | 389 tests passing |
 
 ## On-Chain (Mantle Mainnet)
 
@@ -166,6 +185,8 @@ mantle-ai-swarm/
 
 ## Origin
 
-Forged from three battle-tested trading engines and unified for the Mantle Turing Test Hackathon.
+Converged from three battle-tested trading engines — Ouroboros (LLM brain), Titan (execution), Hive Mind (intelligence) — and unified with X402 on-chain infrastructure for the Mantle Turing Test Hackathon 2026.
 
-Built by Triarchy Labs.
+22,895 lines of Rust. 12 crates. 6 intelligence layers. Zero compromises.
+
+Built by [Triarchy Labs](https://github.com/Triarchy-Labs).
