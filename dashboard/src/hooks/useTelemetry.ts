@@ -60,9 +60,11 @@ interface TelemetryResponse {
   cycle: number;
   pipeline_stage: number;
   pipeline_total: number;
+  live_mode: boolean;
   symbols: SymbolTelemetry[];
   debates: DebateEntry[];
   log_entries: LogEntry[];
+  tx_hashes: string[];
   paper_stats: PaperStats | null;
   benchmark: BenchmarkTelemetry | null;
   pipeline: string;
@@ -84,6 +86,7 @@ export interface MarketRow {
 
 export interface TelemetryData {
   connected: boolean;
+  liveMode: boolean;
   cycle: number;
   uptimeSecs: number;
   pipelineStage: number;
@@ -91,6 +94,7 @@ export interface TelemetryData {
   markets: MarketRow[];
   debates: { agent: string; color: string; msg: string; time: string }[];
   logs: { tag: string; msg: string; type: string; off: number }[];
+  txHashes: string[];
   pnl: string;
   winRate: string;
   version: string;
@@ -125,6 +129,7 @@ const MOCK_LOGS = [
 
 const MOCK_DATA: TelemetryData = {
   connected: false,
+  liveMode: false,
   cycle: 0,
   uptimeSecs: 0,
   pipelineStage: 10,
@@ -136,6 +141,7 @@ const MOCK_DATA: TelemetryData = {
   ],
   debates: MOCK_DEBATES,
   logs: MOCK_LOGS,
+  txHashes: [],
   pnl: '$1,444.91',
   winRate: '75.7%',
   version: 'v4.2-triarchy',
@@ -204,6 +210,7 @@ function mapResponse(resp: TelemetryResponse): TelemetryData {
 
   return {
     connected: true,
+    liveMode: resp.live_mode ?? false,
     cycle: resp.cycle,
     uptimeSecs: resp.uptime_secs,
     pipelineStage: resp.pipeline_stage,
@@ -211,6 +218,7 @@ function mapResponse(resp: TelemetryResponse): TelemetryData {
     markets: markets.length > 0 ? markets : MOCK_DATA.markets,
     debates,
     logs,
+    txHashes: resp.tx_hashes ?? [],
     pnl: ps ? `$${ps.total_pnl.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : MOCK_DATA.pnl,
     winRate: ps ? `${(ps.win_rate * 100).toFixed(1)}%` : MOCK_DATA.winRate,
     version: resp.version,
