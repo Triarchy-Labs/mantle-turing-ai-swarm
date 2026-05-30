@@ -422,7 +422,7 @@ async fn decision_cycle<P: alloy::providers::Provider>(
         // D3: Hive Mind — ML + Hybrid Recall (OWM + vector + anti-survivorship)
         let (ml_dir, ml_conf) = run_ml_prediction(ml, data);
         let memories = trade_memories.lock().unwrap();
-        let _memory_boost = run_memory_recall(data, &affective, &memories);
+        let memory_boost = run_memory_recall(data, &affective, &memories);
         drop(memories);
 
         // L2: Decision Memory — inject past context into judge
@@ -514,11 +514,57 @@ async fn decision_cycle<P: alloy::providers::Provider>(
             tracing::info!("💰 Size [{}]: ${:.2} too small after dampening — skip", data.symbol, final_size);
             store_result(state, data, &verdict, &debate, false); continue;
         }
-        tracing::info!("💰 Final Size [{}]: ${:.2} (raw=${:.2} × pretrade={:.2} × appetite={:.2})",
-            data.symbol, final_size, raw_size, risk_check.max_size_factor, risk_app);
+
+        // D3: Hive Mind — Decision Quality Score (5-factor pre-trade gate)
+        let dqs_engine = hive_intel::dqs::DqsEngine::new();
+        let dqs_result = {
+            let pe = paper.lock().unwrap();
+            let dd = if pe.peak_equity > 0.0 { ((pe.peak_equity - pe.equity) / pe.peak_equity * 100.0).max(0.0) } else { 0.0 };
+            let losses = pe.pnl_history.iter().rev().take_while(|p| **p < 0.0).count() as u32;
+            let wr = {
+                let total = pe.closed_trades.len();
+                if total > 0 { pe.closed_trades.iter().filter(|t| t.pnl > 0.0).count() as f64 / total as f64 } else { 0.5 }
+            };
+            dqs_engine.compute(&hive_intel::dqs::DqsInput {
+                regime_win_rate: Some(wr),
+                overall_win_rate: wr,
+                proposed_lot: final_size,
+                kelly_fraction: None,
+                owm_score: memory_boost,
+                drawdown_pct: dd,
+                consecutive_losses: losses,
+                confidence: verdict.confidence / 100.0,
+                avg_pnl_r_similar: verdict.score,
+            })
+        };
+        let final_size = final_size * dqs_result.position_multiplier;
+        if dqs_result.tier == hive_intel::dqs::DqsTier::Skip {
+            tracing::info!("📊 DQS [{}]: SKIP (score={:.1}/10) — quality too low", data.symbol, dqs_result.score);
+            store_result(state, data, &verdict, &debate, false); continue;
+        }
+        tracing::info!("📊 DQS [{}]: {} (score={:.1}/10) size×{:.1} | regime={:.2} sizing={:.2} process={:.2} risk={:.2} pattern={:.2}",
+            data.symbol, dqs_result.tier.as_str().to_uppercase(), dqs_result.score, dqs_result.position_multiplier,
+            dqs_result.factors.regime_match, dqs_result.factors.position_sizing,
+            dqs_result.factors.process_adherence, dqs_result.factors.risk_state, dqs_result.factors.historical_pattern);
+        tracing::info!("💰 Final Size [{}]: ${:.2} (raw=${:.2} × pretrade={:.2} × appetite={:.2} × dqs={:.1})",
+            data.symbol, final_size, raw_size, risk_check.max_size_factor, risk_app, dqs_result.position_multiplier);
 
         // D3: Hive Mind — Paper Trade (ATR stops)
         run_paper_trade(paper, &data.symbol, verdict.decision, data.price, final_size);
+
+        // D3: Hive Mind — Anomaly Detection (Z-score + IQR on trade PnL history)
+        {
+            let pe = paper.lock().unwrap();
+            if pe.pnl_history.len() >= 5 {
+                let history: Vec<f64> = pe.pnl_history.iter().map(|p| *p as f64).collect();
+                let latest_pnl = history.last().copied().unwrap_or(0.0);
+                let anomaly = hive_intel::anomaly::detect_anomaly(latest_pnl, &history);
+                if anomaly.severity != hive_intel::anomaly::AnomalySeverity::Normal {
+                    tracing::warn!("🔍 ANOMALY [{}]: z={:.2} severity={} pctl={:.0}%",
+                        data.symbol, anomaly.z_score, anomaly.severity.as_str(), anomaly.percentile);
+                }
+            }
+        }
 
         // D4: X402 — Memory Edge
         log_memory_edge(&data.symbol, verdict.decision, verdict.score);
