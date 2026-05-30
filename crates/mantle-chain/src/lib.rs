@@ -13,3 +13,4 @@ pub mod provider;
 pub mod erc8004;
 pub mod onchain;
 pub mod wallet;
+pub mod dex;
