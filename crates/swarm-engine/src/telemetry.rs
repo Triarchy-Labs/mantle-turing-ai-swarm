@@ -10,7 +10,8 @@
 //!   GET /regime     → Current market regime per symbol
 //!   GET /paper      → Paper trading PnL + stats
 
-use axum::{routing::get, Json, Router};
+use axum::{routing::get, Json, Router, middleware::{self, Next}, response::Response, http::Request};
+use axum::body::Body;
 use serde::Serialize;
 use std::sync::Arc;
 use tokio::sync::RwLock;
@@ -93,7 +94,16 @@ pub fn spawn_server(handle: TelemetryHandle) {
         let h4 = handle.clone();
         let h5 = handle.clone();
 
+        // CORS middleware for cross-origin dashboard access
+        async fn cors_middleware(req: Request<Body>, next: Next) -> Response {
+            let mut resp = next.run(req).await;
+            resp.headers_mut().insert("access-control-allow-origin", "*".parse().unwrap());
+            resp.headers_mut().insert("access-control-allow-methods", "GET".parse().unwrap());
+            resp
+        }
+
         let app = Router::new()
+            .layer(middleware::from_fn(cors_middleware))
             .route("/", get(move || {
                 let h = h1.clone();
                 async move {
