@@ -13,19 +13,21 @@ use ouroboros_brain::{
     judge::{chief_judge_v2, load_thresholds, JudgeInput, JudgeVerdict, ThresholdsConfig},
     openrouter::{ModelPool, OpenRouterClient},
     state::{ConsensusResult, SymbolData, SwarmState, Verdict},
+    decision_memory::DecisionMemory,
 };
 use titan_core::entry::{EntryConfig, EntryContext, EntryPipeline, EntryVerdict};
 use hive_intel::ml_local::{FeatureVector, LocalModel};
-use hive_intel::paper_engine::{PaperEngine, Side as PaperSide};
+use hive_intel::paper_engine::{PaperEngine, Side as PaperSide, OrderStatus};
 use hive_intel::recall::{
     AffectiveState, ContextVector, RawMemory,
     outcome_weighted_recall,
 };
+use hive_intel::hybrid_recall::hybrid_blend;
 use x402_consensus::engine::{Action, AgentVote, PolicyGovernor};
 use x402_risk::engine::{AtrStops, MarketRegime, RiskGate};
-use x402_memory::engine::{HyperEdge, create_liquidation_edge};
+use x402_memory::engine::create_liquidation_edge;
 
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::sync::Arc;
 use std::sync::Mutex;
 
@@ -142,12 +144,23 @@ fn run_memory_recall(data: &SymbolData, affective: &AffectiveState, trade_memori
         price: Some(data.price),
         ..Default::default()
     };
-    let recalled = outcome_weighted_recall(&query, trade_memories, affective, 3);
-    let memory_boost = if recalled.is_empty() { 0.0 } else {
-        recalled.iter().map(|m| m.score).sum::<f64>() / recalled.len() as f64
+
+    // OWM base scoring
+    let recalled = outcome_weighted_recall(&query, trade_memories, affective, 5);
+
+    // Upgrade to hybrid (vector + OWM) when available
+    let owm_scores: Vec<(String, f64, Option<f64>)> = recalled.iter()
+        .map(|m| (m.memory_id.clone(), m.score, trade_memories.iter()
+            .find(|t| t.id == m.memory_id).and_then(|t| t.pnl_r)))
+        .collect();
+    let hybrid = hybrid_blend(&owm_scores, None, &[], 0.3, 3);
+
+    let memory_boost = if hybrid.is_empty() { 0.0 } else {
+        hybrid.iter().map(|m| m.score).sum::<f64>() / hybrid.len() as f64
     };
-    if !recalled.is_empty() {
-        tracing::info!("🧠 OWM Recall [{}]: {} memories, avg_score={:.3}", data.symbol, recalled.len(), memory_boost);
+    if !hybrid.is_empty() {
+        tracing::info!("🧠 Hybrid Recall [{}]: {} memories, avg_score={:.3} (anti-survivorship enforced)",
+            data.symbol, hybrid.len(), memory_boost);
     }
     memory_boost
 }
@@ -235,7 +248,8 @@ async fn decision_cycle(
     client: &OpenRouterClient, debate_pool: &ModelPool,
     prompts: &PromptsFile, models: &ModelsFile, thresholds: &ThresholdsConfig,
     state: &SwarmState, ml: &LocalModel, risk: &RiskGate,
-    paper: &Mutex<PaperEngine>, trade_memories: &[RawMemory],
+    paper: &Mutex<PaperEngine>, trade_memories: &Mutex<Vec<RawMemory>>,
+    decision_mem: &DecisionMemory,
 ) {
     let cycle = state.increment_cycle();
     tracing::info!("━━━ CYCLE {} ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", cycle);
@@ -252,6 +266,34 @@ async fn decision_cycle(
         }
     };
 
+    // L2: Ingest any Titan outcomes into Decision Memory
+    decision_mem.ingest_outcomes();
+
+    // L1→L3: Convert PaperEngine closed trades into OWM RawMemory (learning loop)
+    {
+        let pe = paper.lock().unwrap();
+        let mut memories = trade_memories.lock().unwrap();
+        for trade in &pe.closed_trades {
+            let trade_id = format!("paper_{}_{}", trade.symbol, trade.id);
+            if memories.iter().any(|m| m.id == trade_id) { continue; }
+            let pnl_r = if trade.entry_price > 0.0 {
+                Some(trade.pnl / (trade.entry_price * trade.quantity).max(0.01))
+            } else { None };
+            memories.push(RawMemory {
+                id: trade_id,
+                memory_type: "episodic".into(),
+                age_days: 0.0,
+                confidence: 0.7,
+                pnl_r,
+                context: ContextVector {
+                    price: Some(trade.entry_price),
+                    ..Default::default()
+                },
+                rehearsal_count: 0,
+            });
+        }
+    }
+
     for data in &mock_market_data() {
         state.symbols.insert(data.symbol.clone(), data.clone());
         tracing::info!("📊 {} @ ${:.4} | 24h:{:.1}% | FR:{:.6} | OI:{:.1}%",
@@ -262,11 +304,16 @@ async fn decision_cycle(
         // D1: Ouroboros — LLM Debate
         let debate = run_debate(client, debate_pool, prompts, models, data).await;
 
-        // D3: Hive Mind — ML + OWM Recall
+        // D3: Hive Mind — ML + Hybrid Recall (OWM + vector + anti-survivorship)
         let (ml_dir, ml_conf) = run_ml_prediction(ml, data);
-        let _memory_boost = run_memory_recall(data, &affective, trade_memories);
+        let memories = trade_memories.lock().unwrap();
+        let _memory_boost = run_memory_recall(data, &affective, &memories);
+        drop(memories);
 
-        // D1: Ouroboros — 15-Factor Judge
+        // L2: Decision Memory — inject past context into judge
+        let past_ctx = decision_mem.get_past_context(&data.symbol, 3, 2);
+
+        // D1: Ouroboros — 15-Factor Judge (with memory context)
         let input = JudgeInput {
             data: data.clone(),
             bull_argument: debate.bull_argument.clone(), bear_argument: debate.bear_argument.clone(),
@@ -277,6 +324,9 @@ async fn decision_cycle(
         let verdict = chief_judge_v2(&input, thresholds);
         let e = match verdict.decision { Verdict::Buy => "🟢", Verdict::Sell => "🔴", Verdict::Hold => "⚪" };
         tracing::info!("{} Judge [{}]: {} | score={:.2} conf={:.1}%", e, data.symbol, verdict.decision, verdict.score, verdict.confidence);
+        if !past_ctx.is_empty() {
+            tracing::info!("📜 Decision Memory [{}]: {} chars of past context injected", data.symbol, past_ctx.len());
+        }
 
         // D2: Titan — 8-Gate Entry
         if !run_entry_gate(&verdict, data) {
@@ -297,6 +347,19 @@ async fn decision_cycle(
 
         // D4: X402 — Memory Edge
         log_memory_edge(&data.symbol, verdict.decision, verdict.score);
+
+        // L2: Decision Memory — store verdict for future reflection
+        let factors_summary = format!(
+            "macro={} ml_dir={} ml_conf={:.2} score={:.2}",
+            debate.macro_bias, ml_dir, ml_conf, verdict.score
+        );
+        decision_mem.store_decision(
+            &data.symbol,
+            &format!("{}", verdict.decision),
+            verdict.score,
+            verdict.confidence,
+            &factors_summary,
+        );
 
         // D5: Mantle Chain — (Phase 2: live execution via x402-sniper)
         tracing::info!("🚀 EXECUTE [{}]: {} ${:.2} | score={:.2} conf={:.1}%",
@@ -366,8 +429,15 @@ async fn main() {
     // D3: Hive Mind
     let ml_model = LocalModel::new();
     let paper = Mutex::new(PaperEngine::new(1000.0));
-    let trade_memories: Vec<RawMemory> = vec![]; // Grows via OWM learning loop
-    tracing::info!("🤖 D3 Hive Mind: ML(7-feature LR) + PaperEngine($1000) + OWM Recall");
+    let trade_memories = Mutex::new(Vec::<RawMemory>::new()); // Grows via PaperEngine→OWM loop
+    tracing::info!("🤖 D3 Hive Mind: ML(7-feature LR) + PaperEngine($1000) + Hybrid Recall");
+
+    // L2: Decision Memory — self-learning trade journal
+    let data_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .parent().unwrap().parent().unwrap().join("data");
+    let _ = std::fs::create_dir_all(&data_dir);
+    let decision_mem = DecisionMemory::new(&data_dir);
+    tracing::info!("📜 L2 Decision Memory: trade journal at {}/trading_memory.md", data_dir.display());
 
     // D4: X402 Agents
     let risk = RiskGate::new(1000.0);
@@ -381,12 +451,13 @@ async fn main() {
     let interval = std::time::Duration::from_secs(
         std::env::var("CYCLE_INTERVAL_SECS").ok().and_then(|v| v.parse().ok()).unwrap_or(60));
 
-    tracing::info!("🚀 Pipeline: Data→Debate→ML→Recall→Judge→Entry→Consensus→Risk→Paper→Chain");
+    tracing::info!("🚀 Full Memory Stack: L0(DashMap)→L1(OWM+Hybrid)→L2(DecisionMemory)→L3(HyperEdge)→L4(Paper)");
+    tracing::info!("🚀 Pipeline: Data→Debate→ML→Recall→Judge→Entry→Consensus→Risk→Paper→Journal→Chain");
     tracing::info!("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
 
     loop {
         decision_cycle(&client, &debate_pool, &prompts, &models, &thresholds,
-            &state, &ml_model, &risk, &paper, &trade_memories).await;
+            &state, &ml_model, &risk, &paper, &trade_memories, &decision_mem).await;
         tracing::info!("💤 Next in {}s...", interval.as_secs());
         tokio::time::sleep(interval).await;
     }
