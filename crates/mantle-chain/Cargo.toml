@@ -12,3 +12,4 @@ tracing = { workspace = true }
 chrono = { workspace = true }
 alloy = { workspace = true }
 hex = { workspace = true }
+reqwest = { workspace = true }

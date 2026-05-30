@@ -71,6 +71,58 @@ fn mock_market_data() -> Vec<SymbolData> {
     ]
 }
 
+/// Fetch live market data from DexScreener, falling back to mock on failure.
+async fn live_market_data() -> Vec<SymbolData> {
+    let mut data = Vec::new();
+    let ts = chrono::Utc::now().timestamp();
+
+    // Fetch MNT
+    match mantle_chain::dex::fetch_live_price("MNT").await {
+        Ok(price) => {
+            tracing::info!("📡 LIVE MNT @ ${:.4} (DexScreener)", price);
+            data.push(SymbolData {
+                symbol: "MNT".into(), price, price_24h_change: 0.0,
+                volume_24h: 0.0, volume_ratio: 1.0,
+                funding_rate: 0.0, open_interest: 0.0,
+                oi_change_pct: 0.0, timestamp: ts,
+            });
+        }
+        Err(e) => {
+            tracing::warn!("⚠️ MNT live price failed: {e}, using mock");
+            data.push(SymbolData {
+                symbol: "MNT".into(), price: 0.82, price_24h_change: -3.2,
+                volume_24h: 45_000_000.0, volume_ratio: 1.8,
+                funding_rate: -0.0004, open_interest: 120_000_000.0,
+                oi_change_pct: -2.1, timestamp: ts,
+            });
+        }
+    }
+
+    // Fetch WETH
+    match mantle_chain::dex::fetch_live_price("WETH").await {
+        Ok(price) => {
+            tracing::info!("📡 LIVE WETH @ ${:.2} (DexScreener)", price);
+            data.push(SymbolData {
+                symbol: "WETH".into(), price, price_24h_change: 0.0,
+                volume_24h: 0.0, volume_ratio: 1.0,
+                funding_rate: 0.0, open_interest: 0.0,
+                oi_change_pct: 0.0, timestamp: ts,
+            });
+        }
+        Err(e) => {
+            tracing::warn!("⚠️ WETH live price failed: {e}, using mock");
+            data.push(SymbolData {
+                symbol: "WETH".into(), price: 2650.0, price_24h_change: 1.4,
+                volume_24h: 180_000_000.0, volume_ratio: 1.2,
+                funding_rate: 0.0001, open_interest: 890_000_000.0,
+                oi_change_pct: 0.8, timestamp: ts,
+            });
+        }
+    }
+
+    data
+}
+
 // ═══════════════════════════════════════════════════════════
 // REGIME DETECTION — 4-State Market Classifier
 // ═══════════════════════════════════════════════════════════
@@ -339,7 +391,16 @@ async fn decision_cycle(
 
     let risk_config = RiskConfig::default();
 
-    for data in &mock_market_data() {
+    // Fetch market data: live from DexScreener or mock (set MOCK_DATA=1 to force mock)
+    let use_mock = std::env::var("MOCK_DATA").map(|v| v == "1").unwrap_or(false);
+    let market_data = if use_mock {
+        tracing::info!("📦 Using MOCK market data (MOCK_DATA=1)");
+        mock_market_data()
+    } else {
+        live_market_data().await
+    };
+
+    for data in &market_data {
         state.symbols.insert(data.symbol.clone(), data.clone());
 
         // REGIME DETECTION — 4-state classifier before anything else
