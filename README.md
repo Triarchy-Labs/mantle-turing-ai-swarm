@@ -1,8 +1,9 @@
 # Mantle AI Swarm — Autonomous Trading Intelligence
 
-> 12-crate Rust workspace. 22,895 LOC. Zero external databases.
+> 12-crate Rust workspace. 23,809 LOC. Zero external databases.
 > 6 Intelligence Layers. 4-state regime detection. 5-filter pre-trade risk engine.
-> LLM consensus + neural brain + collective intelligence + on-chain execution.
+> LLM consensus + neural brain + collective intelligence + **live on-chain execution**.
+> Live DexScreener data feeds. ERC-8004 reputation on Mantle Mainnet.
 > Built for the Mantle Turing Test Hackathon 2026.
 
 ## Architecture
@@ -39,8 +40,8 @@
 | **ouroboros-brain** | 3,987 | LLM consensus: multi-model debate, 15-factor judge, decision memory, circuit breaker, pre-trade risk engine (5 institutional filters) |
 | **titan-core** | 4,465 | Neural trading brain: 8-gate entry pipeline, Kelly risk sizing, trailing SL, position recovery |
 | **hive-intel** | 11,991 | Collective intelligence: 40+ cognitive modules, SIMD turbo, ML local (<1μs), regime detection (4-state HMM), affective memory (EWMA), hybrid recall (OWM+SIMD+anti-survivorship), paper engine |
-| **mantle-chain** | 118 | Alloy 2.0 on-chain adapter for Mantle (Chain 5000) |
-| **swarm-engine** | 490 | Main orchestrator — v4 pipeline with 6 intelligence layers |
+| **mantle-chain** | 650 | Alloy 2.0 on-chain: ERC-8004 ABI (sol!), wallet signer, DexScreener 13-field live data, Merchant Moe/Agni router addresses |
+| **swarm-engine** | 660 | Main orchestrator — v4.1 pipeline + telemetry HTTP server (:3402) |
 | **x402-consensus** | 398 | PolicyGovernor — 4-voter consensus engine for trade decisions |
 | **x402-risk** | 555 | Regime-aware Kelly sizing, KillSwitch, ATR stops, BucketCap risk management |
 | **x402-polymarket** | 83 | Gamma API — live prediction market sentiment oracle |
@@ -122,8 +123,29 @@ Market Data
 
 | Contract | Address | Purpose |
 |----------|---------|---------|
-| ERC8004Registry | `0xFA0b...8383` | Agent identity NFT + reputation |
+| ERC8004Registry | `0xFA0b...8383` | Agent identity NFT + dynamic reputation |
 | X402FlashLiquidator | `0x41c5...4F4` | AI-scored flash liquidation |
+| Agent #1 NFT | Token ID 1 | Already minted — sovereign AI identity |
+| Deployment Wallet | `0xF023...c79` | Signed tx broadcast via Alloy |
+
+## Live Data Feeds
+
+| Source | Data | Update |
+|--------|------|--------|
+| DexScreener API | MNT/WETH price, 24h change, volume, buy/sell txns, liquidity | Every cycle |
+| Mantle RPC | Wallet balance, ERC-20 balances, contract state | On-demand |
+| Derived Signals | Buy/sell ratio, volume acceleration, synthetic funding rate | Computed per cycle |
+
+## Telemetry API
+
+Live transparency endpoint on `http://localhost:3402`:
+
+| Endpoint | Response |
+|----------|----------|
+| `GET /` | Full swarm state (symbols, verdicts, pipeline, chain info) |
+| `GET /health` | Version, uptime, cycle count |
+| `GET /verdicts` | Latest AI trade verdicts per symbol |
+| `GET /regime` | Current market regime + confidence |
 
 ## LLM Models (Zero Cost)
 
@@ -187,6 +209,6 @@ mantle-ai-swarm/
 
 Converged from three battle-tested trading engines — Ouroboros (LLM brain), Titan (execution), Hive Mind (intelligence) — and unified with X402 on-chain infrastructure for the Mantle Turing Test Hackathon 2026.
 
-22,895 lines of Rust. 12 crates. 6 intelligence layers. Zero compromises.
+23,809 lines of Rust. 12 crates. 6 intelligence layers. Live Mantle data. Zero compromises.
 
 Built by [Triarchy Labs](https://github.com/Triarchy-Labs).
