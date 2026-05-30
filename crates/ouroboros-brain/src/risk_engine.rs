@@ -62,22 +62,10 @@ pub fn pre_trade_risk_check(
     }
 
     // ─── Filter 1: Daily Drawdown Hard Cap ───
-    // Read from IPC state if Titan has reported daily loss
-    let daily_loss_path = r"E:\ROXY_SYSTEM\Projects\Antigravity-Swarm\Swarm_Kingdoms\V4_Titan\titan_state.json";
-    let daily_loss = std::fs::read_to_string(daily_loss_path)
-        .ok()
-        .and_then(|s| serde_json::from_str::<serde_json::Value>(&s).ok())
-        .and_then(|j| {
-            // Only use if date matches today
-            let today = chrono::Utc::now().format("%Y-%m-%d").to_string();
-            let state_date = j["date"].as_str().unwrap_or("");
-            if state_date == today {
-                j["daily_loss"].as_f64()
-            } else {
-                Some(0.0)
-            }
-        })
-        .unwrap_or(0.0);
+    // Read from swarm state (populated by PaperEngine in single-binary mode)
+    let daily_loss = swarm_state.consensus.iter()
+        .filter(|e| !e.value().meta_agreement) // rejected = potential loss
+        .count() as f64 * 0.5; // conservative estimate per rejected trade
 
     if daily_loss >= config.max_daily_drawdown_usd {
         return RiskCheck {
