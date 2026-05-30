@@ -1,7 +1,7 @@
-"use client";
+
 
 import { useState, useEffect, useRef, Suspense } from 'react';
-import { Activity, Shield, Zap, Globe, Terminal, Network, RefreshCw, Layers, Cpu, Eye, TrendingUp, TrendingDown } from 'lucide-react';
+import { Activity, Shield, Zap, Globe, Terminal, Network, Layers, Cpu, Eye, TrendingUp } from 'lucide-react';
 import './index.css';
 import LiquidGlassShader from './components/LiquidGlassShader';
 import { AnimatedArchitecture } from './components/AnimatedArchitecture';
@@ -252,9 +252,9 @@ export default function App() {
 							<div key={s.n} style={{
 								display: 'flex', justifyContent: 'space-between', alignItems: 'center',
 								padding: '8px 14px', borderRadius: '8px', fontFamily: 'var(--font-mono)', fontSize: '12px',
-								background: s.status === 'active' ? 'rgba(0,255,85,0.05)' : 'rgba(15,15,25,0.3)',
+								background: s.status === 'active' ? 'rgba(0,212,255,0.05)' : 'rgba(15,15,25,0.3)',
 								border: `1px solid ${s.status === 'active' ? 'var(--accent-hover)' : 'rgba(255,255,255,0.03)'}`,
-								boxShadow: s.status === 'active' ? '0 0 15px rgba(0,255,85,0.08)' : 'none',
+								boxShadow: s.status === 'active' ? '0 0 15px rgba(0,212,255,0.08)' : 'none',
 								transform: s.status === 'active' ? 'scale(1.01)' : 'none',
 								transition: 'all 0.3s ease',
 							}}>

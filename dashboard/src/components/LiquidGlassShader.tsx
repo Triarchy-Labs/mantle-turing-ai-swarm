@@ -14,13 +14,13 @@ import { createPortal } from "react-dom";
 import * as THREE from "three";
 import { useUnifiedPointer } from "../hooks/useUnifiedPointer";
 import { useDeviceTier, type DeviceTier } from "../hooks/useDeviceTier";
-// import RefractiveCore from "./RefractiveCore"; // Disabled — MeshTransmission lag
+
 import ScreenPaint from "./ScreenPaint";
 import LusionFinalPass from "./LusionFinalPass";
-// import ScreenPaintDistortion from "./ScreenPaintDistortion"; // Disabled — too aggressive
-// import BrownianMotionCamera from "./BrownianMotionCamera"; // Disabled — parallax drift
+
+
 import FsrRcasPass from "./FsrRcasPass";
-// import LensHaloPass from "./LensHaloPass"; // Disabled — center overexposure
+
 
 // Lusion-grade adaptive constants per device tier
 const TIER_CONFIG = {
