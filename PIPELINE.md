@@ -23,11 +23,11 @@
 
 ---
 
-## Phase 1: Swarm Orchestrator Wiring 🔄 NEXT
+## Phase 1: Swarm Orchestrator Wiring ✅ DONE
 
 **Goal:** Wire swarm-engine main loop connecting all dimensions.
 
-- [ ] **swarm-engine/main.rs**: Implement the main async loop
+- [x] **swarm-engine/main.rs**: Implement the main async loop
   - Load .env (dotenvy)
   - Initialize OpenRouter client (ouroboros-brain)
   - Initialize Mantle provider (mantle-chain)
@@ -35,7 +35,7 @@
   - Boot consensus engine (x402-consensus)
   - Boot risk agent (x402-risk)
 
-- [ ] **Signal pipeline**: Wire the decision flow
+- [x] **Signal pipeline**: Wire the decision flow
   - Market data ingestion (initially mock, then DEX oracle)
   - Ouroboros debate → Judge scoring → Verdict
   - Titan entry pipeline validation
@@ -43,7 +43,7 @@
   - X402 consensus vote
   - Risk gate (Kelly sizing)
 
-- [ ] **IPC bridge**: Connect core-ipc mmap to all agents
+- [ ] **IPC bridge**: Connect core-ipc mmap to all agents (deferred — DashMap used instead)
 
 **Deliverable:** `cargo run -p swarm-engine` boots all agents and runs one decision cycle.
 
@@ -53,7 +53,7 @@
 
 **Goal:** Live on-chain execution on Mantle (Chain 5000).
 
-- [ ] **mantle-chain adapter**: Implement provider.rs with wallet
+- [x] **mantle-chain adapter**: Implement provider.rs with wallet
   - Connect to Mantle RPC (public or Alchemy)
   - Load private key from .env
   - Alloy ProviderBuilder with wallet signer
@@ -63,7 +63,7 @@
   - Register agent if not already registered
   - Execute AI liquidation with sentiment score
 
-- [ ] **DEX price feed**: Replace mock data with live Mantle DEX
+- [x] **DEX price feed**: Replace mock data with live Mantle DEX
   - Agni Finance Router ABI integration
   - Real-time token price via getAmountsOut
   - Feed into Judge factor inputs
@@ -107,11 +107,11 @@
 
 ---
 
-## Phase 4: Dashboard & Presentation
+## Phase 4: Dashboard & Presentation ✅ DONE
 
 **Goal:** Hackathon-ready demo with visual impact.
 
-- [ ] **Dashboard upgrade**:
+- [x] **Dashboard upgrade**:
   - Connect to live swarm-engine WebSocket
   - Real-time decision feed (not mock data)
   - ERC-8004 reputation display

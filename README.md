@@ -1,6 +1,6 @@
 # Mantle AI Swarm — Autonomous Trading Intelligence
 
-> 12-crate Rust workspace. 23,809 LOC. Zero external databases.
+> 12-crate Rust workspace. 24,267 LOC. Zero external databases.
 > 6 Intelligence Layers. 4-state regime detection. 5-filter pre-trade risk engine.
 > LLM consensus + neural brain + collective intelligence + **live on-chain execution**.
 > Live DexScreener data feeds. ERC-8004 reputation on Mantle Mainnet.
@@ -39,9 +39,9 @@
 |-------|-----|------|
 | **ouroboros-brain** | 3,987 | LLM consensus: multi-model debate, 15-factor judge, decision memory, circuit breaker, pre-trade risk engine (5 institutional filters) |
 | **titan-core** | 4,465 | Neural trading brain: 8-gate entry pipeline, Kelly risk sizing, trailing SL, position recovery |
-| **hive-intel** | 11,991 | Collective intelligence: 40+ cognitive modules, SIMD turbo, ML local (<1μs), regime detection (4-state HMM), affective memory (EWMA), hybrid recall (OWM+SIMD+anti-survivorship), paper engine |
-| **mantle-chain** | 650 | Alloy 2.0 on-chain: ERC-8004 ABI (sol!), wallet signer, DexScreener 13-field live data, Merchant Moe/Agni router addresses |
-| **swarm-engine** | 660 | Main orchestrator — v4.1 pipeline + telemetry HTTP server (:3402) |
+| **hive-intel** | 12,212 | Collective intelligence: 40+ cognitive modules, SIMD turbo, ML local (<1μs), regime detection (4-state HMM), affective memory (EWMA), hybrid recall (OWM+SIMD+anti-survivorship), paper engine, AI vs Human benchmark |
+| **mantle-chain** | 705 | Alloy 2.0 on-chain: ERC-8004 ABI (sol!), wallet signer + live tx broadcast, DexScreener 13-field live data, Merchant Moe/Agni router |
+| **swarm-engine** | 1,040 | Main orchestrator — v4.2 pipeline + telemetry HTTP server (:3402) + live chain broadcast |
 | **x402-consensus** | 398 | PolicyGovernor — 4-voter consensus engine for trade decisions |
 | **x402-risk** | 555 | Regime-aware Kelly sizing, KillSwitch, ATR stops, BucketCap risk management |
 | **x402-polymarket** | 83 | Gamma API — live prediction market sentiment oracle |
@@ -209,6 +209,6 @@ mantle-ai-swarm/
 
 Converged from three battle-tested trading engines — Ouroboros (LLM brain), Titan (execution), Hive Mind (intelligence) — and unified with X402 on-chain infrastructure for the Mantle Turing Test Hackathon 2026.
 
-23,809 lines of Rust. 12 crates. 6 intelligence layers. Live Mantle data. Zero compromises.
+24,267 lines of Rust. 12 crates. 6 intelligence layers. Live Mantle data. Zero compromises.
 
 Built by [Triarchy Labs](https://github.com/Triarchy-Labs).
