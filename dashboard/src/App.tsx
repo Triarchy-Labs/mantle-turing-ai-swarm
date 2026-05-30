@@ -163,13 +163,13 @@ export default function App() {
 						<h1>MANTLE AI SWARM ACTIVITY MATRIX <span className="lusion-btn connect-state-true" style={{ fontSize: '11px', padding: '3px 8px', verticalAlign: 'middle', marginLeft: '10px' }}>V4.2 LIVE</span></h1>
 					</div>
 					<p style={{ marginTop: '6px', fontSize: '0.8rem', fontFamily: 'var(--font-mono)', opacity: 0.7 }}>
-						12 containers · 23,809 lines of Rust · 6 decision layers · Mantle Blockchain
+						12 containers · 24,267 lines of Rust · 6 decision layers · Mantle Blockchain
 					</p>
 				</div>
 				<div className="toggle-group" style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
 					<div className={`lusion-btn ${telem.connected ? 'connect-state-true' : ''}`} style={{ cursor: 'default', fontSize: '11px' }}>
 						{telem.connected ? <Wifi size={12} style={{ marginRight: '6px' }} /> : <WifiOff size={12} style={{ marginRight: '6px', opacity: 0.5 }} />}
-						{telem.connected ? 'LIVE' : 'MOCK'} · CYCLE {cycle}
+						{telem.connected ? (telem.liveMode ? 'LIVE TX' : 'CONNECTED') : 'MOCK'} · CYCLE {cycle}
 					</div>
 				</div>
 			</header>
@@ -353,7 +353,7 @@ export default function App() {
 				<button className="lusion-btn-primary" onClick={handleLaunch} aria-label="Launch Synaptic Analysis">
 					{analysisRunning ? '[ ◎ ANALYSIS RUNNING... ]' : '[ LAUNCH SYNAPTIC ANALYSIS ]'}
 				</button>
-				<button className="lusion-btn connect-btn-hover-fx" onClick={() => alert('On-chain mint emulation coming in v4.3')} aria-label="Emulate On-Chain Mint"><span>[ EMULATE ON-CHAIN MINT ]</span></button>
+				<button className="lusion-btn connect-btn-hover-fx" onClick={() => window.open(`https://explorer.mantle.xyz/address/0xFA0b5036aF9770B370B33CeBBb42d1E626338383`, '_blank')} aria-label="View On-Chain Agent NFT"><span>[ VIEW AGENT NFT ON-CHAIN ]</span></button>
 			</div>
 
 			{/* ═══ FOOTER ═══ */}
