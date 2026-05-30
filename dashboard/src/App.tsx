@@ -1,14 +1,10 @@
-
-
-import { useState, useEffect, useRef, Suspense } from 'react';
-import { Activity, Shield, Zap, Globe, Terminal, Network, Layers, Cpu, Eye, TrendingUp } from 'lucide-react';
+import { useState, useEffect, useRef, Suspense, useCallback } from 'react';
+import { Activity, Zap, Globe, Terminal, Network, Layers, Cpu, Eye, TrendingUp } from 'lucide-react';
 import './index.css';
 import LiquidGlassShader from './components/LiquidGlassShader';
 import { AnimatedArchitecture } from './components/AnimatedArchitecture';
 import CustomCursor from './components/CustomCursor';
 import { WebGLErrorBoundary } from './components/WebGLErrorBoundary';
-
-type ViewMode = 'IPC' | 'ERC8004';
 
 /* ── Market data ── */
 const marketData = [
@@ -41,18 +37,19 @@ const debates = [
 	{ agent: 'Diablo (Architect)', color: '#00d4ff', msg: 'SMA(20) crossed above SMA(50). Strong bullish impulse for MNT.', time: new Date().toLocaleTimeString('en-US', { hour12: false }) },
 ];
 
-/* ── Log entries ── */
+/* ── Log entries (staggered timestamps) ── */
+const LOG_OFFSETS = [47, 42, 38, 33, 27, 22, 17, 12, 6, 1];
 const logEntries = [
-	{ ts: '', tag: '[SYNAPSE]', msg: 'Veldora (Synthesis): Trade volume surged 14% in 4h. Vector confirms...', type: '' },
-	{ ts: '', tag: '[ANALYSIS]', msg: 'MNT trend strength index at 72.3%. Market regime: Bullish.', type: '' },
-	{ ts: '', tag: '[SYNAPSE]', msg: 'Launching arbiter contest between Diablo and Zegion...', type: '' },
-	{ ts: '', tag: '[ML]', msg: 'Local ML prediction complete. Asset growth probability: 81.2%', type: '' },
-	{ ts: '', tag: '[VECTOR]', msg: 'Similar pattern found from 2026-05-27 in vector archive. Success: 89%', type: 'success' },
-	{ ts: '', tag: '[JUDGE]', msg: 'Seven factors analyzed. Final verdict: BUY with weight 1.75.', type: '' },
-	{ ts: '', tag: '[AUDIT]', msg: 'Slippage and front-running risk checks: all passed.', type: 'success' },
-	{ ts: '', tag: '[ENTRY]', msg: 'Optimal entry point detected: $0.7852. Launching swarm orders.', type: '' },
-	{ ts: '', tag: '[CONSENSUS]', msg: 'Swarm Consensus reached: BUY with 82.5% probability.', type: 'success' },
-	{ ts: '', tag: '[RISK]', msg: 'Risk limit checks passed: margin deviation < 2%. No risks.', type: '' },
+	{ off: 0, tag: '[SYNAPSE]', msg: 'Veldora (Synthesis): Trade volume surged 14% in 4h. Vector confirms...', type: '' },
+	{ off: 1, tag: '[ANALYSIS]', msg: 'MNT trend strength index at 72.3%. Market regime: Bullish.', type: '' },
+	{ off: 2, tag: '[SYNAPSE]', msg: 'Launching arbiter contest between Diablo and Zegion...', type: '' },
+	{ off: 3, tag: '[ML]', msg: 'Local ML prediction complete. Asset growth probability: 81.2%', type: '' },
+	{ off: 4, tag: '[VECTOR]', msg: 'Similar pattern found from 2026-05-27 in vector archive. Success: 89%', type: 'success' },
+	{ off: 5, tag: '[JUDGE]', msg: 'Seven factors analyzed. Final verdict: BUY with weight 1.75.', type: '' },
+	{ off: 6, tag: '[AUDIT]', msg: 'Slippage and front-running risk checks: all passed.', type: 'success' },
+	{ off: 7, tag: '[ENTRY]', msg: 'Optimal entry point detected: $0.7852. Launching swarm orders.', type: '' },
+	{ off: 8, tag: '[CONSENSUS]', msg: 'Swarm Consensus reached: BUY with 82.5% probability.', type: 'success' },
+	{ off: 9, tag: '[RISK]', msg: 'Risk limit checks passed: margin deviation < 2%. No risks.', type: '' },
 ];
 
 /* ── Orbiting tech cards around 3D stone ── */
@@ -99,12 +96,13 @@ function AgentOrb({ state = 'idle' }: { state?: 'idle' | 'thinking' | 'working' 
 }
 
 export default function App() {
-	const [view, setView] = useState<ViewMode>('ERC8004');
 	const [theme, setTheme] = useState<'dark' | 'light'>('dark');
 	const [mounted, setMounted] = useState(false);
 	const [cycle, setCycle] = useState(42);
 	const [uptime, setUptime] = useState(0);
 	const [orbState, setOrbState] = useState<'idle' | 'thinking' | 'working'>('idle');
+	const [activeStage, setActiveStage] = useState(10);
+	const [analysisRunning, setAnalysisRunning] = useState(false);
 	const logRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
@@ -129,9 +127,34 @@ export default function App() {
 	}, []);
 
 	const fmtUptime = `${Math.floor(uptime / 3600)}h ${Math.floor((uptime % 3600) / 60)}m ${uptime % 60}s`;
-	const now = new Date().toLocaleTimeString('en-US', { hour12: false });
+	const nowDate = new Date();
+	const now = nowDate.toLocaleTimeString('en-US', { hour12: false });
+	const logTime = (off: number) => {
+		const d = new Date(nowDate.getTime() - LOG_OFFSETS[off] * 1000);
+		return d.toLocaleTimeString('en-US', { hour12: false });
+	};
 
-	if (!mounted) return null;
+	// CTA: Launch Synaptic Analysis mock
+	const handleLaunch = useCallback(() => {
+		if (analysisRunning) return;
+		setAnalysisRunning(true);
+		setActiveStage(0);
+		const t = setInterval(() => {
+			setActiveStage(prev => {
+				if (prev >= 12) { clearInterval(t); setAnalysisRunning(false); return 10; }
+				return prev + 1;
+			});
+		}, 800);
+	}, [analysisRunning]);
+
+	if (!mounted) return (
+		<div style={{ position: 'fixed', inset: 0, background: '#010204', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+			<div style={{ color: 'var(--accent)', fontFamily: 'var(--font-mono)', fontSize: '0.9rem', opacity: 0.6, textAlign: 'center' }}>
+				<div style={{ fontSize: '2rem', marginBottom: '12px', animation: 'pulse 2s infinite' }}>⬡</div>
+				INITIALIZING SWARM...
+			</div>
+		</div>
+	);
 
 	return (
 		<>
@@ -145,7 +168,7 @@ export default function App() {
 			<div style={{ position: 'fixed', inset: 0, background: 'radial-gradient(circle at center, transparent 30%, rgba(4,4,6,0.8) 100%)', zIndex: -98, pointerEvents: 'none' }} />
 
 			{/* ═══ HEADER ═══ */}
-			<header className="header glass snake-border">
+			<header className="header glass snake-border" role="banner" aria-label="Mantle AI Swarm Dashboard">
 				<div>
 					<div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
 						<Layers size={22} className="green-sweep-text" />
@@ -156,34 +179,29 @@ export default function App() {
 					</p>
 				</div>
 				<div className="toggle-group" style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-					<button className={`lusion-btn ${view === 'IPC' ? 'connect-state-true' : ''}`} onClick={() => setView('IPC')}>
-						<Terminal size={14} style={{ verticalAlign: 'middle', marginRight: '6px' }} />[ L0 IPC ]
-					</button>
-					<button className={`lusion-btn ${view === 'ERC8004' ? 'connect-state-true' : ''}`} onClick={() => setView('ERC8004')}>
-						<Shield size={14} style={{ verticalAlign: 'middle', marginRight: '6px' }} />[ ERC-8004 ]
-					</button>
 					<div className="lusion-btn connect-state-true" style={{ cursor: 'default' }}>
 						<span style={{ marginRight: '8px' }}>●</span>AUTONOMOUS MODE · CYCLE {cycle}
 					</div>
 				</div>
 			</header>
 
+			<main>
 			{/* ═══ STATS GRID ═══ */}
-			<div className="metrics">
+			<section className="metrics" aria-label="Key Performance Metrics">
 				<div className="glass metric"><h3><Cpu size={14} style={{ color: 'var(--accent)' }} /> Current Cycle</h3><div className="val cyan">{cycle}</div></div>
 				<div className="glass metric"><h3><Activity size={14} style={{ color: 'var(--accent-hover)' }} /> Uptime</h3><div className="val green">{fmtUptime}</div></div>
 				<div className="glass metric"><h3><Zap size={14} style={{ color: 'var(--accent-hover)' }} /> Synthetic PNL</h3><div className="val green">$1,444.91</div></div>
 				<div className="glass metric"><h3><Globe size={14} style={{ color: 'var(--accent-hover)' }} /> Win Rate</h3><div className="val green">75.7%</div></div>
-			</div>
+			</section>
 
 			{/* ═══ MAIN GRID: Market + Synaptic Core ═══ */}
 			<div className="grid-main">
 
 				{/* LEFT: Market Monitoring */}
-				<div className="glass events-section">
+				<div className="glass events-section" role="region" aria-label="Live Market Data">
 					<div className="card-title"><TrendingUp size={16} style={{ color: 'var(--accent-hover)' }} /> LIVE MARKET MONITORING</div>
 					{marketData.map(m => (
-						<div key={m.sym} className="event-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderRadius: '12px', background: 'var(--glass-bg)', border: '1px solid var(--border)', marginBottom: '14px', transition: 'all 0.3s ease' }}>
+						<div key={m.sym} className="event-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderRadius: '12px', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', marginBottom: '14px', transition: 'all 0.3s ease', cursor: 'pointer' }}>
 							<div>
 								<div style={{ fontSize: '19px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>{m.sym}</div>
 								<div style={{ fontSize: '11px', color: 'var(--foreground)', opacity: 0.5 }}>Vol 24h: {m.vol}</div>
@@ -243,34 +261,37 @@ export default function App() {
 			</div>
 
 			{/* ═══ PIPELINE + DEBATE ═══ */}
-			<div className="grid-main" style={{ marginTop: '24px' }}>
+			<section className="grid-main" style={{ marginTop: '24px' }} aria-label="Decision Pipeline">
 				{/* Pipeline */}
 				<div className="glass events-section">
 					<div className="card-title"><Zap size={16} style={{ color: 'var(--accent-hover)' }} /> SYNAPTIC DECISION PIPELINE</div>
-					<div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-						{pipelineStages.map(s => (
-							<div key={s.n} style={{
+					<div role="list" style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+						{pipelineStages.map((s, idx) => {
+							const st = idx < activeStage ? 'done' : idx === activeStage ? 'active' : 'pending';
+							return (
+							<div key={s.n} role="listitem" style={{
 								display: 'flex', justifyContent: 'space-between', alignItems: 'center',
 								padding: '8px 14px', borderRadius: '8px', fontFamily: 'var(--font-mono)', fontSize: '12px',
-								background: s.status === 'active' ? 'rgba(0,212,255,0.05)' : 'rgba(15,15,25,0.3)',
-								border: `1px solid ${s.status === 'active' ? 'var(--accent-hover)' : 'rgba(255,255,255,0.03)'}`,
-								boxShadow: s.status === 'active' ? '0 0 15px rgba(0,212,255,0.08)' : 'none',
-								transform: s.status === 'active' ? 'scale(1.01)' : 'none',
+								background: st === 'active' ? 'rgba(0,212,255,0.05)' : 'rgba(15,15,25,0.3)',
+								border: `1px solid ${st === 'active' ? 'var(--accent-hover)' : 'rgba(255,255,255,0.03)'}`,
+								boxShadow: st === 'active' ? '0 0 15px rgba(0,212,255,0.08)' : 'none',
+								transform: st === 'active' ? 'scale(1.01)' : 'none',
 								transition: 'all 0.3s ease',
 							}}>
 								<div style={{ display: 'flex', gap: '10px' }}>
-									<span style={{ color: s.status === 'active' ? 'var(--accent-hover)' : 'var(--foreground)', opacity: s.status === 'pending' ? 0.3 : 0.5 }}>[{s.n}]</span>
-									<span style={{ color: s.status === 'done' ? 'var(--accent-hover)' : s.status === 'active' ? '#fff' : 'var(--foreground)', opacity: s.status === 'pending' ? 0.4 : 1, fontWeight: s.status === 'active' ? 700 : 400 }}>{s.label}</span>
+									<span style={{ color: st === 'active' ? 'var(--accent-hover)' : 'var(--foreground)', opacity: st === 'pending' ? 0.3 : 0.5 }}>[{s.n}]</span>
+									<span style={{ color: st === 'done' ? 'var(--accent-hover)' : st === 'active' ? '#fff' : 'var(--foreground)', opacity: st === 'pending' ? 0.4 : 1, fontWeight: st === 'active' ? 700 : 400 }}>{s.label}</span>
 								</div>
 								<span style={{
 									fontSize: '11px', textTransform: 'uppercase', fontWeight: 700,
-									color: s.status === 'done' ? 'var(--accent-hover)' : s.status === 'active' ? 'var(--accent)' : 'var(--foreground)',
-									opacity: s.status === 'pending' ? 0.3 : 1,
+									color: st === 'done' ? 'var(--accent-hover)' : st === 'active' ? 'var(--accent)' : 'var(--foreground)',
+									opacity: st === 'pending' ? 0.3 : 1,
 								}}>
-									{s.status === 'done' ? 'DONE' : s.status === 'active' ? 'PROCESSING' : 'PENDING'}
+									{st === 'done' ? 'DONE' : st === 'active' ? 'PROCESSING' : 'PENDING'}
 								</span>
 							</div>
-						))}
+						);
+						})}
 					</div>
 				</div>
 
@@ -307,7 +328,7 @@ export default function App() {
 			</div>
 
 			{/* ═══ LOG STREAM ═══ */}
-			<div className="glass" style={{ padding: '20px', marginTop: '24px' }}>
+			<div className="glass" style={{ padding: '20px', marginTop: '24px' }} role="log" aria-live="polite" aria-label="Synaptic Activity Log">
 				<div className="card-title"><Terminal size={16} /> SYNAPTIC ACTIVITY LOG</div>
 				<div ref={logRef} style={{
 					height: '250px', overflowY: 'auto', fontFamily: 'var(--font-mono)', fontSize: '12px', lineHeight: 1.8,
@@ -316,7 +337,7 @@ export default function App() {
 				}}>
 					{logEntries.map((l, i) => (
 						<div key={i} style={{ display: 'flex', gap: '12px', color: 'var(--foreground)', opacity: 0.7, borderBottom: '1px solid rgba(255,255,255,0.01)', padding: '2px 0' }}>
-							<span style={{ color: 'var(--foreground)', opacity: 0.3, minWidth: '90px' }}>{now}</span>
+							<span style={{ color: 'var(--foreground)', opacity: 0.3, minWidth: '90px' }}>{logTime(l.off)}</span>
 							<span style={{ color: l.type === 'success' ? 'var(--accent-hover)' : 'var(--accent)', fontWeight: 700, minWidth: '100px' }}>{l.tag}</span>
 							<span>{l.msg}</span>
 						</div>
@@ -326,8 +347,10 @@ export default function App() {
 
 			{/* ═══ CONTROL BAR ═══ */}
 			<div className="control-bar">
-				<button className="lusion-btn-primary">[ LAUNCH SYNAPTIC ANALYSIS ]</button>
-				<button className="lusion-btn connect-btn-hover-fx"><span>[ EMULATE ON-CHAIN MINT ]</span></button>
+				<button className="lusion-btn-primary" onClick={handleLaunch} aria-label="Launch Synaptic Analysis">
+					{analysisRunning ? '[ ◎ ANALYSIS RUNNING... ]' : '[ LAUNCH SYNAPTIC ANALYSIS ]'}
+				</button>
+				<button className="lusion-btn connect-btn-hover-fx" onClick={() => alert('On-chain mint emulation coming in v4.3')} aria-label="Emulate On-Chain Mint"><span>[ EMULATE ON-CHAIN MINT ]</span></button>
 			</div>
 
 			{/* ═══ FOOTER ═══ */}
@@ -338,9 +361,10 @@ export default function App() {
 			</div>
 
 			{/* Theme switcher */}
-			<button onClick={() => setTheme(t => t === 'dark' ? 'light' : 'dark')} className="lusion-btn connect-btn-hover-fx" style={{ position: 'fixed', bottom: '25px', right: '25px', zIndex: 100 }}>
+			<button onClick={() => setTheme(t => t === 'dark' ? 'light' : 'dark')} className="lusion-btn connect-btn-hover-fx" style={{ position: 'fixed', bottom: '25px', right: '25px', zIndex: 100 }} aria-label="Toggle dark/light mode">
 				<span>{theme === 'dark' ? '◉ DARK' : '◌ LIGHT'}</span>
 			</button>
+			</main>
 		</>
 	);
 }
