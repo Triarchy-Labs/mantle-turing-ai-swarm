@@ -1,10 +1,18 @@
 # Mantle AI Swarm — Autonomous Trading Intelligence
 
-> 12-crate Rust workspace. 24,267 LOC. Zero external databases.
+![License](https://img.shields.io/badge/license-MIT-blue)
+![Tests](https://img.shields.io/badge/tests-553%20pass-brightgreen)
+![Rust](https://img.shields.io/badge/rust-1.95-orange)
+![Mantle](https://img.shields.io/badge/chain-Mantle%20Mainnet-purple)
+![LOC](https://img.shields.io/badge/LOC-26%2C873-informational)
+
+> 12-crate Rust workspace. 26,873 LOC. Zero external databases.
 > 6 Intelligence Layers. 4-state regime detection. 5-filter pre-trade risk engine.
 > LLM consensus + neural brain + collective intelligence + **live on-chain execution**.
 > Live DexScreener data feeds. ERC-8004 reputation on Mantle Mainnet.
-> Built for the Mantle Turing Test Hackathon 2026.
+> Built for the [Mantle Turing Test Hackathon 2026](https://dorahacks.io/hackathon/2130/detail).
+
+**[🔴 Live Dashboard](https://mantle-ai-swarm.vercel.app)** · **[📜 ERC-8004 Registry](https://repo.sourcify.dev/5000/0xFA0b5036aF9770B370B33CeBBb42d1E626338383)** · **[⚡ Flash Liquidator](https://repo.sourcify.dev/5000/0x41c51a03FFE750F5df1F6ffc972DBA8265B5a4F4)**
 
 ## Architecture
 
