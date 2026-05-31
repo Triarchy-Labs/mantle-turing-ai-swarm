@@ -16,6 +16,11 @@ members = [
     "crates/core-ipc",
 ]
 
+[workspace.package]
+edition = "2021"
+license = "MIT"
+repository = "https://github.com/Triarchy-Labs/mantle-turing-ai-swarm"
+
 [workspace.dependencies]
 # Async
 tokio = { version = "1", features = ["full"] }
