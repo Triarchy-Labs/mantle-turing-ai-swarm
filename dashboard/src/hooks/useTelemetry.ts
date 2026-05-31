@@ -71,6 +71,39 @@ interface TelemetryResponse {
   agent_id: number;
   chain_id: number;
   registry_address: string;
+  risk_state: RiskState | null;
+  ramp_state: RampState | null;
+  open_positions: PositionEntry[];
+}
+
+interface RiskState {
+  dynamic_leverage: number;
+  atr_estimate: number;
+  macro_penalty: number;
+  ewma_confidence: number;
+  risk_appetite: number;
+  pretrade_factor: number;
+  circuit_breaker: string;
+}
+
+interface RampState {
+  current_phase: number;
+  phase_label: string;
+  max_position_pct: number;
+  daily_loss_kill_pct: number;
+  total_promotions: number;
+  total_demotions: number;
+}
+
+interface PositionEntry {
+  symbol: string;
+  side: string;
+  entry_price: number;
+  quantity: number;
+  unrealized_pnl: number;
+  hold_duration_secs: number;
+  trailing_stop: number;
+  unstuck_stage: string;
 }
 
 // ── Dashboard-facing types ──
@@ -103,6 +136,12 @@ export interface TelemetryData {
   agentId: number;
   benchmark: BenchmarkTelemetry | null;
   paperStats: PaperStats | null;
+  riskState: RiskState | null;
+  rampState: RampState | null;
+  openPositions: PositionEntry[];
+  totalTrades: number;
+  balance: string;
+  maxDrawdown: string;
 }
 
 // ── Mock fallback (used when backend is offline) ──
@@ -133,7 +172,7 @@ const MOCK_DATA: TelemetryData = {
   cycle: 0,
   uptimeSecs: 0,
   pipelineStage: 10,
-  pipelineTotal: 13,
+  pipelineTotal: 24,
   markets: [
     { sym: 'MNT', price: '$0.7833', vol: '$1,248,092', change: '+4.58%', up: true, conf: 82.5, verdict: 'BUY' },
     { sym: 'WMNT', price: '$0.7841', vol: '$842,104', change: '+4.64%', up: true, conf: 78.4, verdict: 'BUY' },
@@ -144,12 +183,18 @@ const MOCK_DATA: TelemetryData = {
   txHashes: [],
   pnl: '$1,444.91',
   winRate: '75.7%',
-  version: 'v4.2-triarchy',
+  version: 'v5.0-triarchy',
   registryAddress: '0xFA0b…8383',
   chainId: 5000,
   agentId: 1,
   benchmark: null,
   paperStats: null,
+  riskState: { dynamic_leverage: 5.0, atr_estimate: 0.015, macro_penalty: 0.0, ewma_confidence: 0.0, risk_appetite: 0.0, pretrade_factor: 0.0, circuit_breaker: 'GREEN' },
+  rampState: { current_phase: 0, phase_label: 'SEED', max_position_pct: 0.10, daily_loss_kill_pct: 3.0, total_promotions: 0, total_demotions: 0 },
+  openPositions: [],
+  totalTrades: 0,
+  balance: '$1,000.00',
+  maxDrawdown: '0.0%',
 };
 
 function formatPrice(price: number): string {
@@ -229,6 +274,12 @@ function mapResponse(resp: TelemetryResponse): TelemetryData {
     agentId: resp.agent_id,
     benchmark: resp.benchmark,
     paperStats: resp.paper_stats,
+    riskState: resp.risk_state,
+    rampState: resp.ramp_state,
+    openPositions: resp.open_positions ?? [],
+    totalTrades: resp.paper_stats?.total_trades ?? 0,
+    balance: ps ? `$${ps.balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '$1,000.00',
+    maxDrawdown: ps ? `${(ps.max_drawdown * 100).toFixed(1)}%` : '0.0%',
   };
 }
 

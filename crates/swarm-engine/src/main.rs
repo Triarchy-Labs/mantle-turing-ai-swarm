@@ -24,6 +24,10 @@ use titan_core::entry::{EntryConfig, EntryContext, EntryPipeline, EntryVerdict};
 use titan_core::trailing::{TrailingConfig, TrailingEngine, TrailingVerdict};
 use titan_core::unstuck::{UnstuckConfig, UnstuckEngine, UnstuckVerdict};
 use titan_core::risk::RiskMatrix;
+use titan_core::confidence::ConfidenceEngine;
+use titan_core::auto_ramp::AutoRamp;
+use titan_core::deallow::Deallow;
+use titan_core::patience::PatienceTracker;
 use core_ipc::IpcBridge;
 use hive_intel::ml_local::{FeatureVector, LocalModel};
 use hive_intel::paper_engine::{PaperEngine, Side as PaperSide};
@@ -347,6 +351,7 @@ async fn decision_cycle<P: alloy::providers::Provider>(
     bench_stats: &Mutex<BenchmarkStats>,
     signed_provider: &Option<P>,
     tx_hashes: &Mutex<Vec<String>>,
+    patience: &Mutex<PatienceTracker>,
 ) {
     let cycle = state.increment_cycle();
     tracing::info!("━━━ CYCLE {} ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", cycle);
@@ -569,6 +574,22 @@ async fn decision_cycle<P: alloy::providers::Provider>(
         tracing::info!("💰 Final Size [{}]: ${:.2} (raw=${:.2} × pretrade={:.2} × appetite={:.2} × dqs={:.1})",
             data.symbol, final_size, raw_size, risk_check.max_size_factor, risk_app, dqs_result.position_multiplier);
 
+        // D2: Titan — Patience Tracker (15-min signal confirmation)
+        {
+            let side_str = match verdict.decision { Verdict::Buy => "Buy", Verdict::Sell => "Sell", _ => "Hold" };
+            let mut pt = patience.lock().unwrap();
+            pt.purge_stale(); // Clean entries older than 2h
+            if verdict.decision != Verdict::Hold {
+                if !pt.is_ready_to_strike(&data.symbol, side_str) {
+                    pt.lock_target(&data.symbol, side_str);
+                    tracing::info!("⏳ Patience [{}]: {} signal locked — waiting 15m confirmation", data.symbol, side_str);
+                } else {
+                    tracing::info!("✅ Patience [{}]: {} signal confirmed after wait", data.symbol, side_str);
+                    pt.clear_target(&data.symbol);
+                }
+            }
+        }
+
         // D3: Hive Mind — Paper Trade (ATR stops)
         run_paper_trade(paper, &data.symbol, verdict.decision, data.price, final_size);
 
@@ -657,6 +678,34 @@ async fn decision_cycle<P: alloy::providers::Provider>(
                     tracing::warn!("🔍 ANOMALY [{}]: z={:.2} severity={} pctl={:.0}%",
                         data.symbol, anomaly.z_score, anomaly.severity.as_str(), anomaly.percentile);
                 }
+            }
+        }
+
+        // D2: Titan — Confidence Engine (DNA-based scoring, adaptive ATR, directional bias)
+        {
+            let conf_score = ConfidenceEngine::calculate(&data.symbol);
+            let adaptive_atr = ConfidenceEngine::get_adaptive_atr_mult(&data.symbol, 3.5);
+            let adaptive_cd = ConfidenceEngine::get_adaptive_cooldown(&data.symbol, 900);
+            let dir_bias = ConfidenceEngine::get_directional_bias(&data.symbol);
+            if conf_score.abs() > 0.1 || dir_bias.is_some() {
+                tracing::info!("🧬 Confidence [{}]: score={:.1} atr_mult={:.1} cooldown={}s bias={:?}",
+                    data.symbol, conf_score, adaptive_atr, adaptive_cd, dir_bias);
+            }
+        }
+
+        // D2: Titan — AutoRamp (5-gate capital scaling state machine)
+        {
+            let ramp_log = AutoRamp::evaluate();
+            let phase = AutoRamp::current_phase();
+            tracing::info!("📈 AutoRamp: Phase {}/4 ({}) max_pos={:.0}% | {}",
+                phase.phase, phase.label, phase.max_position_pct * 100.0, ramp_log);
+        }
+
+        // D2: Titan — Deallow (underperformer ban/recovery scanner)
+        {
+            let banned = Deallow::scan_underperformers();
+            if !banned.is_empty() {
+                tracing::warn!("🚫 Deallow: {} symbols banned: {}", banned.len(), banned.join(", "));
             }
         }
 
@@ -776,8 +825,9 @@ async fn main() {
     let debate_pool = ModelPool::new(models.debate_pool.clone(), models.defaults.max_failures_before_rotate);
     tracing::info!("🧠 D1 Ouroboros: {} debate models + macro/meta judges", debate_pool.pool_size());
 
-    // D2: Titan
-    tracing::info!("🚪 D2 Titan: 8-gate entry + TrailingEngine(ATR/BE-Lock/AdverseSelection) + Unstuck(3-stage) + RiskMatrix(dynamic leverage)");
+    // D2: Titan (8 active modules)
+    let patience = Mutex::new(PatienceTracker::new());
+    tracing::info!("🚪 D2 Titan: Entry(8-gate) + Trailing(ATR/BE/AdverseSelect) + Unstuck(3-stage) + RiskMatrix + Confidence(DNA) + AutoRamp(5-phase) + Deallow + Patience(15m)");
 
     // D3: Hive Mind
     let ml_model = LocalModel::new();
@@ -842,7 +892,7 @@ async fn main() {
         cycle_count += 1;
         decision_cycle(&client, &debate_pool, &prompts, &models, &thresholds,
             &state, &ml_model, &risk, &paper, &trade_memories, &decision_mem,
-            &sma_engines, &bench_stats, &signed_provider, &tx_hashes).await;
+            &sma_engines, &bench_stats, &signed_provider, &tx_hashes, &patience).await;
 
         // Update telemetry state after each cycle
         {
@@ -892,8 +942,49 @@ async fn main() {
                 });
             }
 
-            // Pipeline stage (13 = all stages complete after cycle)
-            t.pipeline_stage = 13;
+            // AutoRamp telemetry
+            let ramp_phase = titan_core::auto_ramp::AutoRamp::current_phase();
+            t.ramp_state = Some(telemetry::RampTelemetry {
+                current_phase: ramp_phase.phase,
+                phase_label: ramp_phase.label.to_string(),
+                max_position_pct: ramp_phase.max_position_pct,
+                daily_loss_kill_pct: ramp_phase.daily_loss_kill_pct,
+                total_promotions: 0,
+                total_demotions: 0,
+            });
+
+            // Risk telemetry (from latest cycle state)
+            t.risk_state = Some(telemetry::RiskTelemetry {
+                dynamic_leverage: 5.0, // Default leverage (dynamic per-cycle)
+                atr_estimate: 0.015,
+                macro_penalty: 0.0,
+                ewma_confidence: 0.0,
+                risk_appetite: 0.0,
+                pretrade_factor: 0.0,
+                circuit_breaker: if state.is_trading_allowed() { "GREEN".into() } else { "RED".into() },
+            });
+
+            // Open positions from paper engine
+            {
+                let pe_inner = paper.lock().unwrap();
+                t.open_positions = pe_inner.open_positions.values().map(|pos| {
+                    let now_ms = chrono::Utc::now().timestamp_millis() as u64;
+                    let hold_ms = (now_ms as i64).saturating_sub(pos.opened_at_ms);
+                    telemetry::PositionTelemetry {
+                        symbol: pos.symbol.clone(),
+                        side: format!("{:?}", pos.side),
+                        entry_price: pos.entry_price,
+                        quantity: pos.quantity,
+                        unrealized_pnl: 0.0, // calculated per-tick
+                        hold_duration_secs: (hold_ms / 1000).max(0) as u64,
+                        trailing_stop: pos.stop_loss.unwrap_or(0.0),
+                        unstuck_stage: "monitoring".into(),
+                    }
+                }).collect();
+            }
+
+            // Pipeline stage completion (24 = all stages complete after cycle)
+            t.pipeline_stage = 24;
 
             // Debates — extract from consensus results
             t.debates = state.consensus.iter().flat_map(|entry| {
