@@ -2,6 +2,7 @@
 // Vector 3: Confidence Score — непрерывная шкала доверия [-5..+5]
 // Заменяет бинарный "locked/boosted" на плавную кривую на основе DNA профиля монеты.
 use serde_json::Value;
+use crate::safe_io::data_file;
 use std::sync::Mutex;
 use std::time::Instant;
 
@@ -15,7 +16,7 @@ impl ConfidenceEngine {
     /// Положительный = агрессивнее. Отрицательный = осторожнее/бан.
     /// 0.0 = неизвестная монета (работают только индикаторы).
     pub fn calculate(symbol: &str) -> f64 {
-        let tilt_path = r"E:\ROXY_SYSTEM\Projects\Antigravity-Swarm\Swarm_Kingdoms\V4_Titan\tilt_lock.json";
+        let tilt_path = data_file("tilt_lock.json");
 
         // Tilt lock = hard negative
         if let Ok(content) = std::fs::read_to_string(tilt_path) {
@@ -167,7 +168,7 @@ impl ConfidenceEngine {
 
     /// BUG-11 FIX: Cached reader for hive_mind_snapshot.json (15s TTL)
     fn read_snapshot_cached() -> Option<Value> {
-        let path = r"E:\ROXY_SYSTEM\Projects\Antigravity-Swarm\Swarm_Kingdoms\V10_Hive_Mind\hive_mind_snapshot.json";
+        let path = data_file("hive_mind_snapshot.json");
         if let Ok(mut cache) = SNAPSHOT_CACHE.lock() {
             if let Some((ts, ref val)) = *cache {
                 if ts.elapsed().as_secs() < 15 { return Some(val.clone()); }

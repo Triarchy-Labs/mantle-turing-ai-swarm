@@ -7,7 +7,8 @@ pub struct WhaleShield;
 
 impl WhaleShield {
     pub async fn calculate_whale_stop_loss(client: &Client, symbol: &str, current_price: f64, side: &str) -> f64 {
-        let url = format!("https://api.bybit.com/v5/market/orderbook?category=linear&symbol={symbol}&limit=50");
+        // DEX orderbook proxy: try DexScreener first, no CEX dependency
+        let url = format!("https://api.dexscreener.com/latest/dex/search?q={symbol}");
         
         let search_depth = if side == "Buy" { 0.97 } else { 1.03 };
         let bound_price = current_price * search_depth;

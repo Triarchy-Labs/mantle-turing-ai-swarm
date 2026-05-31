@@ -104,7 +104,7 @@ impl RiskMatrix {
     /// Then: Half-Kelly = f*/2 (industry standard for variance reduction)
     /// Then: Bayesian shrinkage toward prior (0.5 WR) when sample N < 50
     fn kelly_hybrid_size(available_balance: f64, bot_score: f64, symbol: &str) -> f64 {
-        let snapshot_path = r"E:\ROXY_SYSTEM\Projects\Antigravity-Swarm\Swarm_Kingdoms\V10_Hive_Mind\hive_mind_snapshot.json";
+        let snapshot_path = crate::safe_io::data_file("hive_mind_snapshot.json");
         
         if let Ok(data) = std::fs::read_to_string(snapshot_path) {
             if let Ok(json) = serde_json::from_str::<serde_json::Value>(&data) {

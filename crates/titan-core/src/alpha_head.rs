@@ -15,7 +15,7 @@ pub struct GhostPosition {
     pub side: String,
     pub qty: f64,
     pub ghost_sl: f64,        // [SOFT] Невидимый локальный стоп для снайперского выхода
-    pub hardware_sl: f64,     // [HARD] Широкий стоп на Bybit (Щит от отключения света/проливов ММ)
+    pub hardware_sl: f64,     // [HARD] Wide exchange SL fallback (Щит от отключения света/проливов ММ)
     pub highest_profit_price: f64,
 }
 
@@ -114,7 +114,7 @@ impl AlphaGhostHead {
                         }
                         if new_hard_sl > pos.hardware_sl {
                             pos.hardware_sl = new_hard_sl;
-                            tracing::info!(hardware_sl = format!("{:.4}", pos.hardware_sl).as_str(), "🛡️ [IRON WALL] Bybit стоп подтянут");
+                            tracing::info!(hardware_sl = format!("{:.4}", pos.hardware_sl).as_str(), "🛡️ [IRON WALL] SL adjusted");
                         }
                     } else {
                         if new_ghost_sl < pos.ghost_sl { 
@@ -123,7 +123,7 @@ impl AlphaGhostHead {
                         }
                         if new_hard_sl < pos.hardware_sl {
                             pos.hardware_sl = new_hard_sl;
-                            tracing::info!(hardware_sl = format!("{:.4}", pos.hardware_sl).as_str(), "🛡️ [IRON WALL] Bybit стоп подтянут");
+                            tracing::info!(hardware_sl = format!("{:.4}", pos.hardware_sl).as_str(), "🛡️ [IRON WALL] SL adjusted");
                         }
                     }
                 }
@@ -148,7 +148,7 @@ impl AlphaGhostHead {
             }
             
             if is_hard_triggered {
-                tracing::error!("💀 [FATAL] Аппаратный щит Bybit пробит проскальзыванием раньше Ghost SL. Бой окончен.");
+                tracing::error!("💀 [FATAL] Hardware SL breached проскальзыванием раньше Ghost SL. Бой окончен.");
                 return Some("HARDWARE_FATALITY");
             }
         }
