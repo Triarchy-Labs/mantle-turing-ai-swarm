@@ -3,7 +3,6 @@ use crate::brain_feeds::BrainFeeds;
 
 /// Модуль Динамической Матрицы Рисков
 /// Никогда не возвращает статическое 5x плечо, если рынок слишком волатилен.
-
 pub struct RiskMatrix {
     pub base_leverage: f64,
     pub max_leverage: f64,

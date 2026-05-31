@@ -1,3 +1,4 @@
+#![allow(dead_code)] // Pending pipeline integration
 mod config;
 mod engine;
 mod network;

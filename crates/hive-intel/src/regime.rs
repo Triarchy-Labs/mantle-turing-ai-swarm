@@ -4,7 +4,6 @@
 ///
 /// Использует returns + volatility для классификации без полного HMM
 /// (упрощённый детектор для production use — полный HMM в будущем).
-
 use serde::Serialize;
 
 /// Рыночный режим.

@@ -9,7 +9,6 @@
 /// - Aff (Affective)        — модуляция на основе эмоционального состояния
 ///
 /// Портировано из: tradememory-protocol/src/tradememory/owm/recall.py
-
 use serde::Serialize;
 
 // ═══════════════════════════════════════════════════════════

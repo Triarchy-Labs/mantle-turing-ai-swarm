@@ -4,7 +4,6 @@
 /// 2. Disposition Effect: режем прибыль рано, держим убыток долго?
 ///
 /// Портировано из: tradememory-protocol/src/tradememory/owm/drift.py
-
 use serde::Serialize;
 
 // ═══════════════════════════════════════════════════════════

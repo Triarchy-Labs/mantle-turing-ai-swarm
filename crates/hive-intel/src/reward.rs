@@ -8,7 +8,6 @@
 /// - total_reward:     взвешенная сумма → UDP обратно в Titan
 ///
 /// Замыкает цикл: Titan → Castle → Titan (self-improving feedback loop).
-
 use serde::Serialize;
 use crate::entity::MemoryEntity;
 use crate::brain::BrainDiagnostics;

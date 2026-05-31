@@ -5,7 +5,6 @@
 /// - Risk Appetite (аппетит к риску на основе просадки)
 ///
 /// Портировано из: tradememory-protocol/src/tradememory/owm/affective.py
-
 /// EWMA Confidence — экспоненциально взвешенная уверенность.
 ///
 /// Маппит сырой EWMA в [0, 1] через sigmoid.

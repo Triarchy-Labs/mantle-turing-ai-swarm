@@ -12,7 +12,6 @@
 /// с run-length posterior в log-space.
 ///
 /// CUSUM остаётся как ДОПОЛНИТЕЛЬНЫЙ детектор для gradual shifts.
-
 use serde::Serialize;
 
 // ═══════════════════════════════════════════════════════════════
@@ -171,6 +170,7 @@ impl NigSignal {
 
 /// Bayesian Online Changepoint Detector.
 pub struct BayesianChangepoint {
+    #[allow(dead_code)] // Kept for debug inspection
     hazard_lambda: f64,
     truncation_threshold: f64,
     log_h: f64,

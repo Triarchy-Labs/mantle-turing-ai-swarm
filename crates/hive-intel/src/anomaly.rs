@@ -9,7 +9,6 @@
 /// - Modified Z-Score (MAD): ещё более robust
 ///
 /// Если трейд = -50$ при avg_loss = -5$ → это 10σ → КРИК.
-
 use serde::Serialize;
 
 /// Результат анализа аномалии.
@@ -57,18 +56,21 @@ fn z_score(value: f64, mean: f64, std_dev: f64) -> f64 {
 
 /// Среднее арифметическое.
 /// Делегирует в turbo::batch_stats (Welford, один проход).
-fn mean(data: &[f64]) -> f64 {
+#[allow(dead_code)] // Utility: available for future ML/risk modules
+pub(crate) fn mean(data: &[f64]) -> f64 {
     crate::turbo::batch_stats(data).mean
 }
 
 /// Стандартное отклонение (population).
 /// Делегирует в turbo::batch_stats (Welford, один проход, numerically stable).
-fn std_dev(data: &[f64]) -> f64 {
+#[allow(dead_code)] // Utility: available for future ML/risk modules
+pub(crate) fn std_dev(data: &[f64]) -> f64 {
     crate::turbo::batch_stats(data).std_dev
 }
 
 /// Медиана (для IQR и MAD).
-fn median(data: &mut [f64]) -> f64 {
+#[allow(dead_code)] // Utility: available for future ML/risk modules
+pub(crate) fn median(data: &mut [f64]) -> f64 {
     if data.is_empty() { return 0.0; }
     data.sort_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal));
     let mid = data.len() / 2;

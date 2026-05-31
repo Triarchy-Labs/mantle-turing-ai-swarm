@@ -12,7 +12,6 @@
 ///   trending_up → volatile:      10%
 ///
 /// Зачем: Titan ЗАРАНЕЕ готовится к смене режима вместо реактивного переключения.
-
 use serde::Serialize;
 use std::collections::HashMap;
 

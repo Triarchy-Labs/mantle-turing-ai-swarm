@@ -15,7 +15,6 @@
 ///   6. ADX (Average Directional Index) — сила тренда
 ///   7. Stochastic RSI — нормализованный RSI
 ///   8. OBV (On-Balance Volume) — объёмное давление
-
 use serde::Serialize;
 
 // ═══════════════════════════════════════════════════════════════

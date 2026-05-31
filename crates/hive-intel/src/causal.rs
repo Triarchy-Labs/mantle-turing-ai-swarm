@@ -7,7 +7,6 @@
 /// - Временны́м лагом (delay)
 /// - Статистической силой (Bayesian confidence)
 /// - Авто-обнаружением новых цепочек
-
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
