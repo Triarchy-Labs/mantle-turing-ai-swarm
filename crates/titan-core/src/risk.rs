@@ -9,6 +9,12 @@ pub struct RiskMatrix {
     pub max_leverage: f64,
 }
 
+impl Default for RiskMatrix {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl RiskMatrix {
     pub fn new() -> Self {
         RiskMatrix {

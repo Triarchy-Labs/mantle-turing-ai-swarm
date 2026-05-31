@@ -73,6 +73,12 @@ pub struct SemanticStore {
     pub beliefs: Vec<Belief>,
 }
 
+impl Default for SemanticStore {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl SemanticStore {
     pub fn new() -> Self {
         Self { beliefs: Vec::new() }

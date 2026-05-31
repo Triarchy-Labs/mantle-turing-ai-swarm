@@ -138,6 +138,12 @@ pub struct ImbalanceEngine {
     pub history_size: usize,
 }
 
+impl Default for ImbalanceEngine {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl ImbalanceEngine {
     pub fn new() -> Self {
         Self {

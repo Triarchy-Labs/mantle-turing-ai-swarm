@@ -69,6 +69,12 @@ pub struct CausalGraph {
     pub edges: HashMap<String, CausalEdge>,
 }
 
+impl Default for CausalGraph {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl CausalGraph {
     pub fn new() -> Self {
         Self { edges: HashMap::new() }

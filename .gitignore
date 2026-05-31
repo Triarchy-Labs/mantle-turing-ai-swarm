@@ -9,3 +9,4 @@ x402_memory.db/
 data/
 *.db
 *.log
+dashboard/.vite/

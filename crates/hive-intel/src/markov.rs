@@ -59,6 +59,12 @@ pub struct TransitionMatrix {
     pub total_transitions: u32,
 }
 
+impl Default for TransitionMatrix {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl TransitionMatrix {
     pub fn new() -> Self {
         let mut counts = HashMap::new();

@@ -80,6 +80,12 @@ const MAX_BELIEFS: usize = 500;
 /// Максимум causal edges (пруним слабые).
 const MAX_CAUSAL_EDGES: usize = 1000;
 
+impl Default for Brain {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Brain {
     pub fn new() -> Self {
         Self {
