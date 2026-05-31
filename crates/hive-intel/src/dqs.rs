@@ -14,7 +14,6 @@
 ///   5. Historical Pattern — avg PnL похожих прошлых трейдов (tanh)
 ///
 /// Adaptive thresholds: skip = μ - 2σ, caution = μ - 1σ (из распределения DQS)
-
 use serde::Serialize;
 
 // ═══════════════════════════════════════════════════════════════
@@ -128,8 +127,8 @@ impl DqsEngine {
         let min_w = weights.iter().cloned().fold(f64::INFINITY, f64::min);
         let shifted: Vec<f64> = weights.iter().map(|w| w - min_w + 0.1).collect();
         let total: f64 = shifted.iter().sum();
-        for j in 0..5 {
-            self.weights[j] = shifted[j] / total * 5.0;
+        for (w, s) in self.weights.iter_mut().zip(shifted.iter()) {
+            *w = s / total * 5.0;
         }
     }
 

@@ -68,6 +68,7 @@ pub struct UnstuckEngine;
 
 impl UnstuckEngine {
     /// Главная функция — анализирует позицию и выдаёт вердикт
+    #[allow(clippy::too_many_arguments)]
     pub fn evaluate(
         side: &str,
         entry_price: f64,

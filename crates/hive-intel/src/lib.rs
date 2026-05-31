@@ -6,7 +6,6 @@
 //!
 //! This is the "reflexion" layer — it learns from trade outcomes,
 //! profiles asset DNA, and provides predictive signals.
-
 pub mod brain;
 pub mod orderbook_imbalance;
 pub mod ml_local;

@@ -6,7 +6,6 @@
 /// Метод: Online gradient-free optimization (EWA — Exponentially Weighted Average).
 /// После каждого трейда: если recall правильно предсказал → усилить вес
 /// доминирующего компонента. Если ошибся → ослабить.
-
 use std::collections::HashMap;
 use serde::{Deserialize, Serialize};
 
@@ -125,7 +124,7 @@ impl AdaptiveWeightStore {
     /// Символы с наибольшим числом обновлений (самые обученные).
     pub fn most_trained(&self, limit: usize) -> Vec<&SymbolWeights> {
         let mut sorted: Vec<_> = self.weights.values().collect();
-        sorted.sort_by(|a, b| b.updates.cmp(&a.updates));
+        sorted.sort_by_key(|w| std::cmp::Reverse(w.updates));
         sorted.truncate(limit);
         sorted
     }

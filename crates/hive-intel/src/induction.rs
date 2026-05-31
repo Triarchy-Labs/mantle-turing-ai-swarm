@@ -8,7 +8,6 @@
 ///   - win_rate, avg_pnl_r, directions, strategies
 ///
 /// Это механизм обучения: единичные трейды → устойчивые правила.
-
 use serde::Serialize;
 use std::collections::HashMap;
 

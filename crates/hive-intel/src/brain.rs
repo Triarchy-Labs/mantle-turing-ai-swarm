@@ -2,7 +2,6 @@
 ///
 /// Diamond-verified: ВСЕ модули подключены включая OWM Recall.
 /// Bloom rotation, semantic/causal pruning, NaN-safe.
-
 use serde::{Serialize, Deserialize};
 use crate::entity::MemoryEntity;
 use crate::semantic::SemanticStore;

@@ -17,7 +17,6 @@
 ///   - Deflated Sharpe Ratio (Bailey & Lopez de Prado 2014)
 ///   - Benjamini-Hochberg FDR correction
 ///   - Minimum Backtest Length calculator
-
 use serde::Serialize;
 
 // ═══════════════════════════════════════════════════════════════

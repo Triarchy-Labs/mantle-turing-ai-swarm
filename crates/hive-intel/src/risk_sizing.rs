@@ -11,7 +11,6 @@
 ///      TradMemory: mnemox-ai (MIT)
 ///
 /// Для Hive Mind: выбираем min(fixed_risk, kelly) — консервативный подход.
-
 use serde::Serialize;
 
 // ═══════════════════════════════════════════════════════════════
@@ -189,7 +188,6 @@ pub enum SizingMethod {
 ///   3. Session adjustments (WR per session → lot multiplier)
 ///   4. Consecutive losses → STOPPED/REDUCED/ACTIVE
 ///   5. Daily loss limit → hard stop
-
 #[derive(Debug, Clone, Copy, PartialEq, Serialize)]
 pub enum RiskStatus {
     Active,   // Normal trading

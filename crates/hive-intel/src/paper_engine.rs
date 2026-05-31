@@ -4,7 +4,6 @@
 /// Адаптировано для Hive Mind V10 architecture.
 ///
 /// Правило: НА БИРЖУ С РЕАЛЬНЫМИ ДЕНЬГАМИ — ТОЛЬКО ПОСЛЕ 2 НЕДЕЛЬ paper trading В ПЛЮСЕ.
-
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 

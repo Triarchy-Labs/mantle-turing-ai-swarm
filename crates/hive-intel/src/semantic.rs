@@ -7,7 +7,6 @@
 /// - Успех → α += weight
 /// - Провал → β += weight
 /// - Posterior mean = α / (α + β)
-
 use serde::{Deserialize, Serialize};
 
 /// Семантическое знание (belief).

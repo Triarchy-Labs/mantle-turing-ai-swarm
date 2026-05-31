@@ -133,6 +133,7 @@ impl TrailingEngine {
 
     /// Расчёт нового trailing SL для позиции
     /// Возвращает новый SL если он улучшился, иначе None
+    #[allow(clippy::too_many_arguments)]
     pub fn calculate_trailing_sl(
         side: &str,
         entry_price: f64,

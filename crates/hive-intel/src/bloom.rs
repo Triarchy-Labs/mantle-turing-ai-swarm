@@ -6,7 +6,6 @@
 ///
 /// Используется для fast-reject в recall: пропускаем полный scoring
 /// если контекст точно никогда не встречался.
-
 use serde::{Deserialize, Serialize};
 
 /// Компактный Bloom Filter на фиксированном массиве битов.
@@ -38,7 +37,7 @@ impl BloomFilter {
     pub fn optimal(expected_items: usize, fp_rate: f64) -> Self {
         let m = (-(expected_items as f64) * fp_rate.ln() / (2.0_f64.ln().powi(2))).ceil() as usize;
         let k = ((m as f64 / expected_items as f64) * 2.0_f64.ln()).ceil() as u32;
-        Self::new(m.max(64), k.max(1).min(20))
+        Self::new(m.max(64), k.clamp(1, 20))
     }
 
     /// Вставляет элемент (по его хэшу).

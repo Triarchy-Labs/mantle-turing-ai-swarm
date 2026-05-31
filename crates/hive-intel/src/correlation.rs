@@ -9,7 +9,6 @@
 /// - |r| < 0.3: слабая → независимые
 ///
 /// Rolling correlation: пересчитывается на окне последних N трейдов.
-
 use serde::Serialize;
 use std::collections::HashMap;
 

@@ -13,7 +13,6 @@
 //! - Risk-adjusted returns (Sharpe-like ratio)
 //! - Directional accuracy
 //! - Decision speed (AI inference time)
-
 use serde::Serialize;
 
 /// SMA Crossover Strategy — "Human" baseline.

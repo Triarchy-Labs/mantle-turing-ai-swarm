@@ -8,7 +8,6 @@
 ///
 /// Key feature: ensure_negative_balance — guarantees ≥20% negative memories
 /// in recall results to prevent survivorship bias.
-
 use serde::Serialize;
 
 // ═══════════════════════════════════════════════════════════════

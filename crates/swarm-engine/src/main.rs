@@ -360,7 +360,7 @@ async fn decision_cycle<P: alloy::providers::Provider>(
     };
 
     // Affective Intelligence — EWMA confidence & risk appetite from trade history
-    let ewma_conf = ewma_confidence(&pnl_outcomes.iter().map(|p| *p).collect::<Vec<_>>(), 0.9);
+    let ewma_conf = ewma_confidence(&pnl_outcomes.to_vec(), 0.9);
     let risk_app = risk_appetite(affective.drawdown_state, 0.15); // 15% max DD
     tracing::info!("🧬 Affective: EWMA_conf={:.3} risk_appetite={:.3} streak={}",
         ewma_conf, risk_app, affective.consecutive_losses);
@@ -572,7 +572,7 @@ async fn decision_cycle<P: alloy::providers::Provider>(
         {
             let pe = paper.lock().unwrap();
             if pe.pnl_history.len() >= 5 {
-                let history: Vec<f64> = pe.pnl_history.iter().map(|p| *p).collect();
+                let history: Vec<f64> = pe.pnl_history.to_vec();
                 let latest_pnl = history.last().copied().unwrap_or(0.0);
                 let anomaly = hive_intel::anomaly::detect_anomaly(latest_pnl, &history);
                 if anomaly.severity != hive_intel::anomaly::AnomalySeverity::Normal {

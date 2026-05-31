@@ -9,7 +9,6 @@
 ///   3. Raw Sharpe + Max Drawdown utilities
 ///
 /// Все формулы портированы formula-in-formula из Python оригинала.
-
 use serde::Serialize;
 
 // ═══════════════════════════════════════════════════════════════

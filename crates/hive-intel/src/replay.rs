@@ -11,7 +11,6 @@
 /// - Более информативные опыты (аномальные, экстремальные) имеют
 ///   БОЛЬШИЙ приоритет и вспоминаются чаще.
 /// - priority = |TD_error| + ε (temporal difference error)
-
 use serde::{Deserialize, Serialize};
 use std::collections::VecDeque;
 

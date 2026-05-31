@@ -16,7 +16,6 @@
 ///
 /// SPRT — Sequential Probability Ratio Test для statistically valid decisions:
 ///   "Достаточно ли данных чтобы заключить что стратегия прибыльна?"
-
 use serde::Serialize;
 
 // ═══════════════════════════════════════════════════════════════

@@ -12,7 +12,6 @@
 ///   - RSI oversold (< 30) → Long
 ///   - RSI overbought (> 70) → Short
 ///   - SL = 2% от цены, TP = 4% от цены
-
 use crate::paper_engine::{PaperEngine, MarketTick, Side, PaperStats};
 
 // ════════════════════════════════════════════════════════════════

@@ -4,7 +4,6 @@
 /// Сессии: Tokyo (00:00-08:00 UTC), London (08:00-16:00 UTC), NewYork (13:00-21:00 UTC).
 ///
 /// Закрывает дырку D6 из Blueprint V3.
-
 use serde::Serialize;
 
 /// Торговая сессия.
