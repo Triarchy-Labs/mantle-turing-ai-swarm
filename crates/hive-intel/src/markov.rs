@@ -49,7 +49,7 @@ impl MarketRegime {
     }
 }
 
-/// Матрица переходов: T[from][to] = probability.
+/// Матрица переходов: T\[from\]\[to\] = probability.
 #[derive(Debug, Clone, Serialize)]
 pub struct TransitionMatrix {
     /// Количество наблюдённых переходов: counts[from][to]

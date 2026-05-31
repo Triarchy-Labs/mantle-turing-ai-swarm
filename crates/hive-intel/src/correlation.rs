@@ -87,7 +87,7 @@ pub fn pearson_correlation(x: &[f64], y: &[f64]) -> Option<f64> {
 
 /// Матрица корреляций между всеми символами.
 ///
-/// `pnl_series` — HashMap<symbol, Vec<pnl>> (временной ряд PnL).
+/// `pnl_series` — HashMap`<symbol, Vec<pnl>>` (временной ряд PnL).
 /// Возвращает все пары с |r| > min_abs_r.
 pub fn build_correlation_matrix(
     pnl_series: &HashMap<String, Vec<f64>>,

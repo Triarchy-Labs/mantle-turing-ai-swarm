@@ -210,7 +210,7 @@ pub fn zscore_normalize(data: &mut [f64]) {
 /// Не требует AST/HKT — standalone формула.
 ///
 /// DONOR: deep_causality_uncertain::uncertain_f64::estimate_probability_exceeds
-/// Наша версия: принимает сырой массив samples вместо Uncertain<T> монады.
+/// Наша версия: принимает сырой массив samples вместо Uncertain`<T>` монады.
 pub fn monte_carlo_probability_exceeds(samples: &[f64], threshold: f64) -> f64 {
     if samples.is_empty() {
         return 0.0;
