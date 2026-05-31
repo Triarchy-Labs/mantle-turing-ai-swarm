@@ -3,9 +3,9 @@
 //! Extracted from Titan-HFT-Engine: NeuralBrain scoring, RiskMatrix (Kelly),
 //! 8-gate EntryPipeline, technical indicators, shield, trailing SL.
 //!
-//! All modules are exchange-neutral — no Bybit/CEX-specific code.
-//! Feed them data from any source (DEX, CEX, oracle) and they produce
-//! scoring, position sizing, and risk decisions.
+//! All modules are exchange-neutral — no CEX-specific code.
+//! Data comes from DexScreener/CoinGecko APIs (public, no auth).
+//! File paths resolved via safe_io::data_dir() (portable across OS).
 
 pub mod brain;
 pub mod risk;

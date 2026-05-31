@@ -12,8 +12,9 @@
 // Reallow criteria: win_rate ≥ 0.55 AND cooldown expired (24h)
 
 use serde_json::Value;
+use crate::safe_io::data_file;
 
-const SNAPSHOT_PATH: &str = r"E:\ROXY_SYSTEM\Projects\Antigravity-Swarm\Swarm_Kingdoms\V10_Hive_Mind\hive_mind_snapshot.json";
+fn snapshot_path() -> String { data_file("hive_mind_snapshot.json") }
 const MIN_TRADES_FOR_BAN: i64 = 30;
 const BAN_WIN_RATE: f64 = 0.40;
 const REALLOW_WIN_RATE: f64 = 0.55;
@@ -96,7 +97,7 @@ impl Deallow {
     }
 
     fn read_snapshot() -> Option<Value> {
-        std::fs::read_to_string(SNAPSHOT_PATH)
+        std::fs::read_to_string(&snapshot_path())
             .ok()
             .and_then(|s| serde_json::from_str(&s).ok())
     }

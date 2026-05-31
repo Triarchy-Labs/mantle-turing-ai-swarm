@@ -1,5 +1,6 @@
 // src/modules/brain_feeds.rs
 use serde_json::Value;
+use crate::safe_io::data_file;
 use std::sync::Mutex;
 use std::time::Instant;
 
@@ -32,8 +33,8 @@ const MEME_TICKERS_FALLBACK: &[&str] = &[
 impl BrainFeeds {
     /// Протокол "Dead Man's Switch": Проверка жизнеспособности Роя (Treasury/Ouroboros)
     pub fn is_swarm_heartbeat_alive() -> bool {
-        let treasury_path = r"E:\ROXY_SYSTEM\Projects\Antigravity-Swarm\Swarm_Kingdoms\V11_Treasury_Lord\treasury_state.json";
-        let ouroboros_path = r"E:\ROXY_SYSTEM\Projects\Antigravity-Swarm\ouroboros_verdicts.json";
+        let treasury_path = data_file("treasury_state.json");
+        let ouroboros_path = data_file("ouroboros_verdicts.json");
         
         let is_stale = |path: &str| -> bool {
             if let Ok(meta) = std::fs::metadata(path) {
@@ -45,12 +46,12 @@ impl BrainFeeds {
             true // Если файл не читается, считаем пульс мертвым
         };
 
-        if is_stale(treasury_path) {
+        if is_stale(&treasury_path) {
             tracing::warn!("💀 [DEAD_MAN_SWITCH] Казначей мертв (>5 мин). Входы заблокированы!");
             return false;
         }
 
-        if is_stale(ouroboros_path) {
+        if is_stale(&ouroboros_path) {
             tracing::warn!("💀 [DEAD_MAN_SWITCH] Уроборос мертв (>5 мин). Входы заблокированы!");
             return false;
         }
@@ -66,7 +67,7 @@ impl BrainFeeds {
                 if ts.elapsed().as_secs() < 60 { return list.clone(); }
             }
         }
-        let path = r"E:\ROXY_SYSTEM\Projects\Antigravity-Swarm\Swarm_Kingdoms\V4_Titan\meme_blacklist.json";
+        let path = data_file("meme_blacklist.json");
         let result = if let Ok(content) = std::fs::read_to_string(path) {
             if let Ok(json) = serde_json::from_str::<Value>(&content) {
                 let mut list: Vec<String> = Vec::new();
@@ -98,7 +99,7 @@ impl BrainFeeds {
 
     /// [Omni-Memory] Проверка горячего Мозжечкового Кэша на Тилт
     pub fn is_symbol_tilt_locked(symbol: &str) -> bool {
-        let path = r"E:\ROXY_SYSTEM\Projects\Antigravity-Swarm\Swarm_Kingdoms\V4_Titan\tilt_lock.json";
+        let path = data_file("tilt_lock.json");
         if let Ok(content) = std::fs::read_to_string(path) {
             if let Ok(json) = serde_json::from_str::<Value>(&content) {
                 if let Some(entry) = json.get(symbol) {
@@ -122,7 +123,7 @@ impl BrainFeeds {
     /// [Omni-Memory] ПРАВОЕ ПОЛУШАРИЕ: Чтение alpha_boost.json
     /// Возвращает (leverage_multiplier, score_bonus) для S-TIER монет.
     pub fn read_alpha_boost(symbol: &str) -> (f64, f64) {
-        let path = r"E:\ROXY_SYSTEM\Projects\Antigravity-Swarm\Swarm_Kingdoms\V4_Titan\alpha_boost.json";
+        let path = data_file("alpha_boost.json");
         if let Ok(content) = std::fs::read_to_string(path) {
             if let Ok(json) = serde_json::from_str::<Value>(&content) {
                 if let Some(entry) = json.get(symbol) {
@@ -149,7 +150,7 @@ impl BrainFeeds {
 
     // ═══ TREASURY CACHED READER (BUG-1 fix: 48 I/O → 1) ═══
     fn read_treasury_json() -> Option<Value> {
-        let path = r"E:\ROXY_SYSTEM\Projects\Antigravity-Swarm\Swarm_Kingdoms\V11_Treasury_Lord\treasury_state.json";
+        let path = data_file("treasury_state.json");
         let mut cache = TREASURY_CACHE.lock().ok()?;
         if let Some((ts, ref val)) = *cache {
             if ts.elapsed().as_secs() < 10 { return Some(val.clone()); }
@@ -163,7 +164,7 @@ impl BrainFeeds {
 
 
     pub fn read_ouroboros_verdict(symbol: &str) -> String {
-        let path = "E:\\ROXY_SYSTEM\\Projects\\Antigravity-Swarm\\ouroboros_verdicts.json";
+        let path = data_file("ouroboros_verdicts.json");
         if let Ok(content) = std::fs::read_to_string(path) {
             if let Ok(json) = serde_json::from_str::<Value>(&content) {
                 if let Some(entry) = json.get(symbol) {
@@ -192,7 +193,7 @@ impl BrainFeeds {
     }
 
     pub fn read_liq_magnet(symbol: &str) -> f64 {
-        let path = r"E:\ROXY_SYSTEM\Projects\Roxy-Alpha-Station\liq_heatmap.json";
+        let path = data_file("liq_heatmap.json");
         let data = match std::fs::read_to_string(path) {
             Ok(d) => d, Err(_) => return 0.0,
         };
@@ -228,7 +229,7 @@ impl BrainFeeds {
             return limit;
         }
         // Priority 2: Calibration (from backtester V5 auto-tuning)
-        let cal_path = r"E:\ROXY_SYSTEM\Projects\Antigravity-Swarm\Swarm_Kingdoms\V4_Titan\titan_calibration.json";
+        let cal_path = data_file("titan_calibration.json");
         if let Ok(content) = std::fs::read_to_string(cal_path) {
             if let Ok(json) = serde_json::from_str::<serde_json::Value>(&content) {
                 if let Some(limit) = json["session_limit"].as_f64() {
@@ -261,8 +262,8 @@ impl BrainFeeds {
     }
 
     pub fn read_swarm_idle_boost() -> f64 {
-        let v7_idle = Self::is_bot_idle(r"E:\ROXY_SYSTEM\Projects\Antigravity-Swarm\Swarm_Kingdoms\V7_Meme_Sniper\meme_momentum.json", 3 * 3600);
-        let v13_idle = Self::is_bot_idle(r"E:\ROXY_SYSTEM\Projects\Antigravity-Swarm\Swarm_Kingdoms\V13_VWAP_Scalper\vwap_state.json", 3 * 3600);
+        let v7_idle = Self::is_bot_idle(&data_file("meme_momentum.json"), 3 * 3600);
+        let v13_idle = Self::is_bot_idle(&data_file("vwap_state.json"), 3 * 3600);
         if v7_idle && v13_idle { 1.5 } 
         else if v7_idle || v13_idle { 1.25 } 
         else { 1.0 }
@@ -281,15 +282,15 @@ impl BrainFeeds {
     /// BUG-2 FIX: Проверяет реальные ownership файлы V7/V13, а не пустое поле Treasury
     pub fn is_symbol_held_by_other_bot(symbol: &str) -> bool {
         let paths = [
-            r"E:\ROXY_SYSTEM\Projects\Antigravity-Swarm\Swarm_Kingdoms\V7_Meme_Sniper\meme_ownership.json",
-            r"E:\ROXY_SYSTEM\Projects\Antigravity-Swarm\Swarm_Kingdoms\V13_VWAP_Scalper\vwap_ownership.json",
+            data_file("meme_ownership.json"),
+            data_file("vwap_ownership.json"),
         ];
         for path in &paths {
-            if let Ok(content) = std::fs::read_to_string(path) {
+            if let Ok(content) = std::fs::read_to_string(&path) {
                 if let Ok(json) = serde_json::from_str::<Value>(&content) {
                     if let Some(obj) = json.as_object() {
                         if obj.contains_key(symbol) {
-                            tracing::info!(symbol = %symbol, bot = path.split('\\').next_back().unwrap_or(""), "[ANTI-DUP] Already held by another bot");
+                            tracing::info!(symbol = %symbol, bot = std::path::Path::new(&path).file_stem().and_then(|s| s.to_str()).unwrap_or(""), "[ANTI-DUP] Already held by another bot");
                             return true;
                         }
                     }
@@ -300,8 +301,8 @@ impl BrainFeeds {
     }
 
     pub fn read_whale_radar(symbol: &str) -> f64 {
-        let path = r"E:\ROXY_SYSTEM\Projects\Roxy-Alpha-Station\whale_alerts.json";
-        let data = match std::fs::read_to_string(path) {
+        let path = data_file("whale_alerts.json");
+        let data = match std::fs::read_to_string(&path) {
             Ok(d) => d, Err(_) => return 0.0,
         };
         let json: serde_json::Value = match serde_json::from_str(&data) {
@@ -313,7 +314,7 @@ impl BrainFeeds {
                 let age = chrono::Utc::now().signed_duration_since(gen.with_timezone(&chrono::Utc));
                 if age.num_seconds() > 600 { return 0.0; }
             }
-        } else if let Ok(meta) = std::fs::metadata(path) {
+        } else if let Ok(meta) = std::fs::metadata(&path) {
             if let Ok(modified) = meta.modified() {
                 if modified.elapsed().unwrap_or_default().as_secs() > 600 { return 0.0; }
             }
@@ -327,15 +328,15 @@ impl BrainFeeds {
     }
 
     pub fn read_oi_tracker(symbol: &str) -> f64 {
-        let path = r"E:\ROXY_SYSTEM\Projects\Roxy-Alpha-Station\oi_alerts.json";
-        let data = match std::fs::read_to_string(path) {
+        let path = data_file("oi_alerts.json");
+        let data = match std::fs::read_to_string(&path) {
             Ok(d) => d, Err(_) => return 0.0,
         };
         let json: serde_json::Value = match serde_json::from_str(&data) {
             Ok(j) => j, Err(_) => return 0.0,
         };
         // BUG-24 FIX: staleness check (>10 min = ignore)
-        if let Ok(meta) = std::fs::metadata(path) {
+        if let Ok(meta) = std::fs::metadata(&path) {
             if let Ok(modified) = meta.modified() {
                 if modified.elapsed().unwrap_or_default().as_secs() > 600 { return 0.0; }
             }
@@ -351,7 +352,7 @@ impl BrainFeeds {
     /// [Vector 6] Часовой модификатор на основе исторической статистики
     /// НЕ блокирует, а корректирует Score: -1.0 (осторожность) / +1.0 (агрессия) / 0.0 (нейтрально)
     pub fn read_hour_bias() -> f64 {
-        let path = r"E:\ROXY_SYSTEM\Projects\Antigravity-Swarm\Swarm_Kingdoms\V4_Titan\hour_performance.json";
+        let path = data_file("hour_performance.json");
         // PREDATOR-09 FIX: cached read (300s TTL)
         let json = {
             if let Ok(mut cache) = HOUR_BIAS_CACHE.lock() {

@@ -21,9 +21,10 @@
 
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
+use crate::safe_io::data_file;
 
-const RAMP_STATE_PATH: &str = r"E:\ROXY_SYSTEM\Projects\Antigravity-Swarm\Swarm_Kingdoms\V4_Titan\titan_ramp_state.json";
-const SNAPSHOT_PATH: &str = r"E:\ROXY_SYSTEM\Projects\Antigravity-Swarm\Swarm_Kingdoms\V10_Hive_Mind\hive_mind_snapshot.json";
+fn ramp_state_path() -> String { data_file("titan_ramp_state.json") }
+fn snapshot_path() -> String { data_file("hive_mind_snapshot.json") }
 const EVAL_WINDOW_HOURS: i64 = 96;
 const PROMOTION_COOLDOWN_DAYS: i64 = 7;
 
@@ -274,7 +275,7 @@ impl AutoRamp {
 
     /// Count trades in recent 96h window from snapshot
     fn count_recent_trades(_now_ts: i64) -> i64 {
-        if let Ok(data) = std::fs::read_to_string(SNAPSHOT_PATH) {
+        if let Ok(data) = std::fs::read_to_string(&snapshot_path()) {
             if let Ok(json) = serde_json::from_str::<Value>(&data) {
                 let mut total = 0i64;
                 if let Some(obj) = json.as_object() {
@@ -292,7 +293,7 @@ impl AutoRamp {
 
     /// Get 7-day PnL from snapshot (sum of all symbols' net_pnl)
     fn get_7d_pnl() -> f64 {
-        if let Ok(data) = std::fs::read_to_string(SNAPSHOT_PATH) {
+        if let Ok(data) = std::fs::read_to_string(&snapshot_path()) {
             if let Ok(json) = serde_json::from_str::<Value>(&data) {
                 let mut total_pnl = 0.0;
                 if let Some(obj) = json.as_object() {
@@ -308,7 +309,7 @@ impl AutoRamp {
 
     /// Get overall win rate from snapshot
     fn get_overall_win_rate() -> f64 {
-        if let Ok(data) = std::fs::read_to_string(SNAPSHOT_PATH) {
+        if let Ok(data) = std::fs::read_to_string(&snapshot_path()) {
             if let Ok(json) = serde_json::from_str::<Value>(&data) {
                 let mut total_wins = 0i64;
                 let mut total_trades = 0i64;
@@ -330,7 +331,7 @@ impl AutoRamp {
 
     /// Load state from disk (or default if missing)
     fn load_state() -> RampState {
-        std::fs::read_to_string(RAMP_STATE_PATH)
+        std::fs::read_to_string(&ramp_state_path())
             .ok()
             .and_then(|s| serde_json::from_str(&s).ok())
             .unwrap_or_default()
@@ -339,7 +340,7 @@ impl AutoRamp {
     /// Save state to disk
     fn save_state(state: &RampState) {
         if let Ok(json) = serde_json::to_string_pretty(state) {
-            let _ = crate::safe_io::SafeIO::atomic_write(RAMP_STATE_PATH, &json);
+            let _ = crate::safe_io::SafeIO::atomic_write(&ramp_state_path(), &json);
         }
     }
 }

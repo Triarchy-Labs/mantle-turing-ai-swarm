@@ -60,7 +60,9 @@ impl PatienceTracker {
     
     /// Ренгеновский сканер стакана. Вызывается перед самым входом (Phase 2)
     pub async fn check_imbalance_ratio(&self, client: &Client, symbol: &str) -> f64 {
-        let url = format!("https://api.bybit.com/v5/market/orderbook?category=linear&symbol={symbol}&limit=20");
+        // DEX orderbook proxy: DexScreener doesn't expose raw orderbook,
+        // so we use liquidity as a proxy for bid/ask imbalance
+        let url = format!("https://api.dexscreener.com/latest/dex/search?q={symbol}");
         
         if let Ok(res) = client.get(&url).send().await {
             if let Ok(json) = res.json::<Value>().await {

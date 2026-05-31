@@ -5,7 +5,47 @@
 // Pattern: write to .tmp → rename to final (atomic on NTFS/ext4).
 // If crash during write → old file survives. No corruption possible.
 
-use std::path::Path;
+use std::path::{Path, PathBuf};
+
+/// Return the project-local data directory for persistent state files.
+///
+/// Resolution order:
+/// 1. `$SWARM_DATA_DIR` env var (explicit override for deployment)
+/// 2. `$CARGO_MANIFEST_DIR/../../data` (workspace-relative, development)
+/// 3. `./data` (fallback — works in Docker/Vercel/CI)
+///
+/// The directory is lazily created on first access.
+pub fn data_dir() -> PathBuf {
+    if let Ok(d) = std::env::var("SWARM_DATA_DIR") {
+        let p = PathBuf::from(d);
+        let _ = std::fs::create_dir_all(&p);
+        return p;
+    }
+    // Try workspace-relative (crates/titan-core/../../data = project-root/data)
+    let manifest = option_env!("CARGO_MANIFEST_DIR");
+    if let Some(m) = manifest {
+        let ws = PathBuf::from(m).join("../../data");
+        if let Ok(canonical) = ws.canonicalize() {
+            return canonical;
+        }
+        // Dir doesn't exist yet — create it
+        let target = PathBuf::from(m).join("..").join("..").join("data");
+        let _ = std::fs::create_dir_all(&target);
+        return target;
+    }
+    // Absolute fallback
+    let p = PathBuf::from("./data");
+    let _ = std::fs::create_dir_all(&p);
+    p
+}
+
+/// Resolve a filename within the project data directory.
+///
+/// Maps legacy Windows paths like `E:\ROXY_SYSTEM\...\foo.json` → `data/foo.json`.
+/// Accepts just the filename: `data_file("titan_ramp_state.json")`.
+pub fn data_file(name: &str) -> String {
+    data_dir().join(name).to_string_lossy().to_string()
+}
 
 pub struct SafeIO;
 
