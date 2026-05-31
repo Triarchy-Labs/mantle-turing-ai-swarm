@@ -46,7 +46,7 @@
 | Crate | LOC | Role |
 |-------|-----|------|
 | **ouroboros-brain** | 3,987 | LLM consensus: multi-model debate, 15-factor judge, decision memory, circuit breaker, pre-trade risk engine (5 institutional filters) |
-| **titan-core** | 4,465 | Neural trading brain: 8-gate entry pipeline, Kelly risk sizing, trailing SL, position recovery |
+| **titan-core** | 4,465 | Neural trading brain: 8-gate entry pipeline, trailing SL (ATR + BE-lock + adverse selection), 3-stage unstuck recovery (Passivbot v7), dynamic leverage (RiskMatrix), Kelly risk sizing |
 | **hive-intel** | 12,212 | Collective intelligence: 40+ cognitive modules, SIMD turbo, ML local (<1μs), regime detection (4-state HMM), affective memory (EWMA), hybrid recall (OWM+SIMD+anti-survivorship), paper engine, AI vs Human benchmark |
 | **mantle-chain** | 705 | Alloy 2.0 on-chain: ERC-8004 ABI (sol!), wallet signer + live tx broadcast, DexScreener 13-field live data, Merchant Moe/Agni router |
 | **swarm-engine** | 1,040 | Main orchestrator — v4.2 pipeline + telemetry HTTP server (:3402) + live chain broadcast |
@@ -81,9 +81,19 @@ Market Data
     ↓
 ╔═ PAPER TRADE (ATR 1.5× stops, 2:1 R:R, circuit breaker) ═╗
     ↓
+╔═ TITAN RISK MATRIX (dynamic leverage: ATR volatility + macro penalty) ═╗
+    ↓
+╔═ TITAN TRAILING SL (ATR trailing + BE-lock + adverse selection guard) ═╗
+    ↓
+╔═ TITAN UNSTUCK (3-stage recovery: monitor → partial trim → full evacuation) ═╗
+    ↓
+╔═ ANOMALY DETECTION (Z-score + IQR on PnL history) ═╗
+    ↓
 ╔═ DECISION JOURNAL (self-learning memory → future prompt injection) ═╗
     ↓
 ╔═ MANTLE CHAIN (ERC-8004 reputation update + on-chain tx logging) ═╗
+    ↓
+╔═ IPC BRIDGE (mmap zero-copy → inter-agent state sync) ═╗
 ```
 
 ## 15-Factor Judge (Ouroboros)
@@ -113,7 +123,7 @@ Market Data
 | **L0** | `DashMap` + `Arc` | Real-time state (lock-free, in-memory) |
 | **L1** | Hybrid Recall (OWM + SIMD cosine + anti-survivorship) | Episodic trade memory with forced negative inclusion |
 | **L2** | Decision Memory (LLM journal) | Self-learning trade journal → prompt injection |
-| **L3** | HyperEdge Graph (sled DB) | Persistent on-chain event memory |
+| **L3** | IPC Bridge (mmap) + HyperEdge Graph (sled DB) | Inter-agent state sync + persistent on-chain memory |
 | **L4** | Paper Engine (SL/TP/circuit breaker) | Simulation with ATR-based risk |
 
 ## Performance
@@ -217,6 +227,6 @@ mantle-ai-swarm/
 
 Converged from three battle-tested trading engines — Ouroboros (LLM brain), Titan (execution), Hive Mind (intelligence) — and unified with X402 on-chain infrastructure for the Mantle Turing Test Hackathon 2026.
 
-24,267 lines of Rust. 12 crates. 6 intelligence layers. Live Mantle data. Zero compromises.
+26,873 lines of Rust. 12 crates. 6 intelligence layers. 18 pipeline stages. Live Mantle data. Zero compromises.
 
 Built by [Triarchy Labs](https://github.com/Triarchy-Labs).
