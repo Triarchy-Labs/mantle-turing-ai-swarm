@@ -66,7 +66,7 @@ mod tests {
     use std::fs;
 
     fn temp_path(name: &str) -> String {
-        format!("{}\\{}", std::env::temp_dir().display(), name)
+        std::env::temp_dir().join(name).to_string_lossy().to_string()
     }
 
     #[test]

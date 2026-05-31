@@ -9,6 +9,12 @@ pub struct HiveMindEngine {
     pub graph: DashMap<String, MemoryEntity>,
 }
 
+impl Default for HiveMindEngine {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl HiveMindEngine {
     pub fn new() -> Self {
         Self { graph: DashMap::new() }

@@ -66,6 +66,12 @@ pub struct DqsEngine {
     caution_threshold: f64,
 }
 
+impl Default for DqsEngine {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl DqsEngine {
     pub fn new() -> Self {
         Self {

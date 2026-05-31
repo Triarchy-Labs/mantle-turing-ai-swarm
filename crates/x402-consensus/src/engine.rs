@@ -154,8 +154,8 @@ impl PolicyGovernor {
         }
 
         // Step 5: Trend veto — block counter-trend signals
-        if self.require_trend_alignment {
-            if let Some(trend) = trend_vote {
+        if self.require_trend_alignment
+            && let Some(trend) = trend_vote {
                 let counter_trend = match (majority_action, trend) {
                     (Action::Buy, Action::Sell) => true,
                     (Action::Sell, Action::Buy) => true,
@@ -172,7 +172,6 @@ impl PolicyGovernor {
                     };
                 }
             }
-        }
 
         // All checks passed — execute
         GovernorDecision {

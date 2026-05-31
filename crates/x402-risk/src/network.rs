@@ -36,7 +36,7 @@ pub async fn run_risk_loop() {
         }
 
         // ── Auto-Ramp evaluation every 100 ticks ──
-        if tick_count % 100 == 0 {
+        if tick_count.is_multiple_of(100) {
             let promoted = risk_gate.auto_ramp.evaluate_promotion(
                 12,   // closed_trades_96h
                 50.0, // pnl_7d (positive)

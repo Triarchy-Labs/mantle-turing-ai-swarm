@@ -19,6 +19,12 @@ pub struct GhostPosition {
     pub highest_profit_price: f64,
 }
 
+impl Default for AlphaGhostHead {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl AlphaGhostHead {
     pub fn new() -> Self {
         AlphaGhostHead {

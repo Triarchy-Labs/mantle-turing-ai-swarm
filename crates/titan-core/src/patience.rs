@@ -9,6 +9,12 @@ pub struct PatienceTracker {
     pub wait_time_seconds: i64,
 }
 
+impl Default for PatienceTracker {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl PatienceTracker {
     pub fn new() -> Self {
         PatienceTracker {

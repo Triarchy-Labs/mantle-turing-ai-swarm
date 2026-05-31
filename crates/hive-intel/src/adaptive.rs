@@ -96,6 +96,12 @@ pub struct AdaptiveWeightStore {
     pub weights: HashMap<String, SymbolWeights>,
 }
 
+impl Default for AdaptiveWeightStore {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl AdaptiveWeightStore {
     pub fn new() -> Self {
         Self { weights: HashMap::new() }
