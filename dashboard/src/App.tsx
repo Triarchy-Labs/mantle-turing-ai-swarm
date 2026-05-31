@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, Suspense, useCallback } from 'react';
-import { Activity, Zap, Globe, Terminal, Network, Layers, Cpu, Eye, TrendingUp, Wifi, WifiOff } from 'lucide-react';
+import { Activity, Zap, Globe, Terminal, Network, Layers, Cpu, Eye, TrendingUp, Wifi, WifiOff, Shield, AlertTriangle, BarChart3, Target } from 'lucide-react';
 import './index.css';
 import LiquidGlassShader from './components/LiquidGlassShader';
 import { AnimatedArchitecture } from './components/AnimatedArchitecture';
@@ -10,18 +10,29 @@ import { useTelemetry } from './hooks/useTelemetry';
 /* ── Pipeline stages ── */
 const pipelineStages = [
 	{ n: '01', label: 'MARKET DATA INGESTION' },
-	{ n: '02', label: 'TREND REGIME DETECTION' },
-	{ n: '03', label: 'SYNAPTIC AI DEBATE' },
-	{ n: '04', label: 'LOCAL ML PREDICTION' },
-	{ n: '05', label: 'VECTOR ARCHIVE SEARCH' },
-	{ n: '06', label: 'WEIGHTED FACTOR JUDGE' },
-	{ n: '07', label: 'PRE-EXECUTION AUDIT' },
-	{ n: '08', label: 'ENTRY POINT DETECTION' },
-	{ n: '09', label: 'SWARM ORDER CONSENSUS' },
-	{ n: '10', label: 'RISK MATRIX ANALYSIS' },
-	{ n: '11', label: 'SYNTHETIC SIMULATION' },
-	{ n: '12', label: 'SYNAPTIC LOGGING' },
-	{ n: '13', label: 'ON-CHAIN TX COMMIT' },
+	{ n: '02', label: 'CORRELATION MATRIX' },
+	{ n: '03', label: 'REGIME DETECTION (HMM)' },
+	{ n: '04', label: 'SYNAPTIC AI DEBATE' },
+	{ n: '05', label: 'LOCAL ML PREDICTION' },
+	{ n: '06', label: 'HYBRID VECTOR RECALL' },
+	{ n: '07', label: 'WEIGHTED FACTOR JUDGE' },
+	{ n: '08', label: 'DECISION QUALITY (DQS)' },
+	{ n: '09', label: 'PRE-TRADE RISK GATE' },
+	{ n: '10', label: 'DNA CONFIDENCE ENGINE' },
+	{ n: '11', label: 'PATIENCE SIGNAL LOCK' },
+	{ n: '12', label: 'TITAN ENTRY PIPELINE' },
+	{ n: '13', label: 'SWARM CONSENSUS VOTE' },
+	{ n: '14', label: 'KELLY RISK SIZING' },
+	{ n: '15', label: 'PAPER TRADE EXEC' },
+	{ n: '16', label: 'DYNAMIC LEVERAGE (ATR)' },
+	{ n: '17', label: 'TRAILING SL ENGINE' },
+	{ n: '18', label: 'UNSTUCK RECOVERY' },
+	{ n: '19', label: 'AUTO-RAMP EVALUATION' },
+	{ n: '20', label: 'DEALLOW BAN SCANNER' },
+	{ n: '21', label: 'ANOMALY DETECTION' },
+	{ n: '22', label: 'DECISION JOURNAL' },
+	{ n: '23', label: 'ON-CHAIN TX COMMIT' },
+	{ n: '24', label: 'IPC STATE SYNC' },
 ];
 
 /* ── Debates & logs now come from useTelemetry hook ── */
@@ -129,10 +140,10 @@ export default function App() {
 		setActiveStage(0);
 		const t = setInterval(() => {
 			setActiveStage(prev => {
-				if (prev >= 12) { clearInterval(t); setAnalysisRunning(false); return 10; }
+				if (prev >= 23) { clearInterval(t); setAnalysisRunning(false); return 10; }
 				return prev + 1;
 			});
-		}, 800);
+		}, 400);
 	}, [analysisRunning]);
 
 	if (!mounted) return (
@@ -160,10 +171,10 @@ export default function App() {
 				<div>
 					<div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
 						<Layers size={22} className="green-sweep-text" />
-						<h1>MANTLE AI SWARM ACTIVITY MATRIX <span className="lusion-btn connect-state-true" style={{ fontSize: '11px', padding: '3px 8px', verticalAlign: 'middle', marginLeft: '10px' }}>V4.2 LIVE</span></h1>
+						<h1>MANTLE AI SWARM ACTIVITY MATRIX <span className="lusion-btn connect-state-true" style={{ fontSize: '11px', padding: '3px 8px', verticalAlign: 'middle', marginLeft: '10px' }}>V5.0 LIVE</span></h1>
 					</div>
 					<p style={{ marginTop: '6px', fontSize: '0.8rem', fontFamily: 'var(--font-mono)', opacity: 0.7 }}>
-						12 containers · 24,267 lines of Rust · 6 decision layers · Mantle Blockchain
+						12 crates · 26,873 LOC · 24-stage pipeline · 8 Titan modules · Mantle Mainnet
 					</p>
 				</div>
 				<div className="toggle-group" style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
@@ -176,11 +187,15 @@ export default function App() {
 
 			<main>
 			{/* ═══ STATS GRID ═══ */}
-			<section className="metrics" aria-label="Key Performance Metrics">
-				<div className="glass metric"><h3><Cpu size={14} style={{ color: 'var(--accent)' }} /> Current Cycle</h3><div className="val cyan">{cycle}</div></div>
+			<section className="metrics" aria-label="Key Performance Metrics" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))' }}>
+				<div className="glass metric"><h3><Cpu size={14} style={{ color: 'var(--accent)' }} /> Cycle</h3><div className="val cyan">{cycle}</div></div>
 				<div className="glass metric"><h3><Activity size={14} style={{ color: 'var(--accent-hover)' }} /> Uptime</h3><div className="val green">{fmtUptime}</div></div>
-				<div className="glass metric"><h3><Zap size={14} style={{ color: 'var(--accent-hover)' }} /> Synthetic PNL</h3><div className="val green">{telem.pnl}</div></div>
-				<div className="glass metric"><h3><Globe size={14} style={{ color: 'var(--accent-hover)' }} /> Win Rate</h3><div className="val green">{telem.winRate}</div></div>
+				<div className="glass metric"><h3><Zap size={14} style={{ color: 'var(--accent-hover)' }} /> PnL</h3><div className="val green">{telem.pnl}</div></div>
+				<div className="glass metric"><h3><TrendingUp size={14} style={{ color: 'var(--accent-hover)' }} /> Win Rate</h3><div className="val green">{telem.winRate}</div></div>
+				<div className="glass metric"><h3><BarChart3 size={14} style={{ color: 'var(--accent)' }} /> Balance</h3><div className="val cyan">{telem.balance}</div></div>
+				<div className="glass metric"><h3><AlertTriangle size={14} style={{ color: '#ff6b6b' }} /> Max DD</h3><div className="val" style={{ color: '#ff6b6b' }}>{telem.maxDrawdown}</div></div>
+				<div className="glass metric"><h3><Target size={14} style={{ color: 'var(--accent)' }} /> Trades</h3><div className="val cyan">{telem.totalTrades}</div></div>
+				<div className="glass metric"><h3><Shield size={14} style={{ color: telem.riskState?.circuit_breaker === 'GREEN' ? '#00ff88' : '#ff6b6b' }} /> Circuit</h3><div className="val" style={{ color: telem.riskState?.circuit_breaker === 'GREEN' ? '#00ff88' : '#ff6b6b' }}>{telem.riskState?.circuit_breaker ?? 'N/A'}</div></div>
 			</section>
 
 			{/* ═══ MAIN GRID: Market + Synaptic Core ═══ */}
@@ -330,6 +345,88 @@ export default function App() {
 				</div>
 			</section>
 
+			{/* ═══ RISK + RAMP + POSITIONS ═══ */}
+			<section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px', marginTop: '24px' }}>
+				{/* Risk Matrix Panel */}
+				<div className="glass" style={{ padding: '20px' }}>
+					<div className="card-title"><Shield size={16} style={{ color: '#00ff88' }} /> RISK MATRIX ENGINE</div>
+					<div style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+						<div style={{ display: 'flex', justifyContent: 'space-between' }}>
+							<span style={{ opacity: 0.5 }}>Dynamic Leverage</span>
+							<span style={{ color: 'var(--accent)', fontWeight: 700 }}>{telem.riskState?.dynamic_leverage.toFixed(1) ?? '—'}×</span>
+						</div>
+						<div style={{ display: 'flex', justifyContent: 'space-between' }}>
+							<span style={{ opacity: 0.5 }}>ATR Estimate</span>
+							<span style={{ color: 'var(--accent-hover)' }}>{((telem.riskState?.atr_estimate ?? 0) * 100).toFixed(2)}%</span>
+						</div>
+						<div style={{ display: 'flex', justifyContent: 'space-between' }}>
+							<span style={{ opacity: 0.5 }}>Macro Penalty</span>
+							<span style={{ color: telem.riskState?.macro_penalty ? '#ff6b6b' : '#00ff88' }}>{telem.riskState?.macro_penalty.toFixed(2) ?? '0.00'}</span>
+						</div>
+						<div style={{ display: 'flex', justifyContent: 'space-between' }}>
+							<span style={{ opacity: 0.5 }}>Circuit Breaker</span>
+							<span style={{ color: telem.riskState?.circuit_breaker === 'GREEN' ? '#00ff88' : '#ff6b6b', fontWeight: 700 }}>● {telem.riskState?.circuit_breaker ?? 'N/A'}</span>
+						</div>
+						{/* Leverage bar */}
+						<div style={{ marginTop: '8px' }}>
+							<div style={{ fontSize: '10px', opacity: 0.4, marginBottom: '4px' }}>LEVERAGE UTILIZATION</div>
+							<div style={{ height: '6px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
+								<div style={{ height: '100%', width: `${((telem.riskState?.dynamic_leverage ?? 5) / 20) * 100}%`, background: 'linear-gradient(90deg, #00ff88, #00d4ff)', borderRadius: '3px', transition: 'width 0.5s ease' }} />
+							</div>
+						</div>
+					</div>
+				</div>
+
+				{/* AutoRamp Capital Phase */}
+				<div className="glass" style={{ padding: '20px' }}>
+					<div className="card-title"><BarChart3 size={16} style={{ color: 'var(--accent)' }} /> AUTO-RAMP CAPITAL SCALING</div>
+					<div style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+						<div style={{ textAlign: 'center', padding: '12px', background: 'rgba(0,212,255,0.05)', borderRadius: '8px', border: '1px solid rgba(0,212,255,0.15)' }}>
+							<div style={{ fontSize: '28px', fontWeight: 800, color: 'var(--accent)' }}>{telem.rampState?.phase_label ?? 'SEED'}</div>
+							<div style={{ fontSize: '11px', opacity: 0.5, marginTop: '4px' }}>Phase {telem.rampState?.current_phase ?? 0}/4</div>
+						</div>
+						{/* Phase progress bar */}
+						<div style={{ display: 'flex', gap: '3px' }}>
+							{['SEED', 'SPROUT', 'GROWTH', 'MATURE', 'APEX'].map((label, i) => (
+								<div key={label} style={{ flex: 1, height: '4px', borderRadius: '2px', background: i <= (telem.rampState?.current_phase ?? 0) ? 'var(--accent)' : 'rgba(255,255,255,0.05)', transition: 'background 0.3s ease' }} title={label} />
+							))}
+						</div>
+						<div style={{ display: 'flex', justifyContent: 'space-between' }}>
+							<span style={{ opacity: 0.5 }}>Max Position</span>
+							<span style={{ color: 'var(--accent-hover)', fontWeight: 700 }}>{((telem.rampState?.max_position_pct ?? 0.1) * 100).toFixed(0)}%</span>
+						</div>
+						<div style={{ display: 'flex', justifyContent: 'space-between' }}>
+							<span style={{ opacity: 0.5 }}>Kill-Switch Threshold</span>
+							<span style={{ color: '#ff6b6b' }}>{telem.rampState?.daily_loss_kill_pct?.toFixed(0) ?? '3'}% daily loss</span>
+						</div>
+					</div>
+				</div>
+
+				{/* Open Positions */}
+				<div className="glass" style={{ padding: '20px' }}>
+					<div className="card-title"><Target size={16} style={{ color: 'var(--accent-hover)' }} /> OPEN POSITIONS ({telem.openPositions.length})</div>
+					{telem.openPositions.length === 0 ? (
+						<div style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', opacity: 0.3, textAlign: 'center', padding: '30px 0' }}>NO OPEN POSITIONS</div>
+					) : (
+						<div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+							{telem.openPositions.map((pos, i) => (
+								<div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 14px', borderRadius: '8px', background: 'rgba(10,10,18,0.4)', border: '1px solid rgba(255,255,255,0.03)', fontFamily: 'var(--font-mono)', fontSize: '12px' }}>
+									<div>
+										<span style={{ fontWeight: 700, marginRight: '8px' }}>{pos.symbol}</span>
+										<span className={`badge ${pos.side === 'Buy' ? 'ok' : 'fail'}`} style={{ fontSize: '10px' }}>{pos.side}</span>
+									</div>
+									<div style={{ display: 'flex', gap: '16px', opacity: 0.7 }}>
+										<span>${pos.entry_price.toFixed(4)}</span>
+										<span>{Math.floor(pos.hold_duration_secs / 60)}m</span>
+										<span style={{ color: pos.trailing_stop > 0 ? '#00ff88' : 'rgba(255,255,255,0.3)' }}>SL: ${pos.trailing_stop.toFixed(4)}</span>
+									</div>
+								</div>
+							))}
+						</div>
+					)}
+				</div>
+			</section>
+
 			{/* ═══ LOG STREAM ═══ */}
 			<div className="glass" style={{ padding: '20px', marginTop: '24px' }} role="log" aria-live="polite" aria-label="Synaptic Activity Log">
 				<div className="card-title"><Terminal size={16} /> SYNAPTIC ACTIVITY LOG</div>
@@ -358,7 +455,7 @@ export default function App() {
 
 			{/* ═══ FOOTER ═══ */}
 			<div className="glass footer-bar">
-				<span>Build: v4.2-triarchy · Reactor →</span>
+				<span>Build: v5.0-triarchy · 24-stage pipeline →</span>
 				<span style={{ color: 'var(--accent-hover)' }}>⬡ SYSTEM ACTIVE · MANTLE DOMAIN</span>
 				<span>Last Update: {footerTime}</span>
 			</div>

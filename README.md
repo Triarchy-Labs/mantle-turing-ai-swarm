@@ -46,10 +46,10 @@
 | Crate | LOC | Role |
 |-------|-----|------|
 | **ouroboros-brain** | 3,987 | LLM consensus: multi-model debate, 15-factor judge, decision memory, circuit breaker, pre-trade risk engine (5 institutional filters) |
-| **titan-core** | 4,465 | Neural trading brain: 8-gate entry pipeline, trailing SL (ATR + BE-lock + adverse selection), 3-stage unstuck recovery (Passivbot v7), dynamic leverage (RiskMatrix), Kelly risk sizing |
+| **titan-core** | 4,465 | Neural brain: 8-gate entry, trailing SL (ATR+BE+adverse), 3-stage unstuck, RiskMatrix, ConfidenceEngine (DNA scoring), AutoRamp (5-phase capital), Deallow (ban scanner), PatienceTracker (15m lock) |
 | **hive-intel** | 12,212 | Collective intelligence: 40+ cognitive modules, SIMD turbo, ML local (<1μs), regime detection (4-state HMM), affective memory (EWMA), hybrid recall (OWM+SIMD+anti-survivorship), paper engine, AI vs Human benchmark |
 | **mantle-chain** | 705 | Alloy 2.0 on-chain: ERC-8004 ABI (sol!), wallet signer + live tx broadcast, DexScreener 13-field live data, Merchant Moe/Agni router |
-| **swarm-engine** | 1,040 | Main orchestrator — v4.2 pipeline + telemetry HTTP server (:3402) + live chain broadcast |
+| **swarm-engine** | 1,090 | Main orchestrator — v5.0 24-stage pipeline + telemetry HTTP server (:3402/7 endpoints) + live chain broadcast |
 | **x402-consensus** | 398 | PolicyGovernor — 4-voter consensus engine for trade decisions |
 | **x402-risk** | 555 | Regime-aware Kelly sizing, KillSwitch, ATR stops, BucketCap risk management |
 | **x402-polymarket** | 83 | Gamma API — live prediction market sentiment oracle |
@@ -58,7 +58,7 @@
 | **x402-liquidator** | 111 | On-chain flash liquidation via ILendingPool |
 | **core-ipc** | 75 | mmap-based zero-copy inter-agent communication |
 
-## The v4 Decision Pipeline (6 Intelligence Layers)
+## The v5 Decision Pipeline (24 Stages, 6 Intelligence Layers)
 
 ```
 Market Data
@@ -86,6 +86,12 @@ Market Data
 ╔═ TITAN TRAILING SL (ATR trailing + BE-lock + adverse selection guard) ═╗
     ↓
 ╔═ TITAN UNSTUCK (3-stage recovery: monitor → partial trim → full evacuation) ═╗
+    ↓
+╔═ TITAN CONFIDENCE (DNA-based scoring + adaptive ATR + directional bias) ═╗
+    ↓
+╔═ TITAN AUTO-RAMP (5-phase capital scaling: SEED→SPROUT→GROWTH→MATURE→APEX) ═╗
+    ↓
+╔═ TITAN DEALLOW (underperformer ban/recovery scanner) ═╗
     ↓
 ╔═ ANOMALY DETECTION (Z-score + IQR on PnL history) ═╗
     ↓

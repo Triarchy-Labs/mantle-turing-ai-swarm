@@ -38,6 +38,11 @@ pub struct TelemetryState {
     pub agent_id: u64,
     pub chain_id: u64,
     pub registry_address: &'static str,
+    // New: extended metrics
+    pub risk_state: Option<RiskTelemetry>,
+    pub ramp_state: Option<RampTelemetry>,
+    pub open_positions: Vec<PositionTelemetry>,
+    pub pipeline_stages: Vec<PipelineStageTelemetry>,
 }
 
 /// Per-symbol telemetry snapshot.
@@ -95,15 +100,59 @@ pub struct LogTelemetry {
     pub level: String,  // "info", "success", "warn"
 }
 
+/// Risk management telemetry.
+#[derive(Debug, Clone, Serialize, Default)]
+pub struct RiskTelemetry {
+    pub dynamic_leverage: f64,
+    pub atr_estimate: f64,
+    pub macro_penalty: f64,
+    pub ewma_confidence: f64,
+    pub risk_appetite: f64,
+    pub pretrade_factor: f64,
+    pub circuit_breaker: String, // "GREEN", "YELLOW", "RED"
+}
+
+/// AutoRamp capital scaling telemetry.
+#[derive(Debug, Clone, Serialize, Default)]
+pub struct RampTelemetry {
+    pub current_phase: u8,
+    pub phase_label: String,
+    pub max_position_pct: f64,
+    pub daily_loss_kill_pct: f64,
+    pub total_promotions: u32,
+    pub total_demotions: u32,
+}
+
+/// Open position telemetry for paper trading.
+#[derive(Debug, Clone, Serialize, Default)]
+pub struct PositionTelemetry {
+    pub symbol: String,
+    pub side: String,
+    pub entry_price: f64,
+    pub quantity: f64,
+    pub unrealized_pnl: f64,
+    pub hold_duration_secs: u64,
+    pub trailing_stop: f64,
+    pub unstuck_stage: String,
+}
+
+/// Individual pipeline stage telemetry.
+#[derive(Debug, Clone, Serialize, Default)]
+pub struct PipelineStageTelemetry {
+    pub name: String,
+    pub status: String, // "pass", "skip", "block", "active"
+    pub detail: String,
+}
+
 /// Shared telemetry state handle.
 pub type TelemetryHandle = Arc<RwLock<TelemetryState>>;
 
 /// Create a new telemetry handle with default state.
 pub fn new_handle() -> TelemetryHandle {
     Arc::new(RwLock::new(TelemetryState {
-        version: "v4.2-triarchy",
-        pipeline: "Data→Regime→Debate→ML→Recall→Judge→PreTrade→Entry→Consensus→Risk→Paper→Journal→Chain",
-        pipeline_total: 13,
+        version: "v5.0-triarchy",
+        pipeline: "Data→Correlation→Regime→Debate→ML→Recall→Judge→DQS→PreTrade→Confidence→Patience→Entry→Consensus→Risk→Paper→RiskMatrix→Trailing→Unstuck→AutoRamp→Deallow→Anomaly→Journal→Chain→IPC",
+        pipeline_total: 24,
         agent_id: 1,
         chain_id: 5000,
         registry_address: "0xFA0b5036aF9770B370B33CeBBb42d1E626338383",
@@ -119,6 +168,8 @@ pub fn spawn_server(handle: TelemetryHandle) {
         let h3 = handle.clone();
         let h4 = handle.clone();
         let h5 = handle.clone();
+        let h6 = handle.clone();
+        let h7 = handle.clone();
 
         // CORS middleware for cross-origin dashboard access
         async fn cors_middleware(req: Request<Body>, next: Next) -> Response {
@@ -186,6 +237,27 @@ pub fn spawn_server(handle: TelemetryHandle) {
                 async move {
                     let state = h.read().await;
                     Json(state.benchmark.clone().unwrap_or_default())
+                }
+            }))
+            .route("/positions", get(move || {
+                let h = h6.clone();
+                async move {
+                    let state = h.read().await;
+                    Json(serde_json::json!({
+                        "open": state.open_positions,
+                        "paper_stats": state.paper_stats,
+                    }))
+                }
+            }))
+            .route("/risk", get(move || {
+                let h = h7.clone();
+                async move {
+                    let state = h.read().await;
+                    Json(serde_json::json!({
+                        "risk": state.risk_state,
+                        "ramp": state.ramp_state,
+                        "circuit_breaker": state.risk_state.as_ref().map(|r| r.circuit_breaker.clone()).unwrap_or("UNKNOWN".into()),
+                    }))
                 }
             }));
 
