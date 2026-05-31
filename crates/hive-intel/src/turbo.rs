@@ -10,6 +10,7 @@
 /// 3. Batch compute — обработка массивов через итераторы с минимальными аллокациями.
 ///
 /// DONOR: deep_causality (uncertainty math), SimSIMD (concept)
+
 // ════════════════════════════════════════════════════════════════
 // SIMD-accelerated Vector Operations
 // ════════════════════════════════════════════════════════════════
@@ -281,8 +282,8 @@ pub fn batch_ema(data: &[f64], period: usize) -> Vec<f64> {
     let mut ema = data[0];
     result.push(ema);
 
-    for i in 1..data.len() {
-        ema = alpha * data[i] + (1.0 - alpha) * ema;
+    for &x in &data[1..] {
+        ema = alpha * x + (1.0 - alpha) * ema;
         result.push(ema);
     }
 

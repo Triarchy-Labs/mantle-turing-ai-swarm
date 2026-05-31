@@ -25,7 +25,7 @@ pub enum MarketRegime {
 }
 
 impl MarketRegime {
-    pub fn from_str(s: &str) -> Self {
+    pub fn parse(s: &str) -> Self {
         match s.to_lowercase().as_str() {
             "trending_up" => Self::TrendingUp,
             "trending_down" => Self::TrendingDown,

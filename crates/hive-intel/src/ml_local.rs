@@ -58,6 +58,7 @@ impl FeatureVector {
     }
 
     /// Создать из raw значений с нормализацией.
+    #[allow(clippy::too_many_arguments)]
     pub fn from_raw(
         rsi: f64,
         price_change_pct: f64,
@@ -148,8 +149,8 @@ impl LocalModel {
     pub fn predict(&self, features: &FeatureVector) -> Prediction {
         let arr = features.as_array();
         let mut z = self.bias;
-        for i in 0..NUM_FEATURES {
-            z += self.weights[i] * arr[i];
+        for (w, f) in self.weights.iter().zip(arr.iter()) {
+            z += w * f;
         }
 
         let prob = Self::sigmoid(z);
@@ -180,8 +181,8 @@ impl LocalModel {
         // Gradient descent с adaptive learning rate
         let effective_lr = self.lr / (1.0 + self.train_count as f64 * 0.001);
         let arr = features.as_array();
-        for i in 0..NUM_FEATURES {
-            self.weights[i] -= effective_lr * error * arr[i];
+        for (w, f) in self.weights.iter_mut().zip(arr.iter()) {
+            *w -= effective_lr * error * f;
         }
         self.bias -= effective_lr * error;
 
@@ -227,6 +228,12 @@ impl LocalModel {
     pub fn load(path: &str) -> Option<Self> {
         let data = std::fs::read_to_string(path).ok()?;
         serde_json::from_str(&data).ok()
+    }
+}
+
+impl Default for LocalModel {
+    fn default() -> Self {
+        Self::new()
     }
 }
 

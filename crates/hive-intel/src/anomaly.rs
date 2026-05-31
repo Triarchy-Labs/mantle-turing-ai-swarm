@@ -154,13 +154,12 @@ pub fn find_anomalies(data: &[f64], min_severity: AnomalySeverity) -> Vec<(usize
             .collect();
         let result = detect_anomaly(data[i], &history);
         
-        let dominated = match (min_severity, result.severity) {
-            (AnomalySeverity::Normal, _) => true,
-            (AnomalySeverity::Unusual, AnomalySeverity::Unusual | AnomalySeverity::Anomalous | AnomalySeverity::Extreme) => true,
-            (AnomalySeverity::Anomalous, AnomalySeverity::Anomalous | AnomalySeverity::Extreme) => true,
-            (AnomalySeverity::Extreme, AnomalySeverity::Extreme) => true,
-            _ => false,
-        };
+        let dominated = matches!((min_severity, result.severity),
+            (AnomalySeverity::Normal, _)
+            | (AnomalySeverity::Unusual, AnomalySeverity::Unusual | AnomalySeverity::Anomalous | AnomalySeverity::Extreme)
+            | (AnomalySeverity::Anomalous, AnomalySeverity::Anomalous | AnomalySeverity::Extreme)
+            | (AnomalySeverity::Extreme, AnomalySeverity::Extreme)
+        );
         
         if dominated {
             results.push((i, result));
