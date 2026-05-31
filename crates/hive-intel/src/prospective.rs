@@ -28,7 +28,7 @@ pub enum CompareOp {
 
 impl CompareOp {
     /// Parse from string (порт: prospective.py:50-63)
-    pub fn from_str(s: &str) -> Option<Self> {
+    pub fn parse(s: &str) -> Option<Self> {
         match s {
             "gt" => Some(Self::Gt),
             "lt" => Some(Self::Lt),
@@ -229,9 +229,9 @@ mod tests {
 
     #[test]
     fn test_compare_op_from_str() {
-        assert_eq!(CompareOp::from_str("gt"), Some(CompareOp::Gt));
-        assert_eq!(CompareOp::from_str("lt"), Some(CompareOp::Lt));
-        assert_eq!(CompareOp::from_str("eq"), Some(CompareOp::Eq));
-        assert_eq!(CompareOp::from_str("invalid"), None);
+        assert_eq!(CompareOp::parse("gt"), Some(CompareOp::Gt));
+        assert_eq!(CompareOp::parse("lt"), Some(CompareOp::Lt));
+        assert_eq!(CompareOp::parse("eq"), Some(CompareOp::Eq));
+        assert_eq!(CompareOp::parse("invalid"), None);
     }
 }

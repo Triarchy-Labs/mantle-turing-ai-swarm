@@ -45,7 +45,7 @@ pub struct HybridScoredMemory {
 ///
 /// Порт: hybrid_recall.py:38-102 (ensure_negative_balance)
 pub fn ensure_negative_balance(
-    results: &mut Vec<HybridScoredMemory>,
+    results: &mut [HybridScoredMemory],
     all_candidates: &[HybridScoredMemory],
     min_negative_ratio: f64,
 ) {

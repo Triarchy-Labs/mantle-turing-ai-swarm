@@ -2,8 +2,8 @@
 ///
 /// ПОРТИРОВАНО ИЗ:
 ///   - tradememory-protocol/src/tradememory/evolution/engine.py (265 строк)
-///   - tradememory-protocol/src/tradememory/evolution/selector.py (210 строк)
-///   - tradememory-protocol/src/tradememory/evolution/statistical_gates.py (170 строк)
+/// - tradememory-protocol/src/tradememory/evolution/selector.py (210 строк)
+/// - tradememory-protocol/src/tradememory/evolution/statistical_gates.py (170 строк)
 /// АВТОР ОРИГИНАЛА: mnemox-ai (MIT License)
 ///
 /// Pipeline per generation:
@@ -150,7 +150,7 @@ pub fn validate_oos(h: &Hypothesis, config: &SelectionConfig) -> (bool, String) 
 /// Full selection & elimination pipeline.
 /// Порт: selector.py:139-194
 pub fn select_and_eliminate(
-    hypotheses: &mut Vec<Hypothesis>,
+    hypotheses: &mut [Hypothesis],
     config: &SelectionConfig,
 ) -> SelectionResult {
     let ranked = rank_by_is_fitness(hypotheses, config);
@@ -317,9 +317,8 @@ pub fn benjamini_hochberg(p_values: &[f64], alpha: f64) -> Vec<(usize, f64, bool
     }
 
     if let Some(max_rank) = max_significant_rank {
-        for rank in 0..=max_rank {
-            let orig_idx = indexed[rank].0;
-            significant[orig_idx] = true;
+        for item in indexed.iter().take(max_rank + 1) {
+            significant[item.0] = true;
         }
     }
 
