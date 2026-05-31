@@ -21,6 +21,10 @@ use ouroboros_brain::{
     risk_engine::{pre_trade_risk_check, RiskConfig},
 };
 use titan_core::entry::{EntryConfig, EntryContext, EntryPipeline, EntryVerdict};
+use titan_core::trailing::{TrailingConfig, TrailingEngine, TrailingVerdict};
+use titan_core::unstuck::{UnstuckConfig, UnstuckEngine, UnstuckVerdict};
+use titan_core::risk::RiskMatrix;
+use core_ipc::IpcBridge;
 use hive_intel::ml_local::{FeatureVector, LocalModel};
 use hive_intel::paper_engine::{PaperEngine, Side as PaperSide};
 use hive_intel::recall::{
@@ -568,6 +572,80 @@ async fn decision_cycle<P: alloy::providers::Provider>(
         // D3: Hive Mind — Paper Trade (ATR stops)
         run_paper_trade(paper, &data.symbol, verdict.decision, data.price, final_size);
 
+        // D2: Titan — Dynamic Leverage (ATR-based volatility dampening)
+        {
+            let risk_matrix = RiskMatrix::new();
+            let atr_estimate = data.price * 0.015; // 1.5% ATR proxy
+            let dynamic_lev = risk_matrix.calculate_dynamic_leverage(atr_estimate, data.price);
+            let macro_lev = risk_matrix.apply_macro_penalty(
+                dynamic_lev,
+                match verdict.decision { Verdict::Buy => "Buy", Verdict::Sell => "Sell", _ => "Hold" },
+                0.0, // BTC score (would need BTC data feed for real)
+            );
+            if macro_lev < 10.0 {
+                tracing::info!("⚙️ RiskMatrix [{}]: leverage={:.0}x (ATR dampened from 10x)", data.symbol, macro_lev);
+            }
+        }
+
+        // D2: Titan — Trailing SL management for open positions
+        {
+            let pe = paper.lock().unwrap();
+            let trailing_cfg = TrailingConfig::default();
+            for pos in pe.open_positions.values() {
+                let atr_est = pos.entry_price * 0.015;
+                let (highest, lowest) = (pos.entry_price.max(data.price), pos.entry_price.min(data.price));
+                let side_str = match pos.side { PaperSide::Long => "Buy", PaperSide::Short => "Sell" };
+
+                // Check adverse selection
+                if let Some(adv) = TrailingEngine::check_adverse_selection(
+                    side_str, pos.entry_price, data.price, highest, lowest,
+                    atr_est, pos.opened_at_ms,
+                ) {
+                    tracing::warn!("⚠️ Adverse Selection [{}]: {:?}", pos.symbol, adv);
+                }
+
+                // Calculate trailing SL
+                let trail = TrailingEngine::calculate_trailing_sl(
+                    side_str, pos.entry_price, data.price, highest, lowest,
+                    atr_est, 3.5, pos.stop_loss.unwrap_or(0.0),
+                    &pos.symbol, &trailing_cfg,
+                );
+                match &trail {
+                    TrailingVerdict::Tightened { new_sl, reason } => {
+                        tracing::info!("🔒 Trailing [{}]: SL → {:.4} ({})", pos.symbol, new_sl, reason);
+                    }
+                    _ => {}
+                }
+            }
+        }
+
+        // D2: Titan — Unstuck Engine (stuck position recovery)
+        {
+            let pe = paper.lock().unwrap();
+            let unstuck_cfg = UnstuckConfig::default();
+            for pos in pe.open_positions.values() {
+                let side_str = match pos.side { PaperSide::Long => "Buy", PaperSide::Short => "Sell" };
+                let atr_est = pos.entry_price * 0.015;
+                let unstuck = UnstuckEngine::evaluate(
+                    side_str, pos.entry_price, data.price, pos.quantity,
+                    pos.opened_at_ms, atr_est, 0.0, // btc_score placeholder
+                    0.0, pe.peak_equity, false, 0, &unstuck_cfg,
+                );
+                match &unstuck {
+                    UnstuckVerdict::ReleaseStage1 { close_pct, reason } => {
+                        tracing::warn!("🔓 Unstuck [{}]: Stage1 close {:.0}% — {}", pos.symbol, close_pct * 100.0, reason);
+                    }
+                    UnstuckVerdict::FullEvacuation { reason } => {
+                        tracing::error!("🚨 Unstuck [{}]: FULL EVACUATION — {}", pos.symbol, reason);
+                    }
+                    UnstuckVerdict::Monitoring { hold_hours, loss_pct } => {
+                        tracing::debug!("👁 Unstuck [{}]: monitoring {:.1}h @ {:.1}%", pos.symbol, hold_hours, loss_pct);
+                    }
+                    _ => {}
+                }
+            }
+        }
+
         // D3: Hive Mind — Anomaly Detection (Z-score + IQR on trade PnL history)
         {
             let pe = paper.lock().unwrap();
@@ -699,7 +777,7 @@ async fn main() {
     tracing::info!("🧠 D1 Ouroboros: {} debate models + macro/meta judges", debate_pool.pool_size());
 
     // D2: Titan
-    tracing::info!("🚪 D2 Titan: 8-gate entry pipeline armed");
+    tracing::info!("🚪 D2 Titan: 8-gate entry + TrailingEngine(ATR/BE-Lock/AdverseSelection) + Unstuck(3-stage) + RiskMatrix(dynamic leverage)");
 
     // D3: Hive Mind
     let ml_model = LocalModel::new();
@@ -717,6 +795,10 @@ async fn main() {
     // D4: X402 Agents
     let risk = RiskGate::new(1000.0);
     tracing::info!("⚡ D4 X402: PolicyGovernor(3v) + RiskGate(Kelly/Kill/Bucket) + HyperEdge Memory");
+
+    // L3: Inter-Agent IPC Bridge (shared memory state)
+    let ipc = Mutex::new(IpcBridge::new());
+    tracing::info!("🔗 L3 IPC Bridge: mmap inter-agent state at {}", core_ipc::IPC_FILE);
 
     // D5: Mantle Chain — signed provider (optional, for live tx broadcast)
     let signed_provider = match mantle_chain::wallet::create_signed_provider(mantle_chain::provider::MANTLE_RPC) {
@@ -894,6 +976,17 @@ async fn main() {
             // Keep last 20 entries
             if logs.len() > 20 { logs = logs.split_off(logs.len() - 20); }
             t.log_entries = logs;
+        }
+        // L3: Write IPC state for inter-agent coordination
+        {
+            let mut bridge = ipc.lock().unwrap();
+            bridge.write_state(&core_ipc::AgentState {
+                sniper_vote: None,
+                risk_vote: Some(state.is_trading_allowed()),
+                liquidation_target: None,
+                global_sentiment_modifier: 0.0,
+                timestamp: chrono::Utc::now().timestamp() as u64,
+            });
         }
 
         tracing::info!("💤 Next in {}s...", interval.as_secs());

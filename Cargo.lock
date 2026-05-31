@@ -4413,6 +4413,7 @@ dependencies = [
  "alloy",
  "axum",
  "chrono",
+ "core-ipc",
  "dotenvy",
  "hive-intel",
  "mantle-chain",
