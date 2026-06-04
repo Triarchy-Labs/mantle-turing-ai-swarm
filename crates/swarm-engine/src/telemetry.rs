@@ -155,7 +155,7 @@ pub fn new_handle() -> TelemetryHandle {
         pipeline_total: 24,
         agent_id: 1,
         chain_id: 5000,
-        registry_address: "0xFA0b5036aF9770B370B33CeBBb42d1E626338383",
+        registry_address: "0x1150f09ae885e6E7BcC0cb38feDd200d7f580008",
         ..Default::default()
     }))
 }

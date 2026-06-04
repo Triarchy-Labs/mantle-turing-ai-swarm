@@ -1,8 +1,8 @@
 //! ERC-8004 Registry — on-chain agent identity interaction.
 //!
 //! Deployed on Mantle Mainnet:
-//!   Registry: 0xFA0b5036aF9770B370B33CeBBb42d1E626338383
-//!   Liquidator: 0x41c51a03FFE750F5df1F6ffc972DBA8265B5a4F4
+//!   Registry: 0x1150f09ae885e6E7BcC0cb38feDd200d7f580008
+//!   Liquidator: 0x30daC056a87D5844Fb5BE47Fb5412A6Bee83072d
 
 use alloy::sol;
 
@@ -35,10 +35,10 @@ sol! {
 /// Deployed contract addresses on Mantle Mainnet.
 pub mod addresses {
     /// ERC-8004 Registry — agent identity NFTs.
-    pub const ERC8004_REGISTRY: &str = "0xFA0b5036aF9770B370B33CeBBb42d1E626338383";
+    pub const ERC8004_REGISTRY: &str = "0x1150f09ae885e6E7BcC0cb38feDd200d7f580008";
 
     /// X402 Flash Liquidator — AI execution engine.
-    pub const FLASH_LIQUIDATOR: &str = "0x41c51a03FFE750F5df1F6ffc972DBA8265B5a4F4";
+    pub const FLASH_LIQUIDATOR: &str = "0x30daC056a87D5844Fb5BE47Fb5412A6Bee83072d";
 
     /// Deployment wallet.
     pub const DEPLOYER: &str = "0xF02332A7d92C86631Ea30d49D9778994B9277c79";

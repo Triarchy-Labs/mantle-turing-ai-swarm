@@ -4,7 +4,7 @@
 //! 1. Update agent reputation after each successful trade
 //! 2. Log AI verdicts as on-chain events (calldata)
 //!
-//! Contract: 0xFA0b5036aF9770B370B33CeBBb42d1E626338383 (Mantle Mainnet)
+//! Contract: 0x1150f09ae885e6E7BcC0cb38feDd200d7f580008 (Mantle Mainnet)
 //! Agent #1: Token ID 1
 
 use alloy::primitives::{Address, U256};
@@ -16,10 +16,10 @@ use alloy::sol;
 // ═══════════════════════════════════════════════════════════
 
 /// ERC8004Registry contract address on Mantle Mainnet.
-pub const ERC8004_REGISTRY: &str = "0xFA0b5036aF9770B370B33CeBBb42d1E626338383";
+pub const ERC8004_REGISTRY: &str = "0x1150f09ae885e6E7BcC0cb38feDd200d7f580008";
 
 /// X402 Flash Liquidator contract address on Mantle Mainnet.
-pub const FLASH_LIQUIDATOR: &str = "0x41c51a03FFE750F5df1F6ffc972DBA8265B5a4F4";
+pub const FLASH_LIQUIDATOR: &str = "0x30daC056a87D5844Fb5BE47Fb5412A6Bee83072d";
 
 /// Deployment wallet address.
 pub const DEPLOYMENT_WALLET: &str = "0xF02332A7d92C86631Ea30d49D9778994B9277c79";
