@@ -261,7 +261,10 @@ pub fn spawn_server(handle: TelemetryHandle) {
                 }
             }));
 
-        let addr = format!("0.0.0.0:{}", TELEMETRY_PORT);
+        let port = std::env::var("PORT")
+            .ok().and_then(|p| p.parse::<u16>().ok())
+            .unwrap_or(TELEMETRY_PORT);
+        let addr = format!("0.0.0.0:{}", port);
         tracing::info!("📡 Telemetry server: http://{}", addr);
 
         let listener = tokio::net::TcpListener::bind(&addr).await

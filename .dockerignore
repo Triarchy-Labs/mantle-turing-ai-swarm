@@ -1,0 +1,10 @@
+target/
+dashboard/node_modules/
+dashboard/dist/
+.git/
+.env
+*.md
+*.txt
+!config/*.toml
+data/
+contracts/
