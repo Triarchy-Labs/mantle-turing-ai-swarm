@@ -1,0 +1,24 @@
+# Render.com Blueprint — Mantle AI Swarm Engine
+# Auto-deploy on push to main branch
+# https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: mantle-swarm-engine
+    runtime: docker
+    plan: free
+    branch: main
+    healthCheckPath: /health
+    envVars:
+      - key: OPENROUTER_API_KEY
+        sync: false  # set manually in Render dashboard
+      - key: MANTLE_PRIVATE_KEY
+        sync: false  # set manually — enables LIVE TX on-chain broadcast
+      - key: CONFIG_DIR
+        value: /app/config
+      - key: DATA_DIR
+        value: /app/data
+      - key: RUST_LOG
+        value: swarm_engine=info,ouroboros_brain=info
+      - key: CYCLE_INTERVAL_SECS
+        value: "120"  # 2min cycles on free tier (conserve LLM API calls)

@@ -54,6 +54,9 @@ use std::sync::Mutex;
 // ═══════════════════════════════════════════════════════════
 
 fn config_dir() -> PathBuf {
+    if let Ok(p) = std::env::var("CONFIG_DIR") {
+        return PathBuf::from(p);
+    }
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .parent().unwrap()
         .parent().unwrap()
@@ -836,8 +839,12 @@ async fn main() {
     tracing::info!("🤖 D3 Hive Mind: ML(7-feature LR) + PaperEngine($1000) + Hybrid Recall");
 
     // L2: Decision Memory — self-learning trade journal
-    let data_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .parent().unwrap().parent().unwrap().join("data");
+    let data_dir = if let Ok(p) = std::env::var("DATA_DIR") {
+        PathBuf::from(p)
+    } else {
+        PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .parent().unwrap().parent().unwrap().join("data")
+    };
     let _ = std::fs::create_dir_all(&data_dir);
     let decision_mem = DecisionMemory::new(&data_dir);
     tracing::info!("📜 L2 Decision Memory: trade journal at {}/trading_memory.md", data_dir.display());
