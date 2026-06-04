@@ -40,13 +40,13 @@ RUN for dir in crates/*/; do \
     echo "fn main() {}" > crates/swarm-engine/src/main.rs
 
 # Pre-fetch and build dependencies (this layer is cached)
-RUN cargo build --release --bin swarm-engine 2>/dev/null || true
+RUN cargo build --release --bin swarm-engine || true
 
 # Now copy real source code
 COPY crates/ crates/
 
 # Build the actual binary (only recompiles our code, deps cached)
-RUN cargo build --release --bin swarm-engine 2>&1 | tail -3 && \
+RUN cargo build --release --bin swarm-engine && \
     echo "Binary size:" && ls -lh target/release/swarm-engine
 
 # Stage 2: Runtime
