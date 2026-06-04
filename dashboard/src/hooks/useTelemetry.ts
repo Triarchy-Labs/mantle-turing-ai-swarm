@@ -184,7 +184,7 @@ const MOCK_DATA: TelemetryData = {
   pnl: '$1,444.91',
   winRate: '75.7%',
   version: 'v5.0-triarchy',
-  registryAddress: '0xFA0b…8383',
+  registryAddress: '0x1150…0008',
   chainId: 5000,
   agentId: 1,
   benchmark: null,
