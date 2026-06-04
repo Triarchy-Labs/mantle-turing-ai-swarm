@@ -4,18 +4,50 @@
 # binary + config files for Render.com deployment.
 # ═══════════════════════════════════════════════════════════
 
-# Stage 1: Build
+# Stage 1: Build dependencies (cached layer)
 FROM rust:1.87-bookworm AS builder
+
+# Install build dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    pkg-config libssl-dev && \
+    rm -rf /var/lib/apt/lists/*
 
 WORKDIR /usr/src/app
 
-# Copy workspace manifests first for dependency caching
+# Copy workspace manifests + all crate Cargo.toml first for dependency caching
 COPY Cargo.toml Cargo.lock ./
+
+# Create skeleton crate structures so cargo can resolve deps
+COPY crates/ouroboros-brain/Cargo.toml crates/ouroboros-brain/Cargo.toml
+COPY crates/titan-core/Cargo.toml crates/titan-core/Cargo.toml
+COPY crates/hive-intel/Cargo.toml crates/hive-intel/Cargo.toml
+COPY crates/mantle-chain/Cargo.toml crates/mantle-chain/Cargo.toml
+COPY crates/swarm-engine/Cargo.toml crates/swarm-engine/Cargo.toml
+COPY crates/x402-consensus/Cargo.toml crates/x402-consensus/Cargo.toml
+COPY crates/x402-risk/Cargo.toml crates/x402-risk/Cargo.toml
+COPY crates/x402-polymarket/Cargo.toml crates/x402-polymarket/Cargo.toml
+COPY crates/x402-memory/Cargo.toml crates/x402-memory/Cargo.toml
+COPY crates/x402-sniper/Cargo.toml crates/x402-sniper/Cargo.toml
+COPY crates/x402-liquidator/Cargo.toml crates/x402-liquidator/Cargo.toml
+COPY crates/core-ipc/Cargo.toml crates/core-ipc/Cargo.toml
+
+# Create dummy lib.rs for each crate so cargo fetch works
+RUN for dir in crates/*/; do \
+      mkdir -p "$dir/src"; \
+      echo "" > "$dir/src/lib.rs"; \
+    done && \
+    # swarm-engine has a binary, create dummy main.rs
+    echo "fn main() {}" > crates/swarm-engine/src/main.rs
+
+# Pre-fetch and build dependencies (this layer is cached)
+RUN cargo build --release --bin swarm-engine 2>/dev/null || true
+
+# Now copy real source code
 COPY crates/ crates/
 
-# Build release binary
-RUN cargo build --release --bin swarm-engine --quiet 2>/dev/null; \
-    echo "Build exit: $?"
+# Build the actual binary (only recompiles our code, deps cached)
+RUN cargo build --release --bin swarm-engine 2>&1 | tail -3 && \
+    echo "Binary size:" && ls -lh target/release/swarm-engine
 
 # Stage 2: Runtime
 FROM debian:bookworm-slim
@@ -35,13 +67,11 @@ COPY config/ /app/config/
 # Create data directory for decision memory
 RUN mkdir -p /app/data
 
-# Runtime env vars (overridden by Render/Railway)
+# Runtime env vars (overridden by Render)
 ENV CONFIG_DIR=/app/config
 ENV DATA_DIR=/app/data
 ENV RUST_LOG=swarm_engine=info,ouroboros_brain=info
 
-# Render requires PORT env var — telemetry server binds to 3402
-# but Render proxies to whatever port we expose
-EXPOSE 3402
+EXPOSE 10000
 
 CMD ["/app/swarm-engine"]
