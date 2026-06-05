@@ -45,6 +45,10 @@ RUN cargo build --release --bin swarm-engine || true
 # Now copy real source code
 COPY crates/ crates/
 
+# Force Cargo to rebuild our crates by updating timestamps
+# (COPY preserves host mtime which may be older than cached artifacts)
+RUN find crates -name "*.rs" -exec touch {} +
+
 # Build the actual binary (only recompiles our code, deps cached)
 RUN cargo build --release --bin swarm-engine && \
     echo "Binary size:" && ls -lh target/release/swarm-engine
