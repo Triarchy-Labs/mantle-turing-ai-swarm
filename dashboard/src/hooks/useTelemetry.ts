@@ -5,7 +5,7 @@
  */
 import { useState, useEffect, useCallback, useRef } from 'react';
 
-const TELEMETRY_URL = import.meta.env.VITE_TELEMETRY_URL || 'http://localhost:3402';
+const TELEMETRY_URL = import.meta.env.VITE_TELEMETRY_URL || 'https://mantle-swarm-engine.onrender.com';
 const POLL_INTERVAL = 5000; // 5s
 
 // ── Telemetry API response types ──
