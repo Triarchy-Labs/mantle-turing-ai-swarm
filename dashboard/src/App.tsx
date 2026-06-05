@@ -6,7 +6,6 @@ import { AnimatedArchitecture } from './components/AnimatedArchitecture';
 import CustomCursor from './components/CustomCursor';
 import { WebGLErrorBoundary } from './components/WebGLErrorBoundary';
 import { useTelemetry } from './hooks/useTelemetry';
-import SovereignMascotPanel from './components/SovereignMascotPanel';
 
 /* ── Pipeline stages ── */
 const pipelineStages = [
@@ -369,8 +368,6 @@ export default function App() {
 				{/* ── RIGHT COLUMN ── */}
 				<div className="dashboard-col-right">
 
-					{/* MASCOT PANEL */}
-					<SovereignMascotPanel orbState={orbState} />
 
 					{/* SYNAPTIC CORE — 3D Brain */}
 					<div className="glass" style={{ padding: '20px', position: 'relative', overflow: 'visible' }}>
