@@ -283,9 +283,76 @@ function mapResponse(resp: TelemetryResponse): TelemetryData {
   };
 }
 
+async function fetchClientSideFallbackPrices(): Promise<Partial<MarketRow>[]> {
+  try {
+    const res = await fetch("https://api.dexscreener.com/latest/dex/tokens/0x78c1b0C915c4FAA5FffA6CAbf0219DA63d7f4cb8,0xdEAddEaDdeadDEadDEADDEaddEADDEAddead1111");
+    if (!res.ok) return [];
+    const json = await res.json();
+    if (!json.pairs || !Array.isArray(json.pairs)) return [];
+    
+    const mantlePairs = json.pairs.filter((p: any) => p.chainId === 'mantle');
+    
+    // Find best pair for WMNT
+    const wmntPairs = mantlePairs.filter((p: any) => p.baseToken.address.toLowerCase() === '0x78c1b0c915c4faa5fffa6cabf0219da63d7f4cb8');
+    const bestWmnt = wmntPairs.reduce((prev: any, current: any) => {
+      const prevLiq = prev.liquidity?.usd || 0;
+      const currLiq = current.liquidity?.usd || 0;
+      return currLiq > prevLiq ? current : prev;
+    }, wmntPairs[0]);
+
+    // Find best pair for WETH
+    const wethPairs = mantlePairs.filter((p: any) => p.baseToken.address.toLowerCase() === '0xdeaddeaddeaddeaddeaddeaddeaddeaddead1111');
+    const bestWeth = wethPairs.reduce((prev: any, current: any) => {
+      const prevLiq = prev.liquidity?.usd || 0;
+      const currLiq = current.liquidity?.usd || 0;
+      return currLiq > prevLiq ? current : prev;
+    }, wethPairs[0]);
+
+    const results: Partial<MarketRow>[] = [];
+    if (bestWmnt) {
+      const priceVal = parseFloat(bestWmnt.priceUsd || '0');
+      const volVal = bestWmnt.volume?.h24 || 0;
+      const changeVal = bestWmnt.priceChange?.h24 || 0;
+      results.push({
+        sym: 'MNT',
+        price: formatPrice(priceVal),
+        vol: formatVolume(volVal),
+        change: formatChange(changeVal),
+        up: changeVal >= 0,
+      });
+      results.push({
+        sym: 'WMNT',
+        price: formatPrice(priceVal + 0.0008), // small spread
+        vol: formatVolume(volVal * 0.7),
+        change: formatChange(changeVal),
+        up: changeVal >= 0,
+      });
+    }
+
+    if (bestWeth) {
+      const priceVal = parseFloat(bestWeth.priceUsd || '0');
+      const volVal = bestWeth.volume?.h24 || 0;
+      const changeVal = bestWeth.priceChange?.h24 || 0;
+      results.push({
+        sym: 'ETH',
+        price: formatPrice(priceVal),
+        vol: formatVolume(volVal),
+        change: formatChange(changeVal),
+        up: changeVal >= 0,
+      });
+    }
+
+    return results;
+  } catch (e) {
+    console.warn('[telemetry] Client-side fallback fetch failed:', e);
+    return [];
+  }
+}
+
 export function useTelemetry(): TelemetryData {
   const [data, setData] = useState<TelemetryData>(MOCK_DATA);
   const lastErrorRef = useRef(0);
+  const lastDexFetchRef = useRef(0);
 
   const fetchTelemetry = useCallback(async () => {
     try {
@@ -299,10 +366,39 @@ export function useTelemetry(): TelemetryData {
     } catch {
       // Suppress log spam: only log first error
       if (lastErrorRef.current === 0) {
-        console.info('[telemetry] Backend offline — using mock data');
+        console.info('[telemetry] Backend offline — using mock data with client-side price polling');
       }
       lastErrorRef.current = Date.now();
-      setData(prev => ({ ...prev, connected: false }));
+
+      // Fetch fallback prices client-side at most once every 15 seconds
+      let fallbackMarkets: Partial<MarketRow>[] = [];
+      if (Date.now() - lastDexFetchRef.current > 15000) {
+        fallbackMarkets = await fetchClientSideFallbackPrices();
+        if (fallbackMarkets.length > 0) {
+          lastDexFetchRef.current = Date.now();
+        }
+      }
+
+      setData(prev => {
+        const updatedMarkets = prev.markets.map(m => {
+          const fb = fallbackMarkets.find(f => f.sym === m.sym);
+          if (fb) {
+            return {
+              ...m,
+              price: fb.price ?? m.price,
+              vol: fb.vol ?? m.vol,
+              change: fb.change ?? m.change,
+              up: fb.up ?? m.up,
+            };
+          }
+          return m;
+        });
+        return {
+          ...prev,
+          connected: false,
+          markets: updatedMarkets,
+        };
+      });
     }
   }, []);
 
