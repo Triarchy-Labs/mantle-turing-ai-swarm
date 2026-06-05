@@ -188,7 +188,7 @@ export default function App() {
 
 			<main>
 			{/* ═══ STATS GRID ═══ */}
-			<section className="metrics" aria-label="Key Performance Metrics" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))' }}>
+			<section className="metrics" aria-label="Key Performance Metrics">
 				<div className="glass metric"><h3><Cpu size={14} style={{ color: 'var(--accent)' }} /> Cycle</h3><div className="val cyan">{cycle}</div></div>
 				<div className="glass metric"><h3><Activity size={14} style={{ color: 'var(--accent-hover)' }} /> Uptime</h3><div className="val green">{fmtUptime}</div></div>
 				<div className="glass metric"><h3><Zap size={14} style={{ color: 'var(--accent-hover)' }} /> PnL</h3><div className="val green">{telem.pnl}</div></div>

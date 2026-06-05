@@ -204,9 +204,9 @@ html[data-theme="light"] .toggle-group {
    ============================================================ */
 .metrics {
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-	gap: 24px;
-	margin-bottom: 40px;
+	grid-template-columns: repeat(8, 1fr);
+	gap: 16px;
+	margin-bottom: 16px;
 }
 
 .metric h3 {
@@ -222,7 +222,7 @@ html[data-theme="light"] .toggle-group {
 }
 
 .metric .val {
-	font-size: 2.2rem;
+	font-size: 1.6rem;
 	font-weight: 700;
 	font-family: var(--font-heading);
 	letter-spacing: -0.02em;
@@ -574,16 +574,16 @@ html[data-theme="light"] .event-row {
 .dashboard-grid {
 	display: grid;
 	grid-template-columns: 1.6fr 1fr;
-	gap: 32px;
+	gap: 48px;
 	align-items: start;
-	margin-top: 32px;
+	margin-top: 16px;
 }
 
 .dashboard-col-left,
 .dashboard-col-right {
 	display: flex;
 	flex-direction: column;
-	gap: 32px;
+	gap: 48px;
 }
 
 .control-bar {
@@ -606,9 +606,9 @@ html[data-theme="light"] .event-row {
 
 .metrics {
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-	gap: 32px;
-	margin-bottom: 40px;
+	grid-template-columns: repeat(8, 1fr);
+	gap: 16px;
+	margin-bottom: 16px;
 }
 
 /* ============================================================
@@ -631,15 +631,15 @@ html[data-theme="light"] .event-row {
 @media (max-width: 1024px) {
 	.dashboard-grid {
 		grid-template-columns: 1fr;
-		gap: 24px;
+		gap: 32px;
 	}
 	.dashboard-col-left,
 	.dashboard-col-right {
-		gap: 24px;
+		gap: 32px;
 	}
 	.metrics {
-		grid-template-columns: repeat(2, 1fr);
-		gap: 24px;
+		grid-template-columns: repeat(4, 1fr);
+		gap: 12px;
 	}
 	.header h1 { font-size: 1.6rem; }
 	.metric .val { font-size: 2rem; }
@@ -693,7 +693,7 @@ html[data-theme="light"] .event-row {
 /* ── Phone (≤480px) ── */
 @media (max-width: 480px) {
 	.metrics {
-		grid-template-columns: 1fr;
+		grid-template-columns: repeat(2, 1fr);
 	}
 	.header h1 {
 		font-size: 1.15rem;
