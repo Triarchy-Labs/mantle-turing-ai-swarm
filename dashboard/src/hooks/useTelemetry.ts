@@ -289,7 +289,9 @@ export function useTelemetry(): TelemetryData {
 
   const fetchTelemetry = useCallback(async () => {
     try {
-      const resp = await fetch(TELEMETRY_URL, { signal: AbortSignal.timeout(3000) });
+      // Render free tier cold-starts in 12-50s; use generous timeout
+      const timeout = lastErrorRef.current > 2 ? 8000 : 60000;
+      const resp = await fetch(TELEMETRY_URL, { signal: AbortSignal.timeout(timeout) });
       if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
       const json: TelemetryResponse = await resp.json();
       setData(mapResponse(json));
