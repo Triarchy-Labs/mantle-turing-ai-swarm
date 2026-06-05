@@ -1,0 +1,16 @@
+name: Keep Alive Render Backend
+
+on:
+  schedule:
+    # Run every 10 minutes to stay within the 15-minute inactivity window
+    - cron: '*/10 * * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub UI
+
+jobs:
+  keep-alive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Render Backend Health Endpoint
+        run: |
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" https://mantle-swarm-engine.onrender.com/health)
+          echo "Render health status code: $RESPONSE"
