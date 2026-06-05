@@ -6,6 +6,7 @@ import { AnimatedArchitecture } from './components/AnimatedArchitecture';
 import CustomCursor from './components/CustomCursor';
 import { WebGLErrorBoundary } from './components/WebGLErrorBoundary';
 import { useTelemetry } from './hooks/useTelemetry';
+import SovereignMascotPanel from './components/SovereignMascotPanel';
 
 /* ── Pipeline stages ── */
 const pipelineStages = [
@@ -199,108 +200,223 @@ export default function App() {
 			</section>
 
 			{/* ═══ MAIN GRID: Market + Synaptic Core ═══ */}
-			<div className="grid-main">
+			<div className="dashboard-grid">
 
-				{/* LEFT: Market Monitoring */}
-				<div className="glass events-section" role="region" aria-label="Live Market Data">
-					<div className="card-title"><TrendingUp size={16} style={{ color: 'var(--accent-hover)' }} /> LIVE MARKET MONITORING {telem.connected && <span style={{ fontSize: '9px', color: 'var(--accent-success)', marginLeft: '8px' }}>● LIVE</span>}</div>
-					{telem.markets.map(m => (
-						<div key={m.sym} className="event-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderRadius: '12px', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', marginBottom: '14px', transition: 'all 0.3s ease', cursor: 'pointer' }}>
-							<div>
-								<div style={{ fontSize: '19px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>{m.sym}</div>
-								<div style={{ fontSize: '11px', color: 'var(--foreground)', opacity: 0.5 }}>Vol 24h: {m.vol}</div>
-							</div>
-							<div style={{ fontSize: '24px', fontWeight: 700, fontFamily: 'var(--font-mono)', color: 'var(--accent)' }}>{m.price}</div>
-							<div className={`badge ${m.up ? 'ok' : 'fail'}`}>{m.change}</div>
-							<div className={`lusion-btn ${m.up ? 'connect-state-true' : ''}`} style={{ fontSize: '11px', padding: '4px 12px' }}>
-								{m.verdict}<br /><span style={{ fontSize: '10px', opacity: 0.7 }}>{m.conf}%</span>
-							</div>
-						</div>
-					))}
-				</div>
+				{/* ── LEFT COLUMN ── */}
+				<div className="dashboard-col-left">
 
-				{/* RIGHT: Synaptic Core — 3D Stone with orbiting tech cards */}
-				<div className="glass" style={{ padding: '20px', position: 'relative', overflow: 'visible' }}>
-					<div className="card-title"><Eye size={16} style={{ color: 'var(--accent)' }} /> SYNAPTIC CORE — SWARM BRAIN</div>
-
-					{/* 3D Architecture — compact */}
-					<div style={{ width: '100%', height: '420px', position: 'relative', borderRadius: '12px', overflow: 'hidden' }}>
-						<Suspense fallback={
-							<div style={{
-								width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center',
-								background: 'rgba(5,5,12,0.8)', borderRadius: '12px',
-								border: '1px solid rgba(0,212,255,0.15)'
-							}}>
-								<div style={{ color: 'var(--accent)', fontFamily: 'var(--font-mono)', fontSize: '0.8rem', opacity: 0.6, textAlign: 'center' }}>
-									<div style={{ marginBottom: '8px', animation: 'pulse 2s infinite' }}>◈</div>
-									LOADING 3D MODEL...
+					{/* LIVE MARKET MONITORING */}
+					<div className="glass events-section" role="region" aria-label="Live Market Data">
+						<div className="card-title"><TrendingUp size={16} style={{ color: 'var(--accent-hover)' }} /> LIVE MARKET MONITORING {telem.connected && <span style={{ fontSize: '9px', color: 'var(--accent-success)', marginLeft: '8px' }}>● LIVE</span>}</div>
+						{telem.markets.map(m => (
+							<div key={m.sym} className="event-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderRadius: '12px', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', marginBottom: '14px', transition: 'all 0.3s ease', cursor: 'pointer' }}>
+								<div>
+									<div style={{ fontSize: '19px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>{m.sym}</div>
+									<div style={{ fontSize: '11px', color: 'var(--foreground)', opacity: 0.5 }}>Vol 24h: {m.vol}</div>
 								</div>
-							</div>
-						}>
-							<WebGLErrorBoundary>
-							<AnimatedArchitecture theme={theme} />
-						</WebGLErrorBoundary>
-						</Suspense>
-					</div>
-
-					{/* Orbiting tech cards */}
-					<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginTop: '12px' }}>
-						{techCards.map(tc => (
-							<div key={tc.label} className="snake-border" style={{
-								padding: '8px 12px', background: 'rgba(0,0,0,0.4)', borderRadius: '8px',
-								border: '1px solid var(--border)', backdropFilter: 'blur(8px)',
-								fontSize: '10px', fontFamily: 'var(--font-mono)', transition: 'all 0.3s ease',
-							}}>
-								<div style={{ color: 'var(--accent-hover)', fontWeight: 700, marginBottom: '2px' }}>{tc.label}</div>
-								<div style={{ color: 'var(--foreground)', opacity: 0.6 }}>{tc.desc}</div>
+								<div style={{ fontSize: '24px', fontWeight: 700, fontFamily: 'var(--font-mono)', color: 'var(--accent)' }}>{m.price}</div>
+								<div className={`badge ${m.up ? 'ok' : 'fail'}`}>{m.change}</div>
+								<div className={`lusion-btn ${m.up ? 'connect-state-true' : ''}`} style={{ fontSize: '11px', padding: '4px 12px' }}>
+									{m.verdict}<br /><span style={{ fontSize: '10px', opacity: 0.7 }}>{m.conf}%</span>
+								</div>
 							</div>
 						))}
 					</div>
 
-					{/* Agent Orb */}
-					<div style={{ display: 'flex', justifyContent: 'center', padding: '16px 0', borderTop: '1px solid var(--border)', marginTop: '12px' }}>
-						<AgentOrb state={orbState} />
+					{/* SYNAPTIC DECISION PIPELINE */}
+					<div className="glass events-section" role="region" aria-label="Decision Pipeline">
+						<div className="card-title"><Zap size={16} style={{ color: 'var(--accent-hover)' }} /> SYNAPTIC DECISION PIPELINE</div>
+						<div role="list" style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+							{pipelineStages.map((s, idx) => {
+								const st = idx < effectiveStage ? 'done' : idx === effectiveStage ? 'active' : 'pending';
+								return (
+									<div key={s.n} role="listitem" style={{
+										display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+										padding: '8px 14px', borderRadius: '8px', fontFamily: 'var(--font-mono)', fontSize: '12px',
+										background: st === 'active' ? 'rgba(0,212,255,0.05)' : 'rgba(15,15,25,0.3)',
+										border: `1px solid ${st === 'active' ? 'var(--accent-hover)' : 'rgba(255,255,255,0.03)'}`,
+										boxShadow: st === 'active' ? '0 0 15px rgba(0,212,255,0.08)' : 'none',
+										transform: st === 'active' ? 'scale(1.01)' : 'none',
+										transition: 'all 0.3s ease',
+									}}>
+										<div style={{ display: 'flex', gap: '10px' }}>
+											<span style={{ color: st === 'active' ? 'var(--accent-hover)' : 'var(--foreground)', opacity: st === 'pending' ? 0.3 : 0.5 }}>[{s.n}]</span>
+											<span style={{ color: st === 'done' ? 'var(--accent-hover)' : st === 'active' ? '#fff' : 'var(--foreground)', opacity: st === 'pending' ? 0.4 : 1, fontWeight: st === 'active' ? 700 : 400 }}>{s.label}</span>
+										</div>
+										<span style={{
+											fontSize: '11px', textTransform: 'uppercase', fontWeight: 700,
+											color: st === 'done' ? 'var(--accent-hover)' : st === 'active' ? 'var(--accent)' : 'var(--foreground)',
+											opacity: st === 'pending' ? 0.3 : 1,
+										}}>
+											{st === 'done' ? 'DONE' : st === 'active' ? 'PROCESSING' : 'PENDING'}
+										</span>
+									</div>
+								);
+							})}
+						</div>
 					</div>
-				</div>
-			</div>
 
-			{/* ═══ PIPELINE + DEBATE ═══ */}
-			<section className="grid-main" style={{ marginTop: '24px' }} aria-label="Decision Pipeline">
-				{/* Pipeline */}
-				<div className="glass events-section">
-					<div className="card-title"><Zap size={16} style={{ color: 'var(--accent-hover)' }} /> SYNAPTIC DECISION PIPELINE</div>
-					<div role="list" style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-						{pipelineStages.map((s, idx) => {
-							const st = idx < effectiveStage ? 'done' : idx === effectiveStage ? 'active' : 'pending';
-							return (
-							<div key={s.n} role="listitem" style={{
-								display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-								padding: '8px 14px', borderRadius: '8px', fontFamily: 'var(--font-mono)', fontSize: '12px',
-								background: st === 'active' ? 'rgba(0,212,255,0.05)' : 'rgba(15,15,25,0.3)',
-								border: `1px solid ${st === 'active' ? 'var(--accent-hover)' : 'rgba(255,255,255,0.03)'}`,
-								boxShadow: st === 'active' ? '0 0 15px rgba(0,212,255,0.08)' : 'none',
-								transform: st === 'active' ? 'scale(1.01)' : 'none',
-								transition: 'all 0.3s ease',
-							}}>
-								<div style={{ display: 'flex', gap: '10px' }}>
-									<span style={{ color: st === 'active' ? 'var(--accent-hover)' : 'var(--foreground)', opacity: st === 'pending' ? 0.3 : 0.5 }}>[{s.n}]</span>
-									<span style={{ color: st === 'done' ? 'var(--accent-hover)' : st === 'active' ? '#fff' : 'var(--foreground)', opacity: st === 'pending' ? 0.4 : 1, fontWeight: st === 'active' ? 700 : 400 }}>{s.label}</span>
+					{/* RISK + RAMP + POSITIONS GROUP */}
+					<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '24px' }}>
+						{/* Risk Matrix Panel */}
+						<div className="glass" style={{ padding: '20px' }}>
+							<div className="card-title"><Shield size={16} style={{ color: '#00ff88' }} /> RISK MATRIX ENGINE</div>
+							<div style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+								<div style={{ display: 'flex', justifyContent: 'space-between' }}>
+									<span style={{ opacity: 0.5 }}>Dynamic Leverage</span>
+									<span style={{ color: 'var(--accent)', fontWeight: 700 }}>{telem.riskState?.dynamic_leverage.toFixed(1) ?? '—'}×</span>
 								</div>
-								<span style={{
-									fontSize: '11px', textTransform: 'uppercase', fontWeight: 700,
-									color: st === 'done' ? 'var(--accent-hover)' : st === 'active' ? 'var(--accent)' : 'var(--foreground)',
-									opacity: st === 'pending' ? 0.3 : 1,
-								}}>
-									{st === 'done' ? 'DONE' : st === 'active' ? 'PROCESSING' : 'PENDING'}
-								</span>
+								<div style={{ display: 'flex', justifyContent: 'space-between' }}>
+									<span style={{ opacity: 0.5 }}>ATR Estimate</span>
+									<span style={{ color: 'var(--accent-hover)' }}>{((telem.riskState?.atr_estimate ?? 0) * 100).toFixed(2)}%</span>
+								</div>
+								<div style={{ display: 'flex', justifyContent: 'space-between' }}>
+									<span style={{ opacity: 0.5 }}>Macro Penalty</span>
+									<span style={{ color: telem.riskState?.macro_penalty ? '#ff6b6b' : '#00ff88' }}>{telem.riskState?.macro_penalty.toFixed(2) ?? '0.00'}</span>
+								</div>
+								<div style={{ display: 'flex', justifyContent: 'space-between' }}>
+									<span style={{ opacity: 0.5 }}>Circuit Breaker</span>
+									<span style={{ color: telem.riskState?.circuit_breaker === 'GREEN' ? '#00ff88' : '#ff6b6b', fontWeight: 700 }}>● {telem.riskState?.circuit_breaker ?? 'N/A'}</span>
+								</div>
+								{/* Leverage bar */}
+								<div style={{ marginTop: '8px' }}>
+									<div style={{ fontSize: '10px', opacity: 0.4, marginBottom: '4px' }}>LEVERAGE UTILIZATION</div>
+									<div style={{ height: '6px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
+										<div style={{ height: '100%', width: `${((telem.riskState?.dynamic_leverage ?? 5) / 20) * 100}%`, background: 'linear-gradient(90deg, #00ff88, #00d4ff)', borderRadius: '3px', transition: 'width 0.5s ease' }} />
+									</div>
+								</div>
 							</div>
-						);
-						})}
+						</div>
+
+						{/* AutoRamp Capital Phase */}
+						<div className="glass" style={{ padding: '20px' }}>
+							<div className="card-title"><BarChart3 size={16} style={{ color: 'var(--accent)' }} /> AUTO-RAMP CAPITAL SCALING</div>
+							<div style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+								<div style={{ textAlign: 'center', padding: '12px', background: 'rgba(0,212,255,0.05)', borderRadius: '8px', border: '1px solid rgba(0,212,255,0.15)' }}>
+									<div style={{ fontSize: '28px', fontWeight: 800, color: 'var(--accent)' }}>{telem.rampState?.phase_label ?? 'SEED'}</div>
+									<div style={{ fontSize: '11px', opacity: 0.5, marginTop: '4px' }}>Phase {telem.rampState?.current_phase ?? 0}/4</div>
+								</div>
+								{/* Phase progress bar */}
+								<div style={{ display: 'flex', gap: '3px' }}>
+									{['SEED', 'SPROUT', 'GROWTH', 'MATURE', 'APEX'].map((label, i) => (
+										<div key={label} style={{ flex: 1, height: '4px', borderRadius: '2px', background: i <= (telem.rampState?.current_phase ?? 0) ? 'var(--accent)' : 'rgba(255,255,255,0.05)', transition: 'background 0.3s ease' }} title={label} />
+									))}
+								</div>
+								<div style={{ display: 'flex', justifyContent: 'space-between' }}>
+									<span style={{ opacity: 0.5 }}>Max Position</span>
+									<span style={{ color: 'var(--accent-hover)', fontWeight: 700 }}>{((telem.rampState?.max_position_pct ?? 0.1) * 100).toFixed(0)}%</span>
+								</div>
+								<div style={{ display: 'flex', justifyContent: 'space-between' }}>
+									<span style={{ opacity: 0.5 }}>Kill-Switch Threshold</span>
+									<span style={{ color: '#ff6b6b' }}>{telem.rampState?.daily_loss_kill_pct?.toFixed(0) ?? '3'}% daily loss</span>
+								</div>
+							</div>
+						</div>
+
+						{/* Open Positions */}
+						<div className="glass" style={{ padding: '20px' }}>
+							<div className="card-title"><Target size={16} style={{ color: 'var(--accent-hover)' }} /> OPEN POSITIONS ({telem.openPositions.length})</div>
+							{telem.openPositions.length === 0 ? (
+								<div style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', opacity: 0.3, textAlign: 'center', padding: '30px 0' }}>NO OPEN POSITIONS</div>
+							) : (
+								<div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+									{telem.openPositions.map((pos, i) => (
+										<div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 14px', borderRadius: '8px', background: 'rgba(10,10,18,0.4)', border: '1px solid rgba(255,255,255,0.03)', fontFamily: 'var(--font-mono)', fontSize: '12px' }}>
+											<div>
+												<span style={{ fontWeight: 700, marginRight: '8px' }}>{pos.symbol}</span>
+												<span className={`badge ${pos.side === 'Buy' ? 'ok' : 'fail'}`} style={{ fontSize: '10px' }}>{pos.side}</span>
+											</div>
+											<div style={{ display: 'flex', gap: '16px', opacity: 0.7 }}>
+												<span>${pos.entry_price.toFixed(4)}</span>
+												<span>{Math.floor(pos.hold_duration_secs / 60)}m</span>
+												<span style={{ color: pos.trailing_stop > 0 ? '#00ff88' : 'rgba(255,255,255,0.3)' }}>SL: ${pos.trailing_stop.toFixed(4)}</span>
+											</div>
+										</div>
+									))}
+								</div>
+							)}
+						</div>
 					</div>
+
+					{/* LOG STREAM */}
+					<div className="glass" role="log" aria-live="polite" aria-label="Synaptic Activity Log" style={{ padding: '20px' }}>
+						<div className="card-title"><Terminal size={16} /> SYNAPTIC ACTIVITY LOG</div>
+						<div ref={logRef} style={{
+							height: '250px', overflowY: 'auto', fontFamily: 'var(--font-mono)', fontSize: '12px', lineHeight: 1.8,
+							padding: '16px', background: 'rgba(4,4,6,0.9)', border: '1px solid var(--border)', borderRadius: '12px',
+							boxShadow: 'inset 0 2px 10px rgba(0,0,0,0.8)',
+						}}>
+							{telem.logs.map((l, i) => (
+								<div key={i} style={{ display: 'flex', gap: '12px', color: 'var(--foreground)', opacity: 0.7, borderBottom: '1px solid rgba(255,255,255,0.01)', padding: '2px 0' }}>
+									<span style={{ color: 'var(--foreground)', opacity: 0.3, minWidth: '90px' }}>{logTime(l.off)}</span>
+									<span style={{ color: l.type === 'success' ? 'var(--accent-hover)' : 'var(--accent)', fontWeight: 700, minWidth: '100px' }}>{l.tag}</span>
+									<span>{l.msg}</span>
+								</div>
+							))}
+						</div>
+					</div>
+
+					{/* CONTROL BAR */}
+					<div className="control-bar">
+						<button className="lusion-btn-primary" onClick={handleLaunch} aria-label="Launch Synaptic Analysis">
+							{analysisRunning ? '[ ◎ ANALYSIS RUNNING... ]' : '[ LAUNCH SYNAPTIC ANALYSIS ]'}
+						</button>
+						<button className="lusion-btn connect-btn-hover-fx" onClick={() => window.open(`https://explorer.mantle.xyz/address/0x1150f09ae885e6E7BcC0cb38feDd200d7f580008`, '_blank')} aria-label="View On-Chain Agent NFT"><span>[ VIEW AGENT NFT ON-CHAIN ]</span></button>
+					</div>
+
 				</div>
 
-				{/* Synaptic Debate + Network Registry */}
-				<div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+				{/* ── RIGHT COLUMN ── */}
+				<div className="dashboard-col-right">
+
+					{/* MASCOT PANEL */}
+					<SovereignMascotPanel orbState={orbState} />
+
+					{/* SYNAPTIC CORE — 3D Brain */}
+					<div className="glass" style={{ padding: '20px', position: 'relative', overflow: 'visible' }}>
+						<div className="card-title"><Eye size={16} style={{ color: 'var(--accent)' }} /> SYNAPTIC CORE — SWARM BRAIN</div>
+
+						{/* 3D Model container */}
+						<div style={{ width: '100%', height: '420px', position: 'relative', borderRadius: '12px', overflow: 'hidden' }}>
+							<Suspense fallback={
+								<div style={{
+									width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+									background: 'rgba(5,5,12,0.8)', borderRadius: '12px',
+									border: '1px solid rgba(0,212,255,0.15)'
+								}}>
+									<div style={{ color: 'var(--accent)', fontFamily: 'var(--font-mono)', fontSize: '0.8rem', opacity: 0.6, textAlign: 'center' }}>
+										<div style={{ marginBottom: '8px', animation: 'pulse 2s infinite' }}>◈</div>
+										LOADING 3D MODEL...
+									</div>
+								</div>
+							}>
+								<WebGLErrorBoundary>
+									<AnimatedArchitecture theme={theme} />
+								</WebGLErrorBoundary>
+							</Suspense>
+						</div>
+
+						{/* Orbiting tech cards */}
+						<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginTop: '12px' }}>
+							{techCards.map(tc => (
+								<div key={tc.label} className="snake-border" style={{
+									padding: '8px 12px', background: 'rgba(0,0,0,0.4)', borderRadius: '8px',
+									border: '1px solid var(--border)', backdropFilter: 'blur(8px)',
+									fontSize: '10px', fontFamily: 'var(--font-mono)', transition: 'all 0.3s ease',
+								}}>
+									<div style={{ color: 'var(--accent-hover)', fontWeight: 700, marginBottom: '2px' }}>{tc.label}</div>
+									<div style={{ color: 'var(--foreground)', opacity: 0.6 }}>{tc.desc}</div>
+								</div>
+							))}
+						</div>
+
+						{/* Small Agent Orb */}
+						<div style={{ display: 'flex', justifyContent: 'center', padding: '16px 0', borderTop: '1px solid var(--border)', marginTop: '12px' }}>
+							<AgentOrb state={orbState} />
+						</div>
+					</div>
+
+					{/* SYNAPTIC DECISION ARBITRAGE */}
 					<div className="glass" style={{ padding: '20px' }}>
 						<div className="card-title"><Network size={16} style={{ color: 'var(--accent)' }} /> SYNAPTIC DECISION ARBITRAGE</div>
 						<div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -319,138 +435,32 @@ export default function App() {
 						</div>
 					</div>
 
-					{/* Network Registry */}
+					{/* NETWORK REGISTRY */}
 					<div className="glass" style={{ padding: '20px' }}>
 						<div className="card-title"><Globe size={16} style={{ color: 'var(--accent-hover)' }} /> NETWORK REGISTRY (ON-CHAIN)</div>
 						<div style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-						<div>Contract Registry: <span style={{ color: 'var(--accent)' }}>{telem.registryAddress}</span></div>
-						<div>NFT Identifier: <span style={{ color: 'var(--accent-hover)' }}>#{telem.agentId} Identity NFT</span></div>
-						<div>Network Provider: <span style={{ color: 'var(--accent-hover)' }}>{telem.chainId} (Mantle Mainnet)</span></div>
-						<div>TX Mode: <span style={{ color: telem.liveMode ? '#00ff88' : 'var(--accent-hover)' }}>
-							{telem.liveMode ? '◉ LIVE BROADCAST' : '○ DRY-RUN (calldata only)'}
-						</span></div>
-						{telem.txHashes.length > 0 && (
-							<div style={{ marginTop: '8px', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '8px' }}>
-								<div style={{ marginBottom: '6px', opacity: 0.5 }}>On-Chain Transactions:</div>
-								{telem.txHashes.slice(-5).map((hash, i) => (
-									<a key={i} href={`https://explorer.mantle.xyz/tx/${hash}`} target="_blank" rel="noopener noreferrer"
-										style={{ color: 'var(--accent)', display: 'block', fontSize: '11px', opacity: 0.8, textDecoration: 'none', marginBottom: '2px' }}>
-										→ {hash.slice(0, 10)}…{hash.slice(-8)}
-									</a>
-								))}
-							</div>
-						)}
-					</div>
-				</div>
-				</div>
-			</section>
-
-			{/* ═══ RISK + RAMP + POSITIONS ═══ */}
-			<section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px', marginTop: '24px' }}>
-				{/* Risk Matrix Panel */}
-				<div className="glass" style={{ padding: '20px' }}>
-					<div className="card-title"><Shield size={16} style={{ color: '#00ff88' }} /> RISK MATRIX ENGINE</div>
-					<div style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-						<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-							<span style={{ opacity: 0.5 }}>Dynamic Leverage</span>
-							<span style={{ color: 'var(--accent)', fontWeight: 700 }}>{telem.riskState?.dynamic_leverage.toFixed(1) ?? '—'}×</span>
-						</div>
-						<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-							<span style={{ opacity: 0.5 }}>ATR Estimate</span>
-							<span style={{ color: 'var(--accent-hover)' }}>{((telem.riskState?.atr_estimate ?? 0) * 100).toFixed(2)}%</span>
-						</div>
-						<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-							<span style={{ opacity: 0.5 }}>Macro Penalty</span>
-							<span style={{ color: telem.riskState?.macro_penalty ? '#ff6b6b' : '#00ff88' }}>{telem.riskState?.macro_penalty.toFixed(2) ?? '0.00'}</span>
-						</div>
-						<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-							<span style={{ opacity: 0.5 }}>Circuit Breaker</span>
-							<span style={{ color: telem.riskState?.circuit_breaker === 'GREEN' ? '#00ff88' : '#ff6b6b', fontWeight: 700 }}>● {telem.riskState?.circuit_breaker ?? 'N/A'}</span>
-						</div>
-						{/* Leverage bar */}
-						<div style={{ marginTop: '8px' }}>
-							<div style={{ fontSize: '10px', opacity: 0.4, marginBottom: '4px' }}>LEVERAGE UTILIZATION</div>
-							<div style={{ height: '6px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
-								<div style={{ height: '100%', width: `${((telem.riskState?.dynamic_leverage ?? 5) / 20) * 100}%`, background: 'linear-gradient(90deg, #00ff88, #00d4ff)', borderRadius: '3px', transition: 'width 0.5s ease' }} />
-							</div>
-						</div>
-					</div>
-				</div>
-
-				{/* AutoRamp Capital Phase */}
-				<div className="glass" style={{ padding: '20px' }}>
-					<div className="card-title"><BarChart3 size={16} style={{ color: 'var(--accent)' }} /> AUTO-RAMP CAPITAL SCALING</div>
-					<div style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-						<div style={{ textAlign: 'center', padding: '12px', background: 'rgba(0,212,255,0.05)', borderRadius: '8px', border: '1px solid rgba(0,212,255,0.15)' }}>
-							<div style={{ fontSize: '28px', fontWeight: 800, color: 'var(--accent)' }}>{telem.rampState?.phase_label ?? 'SEED'}</div>
-							<div style={{ fontSize: '11px', opacity: 0.5, marginTop: '4px' }}>Phase {telem.rampState?.current_phase ?? 0}/4</div>
-						</div>
-						{/* Phase progress bar */}
-						<div style={{ display: 'flex', gap: '3px' }}>
-							{['SEED', 'SPROUT', 'GROWTH', 'MATURE', 'APEX'].map((label, i) => (
-								<div key={label} style={{ flex: 1, height: '4px', borderRadius: '2px', background: i <= (telem.rampState?.current_phase ?? 0) ? 'var(--accent)' : 'rgba(255,255,255,0.05)', transition: 'background 0.3s ease' }} title={label} />
-							))}
-						</div>
-						<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-							<span style={{ opacity: 0.5 }}>Max Position</span>
-							<span style={{ color: 'var(--accent-hover)', fontWeight: 700 }}>{((telem.rampState?.max_position_pct ?? 0.1) * 100).toFixed(0)}%</span>
-						</div>
-						<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-							<span style={{ opacity: 0.5 }}>Kill-Switch Threshold</span>
-							<span style={{ color: '#ff6b6b' }}>{telem.rampState?.daily_loss_kill_pct?.toFixed(0) ?? '3'}% daily loss</span>
-						</div>
-					</div>
-				</div>
-
-				{/* Open Positions */}
-				<div className="glass" style={{ padding: '20px' }}>
-					<div className="card-title"><Target size={16} style={{ color: 'var(--accent-hover)' }} /> OPEN POSITIONS ({telem.openPositions.length})</div>
-					{telem.openPositions.length === 0 ? (
-						<div style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', opacity: 0.3, textAlign: 'center', padding: '30px 0' }}>NO OPEN POSITIONS</div>
-					) : (
-						<div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-							{telem.openPositions.map((pos, i) => (
-								<div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 14px', borderRadius: '8px', background: 'rgba(10,10,18,0.4)', border: '1px solid rgba(255,255,255,0.03)', fontFamily: 'var(--font-mono)', fontSize: '12px' }}>
-									<div>
-										<span style={{ fontWeight: 700, marginRight: '8px' }}>{pos.symbol}</span>
-										<span className={`badge ${pos.side === 'Buy' ? 'ok' : 'fail'}`} style={{ fontSize: '10px' }}>{pos.side}</span>
-									</div>
-									<div style={{ display: 'flex', gap: '16px', opacity: 0.7 }}>
-										<span>${pos.entry_price.toFixed(4)}</span>
-										<span>{Math.floor(pos.hold_duration_secs / 60)}m</span>
-										<span style={{ color: pos.trailing_stop > 0 ? '#00ff88' : 'rgba(255,255,255,0.3)' }}>SL: ${pos.trailing_stop.toFixed(4)}</span>
-									</div>
+							<div>Contract Registry: <span style={{ color: 'var(--accent)' }}>{telem.registryAddress}</span></div>
+							<div>NFT Identifier: <span style={{ color: 'var(--accent-hover)' }}>#{telem.agentId} Identity NFT</span></div>
+							<div>Network Provider: <span style={{ color: 'var(--accent-hover)' }}>{telem.chainId} (Mantle Mainnet)</span></div>
+							<div>TX Mode: <span style={{ color: telem.liveMode ? '#00ff88' : 'var(--accent-hover)' }}>
+								{telem.liveMode ? '◉ LIVE BROADCAST' : '○ DRY-RUN (calldata only)'}
+							</span></div>
+							{telem.txHashes.length > 0 && (
+								<div style={{ marginTop: '8px', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '8px' }}>
+									<div style={{ marginBottom: '6px', opacity: 0.5 }}>On-Chain Transactions:</div>
+									{telem.txHashes.slice(-5).map((hash, i) => (
+										<a key={i} href={`https://explorer.mantle.xyz/tx/${hash}`} target="_blank" rel="noopener noreferrer"
+											style={{ color: 'var(--accent)', display: 'block', fontSize: '11px', opacity: 0.8, textDecoration: 'none', marginBottom: '2px' }}>
+											→ {hash.slice(0, 10)}…{hash.slice(-8)}
+										</a>
+									))}
 								</div>
-							))}
+							)}
 						</div>
-					)}
-				</div>
-			</section>
+					</div>
 
-			{/* ═══ LOG STREAM ═══ */}
-			<div className="glass" style={{ padding: '20px', marginTop: '24px' }} role="log" aria-live="polite" aria-label="Synaptic Activity Log">
-				<div className="card-title"><Terminal size={16} /> SYNAPTIC ACTIVITY LOG</div>
-				<div ref={logRef} style={{
-					height: '250px', overflowY: 'auto', fontFamily: 'var(--font-mono)', fontSize: '12px', lineHeight: 1.8,
-					padding: '16px', background: 'rgba(4,4,6,0.9)', border: '1px solid var(--border)', borderRadius: '12px',
-					boxShadow: 'inset 0 2px 10px rgba(0,0,0,0.8)',
-				}}>
-					{telem.logs.map((l, i) => (
-						<div key={i} style={{ display: 'flex', gap: '12px', color: 'var(--foreground)', opacity: 0.7, borderBottom: '1px solid rgba(255,255,255,0.01)', padding: '2px 0' }}>
-							<span style={{ color: 'var(--foreground)', opacity: 0.3, minWidth: '90px' }}>{logTime(l.off)}</span>
-							<span style={{ color: l.type === 'success' ? 'var(--accent-hover)' : 'var(--accent)', fontWeight: 700, minWidth: '100px' }}>{l.tag}</span>
-							<span>{l.msg}</span>
-						</div>
-					))}
 				</div>
-			</div>
 
-			{/* ═══ CONTROL BAR ═══ */}
-			<div className="control-bar">
-				<button className="lusion-btn-primary" onClick={handleLaunch} aria-label="Launch Synaptic Analysis">
-					{analysisRunning ? '[ ◎ ANALYSIS RUNNING... ]' : '[ LAUNCH SYNAPTIC ANALYSIS ]'}
-				</button>
-				<button className="lusion-btn connect-btn-hover-fx" onClick={() => window.open(`https://explorer.mantle.xyz/address/0x1150f09ae885e6E7BcC0cb38feDd200d7f580008`, '_blank')} aria-label="View On-Chain Agent NFT"><span>[ VIEW AGENT NFT ON-CHAIN ]</span></button>
 			</div>
 
 			{/* ═══ FOOTER ═══ */}

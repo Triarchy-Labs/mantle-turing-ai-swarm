@@ -571,17 +571,25 @@ html[data-theme="light"] .event-row {
 /* ============================================================
    LAYOUT CLASSES (moved from inline styles for responsive control)
    ============================================================ */
-.grid-main {
+.dashboard-grid {
 	display: grid;
 	grid-template-columns: 1.6fr 1fr;
-	gap: 24px;
+	gap: 32px;
 	align-items: start;
+	margin-top: 32px;
+}
+
+.dashboard-col-left,
+.dashboard-col-right {
+	display: flex;
+	flex-direction: column;
+	gap: 32px;
 }
 
 .control-bar {
 	display: flex;
 	gap: 16px;
-	margin-top: 24px;
+	margin-top: 32px;
 }
 
 .footer-bar {
@@ -592,15 +600,15 @@ html[data-theme="light"] .event-row {
 	border-radius: 12px;
 	font-size: 12px;
 	font-family: var(--font-mono);
-	margin-top: 30px;
+	margin-top: 40px;
 	opacity: 0.8;
 }
 
 .metrics {
 	display: grid;
-	grid-template-columns: repeat(4, 1fr);
-	gap: 20px;
-	margin-bottom: 30px;
+	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+	gap: 32px;
+	margin-bottom: 40px;
 }
 
 /* ============================================================
@@ -621,12 +629,17 @@ html[data-theme="light"] .event-row {
 
 /* ── Tablet Landscape (769px – 1024px) ── */
 @media (max-width: 1024px) {
-	.grid-main {
+	.dashboard-grid {
 		grid-template-columns: 1fr;
-		gap: 20px;
+		gap: 24px;
+	}
+	.dashboard-col-left,
+	.dashboard-col-right {
+		gap: 24px;
 	}
 	.metrics {
 		grid-template-columns: repeat(2, 1fr);
+		gap: 24px;
 	}
 	.header h1 { font-size: 1.6rem; }
 	.metric .val { font-size: 2rem; }
@@ -821,4 +834,16 @@ a:focus-visible,
 		border: 1px solid #ccc !important;
 	}
 	body { background: white !important; }
+}
+
+@keyframes scanline {
+	0% {
+		top: 0%;
+	}
+	50% {
+		top: 100%;
+	}
+	100% {
+		top: 0%;
+	}
 }
