@@ -75,6 +75,8 @@ RUN mkdir -p /app/data
 ENV CONFIG_DIR=/app/config
 ENV DATA_DIR=/app/data
 ENV RUST_LOG=swarm_engine=info,ouroboros_brain=info
+ENV RUST_BACKTRACE=1
+ENV MALLOC_ARENA_MAX=2
 
 EXPOSE 10000
 
