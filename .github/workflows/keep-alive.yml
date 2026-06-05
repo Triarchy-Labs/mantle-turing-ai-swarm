@@ -2,8 +2,9 @@ name: Keep Alive Render Backend
 
 on:
   schedule:
-    # Run every 10 minutes to stay within the 15-minute inactivity window
-    - cron: '*/10 * * * *'
+    # Run every 5 minutes to stay within the 15-minute inactivity window
+    # even if GitHub Actions schedule is delayed by a few minutes.
+    - cron: '*/5 * * * *'
   workflow_dispatch: # Allows manual trigger from GitHub UI
 
 jobs:
