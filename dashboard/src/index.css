@@ -569,6 +569,186 @@ html[data-theme="light"] .event-row {
 }
 
 /* ============================================================
+   SWARM CHAT — AI Agent Chat Interface
+   ============================================================ */
+.swarm-chat {
+	padding: 20px;
+	display: flex;
+	flex-direction: column;
+	min-height: 520px;
+	max-height: 720px;
+}
+
+/* ── Orb ── */
+.swarm-chat-orb {
+	display: flex;
+	justify-content: center;
+	padding: 16px 0 12px;
+}
+
+.swarm-chat-orb-inner {
+	width: 100px;
+	height: 100px;
+	border-radius: 50%;
+	background: radial-gradient(circle at 40% 35%, rgba(0,245,255,0.12) 0%, rgba(5,5,12,0.95) 70%);
+	border: 2px solid rgba(0,245,255,0.25);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 16px;
+	transition: all 0.4s ease;
+	box-shadow: 0 0 30px rgba(0,245,255,0.08), inset 0 0 30px rgba(0,245,255,0.05);
+}
+
+.swarm-chat-orb.thinking .swarm-chat-orb-inner {
+	border-color: rgba(168,85,247,0.6);
+	box-shadow: 0 0 40px rgba(168,85,247,0.2), 0 0 80px rgba(168,85,247,0.08), inset 0 0 30px rgba(168,85,247,0.05);
+	animation: orbPulse 1.5s ease-in-out infinite;
+}
+
+.swarm-chat-orb.working .swarm-chat-orb-inner {
+	border-color: rgba(0,245,255,0.7);
+	box-shadow: 0 0 50px rgba(0,245,255,0.3), 0 0 100px rgba(0,245,255,0.1), inset 0 0 30px rgba(0,245,255,0.08);
+	animation: orbPulse 0.8s ease-in-out infinite;
+}
+
+@keyframes orbPulse {
+	0%, 100% { transform: scale(1); }
+	50% { transform: scale(1.04); }
+}
+
+/* ── Messages ── */
+.swarm-chat-messages {
+	flex: 1;
+	overflow-y: auto;
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	padding: 12px 0;
+	margin: 8px 0;
+	scrollbar-width: thin;
+	scrollbar-color: rgba(0,245,255,0.2) transparent;
+}
+
+.swarm-chat-messages::-webkit-scrollbar {
+	width: 4px;
+}
+.swarm-chat-messages::-webkit-scrollbar-track {
+	background: transparent;
+}
+.swarm-chat-messages::-webkit-scrollbar-thumb {
+	background: rgba(0,245,255,0.2);
+	border-radius: 2px;
+}
+
+.swarm-chat-msg {
+	padding: 10px 14px;
+	border-radius: 8px;
+	font-size: 0.8rem;
+	line-height: 1.55;
+	font-family: var(--font-mono);
+}
+
+.swarm-chat-msg.assistant {
+	background: rgba(0,245,255,0.04);
+	border-left: 2px solid rgba(0,245,255,0.3);
+}
+
+.swarm-chat-msg.user {
+	background: rgba(255,255,255,0.03);
+	border-left: 2px solid rgba(255,255,255,0.15);
+}
+
+.swarm-chat-msg-label {
+	font-size: 0.65rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	margin-bottom: 4px;
+	opacity: 0.5;
+}
+
+.swarm-chat-msg.assistant .swarm-chat-msg-label {
+	color: var(--accent);
+}
+
+.swarm-chat-msg-content {
+	color: var(--foreground);
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+/* ── Input ── */
+.swarm-chat-input-wrap {
+	display: flex;
+	gap: 8px;
+	padding-top: 12px;
+	border-top: 1px solid var(--border);
+	margin-top: auto;
+}
+
+.swarm-chat-input {
+	flex: 1;
+	background: rgba(0,0,0,0.4);
+	border: 1px solid var(--border);
+	border-radius: 8px;
+	padding: 10px 14px;
+	color: var(--foreground);
+	font-family: var(--font-mono);
+	font-size: 0.8rem;
+	resize: none;
+	outline: none;
+	transition: border-color 0.3s ease, box-shadow 0.3s ease;
+	min-height: 40px;
+	max-height: 80px;
+}
+
+.swarm-chat-input:focus {
+	border-color: rgba(0,245,255,0.4);
+	box-shadow: 0 0 20px rgba(0,245,255,0.08);
+}
+
+.swarm-chat-input::placeholder {
+	color: var(--foreground);
+	opacity: 0.3;
+}
+
+.swarm-chat-send {
+	width: 40px;
+	height: 40px;
+	border-radius: 8px;
+	border: 1px solid var(--border);
+	background: rgba(0,245,255,0.08);
+	color: var(--accent);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	flex-shrink: 0;
+}
+
+.swarm-chat-send:hover:not(:disabled) {
+	background: rgba(0,245,255,0.15);
+	border-color: rgba(0,245,255,0.4);
+	box-shadow: 0 0 15px rgba(0,245,255,0.15);
+}
+
+.swarm-chat-send:disabled {
+	opacity: 0.3;
+	cursor: not-allowed;
+}
+
+/* Spin animation for loader */
+.spin {
+	animation: spin 1s linear infinite;
+}
+@keyframes spin {
+	from { transform: rotate(0deg); }
+	to { transform: rotate(360deg); }
+}
+
+/* ============================================================
    LAYOUT CLASSES (moved from inline styles for responsive control)
    ============================================================ */
 .dashboard-grid {

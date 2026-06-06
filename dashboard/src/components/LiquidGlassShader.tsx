@@ -204,6 +204,7 @@ uniform float u_windStrMul;
 uniform float u_mouseStrength;        // DEFAULT: 0.2 (line 155)
 uniform float u_mouseMoveIntensity;   // Lerped mouse delta (line 158)
 uniform vec3 u_screenBounds;          // Screen projection bounds (line 161)
+uniform sampler2D u_screenPaintTexture;
 
 vec3 hash33(vec3 p3) {
   p3 = fract(p3 * vec3(0.1031, 0.1030, 0.0973));
@@ -238,14 +239,13 @@ void main() {
   vec3 windVel = u_windForce * u_deltaTime * u_windStrMul;
   velInfo.xyz += windVel;
 
-  // Mouse velocity injection — Lusion exact (lines 75-80)
-  // Without ScreenPaint FBO, we simulate mouse push via screenBounds projection
+  // Mouse velocity injection using ScreenPaint FBO
   vec2 posUv = posToUv(positionLife.xyz);
-  // u_mouseMoveIntensity drives the strength (lerped mouse delta)
-  // Applied as radial push from cursor position
-  vec3 mouseFinalVel = vec3(0.0);
-  mouseFinalVel *= u_mouseMoveIntensity * u_mouseStrength;
-  velInfo.xyz += mouseFinalVel;
+  vec4 paintData = texture2D(u_screenPaintTexture, posUv);
+  vec2 fluidVel = paintData.xy - 0.5;
+  float paintWeight = (paintData.z + paintData.w) * 0.5;
+  vec3 fluidPush = vec3(fluidVel.x, fluidVel.y, 0.0) * u_mouseStrength * 100.0 * paintWeight;
+  velInfo.xyz += fluidPush;
 
   gl_FragColor = velInfo;
 }
@@ -291,7 +291,7 @@ void main() {
 `;
 
 // ── LiquidNebula: GPGPU Particle Component ──
-function LiquidNebula({ theme }: { theme: "dark" | "light" }) {
+function LiquidNebula({ theme, paintTextureRef }: { theme: "dark" | "light"; paintTextureRef: { current: THREE.Texture | null } }) {
 	const pointsRef = useRef<THREE.Points>(null);
 	const materialRef = useRef<THREE.ShaderMaterial>(null);
 	const gpuRef = useRef<InstanceType<typeof GPUComputationRenderer> | null>(null);
@@ -380,6 +380,7 @@ function LiquidNebula({ theme }: { theme: "dark" | "light" }) {
 		velVar.material.uniforms.u_mouseStrength = { value: 0.2 };  // Lusion exact (line 155)
 		velVar.material.uniforms.u_mouseMoveIntensity = { value: 0 };  // Lusion exact (line 158)
 		velVar.material.uniforms.u_screenBounds = { value: new THREE.Vector3(4.0, 3.8, 1.0) };
+		velVar.material.uniforms.u_screenPaintTexture = { value: new THREE.Texture() };
 
 		// Wrapping for seamless noise
 		posVar.wrapS = THREE.RepeatWrapping;
@@ -434,6 +435,11 @@ function LiquidNebula({ theme }: { theme: "dark" | "light" }) {
 		posVarRef.current.material.uniforms.u_deltaTime.value = clampedDelta;
 		velVarRef.current.material.uniforms.u_time.value = state.clock.elapsedTime;
 		velVarRef.current.material.uniforms.u_deltaTime.value = clampedDelta;
+
+		// Feed the screen paint FBO texture into the GPGPU velocity simulation
+		if (paintTextureRef.current && velVarRef.current) {
+			velVarRef.current.material.uniforms.u_screenPaintTexture.value = paintTextureRef.current;
+		}
 
 		// Scroll wheel → wind.y + curlStrength.y — Lusion exact (line 194)
 		const wd = lerpedWheelDelta.current * 0.0144;
@@ -589,7 +595,11 @@ export default function LiquidGlassShader({ theme = "dark" }: { theme?: "dark" |
 	const tier = useDeviceTier();
 	const cfg = TIER_CONFIG[tier];
 
-	const handlePaintTexture = useCallback((_tex: THREE.Texture) => {}, []);
+	const paintTextureRef = useRef<THREE.Texture | null>(null);
+
+	const handlePaintTexture = useCallback((tex: THREE.Texture) => {
+		paintTextureRef.current = tex;
+	}, []);
 
 	// Portal to body — bypass Lenis CSS transforms that break position:fixed
 	const [portalTarget, setPortalTarget] = useState<HTMLElement | null>(null);
@@ -620,7 +630,7 @@ export default function LiquidGlassShader({ theme = "dark" }: { theme?: "dark" |
 				<VoltageLights theme={theme} />
 
 				{/* Stars REMOVED — drei Stars cannot individually drift */}
-				<LiquidNebula theme={theme} />
+				<LiquidNebula theme={theme} paintTextureRef={paintTextureRef} />
 				
 				{/* RefractiveCore: DISABLED — MeshTransmission at z=5 causes 6x render pass lag */}
 				{/* {tier !== "low" && <RefractiveCore tier={tier} />} */}
