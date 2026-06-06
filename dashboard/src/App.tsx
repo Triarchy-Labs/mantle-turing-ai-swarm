@@ -6,6 +6,7 @@ import { AnimatedArchitecture } from './components/AnimatedArchitecture';
 import CustomCursor from './components/CustomCursor';
 import { WebGLErrorBoundary } from './components/WebGLErrorBoundary';
 import { useTelemetry } from './hooks/useTelemetry';
+import SwarmChat from './components/SwarmChat';
 
 /* ── Pipeline stages ── */
 const pipelineStages = [
@@ -47,39 +48,6 @@ const techCards = [
 	{ label: 'Rust WASM', desc: '12-Container Architecture', angle: 240 },
 	{ label: 'Mantle L2', desc: 'Low-Fee On-Chain Settlement', angle: 300 },
 ];
-
-/* ── AgentOrb ── */
-function AgentOrb({ state = 'idle' }: { state?: 'idle' | 'thinking' | 'working' }) {
-	const [blink, setBlink] = useState(false);
-	useEffect(() => {
-		const t = setInterval(() => { setBlink(true); setTimeout(() => setBlink(false), 200); }, 3500);
-		return () => clearInterval(t);
-	}, []);
-	const orbClass = `agent-orb ${state}`;
-	const eyeH = state === 'working' ? 10 : state === 'thinking' ? 30 : 38;
-	const eyeR = state === 'working' ? '4px' : '12px';
-	const eyeBg = state === 'working' ? 'var(--accent-hover)' : '#fff';
-	const eyeShadow = state === 'working' ? '0 0 15px var(--accent-hover)' : '0 0 10px rgba(255,255,255,0.8)';
-	return (
-		<div className={orbClass}>
-			{['left', 'right'].map(side => (
-				<div key={side} style={{
-					width: 24, height: blink ? 2 : eyeH, background: eyeBg,
-					borderRadius: eyeR, position: 'relative', overflow: 'hidden',
-					transition: 'all 0.15s ease-out', boxShadow: eyeShadow,
-					marginTop: blink ? 18 : 0,
-				}}>
-					{state !== 'working' && !blink && (
-						<div style={{
-							width: 10, height: 10, background: '#040406', borderRadius: '50%',
-							position: 'absolute', top: 'calc(50% - 5px)', left: 'calc(50% - 5px)',
-						}} />
-					)}
-				</div>
-			))}
-		</div>
-	);
-}
 
 export default function App() {
 	const telem = useTelemetry();
@@ -368,7 +336,8 @@ export default function App() {
 				{/* ── RIGHT COLUMN ── */}
 				<div className="dashboard-col-right">
 
-
+					{/* SWARM AGENT CHAT */}
+					<SwarmChat telem={telem} orbState={orbState} />
 					{/* SYNAPTIC CORE — 3D Brain */}
 					<div className="glass" style={{ padding: '20px', position: 'relative', overflow: 'visible' }}>
 						<div className="card-title"><Eye size={16} style={{ color: 'var(--accent)' }} /> SYNAPTIC CORE — SWARM BRAIN</div>
@@ -407,10 +376,6 @@ export default function App() {
 							))}
 						</div>
 
-						{/* Small Agent Orb */}
-						<div style={{ display: 'flex', justifyContent: 'center', padding: '16px 0', borderTop: '1px solid var(--border)', marginTop: '12px' }}>
-							<AgentOrb state={orbState} />
-						</div>
 					</div>
 
 					{/* SYNAPTIC DECISION ARBITRAGE */}
