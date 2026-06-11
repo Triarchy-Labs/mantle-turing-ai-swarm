@@ -1,8 +1,7 @@
-import { useState, useEffect, useRef, Suspense, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Activity, Zap, Globe, Terminal, Network, Layers, Cpu, Eye, TrendingUp, Wifi, WifiOff, Shield, AlertTriangle, BarChart3, Target } from 'lucide-react';
 import './index.css';
 import LiquidGlassShader from './components/LiquidGlassShader';
-import { AnimatedArchitecture } from './components/AnimatedArchitecture';
 import CustomCursor from './components/CustomCursor';
 import { WebGLErrorBoundary } from './components/WebGLErrorBoundary';
 import { useTelemetry } from './hooks/useTelemetry';
@@ -343,26 +342,6 @@ export default function App() {
 						{/* SYNAPTIC CORE — 3D Brain */}
 						<div className="glass" style={{ padding: '20px', position: 'relative', overflow: 'visible' }}>
 							<div className="card-title"><Eye size={16} style={{ color: 'var(--accent)' }} /> SYNAPTIC CORE — SWARM BRAIN</div>
-
-							{/* 3D Model container */}
-							<div style={{ width: '100%', height: '420px', position: 'relative', borderRadius: '12px', overflow: 'hidden' }}>
-								<Suspense fallback={
-									<div style={{
-										width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center',
-										background: 'rgba(5,5,12,0.8)', borderRadius: '12px',
-										border: '1px solid rgba(0,212,255,0.15)'
-									}}>
-										<div style={{ color: 'var(--accent)', fontFamily: 'var(--font-mono)', fontSize: '0.8rem', opacity: 0.6, textAlign: 'center' }}>
-											<div style={{ marginBottom: '8px', animation: 'pulse 2s infinite' }}>◈</div>
-											LOADING 3D MODEL...
-										</div>
-									</div>
-								}>
-									<WebGLErrorBoundary>
-										<AnimatedArchitecture theme={theme} />
-									</WebGLErrorBoundary>
-								</Suspense>
-							</div>
 
 							{/* Orbiting tech cards */}
 							<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginTop: '12px' }}>
