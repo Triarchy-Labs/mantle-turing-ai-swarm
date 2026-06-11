@@ -53,8 +53,8 @@ export default function SwarmChat({ telem, orbState }: SwarmChatProps) {
     connected: telem.connected,
     liveMode: telem.liveMode,
     circuitBreaker: telem.riskState?.circuit_breaker ?? 'N/A',
-    killSwitch: false,
-    leverage: telem.riskState?.dynamic_leverage ?? 0,
+    dynamicLeverage: telem.riskState?.dynamic_leverage ?? 0,
+    riskAppetite: telem.riskState?.risk_appetite ?? 0,
     markets: telem.markets?.map(m => ({
       symbol: m.sym,
       price: m.price,
@@ -64,7 +64,6 @@ export default function SwarmChat({ telem, orbState }: SwarmChatProps) {
     openPositions: telem.openPositions?.length ?? 0,
     recentDebates: telem.debates?.slice(0, 3).map(d => ({
       agent: d.agent,
-      verdict: '',
       summary: d.msg?.substring(0, 100),
     })) ?? [],
   }), [telem]);

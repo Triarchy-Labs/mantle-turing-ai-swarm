@@ -70,11 +70,11 @@ const screenPaintVert = `
 
 // Lusion defaults (строки 43025-43027)
 const PUSH_STRENGTH = 25.0;
-const VEL_DISSIPATION = 0.975;
-const WEIGHT1_DISSIPATION = 0.95;
-const WEIGHT2_DISSIPATION = 0.8;
+const ACCEL_DISSIPATION = 0.8;
+const VEL_DISSIPATION = 0.985;
 const PAINT_SIZE = 256; // FBO resolution for fluid sim
-const MIN_RADIUS = 0.0;
+const BRUSH_RADIUS = 40.0;
+const BRUSH_WEIGHT = 0.5;
 
 interface ScreenPaintProps {
 	pointerRef: MutableRefObject<PointerState>;
@@ -108,10 +108,10 @@ export default function ScreenPaint({ pointerRef, onTextureReady }: ScreenPaintP
 			uniforms: {
 				u_prevPaintTexture: { value: null },
 				u_paintTexelSize: { value: new THREE.Vector2(1 / PAINT_SIZE, 1 / PAINT_SIZE) },
-				u_drawFrom: { value: new THREE.Vector4(0, 0, 0, 0) },
-				u_drawTo: { value: new THREE.Vector4(0, 0, 0, 0) },
+				u_drawFrom: { value: new THREE.Vector4(0, 0, BRUSH_RADIUS, BRUSH_WEIGHT) },
+				u_drawTo: { value: new THREE.Vector4(0, 0, BRUSH_RADIUS, BRUSH_WEIGHT) },
 				u_pushStrength: { value: PUSH_STRENGTH },
-				u_dissipations: { value: new THREE.Vector3(VEL_DISSIPATION, WEIGHT1_DISSIPATION, WEIGHT2_DISSIPATION) },
+				u_dissipations: { value: new THREE.Vector3(VEL_DISSIPATION, ACCEL_DISSIPATION, ACCEL_DISSIPATION) },
 				u_vel: { value: new THREE.Vector2(0, 0) },
 			},
 		});
@@ -130,43 +130,21 @@ export default function ScreenPaint({ pointerRef, onTextureReady }: ScreenPaintP
 	}, []);
 
 	// Previous pointer for segment drawing
-	const prevPointer = useRef({ px: -1, py: -1 });
+	const prevPointer = useRef({ px: 0, py: 0 });
 
 	/* eslint-disable react-hooks/immutability -- R3F useFrame imperatively mutates Three.js uniforms every frame */
 	useFrame(() => {
 		const ptr = pointerRef.current;
 		const u = paintMaterial.uniforms;
 
-		// Handle first frame initialization to avoid line from (0,0)
-		if (prevPointer.current.px === -1 && prevPointer.current.py === -1) {
-			prevPointer.current.px = ptr.px;
-			prevPointer.current.py = ptr.py;
-		}
-
 		// Convert pixel coords to FBO space
+		const fromX = prevPointer.current.px * (PAINT_SIZE / window.innerWidth);
+		const fromY = (window.innerHeight - prevPointer.current.py) * (PAINT_SIZE / window.innerHeight);
 		const toX = ptr.px * (PAINT_SIZE / window.innerWidth);
 		const toY = (window.innerHeight - ptr.py) * (PAINT_SIZE / window.innerHeight);
 
-		// Dynamic speed-based radius calculation
-		const dx = ptr.px - prevPointer.current.px;
-		const dy = ptr.py - prevPointer.current.py;
-		const dist = Math.sqrt(dx * dx + dy * dy);
-
-		const radiusDistanceRange = 100.0;
-		const maxRadius = Math.max(40.0, window.innerWidth / 20.0);
-		const tVal = Math.max(0, Math.min(1, dist / radiusDistanceRange));
-		let currentRadius = MIN_RADIUS + tVal * (maxRadius - MIN_RADIUS);
-
-		// Convert radius from screen pixels to FBO space
-		currentRadius = currentRadius * (PAINT_SIZE / window.innerHeight);
-
-		// Set weight to 1.0 when moving, 0.0 when still
-		const isStill = ptr.dx === 0 && ptr.dy === 0 && dist === 0;
-		const currentWeight = isStill ? 0.0 : 1.0;
-
-		// Copy previous drawTo to drawFrom to keep continuous spline interpolation
-		u.u_drawFrom.value.copy(u.u_drawTo.value);
-		u.u_drawTo.value.set(toX, toY, currentRadius, currentWeight);
+		u.u_drawFrom.value.set(fromX, fromY, BRUSH_RADIUS, BRUSH_WEIGHT);
+		u.u_drawTo.value.set(toX, toY, BRUSH_RADIUS, BRUSH_WEIGHT);
 
 		// Velocity in normalized space
 		u.u_vel.value.set(ptr.dx * 0.01, -ptr.dy * 0.01);
