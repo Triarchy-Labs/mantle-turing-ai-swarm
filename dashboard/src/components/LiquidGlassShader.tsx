@@ -9,14 +9,13 @@ import {
 } from "@react-three/postprocessing";
 import { SMAAPreset } from "postprocessing";
 import { BlendFunction } from "postprocessing";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import * as THREE from "three";
-import { useUnifiedPointer } from "../hooks/useUnifiedPointer";
 import { useDeviceTier, type DeviceTier } from "../hooks/useDeviceTier";
 
-import ScreenPaint from "./ScreenPaint";
 import LusionFinalPass from "./LusionFinalPass";
+import { MirrorRings, WasiRock, ArchitectureLights, SceneEnvironment, BlurSharpenPass } from "./AnimatedArchitecture";
 
 
 import FsrRcasPass from "./FsrRcasPass";
@@ -35,9 +34,6 @@ const TIER_CONFIG = {
 
 import { GPUComputationRenderer } from "three/examples/jsm/misc/GPUComputationRenderer.js";
 
-const TEX_SIZE = 128; // строка 48648
-const PARTICLE_COUNT = TEX_SIZE * TEX_SIZE; // 16384, строка 48649
-
 // Render: boosted to compensate for missing Bloom postprocessing (physics remain 1:1)
 const U_OPACITY = "0.95";
 const U_P_SIZE_MUL = "1.6";
@@ -47,7 +43,7 @@ const U_FOCUS_DIST = "0.32";
 // Lusion EXACT spawn/kill (строки 48653-48664)
 // NOTE: Use strings with decimals for GLSL (JS integers break shader compilation)
 const SPAWN_X = "4.0"; const SPAWN_Y = "2.4"; const SPAWN_Z = "0.64";
-const SPAWN_OX = "-3.0"; const SPAWN_OY = "-0.5"; const SPAWN_OZ = "0.0";  // Lusion EXACT offset (11_key_constants line 16)
+const SPAWN_OX = "-1.5"; const SPAWN_OY = "-0.5"; const SPAWN_OZ = "0.0";  // Adjusted to center with new camera
 // Lusion EXACT kill bounds (used inside shader via u_bounds uniform, not JS)
 // const KILL_X = "7.0"; const KILL_Y = "5.0"; const KILL_Z = "2.0";
 
@@ -291,7 +287,10 @@ void main() {
 `;
 
 // ── LiquidNebula: GPGPU Particle Component ──
-function LiquidNebula({ theme }: { theme: "dark" | "light" }) {
+function LiquidNebula({ theme, particles }: { theme: "dark" | "light"; particles: number }) {
+	const texSize = Math.ceil(Math.sqrt(particles));
+	const particleCount = texSize * texSize;
+
 	const pointsRef = useRef<THREE.Points>(null);
 	const materialRef = useRef<THREE.ShaderMaterial>(null);
 	const gpuRef = useRef<InstanceType<typeof GPUComputationRenderer> | null>(null);
@@ -305,14 +304,14 @@ function LiquidNebula({ theme }: { theme: "dark" | "light" }) {
 
 	// Create sim UVs + colors (immutable, initialized once)
 	const [simUvs, colors] = useState(() => {
-		const uvs = new Float32Array(PARTICLE_COUNT * 2);
-		const col = new Float32Array(PARTICLE_COUNT * 3);
+		const uvs = new Float32Array(particleCount * 2);
+		const col = new Float32Array(particleCount * 3);
 		const baseColor = new THREE.Color("#d4d0c8");
 		const secondaryColor = new THREE.Color("#00c8e0");
 
-		for (let i = 0; i < PARTICLE_COUNT; i++) {
-			const x = (i % TEX_SIZE) / TEX_SIZE;
-			const y = Math.floor(i / TEX_SIZE) / TEX_SIZE;
+		for (let i = 0; i < particleCount; i++) {
+			const x = (i % texSize) / texSize;
+			const y = Math.floor(i / texSize) / texSize;
 			uvs[i * 2] = x;
 			uvs[i * 2 + 1] = y;
 			const c = Math.random() > 0.35 ? secondaryColor : baseColor;
@@ -324,22 +323,22 @@ function LiquidNebula({ theme }: { theme: "dark" | "light" }) {
 	})[0];
 
 	// Dummy positions (vertex shader reads from FBO, not from position attribute)
-	const dummyPositions = useMemo(() => new Float32Array(PARTICLE_COUNT * 3), []);
+	const dummyPositions = useMemo(() => new Float32Array(particleCount * 3), [particleCount]);
 
 	// Initialize GPUComputationRenderer
 	useEffect(() => {
-		const gpu = new GPUComputationRenderer(TEX_SIZE, TEX_SIZE, gl);
+		const gpu = new GPUComputationRenderer(texSize, texSize, gl);
 
 		// Position texture: xyz = spawn position, w = life (starts at 1.0, decays to 0)
 		const posTex = gpu.createTexture();
 		const posData = posTex.image.data as Float32Array;
-		for (let i = 0; i < PARTICLE_COUNT; i++) {
+		for (let i = 0; i < particleCount; i++) {
 			// Lusion EXACT spawn (line 219): pow(rand,4) for X clusters to center
 			posData[i * 4] = (Math.pow(Math.random(), 4) * 2 - 1) * parseFloat(SPAWN_X) + parseFloat(SPAWN_OX);
 			posData[i * 4 + 1] = (Math.random() * 2 - 1) * parseFloat(SPAWN_Y) + parseFloat(SPAWN_OY);
 			posData[i * 4 + 2] = (Math.random() * 2 - 1) * parseFloat(SPAWN_Z) + parseFloat(SPAWN_OZ);
 			// Lusion EXACT life init (line 111): linear i/N, not random
-			posData[i * 4 + 3] = i / PARTICLE_COUNT;
+			posData[i * 4 + 3] = i / particleCount;
 		}
 
 		// Default position texture for respawn (Lusion exact: texture2D(u_defaultPosTex, uv))
@@ -347,7 +346,7 @@ function LiquidNebula({ theme }: { theme: "dark" | "light" }) {
 		const defaultPosData = defaultPosTex.image.data as Float32Array;
 		defaultPosData.set(posData); // copy initial positions
 		const defaultPosDataTex = new THREE.DataTexture(
-			defaultPosData, TEX_SIZE, TEX_SIZE, THREE.RGBAFormat, THREE.FloatType
+			defaultPosData, texSize, texSize, THREE.RGBAFormat, THREE.FloatType
 		);
 		defaultPosDataTex.needsUpdate = true;
 
@@ -414,7 +413,7 @@ function LiquidNebula({ theme }: { theme: "dark" | "light" }) {
 			window.removeEventListener('wheel', onWheel);
 			window.removeEventListener('mousemove', onMouseMove);
 		};
-	}, [gl]);
+	}, [gl, texSize, particleCount]);
 
 	// Render uniforms
 	const uniforms = useMemo(() => ({
@@ -506,34 +505,20 @@ function LiquidNebula({ theme }: { theme: "dark" | "light" }) {
 }
 
 function VoltageLights({ theme }: { theme: "dark" | "light" }) {
-	const dirLight = useRef<THREE.DirectionalLight>(null);
-	const ptLight = useRef<THREE.PointLight>(null);
-
-	useFrame(() => {
-		if (theme === "dark" && dirLight.current && ptLight.current) {
-			// Constant stable lighting — no pulsation/flickering
-			dirLight.current.intensity = 2.8;
-			ptLight.current.intensity = 4.0;
-		}
-	});
-
 	return (
 		<group>
 			<ambientLight intensity={0.5} color={theme === "dark" ? "#ffffff" : "#cccccc"} />
-			<directionalLight ref={dirLight} position={[10, 10, 10]} intensity={theme === "dark" ? 3 : 1.5} color={theme === "dark" ? "#c8bfae" : "#aaaaaa"} />
-			<pointLight ref={ptLight} position={[-10, -10, -10]} intensity={theme === "dark" ? 5 : 2} color={theme === "dark" ? "#0a8daa" : "#cccccc"} />
+			<directionalLight position={[10, 10, 10]} intensity={theme === "dark" ? 2.8 : 1.5} color={theme === "dark" ? "#c8bfae" : "#aaaaaa"} />
+			<pointLight position={[-10, -10, -10]} intensity={theme === "dark" ? 4.0 : 2} color={theme === "dark" ? "#0a8daa" : "#cccccc"} />
 		</group>
 	);
 }
 
 /**
  * Adaptive post-processing pipeline — Lusion-grade (Blueprint §FSR + §SMAA)
- * Pipeline order matches Lusion exactly (строка 49553-49555):
- *   Scene → SMAA → FSR RCAS → Bloom → LusionFinalPass(vignette+dither+color) → ScreenPaintDistortion
- *
- * High: Full pipeline (SMAA HIGH + FSR RCAS + Bloom + ChromaticAberration + Noise + LusionFinal + ScreenPaintDistortion)
- * Mid:  Reduced pipeline (SMAA MEDIUM + FSR RCAS + Bloom reduced + LusionFinal + ScreenPaintDistortion)
- * Low:  Minimal pipeline (SMAA LOW + FSR RCAS + LusionFinal only)
+ * High: Full pipeline (SMAA HIGH + FSR RCAS + ChromaticAberration + LusionFinal)
+ * Mid:  Reduced pipeline (SMAA MEDIUM + FSR RCAS + LusionFinal)
+ * Low:  Minimal pipeline (SMAA LOW + LusionFinal only)
  */
 function AdaptivePostProcessing({ theme, tier }: { theme: "dark" | "light"; tier: DeviceTier }) {
 	const cfg = TIER_CONFIG[tier];
@@ -542,7 +527,6 @@ function AdaptivePostProcessing({ theme, tier }: { theme: "dark" | "light"; tier
 		return (
 			<EffectComposer multisampling={0}>
 				<SMAA preset={cfg.smaa} />
-				<FsrRcasPass sharpness={1.0} />
 				<LusionFinalPass theme={theme} tintOpacity={0} vignetteFrom={0.6} vignetteTo={1.6} />
 			</EffectComposer>
 		);
@@ -553,12 +537,9 @@ function AdaptivePostProcessing({ theme, tier }: { theme: "dark" | "light"; tier
 			<EffectComposer multisampling={0}>
 				<SMAA preset={cfg.smaa} />
 				<FsrRcasPass sharpness={1.0} />
+				<BlurSharpenPass />
 				{/* Bloom disabled — causes full overexposure without aggressive vignette */}
 				{/* LensHaloPass disabled — creates center overexposure on our scene */}
-				<ChromaticAberration
-					blendFunction={BlendFunction.NORMAL}
-					offset={new THREE.Vector2(0.001, 0.001)}
-				/>
 				<LusionFinalPass theme={theme} tintOpacity={0} vignetteFrom={0.6} vignetteTo={1.6} />
 				{/* ScreenPaintDistortion disabled — too aggressive for our scene */}
 			</EffectComposer>
@@ -570,6 +551,7 @@ function AdaptivePostProcessing({ theme, tier }: { theme: "dark" | "light"; tier
 		<EffectComposer multisampling={0}>
 			<SMAA preset={cfg.smaa} />
 			<FsrRcasPass sharpness={1.0} />
+			<BlurSharpenPass />
 			{/* Bloom disabled — causes full overexposure without aggressive vignette */}
 			{/* LensHaloPass disabled */}
 			<ChromaticAberration
@@ -585,11 +567,8 @@ function AdaptivePostProcessing({ theme, tier }: { theme: "dark" | "light"; tier
 }
 
 export default function LiquidGlassShader({ theme = "dark" }: { theme?: "dark" | "light" }) {
-	const pointerRef = useUnifiedPointer();
 	const tier = useDeviceTier();
 	const cfg = TIER_CONFIG[tier];
-
-	const handlePaintTexture = useCallback((_tex: THREE.Texture) => { }, []);
 
 	// Portal to body — bypass Lenis CSS transforms that break position:fixed
 	const [portalTarget, setPortalTarget] = useState<HTMLElement | null>(null);
@@ -610,17 +589,22 @@ export default function LiquidGlassShader({ theme = "dark" }: { theme?: "dark" |
 				touchAction: "none",
 			}}
 		>
-			<Canvas dpr={cfg.dpr} camera={{ position: [0, 0, 5], fov: 45 }}>
+			<Canvas dpr={cfg.dpr} camera={{ position: [0, 0, 3.5], fov: 55 }}>
 				<color attach="background" args={[theme === "dark" ? "#010204" : "#fafafa"]} />
+				<SceneEnvironment />
 
-				{/* ScreenPaint: Lusion fluid mouse simulation (Blueprint §5) */}
-				<ScreenPaint pointerRef={pointerRef} onTextureReady={handlePaintTexture} />
+				{/* Architecture Models Merged */}
+				<group>
+					<WasiRock />
+				</group>
+				<MirrorRings />
+				<ArchitectureLights />
 
 				{/* Core Lighting & Voltage Surges */}
 				<VoltageLights theme={theme} />
 
 				{/* Stars REMOVED — drei Stars cannot individually drift */}
-				<LiquidNebula theme={theme} />
+				<LiquidNebula key={tier} theme={theme} particles={cfg.particles} />
 
 				{/* RefractiveCore: DISABLED — MeshTransmission at z=5 causes 6x render pass lag */}
 				{/* {tier !== "low" && <RefractiveCore tier={tier} />} */}

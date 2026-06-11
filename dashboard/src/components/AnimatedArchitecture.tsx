@@ -1,9 +1,8 @@
 "use client";
 
 import { useRef, useMemo, useEffect } from 'react';
-import { Canvas, useLoader, useThree, useFrame } from '@react-three/fiber';
+import { useLoader, useThree, useFrame } from '@react-three/fiber';
 import { useGLTF, Center, Resize, useAnimations } from '@react-three/drei';
-import { EffectComposer } from '@react-three/postprocessing';
 import { Effect, BlendFunction } from 'postprocessing';
 import * as THREE from 'three';
 import { GLTFLoader, KTX2Loader, DRACOLoader } from 'three-stdlib';
@@ -80,7 +79,7 @@ class BlurSharpenEffect extends Effect {
 				['uResolution', new THREE.Uniform(new THREE.Vector2(1920, 1080))],
 				['uMouse', new THREE.Uniform(new THREE.Vector2(0.5, 0.5))],
 				['uRadius', new THREE.Uniform(0.1)],
-				['uSamples', new THREE.Uniform(30.0)],
+				['uSamples', new THREE.Uniform(12.0)],
 				['uBlurStrength', new THREE.Uniform(0.02)],
 				['uSharpenStrength', new THREE.Uniform(0.7)],
 			]),
@@ -89,7 +88,7 @@ class BlurSharpenEffect extends Effect {
 }
 
 // React-компонент обёртка
-function BlurSharpenPass() {
+export function BlurSharpenPass() {
 	const effectRef = useRef<BlurSharpenEffect | null>(null);
 	const { size } = useThree();
 
@@ -156,7 +155,7 @@ function createGlassRingMaterial(envMap: THREE.Texture): THREE.MeshPhysicalMater
 		roughness: 0,
 		metalness: 0,
 		ior: 1.5,
-		transmission: 1,
+		transmission: 0,
 		thickness: 0.5,
 		sheen: 1.0,
 		sheenRoughness: 0.1156,
@@ -168,8 +167,8 @@ function createGlassRingMaterial(envMap: THREE.Texture): THREE.MeshPhysicalMater
 		reflectivity: 1,
 		envMap: envMap,
 		envMapIntensity: 13.4,
-		transparent: false,
-		opacity: 1,
+		transparent: true,
+		opacity: 0.85,
 	});
 }
 
@@ -237,7 +236,7 @@ function AnimatedRing({
 	);
 }
 
-function MirrorRings() {
+export function MirrorRings() {
 	const gltfV2 = useGLTF('/models/tech-rings-v2-optimize.glb') as unknown as GLTFResult;
 
 	// ТОЛЬКО v2 (4 ноды, 1 GLTF-анимация)
@@ -259,7 +258,7 @@ function MirrorRings() {
 	);
 }
 
-function WasiRock() {
+export function WasiRock() {
 	const gl = useThree((state) => state.gl);
 
 	const gltf = useLoader(GLTFLoader, '/models/rock-clean.glb', (loader) => {
@@ -321,7 +320,7 @@ function WasiRock() {
 	);
 }
 
-function SceneEnvironment() {
+export function SceneEnvironment() {
 	const envMap = useSceneEnvMap();
 	const applied = useRef(false);
 
@@ -337,80 +336,44 @@ function SceneEnvironment() {
 	return null;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function AnimatedArchitecture({ theme: _theme }: { theme: "light" | "dark" }) {
-	const containerRef = useRef<HTMLDivElement>(null);
-
+export function ArchitectureLights() {
 	return (
-		<div
-			ref={containerRef}
-			style={{
-				width: "100%",
-				height: "100%",
-				minHeight: "0",
-				margin: "0",
-				position: "relative",
-				zIndex: 10,
-				cursor: "crosshair",
-			}}
-		>
-			<Canvas
-				shadows
-				camera={{ position: [0, 0.5, 11], fov: 40, near: 0.1, far: 1000 }}
-				gl={{ antialias: true, alpha: true }}
-			>
-				<SceneEnvironment />
-
-				{/* Дамп: AmbientLight intensity=0 */}
-				<ambientLight intensity={0} />
-
-				{/* ====== 100% SpotLights ИЗ ДАМПА ====== */}
-				<spotLight
-					position={[0.074, 1.601, 0]}
-					intensity={25}
-					angle={0.524}
-					penumbra={0.524}
-					color="#fbfbfb"
-					distance={20}
-					decay={2}
-					castShadow={false}
-				/>
-				<spotLight
-					position={[-0.993, 5.038, 1.364]}
-					intensity={25}
-					angle={0.730}
-					penumbra={0.524}
-					color="#fbfbfb"
-					distance={20}
-					decay={0}
-					castShadow={true}
-					shadow-mapSize={[2048, 2048]}
-					shadow-camera-far={20}
-					shadow-bias={-0.0001}
-				/>
-				<spotLight
-					position={[2.257, -0.430, 0.679]}
-					intensity={20.23}
-					angle={0.524}
-					penumbra={0.524}
-					color="#fbfbfb"
-					distance={20}
-					decay={2}
-					castShadow={true}
-					shadow-mapSize={[1024, 1024]}
-				/>
-
-				<group>
-					<WasiRock />
-				</group>
-
-				<MirrorRings />
-
-				{/* GPU Blur+Sharpen постобработка из дампа Peachworlds */}
-				<EffectComposer>
-					<BlurSharpenPass />
-				</EffectComposer>
-			</Canvas>
-		</div>
+		<>
+			{/* ====== 100% SpotLights ИЗ ДАМПА ====== */}
+			<spotLight
+				position={[0.074, 1.601, 0]}
+				intensity={25}
+				angle={0.524}
+				penumbra={0.524}
+				color="#fbfbfb"
+				distance={20}
+				decay={2}
+				castShadow={false}
+			/>
+			<spotLight
+				position={[-0.993, 5.038, 1.364]}
+				intensity={25}
+				angle={0.730}
+				penumbra={0.524}
+				color="#fbfbfb"
+				distance={20}
+				decay={0}
+				castShadow={true}
+				shadow-mapSize={[512, 512]}
+				shadow-camera-far={20}
+				shadow-bias={-0.0001}
+			/>
+			<spotLight
+				position={[2.257, -0.430, 0.679]}
+				intensity={20.23}
+				angle={0.524}
+				penumbra={0.524}
+				color="#fbfbfb"
+				distance={20}
+				decay={2}
+				castShadow={true}
+				shadow-mapSize={[512, 512]}
+			/>
+		</>
 	);
 }
