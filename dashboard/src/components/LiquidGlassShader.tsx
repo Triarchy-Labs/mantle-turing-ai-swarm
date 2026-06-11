@@ -15,7 +15,6 @@ import * as THREE from "three";
 import { useDeviceTier, type DeviceTier } from "../hooks/useDeviceTier";
 
 import LusionFinalPass from "./LusionFinalPass";
-import { MirrorRings, WasiRock, ArchitectureLights, SceneEnvironment, BlurSharpenPass } from "./AnimatedArchitecture";
 
 
 import FsrRcasPass from "./FsrRcasPass";
@@ -502,17 +501,8 @@ function LiquidNebula({ theme, particles }: { theme: "dark" | "light"; particles
 			/>
 		</points>
 	);
-}
 
-function VoltageLights({ theme }: { theme: "dark" | "light" }) {
-	return (
-		<group>
-			<ambientLight intensity={0.5} color={theme === "dark" ? "#ffffff" : "#cccccc"} />
-			<directionalLight position={[10, 10, 10]} intensity={theme === "dark" ? 2.8 : 1.5} color={theme === "dark" ? "#c8bfae" : "#aaaaaa"} />
-			<pointLight position={[-10, -10, -10]} intensity={theme === "dark" ? 4.0 : 2} color={theme === "dark" ? "#0a8daa" : "#cccccc"} />
-		</group>
-	);
-}
+
 
 /**
  * Adaptive post-processing pipeline — Lusion-grade (Blueprint §FSR + §SMAA)
@@ -537,7 +527,6 @@ function AdaptivePostProcessing({ theme, tier }: { theme: "dark" | "light"; tier
 			<EffectComposer multisampling={0}>
 				<SMAA preset={cfg.smaa} />
 				<FsrRcasPass sharpness={1.0} />
-				<BlurSharpenPass />
 				{/* Bloom disabled — causes full overexposure without aggressive vignette */}
 				{/* LensHaloPass disabled — creates center overexposure on our scene */}
 				<LusionFinalPass theme={theme} tintOpacity={0} vignetteFrom={0.6} vignetteTo={1.6} />
@@ -551,7 +540,6 @@ function AdaptivePostProcessing({ theme, tier }: { theme: "dark" | "light"; tier
 		<EffectComposer multisampling={0}>
 			<SMAA preset={cfg.smaa} />
 			<FsrRcasPass sharpness={1.0} />
-			<BlurSharpenPass />
 			{/* Bloom disabled — causes full overexposure without aggressive vignette */}
 			{/* LensHaloPass disabled */}
 			<ChromaticAberration
@@ -591,18 +579,8 @@ export default function LiquidGlassShader({ theme = "dark" }: { theme?: "dark" |
 		>
 			<Canvas dpr={cfg.dpr} camera={{ position: [0, 0, 3.5], fov: 55 }}>
 				<color attach="background" args={[theme === "dark" ? "#010204" : "#fafafa"]} />
-				<SceneEnvironment />
-
-				{/* Architecture Models Merged */}
-				<group position={[2.5, 0.0, -2.0]} scale={0.85}>
-					<WasiRock />
-					<MirrorRings />
-					<ArchitectureLights />
-				</group>
-
-				{/* Core Lighting & Voltage Surges */}
-				<VoltageLights theme={theme} />
-
+				{/* Architecture Models and Lights removed to maximize FPS and fix background */}
+				
 				{/* Stars REMOVED — drei Stars cannot individually drift */}
 				<LiquidNebula key={tier} theme={theme} particles={cfg.particles} />
 
