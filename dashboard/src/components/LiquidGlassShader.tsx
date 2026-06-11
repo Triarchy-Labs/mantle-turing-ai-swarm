@@ -594,11 +594,11 @@ export default function LiquidGlassShader({ theme = "dark" }: { theme?: "dark" |
 				<SceneEnvironment />
 
 				{/* Architecture Models Merged */}
-				<group>
+				<group position={[2.5, 0.0, -2.0]} scale={0.85}>
 					<WasiRock />
+					<MirrorRings />
+					<ArchitectureLights />
 				</group>
-				<MirrorRings />
-				<ArchitectureLights />
 
 				{/* Core Lighting & Voltage Surges */}
 				<VoltageLights theme={theme} />
