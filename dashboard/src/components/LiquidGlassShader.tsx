@@ -3,12 +3,10 @@
 // All particles now unified in LiquidNebula with CPU-side animation
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import {
-	ChromaticAberration,
 	EffectComposer,
 	SMAA,
 } from "@react-three/postprocessing";
 import { SMAAPreset } from "postprocessing";
-import { BlendFunction } from "postprocessing";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import * as THREE from "three";
@@ -17,14 +15,17 @@ import { useDeviceTier, type DeviceTier } from "../hooks/useDeviceTier";
 import LusionFinalPass from "./LusionFinalPass";
 
 
+import FsrEasuPass from "./FsrEasuPass";
 import FsrRcasPass from "./FsrRcasPass";
 
 
 // Lusion-grade adaptive constants per device tier
+// FSR-optimized DPR: scene renders at reduced resolution, EASU upscales with edge-aware reconstruction.
+// This is how Lusion achieves 60fps with 16K particles — render cheap, upscale smart.
 const TIER_CONFIG = {
-	high: { particles: 16384, smaa: SMAAPreset.HIGH, bloomIntensity: 1.5, dpr: [1, 1.5] as [number, number], enableChroma: true },
-	mid: { particles: 8192, smaa: SMAAPreset.MEDIUM, bloomIntensity: 1.0, dpr: [1, 1.2] as [number, number], enableChroma: true },
-	low: { particles: 4096, smaa: SMAAPreset.LOW, bloomIntensity: 0.6, dpr: [1, 1] as [number, number], enableChroma: false },
+	high: { particles: 16384, smaa: SMAAPreset.HIGH, bloomIntensity: 1.5, dpr: [0.6, 1.0] as [number, number] },
+	mid:  { particles: 8192,  smaa: SMAAPreset.MEDIUM, bloomIntensity: 1.0, dpr: [0.5, 0.75] as [number, number] },
+	low:  { particles: 4096,  smaa: SMAAPreset.LOW, bloomIntensity: 0.6, dpr: [0.5, 0.5] as [number, number] },
 };
 
 // ═══════════════════════════════════════════════════════════════════
@@ -505,10 +506,18 @@ function LiquidNebula({ theme, particles }: { theme: "dark" | "light"; particles
 }
 
 /**
- * Adaptive post-processing pipeline — Lusion-grade (Blueprint §FSR + §SMAA)
- * High: Full pipeline (SMAA HIGH + FSR RCAS + ChromaticAberration + LusionFinal)
- * Mid:  Reduced pipeline (SMAA MEDIUM + FSR RCAS + LusionFinal)
- * Low:  Minimal pipeline (SMAA LOW + LusionFinal only)
+ * Adaptive post-processing pipeline — Lusion-grade FSR (Blueprint §FSR + §SMAA)
+ * 
+ * FSR pipeline order (matching AMD spec + Lusion production):
+ *   Scene (low DPR) → SMAA → EASU (edge-aware upscale) → RCAS (sharpen) → LusionFinal
+ * 
+ * DPR is lowered in TIER_CONFIG so the scene renders at reduced resolution.
+ * EASU reconstructs edge detail that bilinear upscaling would destroy.
+ * RCAS adds final sharpness pass. This is how Lusion runs 16K particles at 60fps.
+ *
+ * High: Full FSR pipeline (SMAA HIGH + EASU + RCAS + LusionFinal) = 4 passes
+ * Mid:  Reduced pipeline (SMAA MEDIUM + EASU + RCAS + LusionFinal) = 4 passes  
+ * Low:  Minimal pipeline (SMAA LOW + LusionFinal only) = 2 passes
  */
 function AdaptivePostProcessing({ theme, tier }: { theme: "dark" | "light"; tier: DeviceTier }) {
 	const cfg = TIER_CONFIG[tier];
@@ -522,34 +531,13 @@ function AdaptivePostProcessing({ theme, tier }: { theme: "dark" | "light"; tier
 		);
 	}
 
-	if (tier === "mid") {
-		return (
-			<EffectComposer multisampling={0}>
-				<SMAA preset={cfg.smaa} />
-				<FsrRcasPass sharpness={1.0} />
-				{/* Bloom disabled — causes full overexposure without aggressive vignette */}
-				{/* LensHaloPass disabled — creates center overexposure on our scene */}
-				<LusionFinalPass theme={theme} tintOpacity={0} vignetteFrom={0.6} vignetteTo={1.6} />
-				{/* ScreenPaintDistortion disabled — too aggressive for our scene */}
-			</EffectComposer>
-		);
-	}
-
-	// tier === "high" — full Lusion pipeline
+	// mid + high: Full FSR pipeline (EASU → RCAS)
 	return (
 		<EffectComposer multisampling={0}>
 			<SMAA preset={cfg.smaa} />
+			<FsrEasuPass sharpness={tier === "high" ? 0.5 : 0.35} />
 			<FsrRcasPass sharpness={1.0} />
-			{/* Bloom disabled — causes full overexposure without aggressive vignette */}
-			{/* LensHaloPass disabled */}
-			<ChromaticAberration
-				blendFunction={BlendFunction.NORMAL}
-				offset={new THREE.Vector2(0.001, 0.001)}
-			/>
-			{/* Noise REMOVED — was adding grainy film grain overlay. Lusion uses
-		    1-bit dithering in final pass (already in LusionFinalPass), NOT noise overlay */}
 			<LusionFinalPass theme={theme} tintOpacity={0} vignetteFrom={0.6} vignetteTo={1.6} />
-			{/* ScreenPaintDistortion disabled — too aggressive for our scene */}
 		</EffectComposer>
 	);
 }
