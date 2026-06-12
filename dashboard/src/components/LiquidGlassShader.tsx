@@ -501,8 +501,7 @@ function LiquidNebula({ theme, particles }: { theme: "dark" | "light"; particles
 			/>
 		</points>
 	);
-
-
+}
 
 /**
  * Adaptive post-processing pipeline — Lusion-grade (Blueprint §FSR + §SMAA)
