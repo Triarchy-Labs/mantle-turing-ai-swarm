@@ -362,7 +362,7 @@ function LiquidNebula({ theme, particles }: { theme: "dark" | "light"; particles
 		posVar.material.uniforms.u_defaultPosTex = { value: defaultPosDataTex };
 		posVar.material.uniforms.u_time = { value: 0 };
 		posVar.material.uniforms.u_deltaTime = { value: 0.016 };
-		posVar.material.uniforms.u_simSpeed = { value: 0.12 };
+		posVar.material.uniforms.u_simSpeed = { value: 0.03 }; // Reduced from 0.12 for calmer drift
 		posVar.material.uniforms.u_simDieSpeed = { value: 0.32 };
 		posVar.material.uniforms.u_curlNoiseScale = { value: new THREE.Vector3(0.2, 0.6, 0.2) };
 		posVar.material.uniforms.u_curlStrength = { value: new THREE.Vector3(0.2, 0.12, 0.12) };
@@ -373,7 +373,7 @@ function LiquidNebula({ theme, particles }: { theme: "dark" | "light"; particles
 		velVar.material.uniforms.u_deltaTime = { value: 0.016 };
 		velVar.material.uniforms.u_time = { value: 0 };
 		velVar.material.uniforms.u_simDieSpeed = { value: 0.32 };
-		velVar.material.uniforms.u_windForce = { value: new THREE.Vector3(0.16, 0.0, 0.0) };
+		velVar.material.uniforms.u_windForce = { value: new THREE.Vector3(0.016, 0.0, 0.0) }; // Reduced from 0.16
 		velVar.material.uniforms.u_windStrMul = { value: 1 };  // Lusion exact (line 152)
 		velVar.material.uniforms.u_mouseStrength = { value: 0.2 };  // Lusion exact (line 155)
 		velVar.material.uniforms.u_mouseMoveIntensity = { value: 0 };  // Lusion exact (line 158)
