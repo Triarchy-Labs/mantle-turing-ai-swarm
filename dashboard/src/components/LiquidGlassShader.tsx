@@ -306,6 +306,7 @@ function LiquidNebula({ theme, particles }: { theme: "dark" | "light"; particles
 		const uvs = new Float32Array(particleCount * 2);
 		const col = new Float32Array(particleCount * 3);
 		const baseColor = new THREE.Color("#d4d0c8");
+
 		const secondaryColor = new THREE.Color("#00c8e0");
 
 		for (let i = 0; i < particleCount; i++) {
