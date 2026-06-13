@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Send, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import type { TelemetryData } from '../hooks/useTelemetry';
 
 interface Message {
@@ -225,7 +225,7 @@ export default function SwarmChat({ telem, orbState }: SwarmChatProps) {
           disabled={isStreaming || !input.trim()}
           aria-label="Send message"
         >
-          {isStreaming ? <Loader2 size={16} className="spin" /> : <Send size={16} />}
+          {isStreaming ? <Loader2 size={16} className="spin" /> : <div className="lusion-dot-icon" />}
         </button>
       </div>
     </div>

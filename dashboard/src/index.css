@@ -1177,31 +1177,36 @@ html[data-theme="light"] .lusion-btn-primary:hover {
 /* ── Input ── */
 .swarm-chat-input-wrap {
 	display: flex;
+	align-items: center;
 	gap: 0.8rem;
-	padding-top: 1.2rem;
-	border-top: 1px solid var(--border);
+	padding: 0.4rem 0.4rem 0.4rem 1.6rem;
 	margin-top: auto;
+	border: 1px solid rgba(255,255,255,0.1);
+	border-radius: 2.5rem;
+	background: rgba(255,255,255,0.02);
+	transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.swarm-chat-input-wrap:focus-within {
+	border-color: rgba(0,245,255,0.4);
+	box-shadow: 0 0 20px rgba(0,245,255,0.08);
 }
 
 .swarm-chat-input {
 	flex: 1;
-	background: rgba(0,0,0,0.4);
-	border: 1px solid var(--border);
-	border-radius: 0.8rem;
-	padding: 1rem 1.2rem;
+	background: transparent;
+	border: none;
+	padding: 0;
 	color: var(--foreground);
 	font-family: var(--font-mono);
-	font-size: 1.2rem;
+	font-size: 1.1rem;
 	resize: none;
 	outline: none;
-	transition: border-color 0.3s ease, box-shadow 0.3s ease;
-	min-height: 4rem;
-	max-height: 8rem;
-}
-
-.swarm-chat-input:focus {
-	border-color: rgba(0,245,255,0.4);
-	box-shadow: 0 0 20px rgba(0,245,255,0.08);
+	min-height: 2rem;
+	height: 2rem;
+	line-height: 2rem;
+	align-self: center;
+	overflow: hidden;
 }
 
 .swarm-chat-input::placeholder {
@@ -1210,11 +1215,11 @@ html[data-theme="light"] .lusion-btn-primary:hover {
 }
 
 .swarm-chat-send {
-	width: 4rem;
-	height: 4rem;
-	border-radius: 0.8rem;
-	border: 1px solid var(--border);
-	background: rgba(0,245,255,0.08);
+	width: 3.2rem;
+	height: 3.2rem;
+	border-radius: 50%;
+	border: none;
+	background: rgba(10,10,18,0.8);
 	color: var(--accent);
 	display: flex;
 	align-items: center;
@@ -1225,14 +1230,20 @@ html[data-theme="light"] .lusion-btn-primary:hover {
 }
 
 .swarm-chat-send:hover:not(:disabled) {
-	background: rgba(0,245,255,0.15);
-	border-color: rgba(0,245,255,0.4);
-	box-shadow: 0 0 15px rgba(0,245,255,0.15);
+	background: #000;
+	transform: scale(1.05);
 }
 
 .swarm-chat-send:disabled {
-	opacity: 0.3;
+	opacity: 0.5;
 	cursor: not-allowed;
+}
+
+.lusion-dot-icon {
+	width: 6px;
+	height: 6px;
+	background: #fff;
+	border-radius: 50%;
 }
 
 /* Spin animation for loader */
