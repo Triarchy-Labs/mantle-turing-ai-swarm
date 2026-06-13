@@ -43,9 +43,9 @@
   font-display: swap;
 }
 
-/* MDX 1:1 VW Scaling Lock with boundary bounds (adapted to base 16px at 1920px width) */
+/* Standardizing root font size to 10px (62.5%) for stable scaling on all displays */
 html {
-	font-size: 0.5208333333vw;
+	font-size: 62.5%;
 	-webkit-text-size-adjust: 100%;
 	overflow-x: hidden;
 	width: 100%;
@@ -540,14 +540,14 @@ html[data-theme="light"] .toggle-group {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	padding: 1.6rem 4rem;
+	padding: 0.8rem 2rem;
 	border-radius: 6rem;
 	border: 1px solid rgba(255, 255, 255, 0.15);
 	background: transparent;
-	font-size: 2.5rem;
+	font-size: 1.5rem;
 	font-weight: 300;
 	line-height: 1.1;
-	letter-spacing: 3px;
+	letter-spacing: 2px;
 	color: #fcfcfd;
 	font-family: 'Aventa', var(--font-main), sans-serif;
 	text-transform: uppercase;
