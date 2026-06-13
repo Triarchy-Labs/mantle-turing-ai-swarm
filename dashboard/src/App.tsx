@@ -253,32 +253,44 @@ export default function App() {
 				{/* ═══ MAIN GRID: 2 Large Cards ═══ */}
 				<div className="dashboard-grid">
 					{/* LIVE MARKET MONITORING CARD */}
-					<article className="mdx-card" role="region" aria-label="Live Market Data">
-						<div className="mdx-card-title"><TrendingUp size={18} style={{ color: 'var(--accent-hover)' }} /> LIVE MARKET MONITORING {telem.connected && <span style={{ fontSize: '0.75rem', color: 'var(--accent-success)', marginLeft: '1rem', letterSpacing: '2px' }}>● LIVE</span>}</div>
-						<div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-							{telem.markets.map(m => (
-								<div key={m.sym} className="market-row" style={{ padding: '1rem 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-									<div>
-										<div style={{ fontSize: '1.4rem', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>{m.sym}</div>
-										<div style={{ fontSize: '0.85rem', color: 'var(--foreground)', opacity: 0.5 }}>Vol 24h: {m.vol}</div>
+					<div className="project-grid-item">
+						<article className="project-grid-card" role="region" aria-label="Live Market Data">
+							<div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '1rem', overflowY: 'auto' }}>
+								{telem.markets.map(m => (
+									<div key={m.sym} className="market-row" style={{ padding: '1.5rem 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+										<div>
+											<div style={{ fontSize: '1.4rem', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>{m.sym}</div>
+											<div style={{ fontSize: '0.85rem', color: 'var(--foreground)', opacity: 0.5 }}>Vol 24h: {m.vol}</div>
+										</div>
+										<div style={{ fontSize: '1.8rem', fontWeight: 700, fontFamily: 'var(--font-mono)', color: 'var(--accent)' }}>{m.price}</div>
+										<div className={`badge ${m.up ? 'ok' : 'fail'}`} style={{ fontSize: '1rem', padding: '0.5rem 1rem' }}>{m.change}</div>
+										<div className={`lusion-btn ${m.up ? 'connect-state-true' : ''}`} style={{ fontSize: '0.8rem', padding: '0.4rem 1rem' }}>
+											{m.verdict}<br /><span style={{ fontSize: '0.75rem', opacity: 0.7 }}>{m.conf}%</span>
+										</div>
 									</div>
-									<div style={{ fontSize: '1.8rem', fontWeight: 700, fontFamily: 'var(--font-mono)', color: 'var(--accent)' }}>{m.price}</div>
-									<div className={`badge ${m.up ? 'ok' : 'fail'}`} style={{ fontSize: '1rem', padding: '0.5rem 1rem' }}>{m.change}</div>
-									<div className={`lusion-btn ${m.up ? 'connect-state-true' : ''}`} style={{ fontSize: '0.8rem', padding: '0.4rem 1rem' }}>
-										{m.verdict}<br /><span style={{ fontSize: '0.75rem', opacity: 0.7 }}>{m.conf}%</span>
-									</div>
-								</div>
-							))}
+								))}
+							</div>
+						</article>
+						<div className="project-grid-service">DATA / ORACLE / FEED</div>
+						<div className="project-grid-link">
+							<span className="project-grid-link-text">Live Market</span>
+							<TrendingUp className="project-grid-link-icon" />
 						</div>
-					</article>
+					</div>
 
 					{/* SWARM AGENT CHAT CARD */}
-					<article className="mdx-card" role="region" aria-label="Swarm Agent Chat">
-						<div className="mdx-card-title"><MessageSquare size={18} style={{ color: 'var(--accent)' }} /> SWARM AGENT</div>
-						<div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-							<SwarmChat telem={telem} orbState={orbState} />
+					<div className="project-grid-item">
+						<article className="project-grid-card" role="region" aria-label="Swarm Agent Chat">
+							<div style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%' }}>
+								<SwarmChat telem={telem} orbState={orbState} />
+							</div>
+						</article>
+						<div className="project-grid-service">AI / LLM / EXECUTION</div>
+						<div className="project-grid-link">
+							<span className="project-grid-link-text">Swarm Agent</span>
+							<MessageSquare className="project-grid-link-icon" />
 						</div>
-					</article>
+					</div>
 				</div>
 
 				{/* ═══ SECONDARY GRID: Remaining Components ═══ */}
