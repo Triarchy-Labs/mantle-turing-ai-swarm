@@ -383,8 +383,9 @@ html[data-theme="light"] .glass:hover {
 	height: min(100rem, 100vh);
 	object-fit: contain;
 	pointer-events: none;
-	filter: hue-rotate(185deg) saturate(1.5) brightness(1.2);
-	-webkit-filter: hue-rotate(185deg) saturate(1.5) brightness(1.2);
+	filter: hue-rotate(185deg);
+	-webkit-filter: hue-rotate(185deg);
+	opacity: 0.85;
 	z-index: 1;
 }
 
