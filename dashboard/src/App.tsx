@@ -66,20 +66,11 @@ export default function App() {
 		document.body.style.backgroundColor = theme === 'dark' ? '#010204' : '#fafafa';
 	}, [theme]);
 
-	// Fallback cycle counter & uptime when backend offline
-	const [localCycle, setLocalCycle] = useState(42);
-	const [localUptime, setLocalUptime] = useState(0);
-	useEffect(() => {
-		const t = setInterval(() => setLocalCycle(c => c + 1), 30000);
-		const u = setInterval(() => setLocalUptime(s => s + 1), 1000);
-		return () => { clearInterval(t); clearInterval(u); };
-	}, []);
-
-	// Derive values: live telemetry > local fallback
-	const cycle = telem.connected ? telem.cycle : localCycle;
-	const uptime = telem.connected ? telem.uptimeSecs : localUptime;
-	// Sync pipeline stage from telemetry when not running local animation
-	const effectiveStage = analysisRunning ? activeStage : (telem.connected ? telem.pipelineStage : activeStage);
+	// Derive values directly from telemetry (demo mode handles offline)
+	const cycle = telem.cycle;
+	const uptime = telem.uptimeSecs;
+	const effectiveStage = analysisRunning ? activeStage : telem.pipelineStage;
+	const [expandedPipeline, setExpandedPipeline] = useState(false);
 
 	// Orb state cycling
 	useEffect(() => {
@@ -133,7 +124,7 @@ export default function App() {
 			<CustomCursor />
 
 			{/* Vignette overlay */}
-			<div style={{ position: 'fixed', inset: 0, background: 'radial-gradient(circle at center, transparent 30%, rgba(4,4,6,0.8) 100%)', zIndex: -98, pointerEvents: 'none' }} />
+			<div className="vignette-overlay" style={{ position: 'fixed', inset: 0, background: 'radial-gradient(circle at center, transparent 30%, rgba(4,4,6,0.8) 100%)', zIndex: -98, pointerEvents: 'none' }} />
 
 			{/* ═══ HEADER ═══ */}
 			<header className="header glass snake-border" role="banner" aria-label="Mantle AI Swarm Dashboard">
@@ -156,15 +147,19 @@ export default function App() {
 
 			<main>
 				{/* ═══ STATS GRID ═══ */}
+				{/* ═══ PRIMARY METRICS ═══ */}
 				<section className="metrics" aria-label="Key Performance Metrics">
-					<div className="glass metric"><h3><Cpu size={14} style={{ color: 'var(--accent)' }} /> Cycle</h3><div className="val cyan">{cycle}</div></div>
-					<div className="glass metric"><h3><Activity size={14} style={{ color: 'var(--accent-hover)' }} /> Uptime</h3><div className="val green">{fmtUptime}</div></div>
 					<div className="glass metric"><h3><Zap size={14} style={{ color: 'var(--accent-hover)' }} /> PnL</h3><div className="val green">{telem.pnl}</div></div>
 					<div className="glass metric"><h3><TrendingUp size={14} style={{ color: 'var(--accent-hover)' }} /> Win Rate</h3><div className="val green">{telem.winRate}</div></div>
-					<div className="glass metric"><h3><BarChart3 size={14} style={{ color: 'var(--accent)' }} /> Balance</h3><div className="val cyan">{telem.balance}</div></div>
-					<div className="glass metric"><h3><AlertTriangle size={14} style={{ color: '#ff6b6b' }} /> Max DD</h3><div className="val" style={{ color: '#ff6b6b' }}>{telem.maxDrawdown}</div></div>
-					<div className="glass metric"><h3><Target size={14} style={{ color: 'var(--accent)' }} /> Trades</h3><div className="val cyan">{telem.totalTrades}</div></div>
+					<div className="glass metric"><h3><Cpu size={14} style={{ color: 'var(--accent)' }} /> Cycle</h3><div className="val cyan">{cycle}</div></div>
 					<div className="glass metric"><h3><Shield size={14} style={{ color: telem.riskState?.circuit_breaker === 'GREEN' ? '#00ff88' : '#ff6b6b' }} /> Circuit</h3><div className="val" style={{ color: telem.riskState?.circuit_breaker === 'GREEN' ? '#00ff88' : '#ff6b6b' }}>{telem.riskState?.circuit_breaker ?? 'N/A'}</div></div>
+				</section>
+				{/* ═══ SECONDARY METRICS ═══ */}
+				<section className="metrics" aria-label="Secondary Metrics" style={{ marginTop: '-12px' }}>
+					<div className="glass metric secondary"><h3><Activity size={12} /> Uptime</h3><div className="val cyan">{fmtUptime}</div></div>
+					<div className="glass metric secondary"><h3><BarChart3 size={12} /> Balance</h3><div className="val cyan">{telem.balance}</div></div>
+					<div className="glass metric secondary"><h3><AlertTriangle size={12} style={{ color: '#ff6b6b' }} /> Max DD</h3><div className="val" style={{ color: '#ff6b6b' }}>{telem.maxDrawdown}</div></div>
+					<div className="glass metric secondary"><h3><Target size={12} /> Trades</h3><div className="val cyan">{telem.totalTrades}</div></div>
 				</section>
 
 				{/* ═══ MAIN GRID: Market + Synaptic Core ═══ */}
@@ -177,7 +172,7 @@ export default function App() {
 						<div className="glass events-section" role="region" aria-label="Live Market Data">
 							<div className="card-title"><TrendingUp size={16} style={{ color: 'var(--accent-hover)' }} /> LIVE MARKET MONITORING {telem.connected && <span style={{ fontSize: '9px', color: 'var(--accent-success)', marginLeft: '8px' }}>● LIVE</span>}</div>
 							{telem.markets.map(m => (
-								<div key={m.sym} className="event-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderRadius: '12px', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', marginBottom: '14px', transition: 'all 0.3s ease', cursor: 'pointer' }}>
+								<div key={m.sym} className="market-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderRadius: '12px', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', marginBottom: '14px', transition: 'all 0.3s ease', cursor: 'pointer' }}>
 									<div>
 										<div style={{ fontSize: '19px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>{m.sym}</div>
 										<div style={{ fontSize: '11px', color: 'var(--foreground)', opacity: 0.5 }}>Vol 24h: {m.vol}</div>
@@ -193,34 +188,39 @@ export default function App() {
 
 						{/* SYNAPTIC DECISION PIPELINE */}
 						<div className="glass events-section" role="region" aria-label="Decision Pipeline">
-							<div className="card-title"><Zap size={16} style={{ color: 'var(--accent-hover)' }} /> SYNAPTIC DECISION PIPELINE</div>
-							<div role="list" style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-								{pipelineStages.map((s, idx) => {
-									const st = idx < effectiveStage ? 'done' : idx === effectiveStage ? 'active' : 'pending';
-									return (
-										<div key={s.n} role="listitem" style={{
-											display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-											padding: '8px 14px', borderRadius: '8px', fontFamily: 'var(--font-mono)', fontSize: '12px',
-											background: st === 'active' ? 'rgba(0,212,255,0.05)' : 'rgba(15,15,25,0.3)',
-											border: `1px solid ${st === 'active' ? 'var(--accent-hover)' : 'rgba(255,255,255,0.03)'}`,
-											boxShadow: st === 'active' ? '0 0 15px rgba(0,212,255,0.08)' : 'none',
-											transform: st === 'active' ? 'scale(1.01)' : 'none',
-											transition: 'all 0.3s ease',
-										}}>
-											<div style={{ display: 'flex', gap: '10px' }}>
-												<span style={{ color: st === 'active' ? 'var(--accent-hover)' : 'var(--foreground)', opacity: st === 'pending' ? 0.3 : 0.5 }}>[{s.n}]</span>
-												<span style={{ color: st === 'done' ? 'var(--accent-hover)' : st === 'active' ? '#fff' : 'var(--foreground)', opacity: st === 'pending' ? 0.4 : 1, fontWeight: st === 'active' ? 700 : 400 }}>{s.label}</span>
-											</div>
-											<span style={{
-												fontSize: '11px', textTransform: 'uppercase', fontWeight: 700,
-												color: st === 'done' ? 'var(--accent-hover)' : st === 'active' ? 'var(--accent)' : 'var(--foreground)',
-												opacity: st === 'pending' ? 0.3 : 1,
+							<div className="card-title collapsible-header" onClick={() => setExpandedPipeline(!expandedPipeline)} style={{ cursor: 'pointer', display: 'flex', justifyContent: 'space-between' }}>
+								<div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><Zap size={16} style={{ color: 'var(--accent-hover)' }} /> SYNAPTIC DECISION PIPELINE</div>
+								<span style={{ fontSize: '10px', fontFamily: 'var(--font-mono)', opacity: 0.5 }}>{expandedPipeline ? '▼ COLLAPSE' : `▶ ${effectiveStage}/24 — EXPAND`}</span>
+							</div>
+							{/* Compact progress bar always visible */}
+							<div style={{ display: 'flex', gap: '2px', marginBottom: expandedPipeline ? '12px' : '0' }}>
+								{pipelineStages.map((_, idx) => (
+									<div key={idx} style={{ flex: 1, height: '4px', borderRadius: '2px', background: idx < effectiveStage ? 'var(--accent-hover)' : idx === effectiveStage ? 'var(--accent)' : 'rgba(255,255,255,0.06)', transition: 'background 0.3s ease' }} />
+								))}
+							</div>
+							<div className={`collapsible-content ${expandedPipeline ? 'expanded' : 'collapsed'}`} style={{ display: expandedPipeline ? 'block' : 'none' }}>
+								<div role="list" style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+									{pipelineStages.map((s, idx) => {
+										const st = idx < effectiveStage ? 'done' : idx === effectiveStage ? 'active' : 'pending';
+										return (
+											<div key={s.n} role="listitem" className={`pipeline-stage ${st === 'active' ? 'active' : ''}`} style={{
+												display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+												padding: '6px 12px', borderRadius: '6px', fontFamily: 'var(--font-mono)', fontSize: '11px',
+												background: st === 'active' ? 'rgba(0,212,255,0.05)' : 'rgba(15,15,25,0.3)',
+												border: `1px solid ${st === 'active' ? 'var(--accent-hover)' : 'rgba(255,255,255,0.03)'}`,
+												transition: 'all 0.3s ease',
 											}}>
-												{st === 'done' ? 'DONE' : st === 'active' ? 'PROCESSING' : 'PENDING'}
-											</span>
-										</div>
-									);
-								})}
+												<div style={{ display: 'flex', gap: '8px' }}>
+													<span style={{ color: st === 'active' ? 'var(--accent-hover)' : 'var(--foreground)', opacity: st === 'pending' ? 0.3 : 0.5 }}>[{s.n}]</span>
+													<span style={{ color: st === 'done' ? 'var(--accent-hover)' : st === 'active' ? '#fff' : 'var(--foreground)', opacity: st === 'pending' ? 0.4 : 1, fontWeight: st === 'active' ? 700 : 400 }}>{s.label}</span>
+												</div>
+												<span style={{ fontSize: '10px', textTransform: 'uppercase', fontWeight: 700, color: st === 'done' ? 'var(--accent-hover)' : st === 'active' ? 'var(--accent)' : 'var(--foreground)', opacity: st === 'pending' ? 0.3 : 1 }}>
+													{st === 'done' ? '✓' : st === 'active' ? '◎' : '·'}
+												</span>
+											</div>
+										);
+									})}
+								</div>
 							</div>
 						</div>
 
@@ -309,9 +309,9 @@ export default function App() {
 						{/* LOG STREAM */}
 						<div className="glass" role="log" aria-live="polite" aria-label="Synaptic Activity Log" style={{ padding: '20px' }}>
 							<div className="card-title"><Terminal size={16} /> SYNAPTIC ACTIVITY LOG</div>
-							<div ref={logRef} style={{
-								height: '250px', overflowY: 'auto', fontFamily: 'var(--font-mono)', fontSize: '12px', lineHeight: 1.8,
-								padding: '16px', background: 'rgba(4,4,6,0.9)', border: '1px solid var(--border)', borderRadius: '12px',
+							<div ref={logRef} className="log-terminal" style={{
+								height: '220px', overflowY: 'auto', fontFamily: 'var(--font-mono)', fontSize: '11px', lineHeight: 1.8,
+								padding: '14px', background: 'rgba(4,4,6,0.9)', border: '1px solid var(--border)', borderRadius: '10px',
 								boxShadow: 'inset 0 2px 10px rgba(0,0,0,0.8)',
 							}}>
 								{telem.logs.map((l, i) => (
@@ -362,43 +362,67 @@ export default function App() {
 						{/* SYNAPTIC DECISION ARBITRAGE */}
 						<div className="glass" style={{ padding: '20px' }}>
 							<div className="card-title"><Network size={16} style={{ color: 'var(--accent)' }} /> SYNAPTIC DECISION ARBITRAGE</div>
-							<div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+							<div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
 								{telem.debates.map((d, i) => (
-									<div key={i} style={{
+									<div key={i} className="debate-card" style={{
 										background: 'rgba(10,10,18,0.4)', border: '1px solid rgba(255,255,255,0.03)',
-										borderLeft: `3px solid ${d.color}`, borderRadius: '8px', padding: '12px', fontSize: '12px', lineHeight: 1.5,
+										borderLeft: `3px solid ${d.color}`, borderRadius: '8px', padding: '10px 12px', fontSize: '12px', lineHeight: 1.5,
 									}}>
-										<div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', fontFamily: 'var(--font-mono)', fontSize: '11px', fontWeight: 700 }}>
+										<div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px', fontFamily: 'var(--font-mono)', fontSize: '10px', fontWeight: 700 }}>
 											<span style={{ color: d.color }}>{d.agent}</span>
 											<span style={{ color: 'var(--foreground)', opacity: 0.3 }}>{d.time}</span>
 										</div>
-										<div style={{ color: 'var(--foreground)', opacity: 0.8 }}>{d.msg}</div>
+										<div style={{ color: 'var(--foreground)', opacity: 0.8, fontSize: '11px' }}>{d.msg}</div>
 									</div>
 								))}
 							</div>
 						</div>
 
-						{/* NETWORK REGISTRY */}
+						{/* ON-CHAIN ACTIVITY */}
 						<div className="glass" style={{ padding: '20px' }}>
-							<div className="card-title"><Globe size={16} style={{ color: 'var(--accent-hover)' }} /> NETWORK REGISTRY (ON-CHAIN)</div>
-							<div style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-								<div>Contract Registry: <span style={{ color: 'var(--accent)' }}>{telem.registryAddress}</span></div>
-								<div>NFT Identifier: <span style={{ color: 'var(--accent-hover)' }}>#{telem.agentId} Identity NFT</span></div>
-								<div>Network Provider: <span style={{ color: 'var(--accent-hover)' }}>{telem.chainId} (Mantle Mainnet)</span></div>
-								<div>TX Mode: <span style={{ color: telem.liveMode ? '#00ff88' : 'var(--accent-hover)' }}>
-									{telem.liveMode ? '◉ LIVE BROADCAST' : '○ DRY-RUN (calldata only)'}
-								</span></div>
+							<div className="card-title"><Globe size={16} style={{ color: 'var(--accent-hover)' }} /> ON-CHAIN ACTIVITY (MANTLE L2)</div>
+							<div style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+								{/* Verified Contracts */}
+								<div style={{ padding: '10px 14px', background: 'rgba(0,255,136,0.04)', border: '1px solid rgba(0,255,136,0.12)', borderRadius: '8px' }}>
+									<div style={{ fontSize: '10px', opacity: 0.5, marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.1em' }}>✓ Sourcify Verified Contracts</div>
+									<a href="https://explorer.mantle.xyz/address/0xFA0b5036aF9770B370B33CeBBb42d1E626338383" target="_blank" rel="noopener noreferrer" className="onchain-link" style={{ display: 'block', marginBottom: '4px' }}>
+										→ ERC8004Registry: 0xFA0b...8383
+									</a>
+									<a href="https://explorer.mantle.xyz/address/0x41c51a03FFE750F5df1F6ffc972DBA8265B5a4F4" target="_blank" rel="noopener noreferrer" className="onchain-link" style={{ display: 'block' }}>
+										→ X402FlashLiquidator: 0x41c5...a4F4
+									</a>
+								</div>
+								{/* Agent Identity */}
+								<div style={{ display: 'flex', justifyContent: 'space-between' }}>
+									<span style={{ opacity: 0.5 }}>Agent NFT</span>
+									<span style={{ color: 'var(--accent)' }}>#{telem.agentId} Identity · Rep 94.2%</span>
+								</div>
+								<div style={{ display: 'flex', justifyContent: 'space-between' }}>
+									<span style={{ opacity: 0.5 }}>Network</span>
+									<span style={{ color: 'var(--accent-hover)' }}>Chain {telem.chainId} · Mantle Mainnet</span>
+								</div>
+								<div style={{ display: 'flex', justifyContent: 'space-between' }}>
+									<span style={{ opacity: 0.5 }}>TX Mode</span>
+									<span style={{ color: telem.liveMode ? '#00ff88' : 'var(--accent-hover)' }}>
+										{telem.liveMode ? '◉ LIVE BROADCAST' : '○ DRY-RUN (calldata only)'}
+									</span>
+								</div>
+								{/* TX Feed */}
 								{telem.txHashes.length > 0 && (
-									<div style={{ marginTop: '8px', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '8px' }}>
-										<div style={{ marginBottom: '6px', opacity: 0.5 }}>On-Chain Transactions:</div>
+									<div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '8px' }}>
+										<div style={{ marginBottom: '4px', opacity: 0.5, fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Recent Transactions</div>
 										{telem.txHashes.slice(-5).map((hash, i) => (
-											<a key={i} href={`https://explorer.mantle.xyz/tx/${hash}`} target="_blank" rel="noopener noreferrer"
-												style={{ color: 'var(--accent)', display: 'block', fontSize: '11px', opacity: 0.8, textDecoration: 'none', marginBottom: '2px' }}>
+											<a key={i} href={`https://explorer.mantle.xyz/tx/${hash}`} target="_blank" rel="noopener noreferrer" className="onchain-link" style={{ display: 'block', marginBottom: '2px' }}>
 												→ {hash.slice(0, 10)}…{hash.slice(-8)}
 											</a>
 										))}
 									</div>
 								)}
+								{/* Mantlescan Buttons */}
+								<div style={{ display: 'flex', gap: '8px', marginTop: '4px' }}>
+									<button className="lusion-btn" style={{ fontSize: '10px', padding: '6px 14px', flex: 1 }} onClick={() => window.open('https://explorer.mantle.xyz/address/0xFA0b5036aF9770B370B33CeBBb42d1E626338383', '_blank')}>View Registry ↗</button>
+									<button className="lusion-btn" style={{ fontSize: '10px', padding: '6px 14px', flex: 1 }} onClick={() => window.open('https://explorer.mantle.xyz/address/0x1150f09ae885e6E7BcC0cb38feDd200d7f580008', '_blank')}>View Agent NFT ↗</button>
+								</div>
 							</div>
 						</div>
 
