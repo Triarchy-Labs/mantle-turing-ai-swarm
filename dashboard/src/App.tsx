@@ -212,7 +212,7 @@ export default function App() {
 
 			<main>
 				{/* ═══ HERO SECTION ═══ */}
-				<section className="hero-section" ref={heroRef} aria-label="Dashboard Hero">
+				<section className="hero-section" aria-label="Dashboard Hero">
 					<div className="hero-blur-bg">
 						<div className="mdx-blur-cyan"></div>
 						<img className="mdx-glow-core" src="/assets/images/blurs/cyan-blur.webp" alt="Mantle AI Glow" />
