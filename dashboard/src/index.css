@@ -368,9 +368,35 @@ html[data-theme="light"] .glass:hover {
 	top: 14rem;
 	left: 50%;
 	transform: translateX(-50%);
-	background: rgba(0, 245, 255, 0.2);
+	background: rgba(0, 245, 255, 0.3);
 	filter: blur(250px);
 	-webkit-filter: blur(250px);
+	z-index: 1;
+}
+
+.mdx-glow-core {
+	position: absolute;
+	border-radius: 50%;
+	width: clamp(60rem, 80vw, 100rem);
+	height: clamp(60rem, 80vw, 100rem);
+	top: 27.1rem;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	pointer-events: none;
+	background: radial-gradient(
+		circle,
+		rgba(0, 245, 255, 0.741) 0%,
+		rgba(0, 245, 255, 0.686) 10%,
+		rgba(0, 245, 255, 0.529) 20%,
+		rgba(0, 245, 255, 0.345) 30%,
+		rgba(0, 245, 255, 0.243) 40%,
+		rgba(0, 245, 255, 0.192) 50%,
+		rgba(0, 245, 255, 0.149) 60%,
+		rgba(0, 245, 255, 0.110) 70%,
+		rgba(0, 245, 255, 0.067) 80%,
+		rgba(0, 245, 255, 0.035) 90%,
+		rgba(0, 245, 255, 0) 100%
+	);
 	z-index: 1;
 }
 
