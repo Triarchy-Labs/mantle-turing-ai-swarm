@@ -1,7 +1,7 @@
 "use client";
 // Stars REMOVED — cannot individually drift, only group rotation
 // All particles now unified in LiquidNebula with CPU-side animation
-import { Canvas, useFrame, useThree, useLoader } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import {
 	EffectComposer,
 	SMAA,
@@ -742,88 +742,6 @@ function AdaptivePostProcessing({ tier }: { tier: DeviceTier }) {
 	);
 }
 
-function MdxGlow() {
-	const texture = useLoader(THREE.TextureLoader, "/assets/images/blurs/cyan-blur.webp");
-	const { viewport } = useThree();
-	const meshRef = useRef<THREE.Mesh>(null);
-
-	const uniforms = useMemo(() => ({
-		uMap: { value: texture },
-		uOpacity: { value: 0.85 }
-	}), [texture]);
-
-	useFrame(() => {
-		if (!meshRef.current) return;
-		const h = window.innerHeight;
-		// 100rem is 1000px.
-		const maxSizePixels = Math.min(1000, h);
-		// Scale in WebGL units:
-		const scale = (maxSizePixels / h) * viewport.height;
-		
-		meshRef.current.scale.set(scale, scale, 1);
-
-		// Position Y:
-		// top: -18% in CSS means the top edge is at y = -0.18 * h (where y=0 is top of screen).
-		// Center of image is at y = -0.18 * h + maxSizePixels / 2.
-		// In WebGL, y=0 is center. Top of screen is viewport.height / 2.
-		const cssCenterY = (-0.18 * h) + (maxSizePixels / 2);
-		const webGLY = (viewport.height / 2) - (cssCenterY / h * viewport.height);
-		
-		meshRef.current.position.set(0, webGLY, -1);
-	});
-
-	return (
-		<mesh ref={meshRef}>
-			<planeGeometry args={[1, 1]} />
-			<shaderMaterial
-				uniforms={uniforms}
-				vertexShader={`
-					varying vec2 vUv;
-					void main() {
-						vUv = uv;
-						gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-					}
-				`}
-				fragmentShader={`
-					uniform sampler2D uMap;
-					uniform float uOpacity;
-					varying vec2 vUv;
-
-					vec3 rgb2hsv(vec3 c) {
-						vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
-						vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));
-						vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));
-						float d = q.x - min(q.w, q.y);
-						float e = 1.0e-10;
-						return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
-					}
-
-					vec3 hsv2rgb(vec3 c) {
-						vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
-						vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
-						return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
-					}
-
-					void main() {
-						vec4 texColor = texture2D(uMap, vUv);
-						
-						// Hue shift 185 deg (185/360 = 0.5138)
-						vec3 hsv = rgb2hsv(texColor.rgb);
-						hsv.x = fract(hsv.x + 0.5138);
-						vec3 rgb = hsv2rgb(hsv);
-
-						gl_FragColor = vec4(rgb, texColor.a * uOpacity);
-					}
-				`}
-				transparent={true}
-				depthWrite={false}
-				depthTest={false}
-				blending={THREE.AdditiveBlending}
-			/>
-		</mesh>
-	);
-}
-
 export default function LiquidGlassShader({ theme = "dark", mode = 0 }: { theme?: "dark" | "light"; mode?: number }) {
 	const tier = useDeviceTier();
 	const cfg = TIER_CONFIG[tier];
@@ -851,8 +769,6 @@ export default function LiquidGlassShader({ theme = "dark", mode = 0 }: { theme?
 				<color attach="background" args={["#010204"]} />
 				{/* Architecture Models and Lights removed to maximize FPS and fix background */}
 				
-				<MdxGlow />
-
 				{/* Stars REMOVED — drei Stars cannot individually drift */}
 				<LiquidNebula key={tier} particles={cfg.particles} mode={mode} />
 
