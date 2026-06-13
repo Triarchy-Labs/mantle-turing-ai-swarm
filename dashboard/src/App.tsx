@@ -175,9 +175,9 @@ export default function App() {
 
 			<main>
 				{/* ═══ HERO SECTION ═══ */}
-				<section className="hero-section">
+				<section className="hero-section" aria-label="Dashboard Hero">
 					<div className="hero-blur-bg">
-						<div className="mdx-blur-red"></div>
+						<div className="mdx-blur-cyan"></div>
 						<div className="mdx-arch-glass"></div>
 						<div className="mdx-arch-line"></div>
 					</div>
