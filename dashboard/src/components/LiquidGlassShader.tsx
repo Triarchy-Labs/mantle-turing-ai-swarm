@@ -14,6 +14,8 @@ import * as THREE from "three";
 import { useDeviceTier, type DeviceTier } from "../hooks/useDeviceTier";
 
 import LusionFinalPass from "./LusionFinalPass";
+import ScreenPaint from "./ScreenPaint";
+import { useUnifiedPointer } from "../hooks/useUnifiedPointer";
 
 
 import FsrEasuPass from "./FsrEasuPass";
@@ -149,6 +151,7 @@ const positionShader = /* glsl */ `
 ${NOISE_GLSL}
 
 uniform sampler2D u_defaultPosTex;
+uniform sampler2D u_logoPosTex;
 uniform float u_time;
 uniform float u_deltaTime;
 uniform float u_simSpeed;
@@ -157,6 +160,8 @@ uniform vec3 u_curlNoiseScale;
 uniform vec3 u_curlStrength;
 uniform float u_curlStrMul;
 uniform vec3 u_bounds;
+uniform float u_mode;
+uniform float u_logoCutPercent;
 
 void main() {
   vec2 uv = gl_FragCoord.xy / resolution.xy;
@@ -169,7 +174,13 @@ void main() {
   // Respawn when life < 0
   if (positionLife.w < 0.0) {
     vec3 h = hash33(vec3(uv, u_time));
-    positionLife.xyz = texture2D(u_defaultPosTex, uv).xyz;
+    float modeCut = step(u_logoCutPercent, h.x);
+    if (u_mode * modeCut > 0.5) {
+      vec3 p = texture2D(u_logoPosTex, uv).xyz;
+      positionLife.xyz = p + h * 0.2;
+    } else {
+      positionLife.xyz = texture2D(u_defaultPosTex, uv).xyz;
+    }
     positionLife.w = 1.0;
   }
 
@@ -185,6 +196,7 @@ void main() {
   vec3 curlStr = u_curlStrength * u_curlStrMul;
   vec3 curlScale = u_curlNoiseScale;
   vec3 curlVel = curl(positionLife.xyz * curlScale, u_time * u_simSpeed, 0.02) * curlStr * u_deltaTime;
+  curlVel /= 1.0 + velInfo.w * u_mode;
   positionLife.xyz += curlVel;
 
   gl_FragColor = positionLife;
@@ -193,14 +205,19 @@ void main() {
 
 // ── Velocity Compute Shader — EXACT from 02_particle_velocity_shader.glsl ──
 const velocityShader = /* glsl */ `
+uniform sampler2D u_logoPosTex;
+uniform sampler2D u_mousePaintTex;
 uniform float u_deltaTime;
 uniform float u_time;
 uniform float u_simDieSpeed;
 uniform vec3 u_windForce;
 uniform float u_windStrMul;
-uniform float u_mouseStrength;        // DEFAULT: 0.2 (line 155)
-uniform float u_mouseMoveIntensity;   // Lerped mouse delta (line 158)
-uniform vec3 u_screenBounds;          // Screen projection bounds (line 161)
+uniform float u_mouseStrength;        // DEFAULT: 0.2
+uniform float u_mouseMoveIntensity;   // Lerped mouse delta
+uniform vec3 u_screenBounds;          // Screen projection bounds
+uniform float u_mode;
+uniform float u_logoCutPercent;
+uniform float u_attractForce;
 
 vec3 hash33(vec3 p3) {
   p3 = fract(p3 * vec3(0.1031, 0.1030, 0.0973));
@@ -208,9 +225,9 @@ vec3 hash33(vec3 p3) {
   return fract((p3.xxy + p3.yxx) * p3.zyx);
 }
 
-// Project 3D position to UV — Lusion exact (line 33)
+// Project 3D position to UV — Lusion exact
 vec2 posToUv(vec3 pos) {
-  vec2 uv = pos.xy / u_screenBounds.xy;
+  vec2 uv = pos.xy / max(vec3(0.001), u_screenBounds).xy;
   uv = (uv + vec2(1.0)) / 2.0;
   uv.y = 1.0 - uv.y;
   return uv;
@@ -224,7 +241,9 @@ void main() {
   // Life decay check for respawn
   positionLife.w -= u_deltaTime * u_simDieSpeed * 0.01;
   if (positionLife.w < 0.0) {
-    velInfo.w = 0.0;
+    vec3 h = hash33(vec3(uv, u_time));
+    float modeCut = step(u_logoCutPercent, h.x);
+    velInfo.w = (modeCut * h.y * 2.0 + 1.0) * u_mode;
   }
 
   // Damping 0.975 — Lusion exact
@@ -232,16 +251,29 @@ void main() {
 
   // Wind force — Lusion exact
   vec3 windVel = u_windForce * u_deltaTime * u_windStrMul;
+  windVel /= 1.0 + velInfo.w * u_mode;
   velInfo.xyz += windVel;
 
-  // Mouse velocity injection — Lusion exact (lines 75-80)
-  // Without ScreenPaint FBO, we simulate mouse push via screenBounds projection
+  // Mouse velocity injection
   vec2 posUv = posToUv(positionLife.xyz);
-  // u_mouseMoveIntensity drives the strength (lerped mouse delta)
-  // Applied as radial push from cursor position
-  vec3 mouseFinalVel = vec3(0.0);
-  mouseFinalVel *= u_mouseMoveIntensity * u_mouseStrength;
+  vec3 mousePaintVel = (texture2D(u_mousePaintTex, posUv).xyz - 0.5 + 0.001) * 2.0;
+  mousePaintVel.z = 0.0;
+  vec3 mouseFinalVel = mousePaintVel * 0.8 * u_mouseMoveIntensity * u_mouseStrength;
+  mouseFinalVel *= 1.0 + velInfo.w * 0.5 * u_mode;
   velInfo.xyz += mouseFinalVel;
+
+  // Logo Attraction Force logic
+  if (velInfo.w * u_mode > 1.0) {
+    vec3 originPos = texture2D(u_logoPosTex, uv).xyz;
+    vec3 attrV = originPos - positionLife.xyz;
+    float dist2 = dot(attrV, attrV);
+    if (dist2 > 0.0001) {
+      attrV /= sqrt(dist2);
+    } else {
+      attrV = vec3(1.0, 0.0, 0.0);
+    }
+    velInfo.xyz += attrV * u_attractForce * velInfo.w * u_deltaTime;
+  }
 
   gl_FragColor = velInfo;
 }
@@ -287,7 +319,7 @@ void main() {
 `;
 
 // ── LiquidNebula: GPGPU Particle Component ──
-function LiquidNebula({ particles }: { particles: number }) {
+function LiquidNebula({ particles, mode }: { particles: number; mode: number }) {
 	const texSize = Math.ceil(Math.sqrt(particles));
 	const particleCount = texSize * texSize;
 
@@ -301,6 +333,11 @@ function LiquidNebula({ particles }: { particles: number }) {
 	const mouseMoveIntensity = useRef(0);
 	const prevMousePos = useRef({ x: 0, y: 0 });
 	const { gl, size } = useThree();
+
+	const modeRatio = useRef(0);
+	const screenBoundsHelper = useRef(new THREE.Vector3(4.0, 3.8, 1.0));
+	const [paintTexture, setPaintTexture] = useState<THREE.Texture | null>(null);
+	const pointerRef = useUnifiedPointer();
 
 	// Create sim UVs + colors (immutable, initialized once)
 	const [simUvs, colors] = useState(() => {
@@ -363,6 +400,76 @@ function LiquidNebula({ particles }: { particles: number }) {
 		);
 		defaultPosDataTex.needsUpdate = true;
 
+		// Procedural 3D Nested Hexagon Logo Points Texture u_logoPosTex
+		const logoPosTex = gpu.createTexture();
+		const logoPosData = logoPosTex.image.data as Float32Array;
+		const getHexagonPoint = (radius: number, segment: number, t: number, z: number) => {
+			const angle1 = (segment * Math.PI) / 3;
+			const angle2 = (((segment + 1) % 6) * Math.PI) / 3;
+			const x1 = radius * Math.cos(angle1);
+			const y1 = radius * Math.sin(angle1);
+			const x2 = radius * Math.cos(angle2);
+			const y2 = radius * Math.sin(angle2);
+			return {
+				x: x1 * (1 - t) + x2 * t,
+				y: y1 * (1 - t) + y2 * t,
+				z: z
+			};
+		};
+
+		for (let i = 0; i < particleCount; i++) {
+			let pt = { x: 0, y: 0, z: 0 };
+			const r = Math.random();
+			if (r < 0.45) {
+				// Outer hexagon edge ring
+				const seg = Math.floor(Math.random() * 6);
+				const t = Math.random();
+				const hz = (Math.random() * 2 - 1) * 0.15;
+				pt = getHexagonPoint(1.7, seg, t, hz);
+			} else if (r < 0.75) {
+				// Inner hexagon edge ring
+				const seg = Math.floor(Math.random() * 6);
+				const t = Math.random();
+				const hz = (Math.random() * 2 - 1) * 0.15;
+				pt = getHexagonPoint(0.95, seg, t, hz);
+			} else {
+				// Spokes/volume fill
+				const seg = Math.floor(Math.random() * 6);
+				const t = Math.random();
+				const hz = (Math.random() * 2 - 1) * 0.15;
+				const pOuter = getHexagonPoint(1.7, seg, t, hz);
+				const pInner = getHexagonPoint(0.95, seg, t, hz);
+				const lerpT = Math.random();
+				pt = {
+					x: pOuter.x * (1 - lerpT) + pInner.x * lerpT,
+					y: pOuter.y * (1 - lerpT) + pInner.y * lerpT,
+					z: pOuter.z * (1 - lerpT) + pInner.z * lerpT
+				};
+			}
+
+			// Apply Lusion exact logo rotations: X = -0.18*PI, Y = 0.16*PI, scale 0.9, translation [0, 0, -0.32]
+			const rx = -0.18 * Math.PI;
+			const ry = 0.16 * Math.PI;
+
+			// Rotate around X
+			let y1 = pt.y * Math.cos(rx) - pt.z * Math.sin(rx);
+			let z1 = pt.y * Math.sin(rx) + pt.z * Math.cos(rx);
+
+			// Rotate around Y
+			let x2 = pt.x * Math.cos(ry) + z1 * Math.sin(ry);
+			let z2 = -pt.x * Math.sin(ry) + z1 * Math.cos(ry);
+
+			logoPosData[i * 4] = x2 * 0.9;
+			logoPosData[i * 4 + 1] = y1 * 0.9;
+			logoPosData[i * 4 + 2] = z2 * 0.9 - 0.32;
+			logoPosData[i * 4 + 3] = 1.0;
+		}
+
+		const logoPosDataTex = new THREE.DataTexture(
+			logoPosData, texSize, texSize, THREE.RGBAFormat, THREE.FloatType
+		);
+		logoPosDataTex.needsUpdate = true;
+
 		// Velocity texture: xyz = velocity, w = mode weight
 		const velTex = gpu.createTexture();
 
@@ -372,8 +479,9 @@ function LiquidNebula({ particles }: { particles: number }) {
 		gpu.setVariableDependencies(posVar, [posVar, velVar]);
 		gpu.setVariableDependencies(velVar, [posVar, velVar]);
 
-		// Position uniforms — adjusted for slower, more graceful movement
+		// Position uniforms
 		posVar.material.uniforms.u_defaultPosTex = { value: defaultPosDataTex };
+		posVar.material.uniforms.u_logoPosTex = { value: logoPosDataTex };
 		posVar.material.uniforms.u_time = { value: 0 };
 		posVar.material.uniforms.u_deltaTime = { value: 0.016 };
 		posVar.material.uniforms.u_simSpeed = { value: 0.12 }; // Lusion exact
@@ -382,16 +490,23 @@ function LiquidNebula({ particles }: { particles: number }) {
 		posVar.material.uniforms.u_curlStrength = { value: new THREE.Vector3(0.2, 0.12, 0.12) };
 		posVar.material.uniforms.u_curlStrMul = { value: 0.8 };  // Lusion exact
 		posVar.material.uniforms.u_bounds = { value: new THREE.Vector3(7.0, 5.0, 2.0) };
+		posVar.material.uniforms.u_mode = { value: 0.0 };
+		posVar.material.uniforms.u_logoCutPercent = { value: 0.4 };
 
-		// Velocity uniforms — adjusted for slower, more graceful movement
+		// Velocity uniforms
+		velVar.material.uniforms.u_logoPosTex = { value: logoPosDataTex };
+		velVar.material.uniforms.u_mousePaintTex = { value: new THREE.Texture() };
 		velVar.material.uniforms.u_deltaTime = { value: 0.016 };
 		velVar.material.uniforms.u_time = { value: 0 };
 		velVar.material.uniforms.u_simDieSpeed = { value: 0.32 }; // Lusion exact
-		velVar.material.uniforms.u_windForce = { value: new THREE.Vector3(0.16, 0.0, 0.0) }; // Lusion exact (line 148)
-		velVar.material.uniforms.u_windStrMul = { value: 1 };  // Lusion exact (line 152)
-		velVar.material.uniforms.u_mouseStrength = { value: 0.2 };  // Lusion exact (line 155)
-		velVar.material.uniforms.u_mouseMoveIntensity = { value: 0 };  // Lusion exact (line 158)
+		velVar.material.uniforms.u_windForce = { value: new THREE.Vector3(0.16, 0.0, 0.0) }; // Lusion exact
+		velVar.material.uniforms.u_windStrMul = { value: 1 };  // Lusion exact
+		velVar.material.uniforms.u_mouseStrength = { value: 0.2 };  // Lusion exact
+		velVar.material.uniforms.u_mouseMoveIntensity = { value: 0 };  // Lusion exact
 		velVar.material.uniforms.u_screenBounds = { value: new THREE.Vector3(4.0, 3.8, 1.0) };
+		velVar.material.uniforms.u_mode = { value: 0.0 };
+		velVar.material.uniforms.u_logoCutPercent = { value: 0.4 };
+		velVar.material.uniforms.u_attractForce = { value: 0.32 };
 
 		// Wrapping for seamless noise
 		posVar.wrapS = THREE.RepeatWrapping;
@@ -444,11 +559,68 @@ function LiquidNebula({ particles }: { particles: number }) {
 
 		const clampedDelta = Math.min(delta, 0.05); // cap at 50ms
 
+		// Transition code matching Lusion burst mechanics
+		const isMode1 = mode === 1;
+		const targetRatio = isMode1 ? 1.0 : 0.0;
+		// Lerp progress over ~0.6 seconds
+		modeRatio.current += (targetRatio - modeRatio.current) * clampedDelta * 1.5;
+		
+		const ratio = modeRatio.current;
+		const currentMode = ratio > 0.5 ? 1.0 : 0.0;
+
+		let simDieSpeed = isMode1 ? 0.48 : 0.32;
+		let logoCutPercent = 0.4;
+		let curlStrMul = 0.6;
+		let windStrMul = 1.2;
+
+		if (isMode1) {
+			// Mode 1 transition burst: when ratio is between 0.68 and 0.80
+			if (ratio > 0.68 && ratio < 0.8) {
+				simDieSpeed = 48.0;
+				logoCutPercent = 0.0;
+			}
+		} else {
+			// Mode 0 transition burst: when ratio is between 0.24 and 0.36
+			if (ratio > 0.24 && ratio < 0.36) {
+				simDieSpeed = 48.0;
+				logoCutPercent = 0.0;
+				curlStrMul = 16.0;
+				windStrMul = 16.0;
+			}
+		}
+
 		// Update compute uniforms — both shaders need time + delta
 		posVarRef.current.material.uniforms.u_time.value = state.clock.elapsedTime;
 		posVarRef.current.material.uniforms.u_deltaTime.value = clampedDelta;
+		posVarRef.current.material.uniforms.u_mode.value = currentMode;
+		posVarRef.current.material.uniforms.u_logoCutPercent.value = logoCutPercent;
+		posVarRef.current.material.uniforms.u_simDieSpeed.value = simDieSpeed;
+		posVarRef.current.material.uniforms.u_curlStrMul.value = curlStrMul;
+
 		velVarRef.current.material.uniforms.u_time.value = state.clock.elapsedTime;
 		velVarRef.current.material.uniforms.u_deltaTime.value = clampedDelta;
+		velVarRef.current.material.uniforms.u_mode.value = currentMode;
+		velVarRef.current.material.uniforms.u_logoCutPercent.value = logoCutPercent;
+		velVarRef.current.material.uniforms.u_simDieSpeed.value = simDieSpeed;
+		velVarRef.current.material.uniforms.u_windStrMul.value = windStrMul;
+
+		// Dynamically calculate u_screenBounds matching Lusion _getScreenBounds
+		const camera = state.camera;
+		const v3 = screenBoundsHelper.current;
+		v3.set(1, -1, 0.5);
+		v3.unproject(camera);
+		v3.sub(camera.position).normalize();
+		const distToZ = -camera.position.z / v3.z;
+		v3.multiplyScalar(distToZ);
+		v3.add(camera.position);
+
+		posVarRef.current.material.uniforms.u_screenBounds.value.copy(v3);
+		velVarRef.current.material.uniforms.u_screenBounds.value.copy(v3);
+
+		// Inject ScreenPaint FBO texture if ready
+		if (paintTexture) {
+			velVarRef.current.material.uniforms.u_mousePaintTex.value = paintTexture;
+		}
 
 		// Scroll wheel → wind.y + curlStrength.y — Lusion exact (line 194)
 		const wd = lerpedWheelDelta.current * 0.0144;
@@ -473,9 +645,10 @@ function LiquidNebula({ particles }: { particles: number }) {
 		// Pass computed position texture to render material
 		const posTex = gpuRef.current.getCurrentRenderTarget(posVarRef.current).texture;
 		if (materialRef.current) {
+			const dpr = state.viewport.dpr;
 			materialRef.current.uniforms.u_currPosTex.value = posTex;
 			materialRef.current.uniforms.uTheme.value = 0.0;
-			materialRef.current.uniforms.uResolution.value.set(size.width, size.height);
+			materialRef.current.uniforms.uResolution.value.set(size.width * dpr, size.height * dpr);
 		}
 	});
 
@@ -499,24 +672,27 @@ function LiquidNebula({ particles }: { particles: number }) {
     `;
 
 	return (
-		<points ref={pointsRef}>
-			<bufferGeometry>
-				<bufferAttribute attach="attributes-position" args={[dummyPositions, 3]} />
-				<bufferAttribute attach="attributes-a_simUv" args={[simUvs, 2]} />
-				<bufferAttribute attach="attributes-customColor" args={[colors, 3]} />
-			</bufferGeometry>
-			<shaderMaterial
-				ref={materialRef}
-				vertexShader={gpgpuVertexShader}
-				fragmentShader={themedFragmentShader}
-				uniforms={uniforms}
-				transparent
-				depthWrite={false}
-				depthTest={false}
-				blending={THREE.AdditiveBlending}
-				extensions-derivatives={true}
-			/>
-		</points>
+		<>
+			<ScreenPaint pointerRef={pointerRef} onTextureReady={setPaintTexture} />
+			<points ref={pointsRef}>
+				<bufferGeometry>
+					<bufferAttribute attach="attributes-position" args={[dummyPositions, 3]} />
+					<bufferAttribute attach="attributes-a_simUv" args={[simUvs, 2]} />
+					<bufferAttribute attach="attributes-customColor" args={[colors, 3]} />
+				</bufferGeometry>
+				<shaderMaterial
+					ref={materialRef}
+					vertexShader={gpgpuVertexShader}
+					fragmentShader={themedFragmentShader}
+					uniforms={uniforms}
+					transparent
+					depthWrite={false}
+					depthTest={false}
+					blending={THREE.AdditiveBlending}
+					extensions-derivatives={true}
+				/>
+			</points>
+		</>
 	);
 }
 
@@ -566,7 +742,7 @@ function AdaptivePostProcessing({ tier }: { tier: DeviceTier }) {
 	);
 }
 
-export default function LiquidGlassShader({ theme = "dark" }: { theme?: "dark" | "light" }) {
+export default function LiquidGlassShader({ theme = "dark", mode = 0 }: { theme?: "dark" | "light"; mode?: number }) {
 	const tier = useDeviceTier();
 	const cfg = TIER_CONFIG[tier];
 
@@ -594,7 +770,7 @@ export default function LiquidGlassShader({ theme = "dark" }: { theme?: "dark" |
 				{/* Architecture Models and Lights removed to maximize FPS and fix background */}
 				
 				{/* Stars REMOVED — drei Stars cannot individually drift */}
-				<LiquidNebula key={tier} particles={cfg.particles} />
+				<LiquidNebula key={tier} particles={cfg.particles} mode={mode} />
 
 				{/* RefractiveCore: DISABLED — MeshTransmission at z=5 causes 6x render pass lag */}
 				{/* {tier !== "low" && <RefractiveCore tier={tier} />} */}

@@ -143,7 +143,7 @@ export default function App() {
 		<>
 			{/* GPGPU Particle Background */}
 			<WebGLErrorBoundary fallback={null}>
-				<LiquidGlassShader theme={theme} />
+				<LiquidGlassShader theme={theme} mode={analysisRunning || (telem.connected && telem.pipelineStage > 1) || orbState !== 'idle' ? 1 : 0} />
 			</WebGLErrorBoundary>
 			<CustomCursor />
 
