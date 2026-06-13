@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Loader2 } from 'lucide-react';
+import { Loader2, ArrowUpRight } from 'lucide-react';
 import type { TelemetryData } from '../hooks/useTelemetry';
 
 interface Message {
@@ -23,6 +23,7 @@ export default function SwarmChat({ telem, orbState }: SwarmChatProps) {
   const [messages, setMessages] = useState<Message[]>([WELCOME_MESSAGE]);
   const [input, setInput] = useState('');
   const [isStreaming, setIsStreaming] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const [chatOrbState, setChatOrbState] = useState<'idle' | 'thinking' | 'working'>(orbState);
   const [blink, setBlink] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -167,6 +168,8 @@ export default function SwarmChat({ telem, orbState }: SwarmChatProps) {
     }
   };
 
+  const showArrow = isHovered || input.trim().length > 0;
+
   // Orb rendering (enlarged version)
   const eyeH = chatOrbState === 'working' ? 12 : chatOrbState === 'thinking' ? 36 : 44;
   const eyeR = chatOrbState === 'working' ? '5px' : '14px';
@@ -222,10 +225,18 @@ export default function SwarmChat({ telem, orbState }: SwarmChatProps) {
         <button
           className="swarm-chat-send"
           onClick={sendMessage}
-          disabled={isStreaming || !input.trim()}
+          disabled={isStreaming}
           aria-label="Send message"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
         >
-          {isStreaming ? <Loader2 size={16} className="spin" /> : <div className="lusion-dot-icon" />}
+          {isStreaming ? (
+            <Loader2 size={16} className="spin" />
+          ) : showArrow ? (
+            <ArrowUpRight size={18} strokeWidth={2.5} />
+          ) : (
+            <div className="lusion-dot-icon" />
+          )}
         </button>
       </div>
     </div>
