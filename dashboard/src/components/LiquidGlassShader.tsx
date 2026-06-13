@@ -44,7 +44,7 @@ const U_FOCUS_DIST = "0.32";
 // Lusion EXACT spawn/kill (строки 48653-48664)
 // NOTE: Use strings with decimals for GLSL (JS integers break shader compilation)
 const SPAWN_X = "4.0"; const SPAWN_Y = "2.4"; const SPAWN_Z = "0.64";
-const SPAWN_OX = "-1.5"; const SPAWN_OY = "-0.5"; const SPAWN_OZ = "0.0";  // Adjusted to center with new camera
+const SPAWN_OX = "-3.0"; const SPAWN_OY = "-0.5"; const SPAWN_OZ = "0.0";
 // Lusion EXACT kill bounds (used inside shader via u_bounds uniform, not JS)
 // const KILL_X = "7.0"; const KILL_Y = "5.0"; const KILL_Z = "2.0";
 
@@ -335,11 +335,23 @@ function LiquidNebula({ particles }: { particles: number }) {
 		const posTex = gpu.createTexture();
 		const posData = posTex.image.data as Float32Array;
 		for (let i = 0; i < particleCount; i++) {
-			// Lusion EXACT spawn (line 219): pow(rand,4) for X clusters to center
-			posData[i * 4] = (Math.pow(Math.random(), 4) * 2 - 1) * parseFloat(SPAWN_X) + parseFloat(SPAWN_OX);
-			posData[i * 4 + 1] = (Math.random() * 2 - 1) * parseFloat(SPAWN_Y) + parseFloat(SPAWN_OY);
-			posData[i * 4 + 2] = (Math.random() * 2 - 1) * parseFloat(SPAWN_Z) + parseFloat(SPAWN_OZ);
-			// Lusion EXACT life init (line 111): linear i/N, not random
+			let boundX = parseFloat(SPAWN_X);
+			let boundY = parseFloat(SPAWN_Y);
+			let boundZ = parseFloat(SPAWN_Z);
+
+			// Lusion EXACT _getCubePosDistribution (line 65046): 
+			// Half the particles get expanded bounds for looser clusters
+			if (i > particleCount * 0.5) {
+				boundX += 2.0 * (Math.random() - 0.5);
+				boundY += 2.0 * (Math.random() - 0.5);
+				boundZ += 2.0 * (Math.random() - 0.5);
+			}
+
+			// Lusion EXACT spawn (line 65046): pow(rand,4) for X clusters to center
+			posData[i * 4] = (Math.pow(Math.random(), 4) * 2 - 1) * boundX + parseFloat(SPAWN_OX);
+			posData[i * 4 + 1] = (Math.random() * 2 - 1) * boundY + parseFloat(SPAWN_OY);
+			posData[i * 4 + 2] = (Math.random() * 2 - 1) * boundZ + parseFloat(SPAWN_OZ);
+			// Lusion EXACT life init: linear i/N, not random
 			posData[i * 4 + 3] = i / particleCount;
 		}
 
