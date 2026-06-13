@@ -1,7 +1,7 @@
 "use client";
 // Stars REMOVED — cannot individually drift, only group rotation
 // All particles now unified in LiquidNebula with CPU-side animation
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { Canvas, useFrame, useThree, useLoader } from "@react-three/fiber";
 import {
 	EffectComposer,
 	SMAA,
@@ -742,6 +742,78 @@ function AdaptivePostProcessing({ tier }: { tier: DeviceTier }) {
 	);
 }
 
+function MdxGlow() {
+	const texture = useLoader(THREE.TextureLoader, "/assets/images/blurs/cyan-blur.webp");
+	const { viewport, size: domSize } = useThree();
+
+	// Calculate size matching CSS: width: min(100rem, 100vh) -> 1000px or window height
+	const maxSize = Math.min(1000, domSize.height);
+	const scale = (maxSize / domSize.height) * viewport.height;
+
+	// In CSS: top: -18%. 
+	// CSS Center Y = 50vh. Top edge of image = -18vh. Center of image = -18vh + (maxSize / 2).
+	// Distance from center of screen in pixels = 50vh - (-18vh + maxSize/2) = 68vh - maxSize/2
+	// Convert to WebGL units:
+	const cssCenterY = -0.18 * domSize.height + (maxSize / 2);
+	const webGLY = ((domSize.height / 2) - cssCenterY) / domSize.height * viewport.height;
+
+	const uniforms = useMemo(() => ({
+		uMap: { value: texture },
+		uOpacity: { value: 0.85 }
+	}), [texture]);
+
+	return (
+		<mesh position={[0, webGLY, -1]}>
+			<planeGeometry args={[scale, scale]} />
+			<shaderMaterial
+				uniforms={uniforms}
+				vertexShader={`
+					varying vec2 vUv;
+					void main() {
+						vUv = uv;
+						gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+					}
+				`}
+				fragmentShader={`
+					uniform sampler2D uMap;
+					uniform float uOpacity;
+					varying vec2 vUv;
+
+					vec3 rgb2hsv(vec3 c) {
+						vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
+						vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));
+						vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));
+						float d = q.x - min(q.w, q.y);
+						float e = 1.0e-10;
+						return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
+					}
+
+					vec3 hsv2rgb(vec3 c) {
+						vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+						vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
+						return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+					}
+
+					void main() {
+						vec4 texColor = texture2D(uMap, vUv);
+						
+						// Hue shift 185 deg (185/360 = 0.5138)
+						vec3 hsv = rgb2hsv(texColor.rgb);
+						hsv.x = fract(hsv.x + 0.5138);
+						vec3 rgb = hsv2rgb(hsv);
+
+						gl_FragColor = vec4(rgb, texColor.a * uOpacity);
+					}
+				`}
+				transparent={true}
+				depthWrite={false}
+				depthTest={false}
+				blending={THREE.AdditiveBlending}
+			/>
+		</mesh>
+	);
+}
+
 export default function LiquidGlassShader({ theme = "dark", mode = 0 }: { theme?: "dark" | "light"; mode?: number }) {
 	const tier = useDeviceTier();
 	const cfg = TIER_CONFIG[tier];
@@ -769,6 +841,9 @@ export default function LiquidGlassShader({ theme = "dark", mode = 0 }: { theme?
 				<color attach="background" args={["#010204"]} />
 				{/* Architecture Models and Lights removed to maximize FPS and fix background */}
 				
+				{/* EXACT MDX Glow moved into WebGL so it passes through Lusion Final Pass (anti-banding) */}
+				<MdxGlow />
+
 				{/* Stars REMOVED — drei Stars cannot individually drift */}
 				<LiquidNebula key={tier} particles={cfg.particles} mode={mode} />
 
