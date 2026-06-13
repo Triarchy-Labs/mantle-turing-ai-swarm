@@ -43,9 +43,9 @@
   font-display: swap;
 }
 
-/* Standardizing root font size to 10px (62.5%) for stable scaling on all displays */
+/* MDX 1:1 VW Scaling Lock with boundary bounds (adapted to base 16px at 1920px width) */
 html {
-	font-size: 62.5%;
+	font-size: 0.5208333333vw;
 	-webkit-text-size-adjust: 100%;
 	overflow-x: hidden;
 	width: 100%;
@@ -411,14 +411,14 @@ html[data-theme="light"] .glass:hover {
 }
 
 .hero-title {
-	font-family: var(--font-ui);
-	font-size: clamp(4rem, 10vw, 12rem);
-	font-weight: 300;
-	letter-spacing: -0.02em;
+	font-family: 'Orlean', 'Aventa', var(--font-ui), sans-serif;
+	font-size: 9.5rem;
+	font-weight: 400;
+	letter-spacing: 2.85px;
 	text-transform: uppercase;
-	color: #ffffff;
-	line-height: 1.1;
-	margin-bottom: 2.2rem;
+	color: #fcfcfd;
+	line-height: 1;
+	margin-bottom: 2rem;
 }
 
 .hero-title-icon {
@@ -528,9 +528,10 @@ html[data-theme="light"] .toggle-group {
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: flex-start;
+	align-items: center;
 	gap: 0.8rem;
 	padding: 0 4rem;
-	margin-bottom: 2rem;
+	margin-bottom: 3.8rem;
 	width: 100%;
 	position: relative;
 	z-index: 5;
@@ -540,7 +541,8 @@ html[data-theme="light"] .toggle-group {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	padding: 0.8rem 2rem;
+	padding: 1rem 2rem;
+	min-width: 8.2rem;
 	border-radius: 6rem;
 	border: 1px solid rgba(255, 255, 255, 0.15);
 	background: transparent;
@@ -548,28 +550,23 @@ html[data-theme="light"] .toggle-group {
 	font-weight: 300;
 	line-height: 1.1;
 	letter-spacing: 2px;
-	color: #fcfcfd;
+	color: #8a8f8d;
 	font-family: 'Aventa', var(--font-main), sans-serif;
 	text-transform: uppercase;
-	transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+	transition: color 0.3s cubic-bezier(0.625, 0.05, 0, 1), border-color 0.3s cubic-bezier(0.625, 0.05, 0, 1);
 	cursor: pointer;
+	position: relative;
+	z-index: 2;
 }
 
-.metric-pill:hover {
-	border-color: rgba(255, 255, 255, 0.3);
-}
-
-.metric-pill.active {
-	background: #e4e5e7;
+.metric-pill:hover, .metric-pill.active {
 	color: #101820;
-	border-color: #e4e5e7;
+	border-color: #fcfcfd;
 }
 
-.metric-pill .val {
-	font-family: var(--font-mono);
-	font-weight: 500;
-	margin-left: 0.5rem;
-}
+
+
+
 
 /* ═══ MAIN GRID ═══ */
 .dashboard-grid {

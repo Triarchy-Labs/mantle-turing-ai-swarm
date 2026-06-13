@@ -58,6 +58,30 @@ export default function App() {
 	const [activeStage, setActiveStage] = useState(10);
 	const [analysisRunning, setAnalysisRunning] = useState(false);
 	const [footerTime, setFooterTime] = useState(new Date().toLocaleTimeString('en-US', { hour12: false }));
+
+	// Magnetic Pill Hover State
+	const pillsRef = useRef<HTMLElement>(null);
+	const [pillHoverStyle, setPillHoverStyle] = useState({ left: 0, width: 0, opacity: 0 });
+	const activePillRef = useRef<HTMLDivElement>(null);
+
+	const updatePillHover = useCallback((element: HTMLElement | null) => {
+		if (!element || !pillsRef.current) return;
+		const cRect = pillsRef.current.getBoundingClientRect();
+		const elRect = element.getBoundingClientRect();
+		setPillHoverStyle({
+			left: elRect.left - cRect.left,
+			width: elRect.width,
+			opacity: 1
+		});
+	}, []);
+
+	useEffect(() => {
+		// Set initial position to the active pill
+		if (activePillRef.current) {
+			updatePillHover(activePillRef.current);
+		}
+	}, [updatePillHover]);
+
 	const logRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
@@ -160,7 +184,7 @@ export default function App() {
 					<div className="hero-content">
 						<div className="hero-title-wrapper" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '2.2rem' }}>
 							<h1 className="hero-title" style={{ margin: 0 }}>
-								MANTLE AI SWARM
+								MANTLE
 							</h1>
 						</div>
 						<p className="hero-subtitle">
@@ -169,12 +193,61 @@ export default function App() {
 					</div>
 				</section>
 				{/* ═══ METRICS PILLS (5 CAPSULES) ═══ */}
-				<section className="metrics-pills" aria-label="Key Performance Metrics">
-					<div className="metric-pill active">PNL<span className="val">{telem.pnl}</span></div>
-					<div className="metric-pill">WIN RATE<span className="val">{telem.winRate}</span></div>
-					<div className="metric-pill">UPTIME<span className="val">{fmtUptime}</span></div>
-					<div className="metric-pill">TRADES<span className="val">{telem.totalTrades}</span></div>
-					<div className="metric-pill">CIRCUIT<span className="val">{telem.riskState?.circuit_breaker ?? 'N/A'}</span></div>
+				<section 
+					className="metrics-pills" 
+					aria-label="Key Performance Metrics" 
+					ref={pillsRef}
+					onMouseLeave={() => {
+						if (activePillRef.current) updatePillHover(activePillRef.current);
+					}}
+				>
+					<div 
+						className="pill-slider" 
+						style={{
+							position: 'absolute',
+							top: 0,
+							left: pillHoverStyle.left,
+							width: pillHoverStyle.width,
+							height: '100%',
+							opacity: pillHoverStyle.opacity,
+							background: '#fcfcfd',
+							borderRadius: '6rem',
+							transition: 'all 0.4s cubic-bezier(0.625, 0.05, 0, 1)',
+							zIndex: 1,
+							pointerEvents: 'none'
+						}}
+					></div>
+					<div 
+						className={`metric-pill ${pillHoverStyle.left === 0 && pillHoverStyle.opacity > 0 ? 'hovered-text' : ''}`}
+						ref={activePillRef}
+						onMouseEnter={(e) => updatePillHover(e.currentTarget)}
+					>
+						PNL {telem.pnl}
+					</div>
+					<div 
+						className="metric-pill"
+						onMouseEnter={(e) => updatePillHover(e.currentTarget)}
+					>
+						WIN RATE {telem.winRate}
+					</div>
+					<div 
+						className="metric-pill"
+						onMouseEnter={(e) => updatePillHover(e.currentTarget)}
+					>
+						UPTIME {fmtUptime}
+					</div>
+					<div 
+						className="metric-pill"
+						onMouseEnter={(e) => updatePillHover(e.currentTarget)}
+					>
+						TRADES {telem.totalTrades}
+					</div>
+					<div 
+						className="metric-pill"
+						onMouseEnter={(e) => updatePillHover(e.currentTarget)}
+					>
+						CIRCUIT {telem.riskState?.circuit_breaker ?? 'N/A'}
+					</div>
 				</section>
 
 				{/* ═══ MAIN GRID: 2 Large Cards ═══ */}
