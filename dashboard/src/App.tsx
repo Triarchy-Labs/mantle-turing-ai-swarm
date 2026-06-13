@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Zap } from 'lucide-react';
 import './index.css';
+import LusionDitherLayer from './LusionDitherLayer';
 import LiquidGlassShader from './components/LiquidGlassShader';
 import CustomCursor from './components/CustomCursor';
 import { WebGLErrorBoundary } from './components/WebGLErrorBoundary';
@@ -184,9 +185,9 @@ export default function App() {
 			</WebGLErrorBoundary>
 			<CustomCursor />
 
-			{/* Vignette & Noise overlays for post-processing dithering */}
+			{/* Vignette & Lusion WebGL Post-Processing Dithering */}
 			<div className="vignette-overlay" style={{ position: 'fixed', inset: 0, background: 'radial-gradient(circle at center, transparent 30%, rgba(4,4,6,0.8) 100%)', zIndex: -98, pointerEvents: 'none' }} />
-			<div className="noise-overlay" />
+			<LusionDitherLayer />
 
 			{/* ═══ HEADER ═══ */}
 			<header className="header" role="banner" aria-label="Mantle AI Swarm Dashboard">
