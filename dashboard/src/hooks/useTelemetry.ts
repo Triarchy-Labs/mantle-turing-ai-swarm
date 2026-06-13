@@ -351,24 +351,35 @@ async function fetchClientSideFallbackPrices(): Promise<Partial<MarketRow>[]> {
 
 export function useTelemetry(): TelemetryData {
   const [data, setData] = useState<TelemetryData>(MOCK_DATA);
-  const lastErrorRef = useRef(0);
+  const failCountRef = useRef(0);
   const lastDexFetchRef = useRef(0);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // Exponential backoff: 5s → 10s → 30s → 60s → 5min (cap)
+  const getBackoffInterval = useCallback((failures: number) => {
+    const intervals = [5000, 10000, 30000, 60000, 300000];
+    return intervals[Math.min(failures, intervals.length - 1)];
+  }, []);
 
   const fetchTelemetry = useCallback(async () => {
     try {
-      // Render free tier cold-starts in 12-50s; use generous timeout
-      const timeout = lastErrorRef.current > 2 ? 8000 : 60000;
+      const timeout = failCountRef.current > 2 ? 8000 : 60000;
       const resp = await fetch(TELEMETRY_URL, { signal: AbortSignal.timeout(timeout) });
       if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
       const json: TelemetryResponse = await resp.json();
       setData(mapResponse(json));
-      lastErrorRef.current = 0;
-    } catch {
-      // Suppress log spam: only log first error
-      if (lastErrorRef.current === 0) {
-        console.info('[telemetry] Backend offline — using mock data with client-side price polling');
+
+      // Reset backoff on success
+      if (failCountRef.current > 0) {
+        console.info('[telemetry] Backend reconnected');
+        failCountRef.current = 0;
       }
-      lastErrorRef.current = Date.now();
+    } catch {
+      // Log only on first failure — no console spam
+      if (failCountRef.current === 0) {
+        console.info('[telemetry] Backend offline – using mock data with client-side price polling');
+      }
+      failCountRef.current++;
 
       // Fetch fallback prices client-side at most once every 15 seconds
       let fallbackMarkets: Partial<MarketRow>[] = [];
@@ -402,11 +413,22 @@ export function useTelemetry(): TelemetryData {
     }
   }, []);
 
+  // Adaptive polling: reschedule with backoff after each tick
   useEffect(() => {
-    fetchTelemetry();
-    const t = setInterval(fetchTelemetry, POLL_INTERVAL);
-    return () => clearInterval(t);
-  }, [fetchTelemetry]);
+    let timeoutId: ReturnType<typeof setTimeout>;
+    let cancelled = false;
+
+    const tick = async () => {
+      await fetchTelemetry();
+      if (cancelled) return;
+      const nextInterval = getBackoffInterval(failCountRef.current);
+      timeoutId = setTimeout(tick, nextInterval);
+    };
+
+    tick();
+    return () => { cancelled = true; clearTimeout(timeoutId); };
+  }, [fetchTelemetry, getBackoffInterval]);
 
   return data;
 }
+
