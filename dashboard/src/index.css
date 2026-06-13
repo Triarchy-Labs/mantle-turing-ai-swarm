@@ -540,14 +540,14 @@ html[data-theme="light"] .toggle-group {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	padding: 0.8rem 2rem;
+	padding: 1.6rem 4rem;
 	border-radius: 6rem;
 	border: 1px solid rgba(255, 255, 255, 0.15);
 	background: transparent;
-	font-size: 1.5rem;
+	font-size: 2.5rem;
 	font-weight: 300;
 	line-height: 1.1;
-	letter-spacing: 2px;
+	letter-spacing: 3px;
 	color: #fcfcfd;
 	font-family: 'Aventa', var(--font-main), sans-serif;
 	text-transform: uppercase;
