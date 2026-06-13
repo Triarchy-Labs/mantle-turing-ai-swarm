@@ -532,46 +532,88 @@ html[data-theme="light"] .toggle-group {
 /* ═══ METRICS PILLS ═══ */
 .metrics-pills {
 	display: flex;
-	flex-wrap: wrap;
-	justify-content: flex-start;
-	align-items: center;
 	gap: 1.7rem;
-	padding: 0 4rem;
 	margin-bottom: 3.8rem;
-	width: 100%;
+	justify-content: center;
 	position: relative;
 	z-index: 5;
+	width: 100%;
 }
 
-.metric-pill {
-	display: inline-flex;
+.metric-pill-btn {
+	position: relative;
+	padding: 2rem 6rem;
+	border-radius: 6rem;
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	background: transparent;
+	color: #fcfcfd;
+	font-family: 'Aventa', var(--font-ui), sans-serif;
+	font-size: 2.5rem;
+	font-weight: 300;
+	cursor: pointer;
+	outline: none;
+	transition: color 0.4s cubic-bezier(0.625, 0.05, 0, 1), border-color 0.4s;
+	display: flex;
 	align-items: center;
 	justify-content: center;
-	padding: 2rem 6rem;
-	min-width: 8.2rem;
+}
+
+.metric-pill-btn.hovered, .metric-pill-btn.active {
+	color: #031819;
+	border-color: transparent;
+}
+
+.metric-pill-btn .btn__bg {
+	position: absolute;
+	inset: 0;
 	border-radius: 6rem;
-	border: 1px solid rgba(255, 255, 255, 0.15);
-	background: transparent;
-	font-size: 2.5rem;
-	font-weight: 400;
-	line-height: 1.1;
-	letter-spacing: 2px;
-	color: #8a8f8d;
-	font-family: 'Aventa', var(--font-main), sans-serif;
-	text-transform: uppercase;
-	transition: color 0.3s cubic-bezier(0.625, 0.05, 0, 1), border-color 0.3s cubic-bezier(0.625, 0.05, 0, 1);
-	cursor: pointer;
-	position: relative;
+	z-index: 1;
+}
+
+.metric-pill-btn .btn__circle-wrap {
+	position: absolute;
+	inset: 0;
+	border-radius: 6rem;
+	overflow: hidden;
 	z-index: 2;
+	pointer-events: none;
 }
 
-.metric-pill:hover, .metric-pill.active {
-	color: #101820;
-	border-color: #fcfcfd;
+.metric-pill-btn .btn__circle {
+	position: absolute;
+	width: 300%;
+	height: 0;
+	padding-bottom: 300%;
+	background-color: #fcfcfd;
+	border-radius: 50%;
+	transform: translate(-50%, -50%) scale(0);
+	transition: transform 0.6s cubic-bezier(0.625, 0.05, 0, 1);
+	/* left and top are dynamically set inline */
 }
 
+.metric-pill-btn.hovered .btn__circle,
+.metric-pill-btn.active .btn__circle {
+	transform: translate(-50%, -50%) scale(1);
+}
 
+.metric-pill-btn .btn__text {
+	position: relative;
+	z-index: 3;
+	pointer-events: none;
+	white-space: nowrap;
+	text-transform: uppercase;
+	letter-spacing: 2px;
+}
 
+.metric-pill-btn .pill-label {
+	color: inherit;
+}
+
+.metric-pill-btn .pill-val {
+	font-family: var(--font-mono);
+	margin-left: 1rem;
+	color: inherit;
+}
 
 
 /* ═══ MAIN GRID ═══ */

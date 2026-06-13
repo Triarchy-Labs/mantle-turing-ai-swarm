@@ -48,7 +48,55 @@ const techCards = [
 	{ label: 'Mantle L2', desc: 'Low-Fee On-Chain Settlement', angle: 300 },
 ];
 
+const MetricPill = ({ label, value, isActive = false }: { label: string, value: string, isActive?: boolean }) => {
+	const pillRef = useRef<HTMLButtonElement>(null);
+	const [circleStyle, setCircleStyle] = useState({ left: '50%', top: '50%' });
+	const [isHovered, setIsHovered] = useState(isActive);
 
+	const getMousePos = (e: React.MouseEvent) => {
+		if (!pillRef.current) return { left: '50%', top: '50%' };
+		const rect = pillRef.current.getBoundingClientRect();
+		const x = ((e.clientX - rect.left) / rect.width) * 100;
+		const y = ((e.clientY - rect.top) / rect.height) * 100;
+		return { left: `${x}%`, top: `${y}%` };
+	};
+
+	const handleMouseEnter = (e: React.MouseEvent) => {
+		setCircleStyle(getMousePos(e));
+		setIsHovered(true);
+	};
+
+	const handleMouseLeave = (e: React.MouseEvent) => {
+		setCircleStyle(getMousePos(e));
+		setIsHovered(false);
+	};
+
+	return (
+		<button 
+			className={`metric-pill-btn ${isActive ? 'active' : ''} ${isHovered ? 'hovered' : ''}`}
+			ref={pillRef}
+			onMouseEnter={handleMouseEnter}
+			onMouseLeave={handleMouseLeave}
+		>
+			<div className="btn__bg"></div>
+			<div className="btn__circle-wrap">
+				<div 
+					className="btn__circle" 
+					style={{ 
+						left: circleStyle.left, 
+						top: circleStyle.top 
+					}}
+				>
+					<div className="before__100"></div>
+				</div>
+			</div>
+			<div className="btn__text">
+				<span className="pill-label">{label} </span>
+				<span className="pill-val">{value}</span>
+			</div>
+		</button>
+	);
+};
 
 export default function App() {
 	const telem = useTelemetry();
@@ -58,30 +106,6 @@ export default function App() {
 	const [activeStage, setActiveStage] = useState(10);
 	const [analysisRunning, setAnalysisRunning] = useState(false);
 	const [footerTime, setFooterTime] = useState(new Date().toLocaleTimeString('en-US', { hour12: false }));
-
-	// Magnetic Pill Hover State
-	const pillsRef = useRef<HTMLElement>(null);
-	const [pillHoverStyle, setPillHoverStyle] = useState({ left: 0, width: 0, opacity: 0 });
-	const activePillRef = useRef<HTMLDivElement>(null);
-
-	const updatePillHover = useCallback((element: HTMLElement | null) => {
-		if (!element || !pillsRef.current) return;
-		const cRect = pillsRef.current.getBoundingClientRect();
-		const elRect = element.getBoundingClientRect();
-		setPillHoverStyle({
-			left: elRect.left - cRect.left,
-			width: elRect.width,
-			opacity: 1
-		});
-	}, []);
-
-	useEffect(() => {
-		// Set initial position to the active pill
-		if (activePillRef.current) {
-			updatePillHover(activePillRef.current);
-		}
-	}, [updatePillHover]);
-
 	const logRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
@@ -196,58 +220,12 @@ export default function App() {
 				<section 
 					className="metrics-pills" 
 					aria-label="Key Performance Metrics" 
-					ref={pillsRef}
-					onMouseLeave={() => {
-						if (activePillRef.current) updatePillHover(activePillRef.current);
-					}}
 				>
-					<div 
-						className="pill-slider" 
-						style={{
-							position: 'absolute',
-							top: 0,
-							left: pillHoverStyle.left,
-							width: pillHoverStyle.width,
-							height: '100%',
-							opacity: pillHoverStyle.opacity,
-							background: '#fcfcfd',
-							borderRadius: '6rem',
-							transition: 'all 0.4s cubic-bezier(0.625, 0.05, 0, 1)',
-							zIndex: 1,
-							pointerEvents: 'none'
-						}}
-					></div>
-					<div 
-						className={`metric-pill ${pillHoverStyle.left === 0 && pillHoverStyle.opacity > 0 ? 'hovered-text' : ''}`}
-						ref={activePillRef}
-						onMouseEnter={(e) => updatePillHover(e.currentTarget)}
-					>
-						PNL {telem.pnl}
-					</div>
-					<div 
-						className="metric-pill"
-						onMouseEnter={(e) => updatePillHover(e.currentTarget)}
-					>
-						WIN RATE {telem.winRate}
-					</div>
-					<div 
-						className="metric-pill"
-						onMouseEnter={(e) => updatePillHover(e.currentTarget)}
-					>
-						UPTIME {fmtUptime}
-					</div>
-					<div 
-						className="metric-pill"
-						onMouseEnter={(e) => updatePillHover(e.currentTarget)}
-					>
-						TRADES {telem.totalTrades}
-					</div>
-					<div 
-						className="metric-pill"
-						onMouseEnter={(e) => updatePillHover(e.currentTarget)}
-					>
-						CIRCUIT {telem.riskState?.circuit_breaker ?? 'N/A'}
-					</div>
+					<MetricPill label="PNL" value={telem.pnl} isActive={true} />
+					<MetricPill label="WIN RATE" value={telem.winRate} />
+					<MetricPill label="UPTIME" value={fmtUptime} />
+					<MetricPill label="TRADES" value={telem.totalTrades.toString()} />
+					<MetricPill label="CIRCUIT" value={telem.riskState?.circuit_breaker ?? 'N/A'} />
 				</section>
 
 				{/* ═══ BENTO GRID ═══ */}
