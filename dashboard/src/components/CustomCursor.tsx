@@ -12,7 +12,6 @@ export default function CustomCursor() {
 	const isHoveringRef = useRef(false);
 
 	// Lerp smoothing factor
-	const LERP = 0.4;
 	const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
 	// Check if this is a touch device on mound
@@ -38,6 +37,10 @@ export default function CustomCursor() {
 		const updateMouse = (e: MouseEvent) => {
 			if (!isVisible) setIsVisible(true);
 			mousePos.current = { x: e.clientX, y: e.clientY };
+			// Direct 1:1 position update — no LERP delay
+			if (dotRef.current) {
+				dotRef.current.style.transform = `translate(${e.clientX - 10}px, ${e.clientY - 10}px) scale(${currentPos.current.scale})`;
+			}
 		};
 
 		const handleMouseOver = (e: MouseEvent) => {
@@ -52,18 +55,13 @@ export default function CustomCursor() {
 			);
 		};
 
-		// RAF loop — calculates physics
+		// RAF loop — only for smooth hover scale animation
 		const tick = () => {
-			currentPos.current.x = lerp(currentPos.current.x, mousePos.current.x, LERP);
-			currentPos.current.y = lerp(currentPos.current.y, mousePos.current.y, LERP);
-			
-			// Smoothly animate the scale instead of instant snapping
 			const targetScale = isHoveringRef.current ? 1.3 : 1;
-			currentPos.current.scale = lerp(currentPos.current.scale, targetScale, LERP * 0.4); 
+			currentPos.current.scale = lerp(currentPos.current.scale, targetScale, 0.15);
 
 			if (dotRef.current) {
-				// Offset is 10px because base width/height is 20
-				dotRef.current.style.transform = `translate(${currentPos.current.x - 10}px, ${currentPos.current.y - 10}px) scale(${currentPos.current.scale})`;
+				dotRef.current.style.transform = `translate(${mousePos.current.x - 10}px, ${mousePos.current.y - 10}px) scale(${currentPos.current.scale})`;
 			}
 			rafId.current = requestAnimationFrame(tick);
 		};
