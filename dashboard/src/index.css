@@ -393,6 +393,20 @@ html[data-theme="light"] .glass:hover {
 	z-index: 1;
 }
 
+.mdx-blur-4 {
+	position: absolute;
+	width: 112.9rem;
+	height: 113rem;
+	top: 45%;
+	left: 50%;
+	transform: translate(-50%);
+	border-radius: 100%;
+	backdrop-filter: blur(50px);
+	-webkit-backdrop-filter: blur(50px);
+	pointer-events: none;
+	z-index: 2;
+}
+
 .mdx-arch-line {
 	position: absolute;
 	border-radius: 50%;
