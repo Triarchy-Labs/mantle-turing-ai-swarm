@@ -12,7 +12,7 @@ export default function CustomCursor() {
 	const isHoveringRef = useRef(false);
 
 	// Lerp smoothing factor
-	const LERP = 0.15;
+	const LERP = 0.4;
 	const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
 	// Check if this is a touch device on mound
@@ -93,18 +93,17 @@ export default function CustomCursor() {
 				width: 20,
 				height: 20,
 				borderRadius: "50%",
-				// Apple Glass: Clear interior, frosted border, high refraction
-				backgroundColor: isHovering ? "rgba(255,255,255,0.01)" : "rgba(255,255,255,0.2)",
-				border: isHovering ? "1px solid rgba(0, 255, 65, 0.4)" : "1px solid rgba(255,255,255,0.4)",
+				// Lightweight glow — NO backdrop-filter (kills GPU on WebGL scenes)
+				background: isHovering
+					? "radial-gradient(circle, rgba(0,255,65,0.15) 0%, rgba(0,255,65,0.02) 60%, transparent 100%)"
+					: "radial-gradient(circle, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.05) 60%, transparent 100%)",
+				border: isHovering ? "1px solid rgba(0, 255, 65, 0.5)" : "1px solid rgba(255,255,255,0.35)",
 				pointerEvents: "none",
 				zIndex: 99999,
-				backdropFilter: isHovering ? "blur(1.5px) saturate(150%) brightness(1.05) contrast(110%)" : "blur(1px) saturate(110%)",
-				WebkitBackdropFilter: isHovering ? "blur(1.5px) saturate(150%) brightness(1.05) contrast(110%)" : "blur(1px) saturate(110%)",
-				// Multilayered inset to simulate glass bezel distortion
-				boxShadow: isHovering 
-					? "inset 0 0.5px 0.5px rgba(255,255,255,0.5), inset 0 0 10px rgba(0,255,65,0.2), 0 4px 15px rgba(0,255,65,0.2)" 
-					: "0 2px 5px rgba(0,0,0,0.15)",
-				transition: "background-color 0.6s ease, border 0.6s ease, backdrop-filter 0.6s ease, box-shadow 0.6s ease",
+				boxShadow: isHovering
+					? "0 0 12px rgba(0,255,65,0.3), inset 0 0 4px rgba(0,255,65,0.15)"
+					: "0 0 6px rgba(255,255,255,0.1)",
+				transition: "background 0.3s ease, border 0.3s ease, box-shadow 0.3s ease",
 				willChange: "transform",
 			}}
 		/>
