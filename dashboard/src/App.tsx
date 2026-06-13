@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Zap, Globe, Terminal, Network, Eye, TrendingUp, Shield, BarChart3, Target, MessageSquare } from 'lucide-react';
+import { Zap } from 'lucide-react';
 import './index.css';
 import LiquidGlassShader from './components/LiquidGlassShader';
 import CustomCursor from './components/CustomCursor';

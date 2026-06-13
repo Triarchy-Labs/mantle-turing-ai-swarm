@@ -367,7 +367,7 @@ html[data-theme="light"] .glass:hover {
 	top: 45%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	background: rgba(0, 245, 255, 0.15);
+	background: rgba(255, 76, 0, 0.35); /* Restored original MDX orange/red glow */
 	filter: blur(120px);
 	-webkit-filter: blur(120px);
 	z-index: 1;
@@ -381,7 +381,7 @@ html[data-theme="light"] .glass:hover {
 	top: 42%;
 	left: 50%;
 	transform: translateX(-50%);
-	border: 1px solid #00f5ff;
+	border: 1px solid #e45200; /* Restored original MDX orange arc */
 	background: linear-gradient(180deg, rgba(0,0,0,0.3), transparent);
 	-webkit-mask-image: linear-gradient(to bottom, #fff 5%, transparent 25%);
 	mask-image: linear-gradient(to bottom, #fff 5%, transparent 25%);
