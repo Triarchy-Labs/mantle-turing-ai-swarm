@@ -6,6 +6,7 @@ import CustomCursor from './components/CustomCursor';
 import { WebGLErrorBoundary } from './components/WebGLErrorBoundary';
 import { useTelemetry } from './hooks/useTelemetry';
 import SwarmChat from './components/SwarmChat';
+import NoiseOverlay from './components/NoiseOverlay';
 
 /* ── Pipeline stages ── */
 const pipelineStages = [
@@ -183,6 +184,7 @@ export default function App() {
 				<LiquidGlassShader theme={theme} mode={analysisRunning ? 2 : ((telem.connected && telem.pipelineStage >= 22) || orbState === 'working' ? 1 : 0)} />
 			</WebGLErrorBoundary>
 			<CustomCursor />
+			<NoiseOverlay />
 
 			{/* Vignette */}
 			<div className="vignette-overlay" style={{ position: 'fixed', inset: 0, background: 'radial-gradient(circle at center, transparent 30%, rgba(4,4,6,0.8) 100%)', zIndex: -98, pointerEvents: 'none' }} />
