@@ -155,8 +155,9 @@ export default function App() {
 				{/* ═══ HERO SECTION ═══ */}
 				<section className="hero-section">
 					<div className="hero-blur-bg">
-						<img src={redBlur} className="hero-blur-red" alt="" />
-						<img src={blurBlack4} className="hero-blur-glass" alt="" />
+						<div className="mdx-blur-red"></div>
+						<div className="mdx-arch-glass"></div>
+						<div className="mdx-arch-line"></div>
 					</div>
 					<div className="hero-content">
 						<div className="hero-title-wrapper" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '2.2rem' }}>
