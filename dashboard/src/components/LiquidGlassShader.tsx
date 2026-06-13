@@ -430,11 +430,14 @@ function LiquidNebula({ particles }: { particles: number }) {
 	}, [gl, texSize, particleCount]);
 
 	// Render uniforms
-	const uniforms = useMemo(() => ({
-		u_currPosTex: { value: null as THREE.Texture | null },
-		uTheme: { value: 0.0 },
-		uResolution: { value: new THREE.Vector2(size.width, size.height) },
-	}), [size]);
+	const uniforms = useMemo(() => {
+		const dpr = gl.getPixelRatio();
+		return {
+			u_currPosTex: { value: null as THREE.Texture | null },
+			uTheme: { value: 0.0 },
+			uResolution: { value: new THREE.Vector2(size.width * dpr, size.height * dpr) },
+		};
+	}, [size, gl]);
 
 	// GPGPU compute + render update
 	useFrame((state, delta) => {
