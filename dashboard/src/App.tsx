@@ -143,20 +143,20 @@ export default function App() {
 
 					{/* App Title & Info */}
 					<div className="header-title-block">
-						<div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+						<div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap' }}>
 							<Layers size={18} className="green-sweep-text" />
-							<h1 style={{ margin: 0, fontSize: 'inherit', letterSpacing: 'inherit', background: 'inherit', WebkitBackgroundClip: 'inherit', WebkitTextFillColor: 'inherit' }}>
+							<h1 style={{ margin: 0 }}>
 								MANTLE AI SWARM ACTIVITY MATRIX
-								<span className="lusion-btn connect-state-true" style={{ fontSize: '11px', padding: '3px 8px', verticalAlign: 'middle', marginLeft: '10px', display: 'inline-block' }}>V5.0 LIVE</span>
+								<span className="lusion-btn connect-state-true" style={{ fontSize: '0.7rem', padding: '0.2rem 0.6rem', verticalAlign: 'middle', marginLeft: '0.6rem', display: 'inline-block' }}>V5.0 LIVE</span>
 							</h1>
 						</div>
-						<p style={{ marginTop: '4px', fontSize: '0.8rem', fontFamily: 'var(--font-mono)', opacity: 0.7 }}>
+						<p style={{ marginTop: '0.3vw', fontSize: '0.75rem', fontFamily: 'var(--font-mono)', opacity: 0.7 }}>
 							12 crates · 26,873 LOC · 24-stage pipeline · 8 Titan modules · Mantle Mainnet
 						</p>
 					</div>
 				</div>
-				<div className="toggle-group" style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-					<div className={`lusion-btn ${telem.connected ? 'connect-state-true' : ''}`} style={{ cursor: 'default', fontSize: '11px' }}>
+				<div className="toggle-group" style={{ display: 'flex', gap: '0.8vw', alignItems: 'center' }}>
+					<div className={`lusion-btn ${telem.connected ? 'connect-state-true' : ''}`} style={{ cursor: 'default', fontSize: '0.7rem' }}>
 						{telem.connected ? <Wifi size={12} style={{ marginRight: '6px' }} /> : <WifiOff size={12} style={{ marginRight: '6px', opacity: 0.5 }} />}
 						{telem.connected ? (telem.liveMode ? 'LIVE TX' : 'CONNECTED') : 'MOCK'} · CYCLE {cycle}
 					</div>
@@ -173,7 +173,7 @@ export default function App() {
 					<div className="glass metric"><h3><Shield size={14} style={{ color: telem.riskState?.circuit_breaker === 'GREEN' ? '#00ff88' : '#ff6b6b' }} /> Circuit</h3><div className="val" style={{ color: telem.riskState?.circuit_breaker === 'GREEN' ? '#00ff88' : '#ff6b6b' }}>{telem.riskState?.circuit_breaker ?? 'N/A'}</div></div>
 				</section>
 				{/* ═══ SECONDARY METRICS ═══ */}
-				<section className="metrics" aria-label="Secondary Metrics" style={{ marginTop: '-12px' }}>
+				<section className="metrics" aria-label="Secondary Metrics" style={{ marginTop: '-0.8vw' }}>
 					<div className="glass metric secondary"><h3><Activity size={12} /> Uptime</h3><div className="val cyan">{fmtUptime}</div></div>
 					<div className="glass metric secondary"><h3><BarChart3 size={12} /> Balance</h3><div className="val cyan">{telem.balance}</div></div>
 					<div className="glass metric secondary"><h3><AlertTriangle size={12} style={{ color: '#ff6b6b' }} /> Max DD</h3><div className="val" style={{ color: '#ff6b6b' }}>{telem.maxDrawdown}</div></div>
@@ -188,17 +188,17 @@ export default function App() {
 
 						{/* LIVE MARKET MONITORING */}
 						<div className="glass events-section" role="region" aria-label="Live Market Data">
-							<div className="card-title"><TrendingUp size={16} style={{ color: 'var(--accent-hover)' }} /> LIVE MARKET MONITORING {telem.connected && <span style={{ fontSize: '9px', color: 'var(--accent-success)', marginLeft: '8px' }}>● LIVE</span>}</div>
+							<div className="card-title"><TrendingUp size={16} style={{ color: 'var(--accent-hover)' }} /> LIVE MARKET MONITORING {telem.connected && <span style={{ fontSize: '0.65rem', color: 'var(--accent-success)', marginLeft: '0.5vw' }}>● LIVE</span>}</div>
 							{telem.markets.map(m => (
-								<div key={m.sym} className="market-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderRadius: '12px', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', marginBottom: '14px', transition: 'all 0.3s ease', cursor: 'pointer' }}>
+								<div key={m.sym} className="market-row">
 									<div>
-										<div style={{ fontSize: '19px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>{m.sym}</div>
-										<div style={{ fontSize: '11px', color: 'var(--foreground)', opacity: 0.5 }}>Vol 24h: {m.vol}</div>
+										<div style={{ fontSize: '1.2rem', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>{m.sym}</div>
+										<div style={{ fontSize: '0.7rem', color: 'var(--foreground)', opacity: 0.5 }}>Vol 24h: {m.vol}</div>
 									</div>
-									<div style={{ fontSize: '24px', fontWeight: 700, fontFamily: 'var(--font-mono)', color: 'var(--accent)' }}>{m.price}</div>
+									<div style={{ fontSize: '1.5rem', fontWeight: 700, fontFamily: 'var(--font-mono)', color: 'var(--accent)' }}>{m.price}</div>
 									<div className={`badge ${m.up ? 'ok' : 'fail'}`}>{m.change}</div>
-									<div className={`lusion-btn ${m.up ? 'connect-state-true' : ''}`} style={{ fontSize: '11px', padding: '4px 12px' }}>
-										{m.verdict}<br /><span style={{ fontSize: '10px', opacity: 0.7 }}>{m.conf}%</span>
+									<div className={`lusion-btn ${m.up ? 'connect-state-true' : ''}`} style={{ fontSize: '0.7rem', padding: '0.25rem 0.75rem' }}>
+										{m.verdict}<br /><span style={{ fontSize: '0.65rem', opacity: 0.7 }}>{m.conf}%</span>
 									</div>
 								</div>
 							))}
@@ -207,11 +207,11 @@ export default function App() {
 						{/* SYNAPTIC DECISION PIPELINE */}
 						<div className="glass events-section" role="region" aria-label="Decision Pipeline">
 							<div className="card-title collapsible-header" onClick={() => setExpandedPipeline(!expandedPipeline)} style={{ cursor: 'pointer', display: 'flex', justifyContent: 'space-between' }}>
-								<div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><Zap size={16} style={{ color: 'var(--accent-hover)' }} /> SYNAPTIC DECISION PIPELINE</div>
-								<span style={{ fontSize: '10px', fontFamily: 'var(--font-mono)', opacity: 0.5 }}>{expandedPipeline ? '▼ COLLAPSE' : `▶ ${effectiveStage}/24 — EXPAND`}</span>
+								<div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}><Zap size={16} style={{ color: 'var(--accent-hover)' }} /> SYNAPTIC DECISION PIPELINE</div>
+								<span style={{ fontSize: '0.7rem', fontFamily: 'var(--font-mono)', opacity: 0.5 }}>{expandedPipeline ? '▼ COLLAPSE' : `▶ ${effectiveStage}/24 — EXPAND`}</span>
 							</div>
 							{/* Compact progress bar always visible */}
-							<div style={{ display: 'flex', gap: '2px', marginBottom: expandedPipeline ? '12px' : '0' }}>
+							<div style={{ display: 'flex', gap: '2px', marginBottom: expandedPipeline ? '0.8vw' : '0' }}>
 								{pipelineStages.map((_, idx) => (
 									<div key={idx} style={{ flex: 1, height: '4px', borderRadius: '2px', background: idx < effectiveStage ? 'var(--accent-hover)' : idx === effectiveStage ? 'var(--accent)' : 'rgba(255,255,255,0.06)', transition: 'background 0.3s ease' }} />
 								))}
@@ -221,18 +221,12 @@ export default function App() {
 									{pipelineStages.map((s, idx) => {
 										const st = idx < effectiveStage ? 'done' : idx === effectiveStage ? 'active' : 'pending';
 										return (
-											<div key={s.n} role="listitem" className={`pipeline-stage ${st === 'active' ? 'active' : ''}`} style={{
-												display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-												padding: '6px 12px', borderRadius: '6px', fontFamily: 'var(--font-mono)', fontSize: '11px',
-												background: st === 'active' ? 'rgba(0,212,255,0.05)' : 'rgba(15,15,25,0.3)',
-												border: `1px solid ${st === 'active' ? 'var(--accent-hover)' : 'rgba(255,255,255,0.03)'}`,
-												transition: 'all 0.3s ease',
-											}}>
+											<div key={s.n} role="listitem" className={`pipeline-stage ${st === 'active' ? 'active' : ''}`}>
 												<div style={{ display: 'flex', gap: '8px' }}>
 													<span style={{ color: st === 'active' ? 'var(--accent-hover)' : 'var(--foreground)', opacity: st === 'pending' ? 0.3 : 0.5 }}>[{s.n}]</span>
 													<span style={{ color: st === 'done' ? 'var(--accent-hover)' : st === 'active' ? '#fff' : 'var(--foreground)', opacity: st === 'pending' ? 0.4 : 1, fontWeight: st === 'active' ? 700 : 400 }}>{s.label}</span>
 												</div>
-												<span style={{ fontSize: '10px', textTransform: 'uppercase', fontWeight: 700, color: st === 'done' ? 'var(--accent-hover)' : st === 'active' ? 'var(--accent)' : 'var(--foreground)', opacity: st === 'pending' ? 0.3 : 1 }}>
+												<span style={{ fontSize: '0.65rem', textTransform: 'uppercase', fontWeight: 700, color: st === 'done' ? 'var(--accent-hover)' : st === 'active' ? 'var(--accent)' : 'var(--foreground)', opacity: st === 'pending' ? 0.3 : 1 }}>
 													{st === 'done' ? '✓' : st === 'active' ? '◎' : '·'}
 												</span>
 											</div>
@@ -275,12 +269,12 @@ export default function App() {
 							</div>
 
 							{/* AutoRamp Capital Phase */}
-							<div className="glass" style={{ padding: '20px' }}>
+							<div className="glass">
 								<div className="card-title"><BarChart3 size={16} style={{ color: 'var(--accent)' }} /> AUTO-RAMP CAPITAL SCALING</div>
-								<div style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-									<div style={{ textAlign: 'center', padding: '12px', background: 'rgba(0,212,255,0.05)', borderRadius: '8px', border: '1px solid rgba(0,212,255,0.15)' }}>
-										<div style={{ fontSize: '28px', fontWeight: 800, color: 'var(--accent)' }}>{telem.rampState?.phase_label ?? 'SEED'}</div>
-										<div style={{ fontSize: '11px', opacity: 0.5, marginTop: '4px' }}>Phase {telem.rampState?.current_phase ?? 0}/4</div>
+								<div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.6vw' }}>
+									<div className="autoramp-phase-card">
+										<div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--accent)' }}>{telem.rampState?.phase_label ?? 'SEED'}</div>
+										<div style={{ fontSize: '0.7rem', opacity: 0.5, marginTop: '0.2vw' }}>Phase {telem.rampState?.current_phase ?? 0}/4</div>
 									</div>
 									{/* Phase progress bar */}
 									<div style={{ display: 'flex', gap: '3px' }}>
@@ -300,19 +294,19 @@ export default function App() {
 							</div>
 
 							{/* Open Positions */}
-							<div className="glass" style={{ padding: '20px' }}>
+							<div className="glass">
 								<div className="card-title"><Target size={16} style={{ color: 'var(--accent-hover)' }} /> OPEN POSITIONS ({telem.openPositions.length})</div>
 								{telem.openPositions.length === 0 ? (
-									<div style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', opacity: 0.3, textAlign: 'center', padding: '30px 0' }}>NO OPEN POSITIONS</div>
+									<div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', opacity: 0.3, textAlign: 'center', padding: '2vw 0' }}>NO OPEN POSITIONS</div>
 								) : (
-									<div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+									<div style={{ display: 'flex', flexDirection: 'column', gap: '0.6vw' }}>
 										{telem.openPositions.map((pos, i) => (
-											<div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 14px', borderRadius: '8px', background: 'rgba(10,10,18,0.4)', border: '1px solid rgba(255,255,255,0.03)', fontFamily: 'var(--font-mono)', fontSize: '12px' }}>
+											<div key={i} className="position-row">
 												<div>
 													<span style={{ fontWeight: 700, marginRight: '8px' }}>{pos.symbol}</span>
-													<span className={`badge ${pos.side === 'Buy' ? 'ok' : 'fail'}`} style={{ fontSize: '10px' }}>{pos.side}</span>
+													<span className={`badge ${pos.side === 'Buy' ? 'ok' : 'fail'}`} style={{ fontSize: '0.65rem' }}>{pos.side}</span>
 												</div>
-												<div style={{ display: 'flex', gap: '16px', opacity: 0.7 }}>
+												<div style={{ display: 'flex', gap: '1vw', opacity: 0.7 }}>
 													<span>${pos.entry_price.toFixed(4)}</span>
 													<span>{Math.floor(pos.hold_duration_secs / 60)}m</span>
 													<span style={{ color: pos.trailing_stop > 0 ? '#00ff88' : 'rgba(255,255,255,0.3)' }}>SL: ${pos.trailing_stop.toFixed(4)}</span>
@@ -325,13 +319,9 @@ export default function App() {
 						</div>
 
 						{/* LOG STREAM */}
-						<div className="glass" role="log" aria-live="polite" aria-label="Synaptic Activity Log" style={{ padding: '20px' }}>
+						<div className="glass" role="log" aria-live="polite" aria-label="Synaptic Activity Log">
 							<div className="card-title"><Terminal size={16} /> SYNAPTIC ACTIVITY LOG</div>
-							<div ref={logRef} className="log-terminal" style={{
-								height: '220px', overflowY: 'auto', fontFamily: 'var(--font-mono)', fontSize: '11px', lineHeight: 1.8,
-								padding: '14px', background: 'rgba(4,4,6,0.9)', border: '1px solid var(--border)', borderRadius: '10px',
-								boxShadow: 'inset 0 2px 10px rgba(0,0,0,0.8)',
-							}}>
+							<div ref={logRef} className="log-terminal">
 								{telem.logs.map((l, i) => (
 									<div key={i} style={{ display: 'flex', gap: '12px', color: 'var(--foreground)', opacity: 0.7, borderBottom: '1px solid rgba(255,255,255,0.01)', padding: '2px 0' }}>
 										<span style={{ color: 'var(--foreground)', opacity: 0.3, minWidth: '90px' }}>{logTime(l.off)}</span>
@@ -358,16 +348,16 @@ export default function App() {
 						{/* SWARM AGENT CHAT */}
 						<SwarmChat telem={telem} orbState={orbState} />
 						{/* SYNAPTIC CORE — 3D Brain */}
-						<div className="glass" style={{ padding: '20px', position: 'relative', overflow: 'visible' }}>
+						<div className="glass" style={{ position: 'relative', overflow: 'visible' }}>
 							<div className="card-title"><Eye size={16} style={{ color: 'var(--accent)' }} /> SYNAPTIC CORE — SWARM BRAIN</div>
 
 							{/* Orbiting tech cards */}
-							<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginTop: '12px' }}>
+							<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.6vw', marginTop: '0.8vw' }}>
 								{techCards.map(tc => (
 									<div key={tc.label} className="snake-border" style={{
-										padding: '8px 12px', background: 'rgba(0,0,0,0.4)', borderRadius: '8px',
+										padding: '0.6vw 0.8vw', background: 'rgba(0,0,0,0.4)', borderRadius: '0.5rem',
 										border: '1px solid var(--border)', backdropFilter: 'blur(8px)',
-										fontSize: '10px', fontFamily: 'var(--font-mono)', transition: 'all 0.3s ease',
+										fontSize: '0.7rem', fontFamily: 'var(--font-mono)', transition: 'all 0.3s ease',
 									}}>
 										<div style={{ color: 'var(--accent-hover)', fontWeight: 700, marginBottom: '2px' }}>{tc.label}</div>
 										<div style={{ color: 'var(--foreground)', opacity: 0.6 }}>{tc.desc}</div>
@@ -378,31 +368,31 @@ export default function App() {
 						</div>
 
 						{/* SYNAPTIC DECISION ARBITRAGE */}
-						<div className="glass" style={{ padding: '20px' }}>
+						<div className="glass">
 							<div className="card-title"><Network size={16} style={{ color: 'var(--accent)' }} /> SYNAPTIC DECISION ARBITRAGE</div>
-							<div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+							<div style={{ display: 'flex', flexDirection: 'column', gap: '0.6vw' }}>
 								{telem.debates.map((d, i) => (
 									<div key={i} className="debate-card" style={{
 										background: 'rgba(10,10,18,0.4)', border: '1px solid rgba(255,255,255,0.03)',
-										borderLeft: `3px solid ${d.color}`, borderRadius: '8px', padding: '10px 12px', fontSize: '12px', lineHeight: 1.5,
+										borderLeft: `3px solid ${d.color}`, borderRadius: '0.5rem', padding: '0.6vw 0.8vw', fontSize: '0.75rem', lineHeight: 1.5,
 									}}>
-										<div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px', fontFamily: 'var(--font-mono)', fontSize: '10px', fontWeight: 700 }}>
+										<div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px', fontFamily: 'var(--font-mono)', fontSize: '0.65rem', fontWeight: 700 }}>
 											<span style={{ color: d.color }}>{d.agent}</span>
 											<span style={{ color: 'var(--foreground)', opacity: 0.3 }}>{d.time}</span>
 										</div>
-										<div style={{ color: 'var(--foreground)', opacity: 0.8, fontSize: '11px' }}>{d.msg}</div>
+										<div style={{ color: 'var(--foreground)', opacity: 0.8, fontSize: '0.7rem' }}>{d.msg}</div>
 									</div>
 								))}
 							</div>
 						</div>
 
 						{/* ON-CHAIN ACTIVITY */}
-						<div className="glass" style={{ padding: '20px' }}>
+						<div className="glass">
 							<div className="card-title"><Globe size={16} style={{ color: 'var(--accent-hover)' }} /> ON-CHAIN ACTIVITY (MANTLE L2)</div>
-							<div style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+							<div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.6vw' }}>
 								{/* Verified Contracts */}
-								<div style={{ padding: '10px 14px', background: 'rgba(0,255,136,0.04)', border: '1px solid rgba(0,255,136,0.12)', borderRadius: '8px' }}>
-									<div style={{ fontSize: '10px', opacity: 0.5, marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.1em' }}>✓ Sourcify Verified Contracts</div>
+								<div style={{ padding: '0.6vw 0.8vw', background: 'rgba(0,255,136,0.04)', border: '1px solid rgba(0,255,136,0.12)', borderRadius: '0.5rem' }}>
+									<div style={{ fontSize: '0.65rem', opacity: 0.5, marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.1em' }}>✓ Sourcify Verified Contracts</div>
 									<a href="https://explorer.mantle.xyz/address/0xFA0b5036aF9770B370B33CeBBb42d1E626338383" target="_blank" rel="noopener noreferrer" className="onchain-link" style={{ display: 'block', marginBottom: '4px' }}>
 										→ ERC8004Registry: 0xFA0b...8383
 									</a>
@@ -428,7 +418,7 @@ export default function App() {
 								{/* TX Feed */}
 								{telem.txHashes.length > 0 && (
 									<div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '8px' }}>
-										<div style={{ marginBottom: '4px', opacity: 0.5, fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Recent Transactions</div>
+										<div style={{ marginBottom: '4px', opacity: 0.5, fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Recent Transactions</div>
 										{telem.txHashes.slice(-5).map((hash, i) => (
 											<a key={i} href={`https://explorer.mantle.xyz/tx/${hash}`} target="_blank" rel="noopener noreferrer" className="onchain-link" style={{ display: 'block', marginBottom: '2px' }}>
 												→ {hash.slice(0, 10)}…{hash.slice(-8)}
@@ -437,9 +427,9 @@ export default function App() {
 									</div>
 								)}
 								{/* Mantlescan Buttons */}
-								<div style={{ display: 'flex', gap: '8px', marginTop: '4px' }}>
-									<button className="lusion-btn" style={{ fontSize: '10px', padding: '6px 14px', flex: 1 }} onClick={() => window.open('https://explorer.mantle.xyz/address/0xFA0b5036aF9770B370B33CeBBb42d1E626338383', '_blank')}>View Registry ↗</button>
-									<button className="lusion-btn" style={{ fontSize: '10px', padding: '6px 14px', flex: 1 }} onClick={() => window.open('https://explorer.mantle.xyz/address/0x1150f09ae885e6E7BcC0cb38feDd200d7f580008', '_blank')}>View Agent NFT ↗</button>
+								<div style={{ display: 'flex', gap: '0.5vw', marginTop: '4px' }}>
+									<button className="lusion-btn" style={{ flex: 1 }} onClick={() => window.open('https://explorer.mantle.xyz/address/0xFA0b5036aF9770B370B33CeBBb42d1E626338383', '_blank')}>View Registry ↗</button>
+									<button className="lusion-btn" style={{ flex: 1 }} onClick={() => window.open('https://explorer.mantle.xyz/address/0x1150f09ae885e6E7BcC0cb38feDd200d7f580008', '_blank')}>View Agent NFT ↗</button>
 								</div>
 							</div>
 						</div>
@@ -456,7 +446,7 @@ export default function App() {
 				</div>
 
 				{/* Theme switcher */}
-				<button onClick={() => setTheme(t => t === 'dark' ? 'light' : 'dark')} className="lusion-btn connect-btn-hover-fx" style={{ position: 'fixed', bottom: '25px', right: '25px', zIndex: 100 }} aria-label="Toggle dark/light mode">
+				<button onClick={() => setTheme(t => t === 'dark' ? 'light' : 'dark')} className="lusion-btn connect-btn-hover-fx" style={{ position: 'fixed', bottom: '1.5rem', right: '1.5rem', zIndex: 100 }} aria-label="Toggle dark/light mode">
 					<span>{theme === 'dark' ? '◉ DARK' : '◌ LIGHT'}</span>
 				</button>
 			</main>
