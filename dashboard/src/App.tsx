@@ -212,10 +212,11 @@ export default function App() {
 
 			<main>
 				{/* ═══ HERO SECTION ═══ */}
-				<section className="hero-section" aria-label="Dashboard Hero">
+				<section className="hero-section" ref={heroRef} aria-label="Dashboard Hero">
 					<div className="hero-blur-bg">
 						<div className="mdx-blur-cyan"></div>
-						<img src="/assets/images/blurs/cyan-blur.webp" className="mdx-glow-core" alt="glow" />
+						<img className="mdx-glow-core" src="/assets/images/blurs/cyan-blur.webp" alt="Mantle AI Glow" />
+						<img className="mdx-blur-4" src="/assets/images/blurs/blur-black-4.webp" alt="decorative blur layer" />
 						<div className="mdx-arch-glass"></div>
 						<div className="mdx-arch-line"></div>
 					</div>
