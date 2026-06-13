@@ -287,7 +287,7 @@ void main() {
 `;
 
 // ── LiquidNebula: GPGPU Particle Component ──
-function LiquidNebula({ theme, particles }: { theme: "dark" | "light"; particles: number }) {
+function LiquidNebula({ particles }: { particles: number }) {
 	const texSize = Math.ceil(Math.sqrt(particles));
 	const particleCount = texSize * texSize;
 
@@ -419,9 +419,9 @@ function LiquidNebula({ theme, particles }: { theme: "dark" | "light"; particles
 	// Render uniforms
 	const uniforms = useMemo(() => ({
 		u_currPosTex: { value: null as THREE.Texture | null },
-		uTheme: { value: theme === "dark" ? 0.0 : 1.0 },
+		uTheme: { value: 0.0 },
 		uResolution: { value: new THREE.Vector2(size.width, size.height) },
-	}), [theme, size]);
+	}), [size]);
 
 	// GPGPU compute + render update
 	useFrame((state, delta) => {
@@ -459,7 +459,7 @@ function LiquidNebula({ theme, particles }: { theme: "dark" | "light"; particles
 		const posTex = gpuRef.current.getCurrentRenderTarget(posVarRef.current).texture;
 		if (materialRef.current) {
 			materialRef.current.uniforms.u_currPosTex.value = posTex;
-			materialRef.current.uniforms.uTheme.value = theme === "dark" ? 0.0 : 1.0;
+			materialRef.current.uniforms.uTheme.value = 0.0;
 			materialRef.current.uniforms.uResolution.value.set(size.width, size.height);
 		}
 	});
@@ -498,7 +498,7 @@ function LiquidNebula({ theme, particles }: { theme: "dark" | "light"; particles
 				transparent
 				depthWrite={false}
 				depthTest={false}
-				blending={theme === "dark" ? THREE.AdditiveBlending : THREE.NormalBlending}
+				blending={THREE.AdditiveBlending}
 				extensions-derivatives={true}
 			/>
 		</points>
@@ -519,14 +519,14 @@ function LiquidNebula({ theme, particles }: { theme: "dark" | "light"; particles
  * Mid:  Reduced pipeline (SMAA MEDIUM + EASU + RCAS + LusionFinal) = 4 passes  
  * Low:  Minimal pipeline (SMAA LOW + LusionFinal only) = 2 passes
  */
-function AdaptivePostProcessing({ theme, tier }: { theme: "dark" | "light"; tier: DeviceTier }) {
+function AdaptivePostProcessing({ tier }: { tier: DeviceTier }) {
 	const cfg = TIER_CONFIG[tier];
 
 	if (tier === "low") {
 		return (
 			<EffectComposer multisampling={0}>
 				<SMAA preset={cfg.smaa} />
-				<LusionFinalPass theme={theme} tintOpacity={0} vignetteFrom={0.6} vignetteTo={1.6} />
+				<LusionFinalPass tintOpacity={0} vignetteFrom={0.6} vignetteTo={1.6} />
 			</EffectComposer>
 		);
 	}
@@ -537,7 +537,7 @@ function AdaptivePostProcessing({ theme, tier }: { theme: "dark" | "light"; tier
 			<SMAA preset={cfg.smaa} />
 			<FsrEasuPass sharpness={tier === "high" ? 0.5 : 0.35} />
 			<FsrRcasPass sharpness={1.0} />
-			<LusionFinalPass theme={theme} tintOpacity={0} vignetteFrom={0.6} vignetteTo={1.6} />
+			<LusionFinalPass tintOpacity={0} vignetteFrom={0.6} vignetteTo={1.6} />
 		</EffectComposer>
 	);
 }
@@ -557,6 +557,7 @@ export default function LiquidGlassShader({ theme = "dark" }: { theme?: "dark" |
 	return createPortal(
 		<div
 			className="global-bg-canvas"
+			data-theme={theme}
 			style={{
 				position: "fixed",
 				inset: 0,
@@ -565,11 +566,11 @@ export default function LiquidGlassShader({ theme = "dark" }: { theme?: "dark" |
 			}}
 		>
 			<Canvas dpr={cfg.dpr} camera={{ position: [0, 0, 5], fov: 45 }}>
-				<color attach="background" args={[theme === "dark" ? "#010204" : "#fafafa"]} />
+				<color attach="background" args={["#010204"]} />
 				{/* Architecture Models and Lights removed to maximize FPS and fix background */}
 				
 				{/* Stars REMOVED — drei Stars cannot individually drift */}
-				<LiquidNebula key={tier} theme={theme} particles={cfg.particles} />
+				<LiquidNebula key={tier} particles={cfg.particles} />
 
 				{/* RefractiveCore: DISABLED — MeshTransmission at z=5 causes 6x render pass lag */}
 				{/* {tier !== "low" && <RefractiveCore tier={tier} />} */}
@@ -580,7 +581,7 @@ export default function LiquidGlassShader({ theme = "dark" }: { theme?: "dark" |
 				    Particles + stars already provide enough ambient motion. */}
 
 				{/* Adaptive Post-Processing Pipeline — Lusion pipeline order */}
-				<AdaptivePostProcessing theme={theme} tier={tier} />
+				<AdaptivePostProcessing tier={tier} />
 			</Canvas>
 		</div>,
 		portalTarget,

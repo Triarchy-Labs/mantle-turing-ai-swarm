@@ -1,4 +1,47 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Space+Grotesk:wght@300..700&family=JetBrains+Mono:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Space+Grotesk:wght@300..700&family=JetBrains+Mono:wght@300;400;500&display=swap');
+
+@font-face {
+  font-family: 'Aventa';
+  src: url('/fonts/aventa/Aventa-Light.woff') format('woff');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Aventa';
+  src: url('/fonts/aventa/Aventa-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Aventa';
+  src: url('/fonts/aventa/Aventa-Medium.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Aventa';
+  src: url('/fonts/aventa/Aventa-SemiBold.woff') format('woff');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Aventa';
+  src: url('/fonts/aventa/Aventa-Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Aventa';
+  src: url('/fonts/aventa/Aventa-ExtraBold.woff') format('woff');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
 
 /* Lusion postInvert: light theme inverts WebGL canvas (dump: ThemeController line 48903) */
 html[data-theme="light"] .global-bg-canvas {
@@ -13,11 +56,11 @@ html[data-theme="dark"] .global-bg-canvas {
 :root {
 	--background: #010204;
 	--foreground: #f4f4f5;
-	/* Aventa → Plus Jakarta Sans (closest match: geometric, wide weight range) */
-	--font-heading: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-	--font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+	/* Aventa → Premium geometric typeface */
+	--font-heading: 'Aventa', -apple-system, BlinkMacSystemFont, sans-serif;
+	--font-body: 'Aventa', -apple-system, BlinkMacSystemFont, sans-serif;
 	/* Orlean → Space Grotesk (closest match: geometric grotesque, interface labels) */
-	--font-ui: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+	--font-ui: 'Space Grotesk', 'Aventa', sans-serif;
 	--font-mono: 'Space Mono', 'JetBrains Mono', monospace;
 
 	--space-nav-x: clamp(16px, 4vw, 40px);
@@ -150,6 +193,75 @@ html[data-theme="light"] .header h1 {
 	background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.7) 100%);
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
+}
+
+.triarchy-logo-link {
+	font-family: 'Aventa', var(--font-heading);
+	text-decoration: none;
+	color: var(--foreground);
+	transition: opacity 0.3s ease, transform 0.3s ease;
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.triarchy-logo-link:hover {
+	opacity: 0.85;
+	transform: scale(0.98);
+}
+
+.triarchy-logo-glyph {
+	font-size: 1.8rem;
+	font-weight: 800;
+	color: var(--accent);
+	text-shadow: 0 0 15px var(--accent-glow);
+	animation: pulse 4s infinite ease-in-out;
+}
+
+.triarchy-logo-text {
+	font-family: 'Aventa', var(--font-heading);
+	font-size: 1.1rem;
+	font-weight: 800;
+	letter-spacing: 0.25em;
+	background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.6) 100%);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	display: block;
+	line-height: 1;
+}
+
+html[data-theme="light"] .triarchy-logo-text {
+	background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.7) 100%);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+.triarchy-logo-sub {
+	font-family: 'Aventa', var(--font-heading);
+	font-size: 0.6rem;
+	font-weight: 300;
+	letter-spacing: 0.52em;
+	opacity: 0.5;
+	margin-top: 2px;
+	display: block;
+	line-height: 1;
+}
+
+.header-left-container {
+	display: flex;
+	align-items: center;
+	gap: 20px;
+}
+
+.header-divider {
+	height: 32px;
+	width: 1px;
+	background: var(--border);
+}
+
+.header-title-block {
+	display: flex;
+	flex-direction: column;
 }
 
 .header {
@@ -588,17 +700,17 @@ html[data-theme="light"] .card-title {
 
 /* Light theme: buttons stay dark since cards are dark */
 html[data-theme="light"] .lusion-btn {
-  background: rgba(255,255,255,0.08);
-  color: rgba(255,255,255,0.7);
+  background: #000000;
+  color: #ffffff;
   border: 1px solid rgba(255,255,255,0.15);
 }
 html[data-theme="light"] .lusion-btn:hover {
-  background: rgba(0, 212, 255, 0.15);
+  background: rgba(0, 212, 255, 0.2);
   color: #00f5ff;
-  border-color: rgba(0, 212, 255, 0.4);
+  border-color: rgba(0, 212, 255, 0.5);
 }
 html[data-theme="light"] .lusion-btn.connect-state-true {
-  background: rgba(0, 212, 255, 0.1);
+  background: #000000;
   color: #00f5ff;
   border-color: rgba(0, 212, 255, 0.5);
 }
@@ -976,6 +1088,15 @@ html[data-theme="light"] .onchain-link {
 	.header {
 		flex-direction: column;
 		align-items: flex-start;
+	}
+	.header-left-container {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 16px;
+		width: 100%;
+	}
+	.header-divider {
+		display: none;
 	}
 	.header h1 { font-size: 1.35rem; }
 	.toggle-group {

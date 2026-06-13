@@ -135,7 +135,6 @@ const LusionFinalPass = forwardRef(function LusionFinalPass(
     contrast?: number;
     brightness?: number;
     tintOpacity?: number;
-    theme?: "dark" | "light";
   },
   ref
 ) {
@@ -146,23 +145,22 @@ const LusionFinalPass = forwardRef(function LusionFinalPass(
     contrast = 0,
     brightness = 0,
     tintOpacity = 0.05,
-    theme = "dark",
   } = props;
 
   const { size } = useThree();
 
   const effect = useMemo(() => {
     return new LusionFinalEffect({
-      bgColor: theme === "dark" ? [0.004, 0.008, 0.004] : [0.98, 0.98, 0.98],
+      bgColor: [0.004, 0.008, 0.004],
       vignetteFrom,
       vignetteTo,
-      vignetteColor: theme === "dark" ? [0, 0, 0] : [0.95, 0.95, 0.95],
+      vignetteColor: [0, 0, 0],
       saturation,
       contrast,
       brightness,
       tintOpacity,
     });
-  }, [theme, vignetteFrom, vignetteTo, saturation, contrast, brightness, tintOpacity]);
+  }, [vignetteFrom, vignetteTo, saturation, contrast, brightness, tintOpacity]);
 
   // Update dither seed every frame (Lusion line 42790: Math.random() * 1000)
   useFrame(() => {
@@ -174,13 +172,9 @@ const LusionFinalPass = forwardRef(function LusionFinalPass(
     const aspectY = h / Math.sqrt(w * w + h * h) * 2;
     effect.uniforms.get("u_vignetteAspect")!.value.set((w / h) * aspectY, aspectY);
 
-    // Update theme-dependent uniforms
-    effect.uniforms.get("u_bgColor")!.value = theme === "dark"
-      ? [0.004, 0.008, 0.004]
-      : [0.98, 0.98, 0.98];
-    effect.uniforms.get("u_vignetteColor")!.value = theme === "dark"
-      ? [0, 0, 0]
-      : [0.95, 0.95, 0.95];
+    // WebGL canvas is always rendered dark internally; CSS invert(1) handles the light theme transformation.
+    effect.uniforms.get("u_bgColor")!.value = [0.004, 0.008, 0.004];
+    effect.uniforms.get("u_vignetteColor")!.value = [0, 0, 0];
   });
 
   return <primitive ref={ref} object={effect} dispose={null} />;
