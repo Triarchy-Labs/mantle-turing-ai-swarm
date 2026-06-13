@@ -395,10 +395,7 @@ function LiquidNebula({ particles, mode }: { particles: number; mode: number }) 
 		const defaultPosTex = gpu.createTexture();
 		const defaultPosData = defaultPosTex.image.data as Float32Array;
 		defaultPosData.set(posData); // copy initial positions
-		const defaultPosDataTex = new THREE.DataTexture(
-			defaultPosData, texSize, texSize, THREE.RGBAFormat, THREE.FloatType
-		);
-		defaultPosDataTex.needsUpdate = true;
+		defaultPosTex.needsUpdate = true;
 
 		// Procedural 3D Nested Hexagon Logo Points Texture u_logoPosTex
 		const logoPosTex = gpu.createTexture();
@@ -465,10 +462,7 @@ function LiquidNebula({ particles, mode }: { particles: number; mode: number }) 
 			logoPosData[i * 4 + 3] = 1.0;
 		}
 
-		const logoPosDataTex = new THREE.DataTexture(
-			logoPosData, texSize, texSize, THREE.RGBAFormat, THREE.FloatType
-		);
-		logoPosDataTex.needsUpdate = true;
+		logoPosTex.needsUpdate = true;
 
 		// Velocity texture: xyz = velocity, w = mode weight
 		const velTex = gpu.createTexture();
@@ -480,8 +474,8 @@ function LiquidNebula({ particles, mode }: { particles: number; mode: number }) 
 		gpu.setVariableDependencies(velVar, [posVar, velVar]);
 
 		// Position uniforms
-		posVar.material.uniforms.u_defaultPosTex = { value: defaultPosDataTex };
-		posVar.material.uniforms.u_logoPosTex = { value: logoPosDataTex };
+		posVar.material.uniforms.u_defaultPosTex = { value: defaultPosTex };
+		posVar.material.uniforms.u_logoPosTex = { value: logoPosTex };
 		posVar.material.uniforms.u_time = { value: 0 };
 		posVar.material.uniforms.u_deltaTime = { value: 0.016 };
 		posVar.material.uniforms.u_simSpeed = { value: 0.12 }; // Lusion exact
@@ -494,7 +488,7 @@ function LiquidNebula({ particles, mode }: { particles: number; mode: number }) 
 		posVar.material.uniforms.u_logoCutPercent = { value: 0.4 };
 
 		// Velocity uniforms
-		velVar.material.uniforms.u_logoPosTex = { value: logoPosDataTex };
+		velVar.material.uniforms.u_logoPosTex = { value: logoPosTex };
 		velVar.material.uniforms.u_mousePaintTex = { value: new THREE.Texture() };
 		velVar.material.uniforms.u_deltaTime = { value: 0.016 };
 		velVar.material.uniforms.u_time = { value: 0 };
@@ -614,7 +608,6 @@ function LiquidNebula({ particles, mode }: { particles: number; mode: number }) 
 		v3.multiplyScalar(distToZ);
 		v3.add(camera.position);
 
-		posVarRef.current.material.uniforms.u_screenBounds.value.copy(v3);
 		velVarRef.current.material.uniforms.u_screenBounds.value.copy(v3);
 
 		// Inject ScreenPaint FBO texture if ready
