@@ -6,7 +6,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 
 const TELEMETRY_URL = import.meta.env.VITE_TELEMETRY_URL || 'https://mantle-swarm-engine.onrender.com';
-const POLL_INTERVAL = 5000; // 5s
 
 // ── Telemetry API response types ──
 interface SymbolTelemetry {
@@ -353,7 +352,6 @@ export function useTelemetry(): TelemetryData {
   const [data, setData] = useState<TelemetryData>(MOCK_DATA);
   const failCountRef = useRef(0);
   const lastDexFetchRef = useRef(0);
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // Exponential backoff: 5s → 10s → 30s → 60s → 5min (cap)
   const getBackoffInterval = useCallback((failures: number) => {
