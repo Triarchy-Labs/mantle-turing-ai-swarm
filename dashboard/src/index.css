@@ -359,7 +359,7 @@ html[data-theme="light"] .glass:hover {
 	pointer-events: none;
 }
 
-.mdx-blur-red {
+.mdx-blur-cyan {
 	position: absolute;
 	border-radius: 100%;
 	width: clamp(40rem, 60vw, 71.2rem);
@@ -367,7 +367,7 @@ html[data-theme="light"] .glass:hover {
 	top: 15rem;
 	left: 50%;
 	transform: translateX(-50%);
-	background: rgba(255, 76, 0, 0.4);
+	background: rgba(0, 245, 255, 0.2);
 	filter: blur(100px);
 	-webkit-filter: blur(100px);
 	z-index: 1;
@@ -381,7 +381,7 @@ html[data-theme="light"] .glass:hover {
 	top: 27rem;
 	left: 50%;
 	transform: translateX(-50%);
-	border: 1px solid #e45200;
+	border: 1px solid #00f5ff;
 	background: linear-gradient(180deg, rgba(0,0,0,0.3), transparent);
 	-webkit-mask-image: linear-gradient(to bottom, #fff 5%, transparent 20%);
 	mask-image: linear-gradient(to bottom, #fff 5%, transparent 20%);
