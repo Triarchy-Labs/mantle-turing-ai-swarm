@@ -561,8 +561,7 @@ export default function LiquidGlassShader({ theme = "dark" }: { theme?: "dark" |
 				position: "fixed",
 				inset: 0,
 				zIndex: -1,
-				pointerEvents: "auto",
-				touchAction: "none",
+				pointerEvents: "none",
 			}}
 		>
 			<Canvas dpr={cfg.dpr} camera={{ position: [0, 0, 5], fov: 45 }}>
