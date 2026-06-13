@@ -48,10 +48,20 @@ const techCards = [
 	{ label: 'Mantle L2', desc: 'Low-Fee On-Chain Settlement', angle: 300 },
 ];
 
-const MetricPill = ({ label, value, isActive = false }: { label: string, value: string, isActive?: boolean }) => {
+const MetricPill = ({ 
+	label, 
+	value, 
+	isActive = false, 
+	onHoverChange 
+}: { 
+	label: string, 
+	value: string, 
+	isActive?: boolean,
+	onHoverChange: (isHovered: boolean) => void 
+}) => {
 	const pillRef = useRef<HTMLButtonElement>(null);
 	const [circleStyle, setCircleStyle] = useState({ left: '50%', top: '50%' });
-	const [isHovered, setIsHovered] = useState(isActive);
+	const [isLocalHover, setIsLocalHover] = useState(false);
 
 	const getMousePos = (e: React.MouseEvent) => {
 		if (!pillRef.current) return { left: '50%', top: '50%' };
@@ -63,17 +73,19 @@ const MetricPill = ({ label, value, isActive = false }: { label: string, value: 
 
 	const handleMouseEnter = (e: React.MouseEvent) => {
 		setCircleStyle(getMousePos(e));
-		setIsHovered(true);
+		setIsLocalHover(true);
+		onHoverChange(true);
 	};
 
 	const handleMouseLeave = (e: React.MouseEvent) => {
 		setCircleStyle(getMousePos(e));
-		setIsHovered(false);
+		setIsLocalHover(false);
+		onHoverChange(false);
 	};
 
 	return (
 		<button 
-			className={`metric-pill-btn ${isActive ? 'active' : ''} ${isHovered ? 'hovered' : ''}`}
+			className={`metric-pill-btn ${isActive ? 'active' : ''} ${isLocalHover ? 'hovered' : ''}`}
 			ref={pillRef}
 			onMouseEnter={handleMouseEnter}
 			onMouseLeave={handleMouseLeave}
@@ -106,6 +118,7 @@ export default function App() {
 	const [activeStage, setActiveStage] = useState(10);
 	const [analysisRunning, setAnalysisRunning] = useState(false);
 	const [footerTime, setFooterTime] = useState(new Date().toLocaleTimeString('en-US', { hour12: false }));
+	const [globalPillHover, setGlobalPillHover] = useState(false);
 	const logRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
@@ -221,11 +234,11 @@ export default function App() {
 					className="metrics-pills" 
 					aria-label="Key Performance Metrics" 
 				>
-					<MetricPill label="PNL" value={telem.pnl} isActive={true} />
-					<MetricPill label="WIN RATE" value={telem.winRate} />
-					<MetricPill label="UPTIME" value={fmtUptime} />
-					<MetricPill label="TRADES" value={telem.totalTrades.toString()} />
-					<MetricPill label="CIRCUIT" value={telem.riskState?.circuit_breaker ?? 'N/A'} />
+					<MetricPill label="PNL" value={telem.pnl} isActive={!globalPillHover} onHoverChange={setGlobalPillHover} />
+					<MetricPill label="WIN RATE" value={telem.winRate} onHoverChange={setGlobalPillHover} />
+					<MetricPill label="UPTIME" value={fmtUptime} onHoverChange={setGlobalPillHover} />
+					<MetricPill label="TRADES" value={telem.totalTrades.toString()} onHoverChange={setGlobalPillHover} />
+					<MetricPill label="CIRCUIT" value={telem.riskState?.circuit_breaker ?? 'N/A'} onHoverChange={setGlobalPillHover} />
 				</section>
 
 				{/* ═══ BENTO GRID ═══ */}
