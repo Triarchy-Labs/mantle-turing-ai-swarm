@@ -216,7 +216,6 @@ export default function App() {
 					<div className="hero-blur-bg">
 						<div className="mdx-blur-cyan"></div>
 						<img className="mdx-glow-core" src="/assets/images/blurs/cyan-blur.webp" alt="Mantle AI Glow" />
-						<img className="mdx-blur-4" src="/assets/images/blurs/blur-black-4.webp" alt="decorative blur layer" />
 						<div className="mdx-arch-glass"></div>
 						<div className="mdx-arch-line"></div>
 					</div>
