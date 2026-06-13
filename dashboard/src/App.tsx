@@ -128,14 +128,32 @@ export default function App() {
 
 			{/* ═══ HEADER ═══ */}
 			<header className="header glass snake-border" role="banner" aria-label="Mantle AI Swarm Dashboard">
-				<div>
-					<div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-						<Layers size={22} className="green-sweep-text" />
-						<h1>MANTLE AI SWARM ACTIVITY MATRIX <span className="lusion-btn connect-state-true" style={{ fontSize: '11px', padding: '3px 8px', verticalAlign: 'middle', marginLeft: '10px' }}>V5.0 LIVE</span></h1>
+				<div className="header-left-container">
+					{/* Triarchy Labs Logo */}
+					<a href="https://github.com/Triarchy-Labs" target="_blank" rel="noopener noreferrer" className="triarchy-logo-link" title="Triarchy Labs GitHub">
+						<div className="triarchy-logo-glyph">⬡</div>
+						<div style={{ display: 'flex', flexDirection: 'column' }}>
+							<span className="triarchy-logo-text">TRIARCHY</span>
+							<span className="triarchy-logo-sub">LABS</span>
+						</div>
+					</a>
+
+					{/* Vertical Divider */}
+					<div className="header-divider" />
+
+					{/* App Title & Info */}
+					<div className="header-title-block">
+						<div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+							<Layers size={18} className="green-sweep-text" />
+							<h1 style={{ margin: 0, fontSize: 'inherit', letterSpacing: 'inherit', background: 'inherit', WebkitBackgroundClip: 'inherit', WebkitTextFillColor: 'inherit' }}>
+								MANTLE AI SWARM ACTIVITY MATRIX
+								<span className="lusion-btn connect-state-true" style={{ fontSize: '11px', padding: '3px 8px', verticalAlign: 'middle', marginLeft: '10px', display: 'inline-block' }}>V5.0 LIVE</span>
+							</h1>
+						</div>
+						<p style={{ marginTop: '4px', fontSize: '0.8rem', fontFamily: 'var(--font-mono)', opacity: 0.7 }}>
+							12 crates · 26,873 LOC · 24-stage pipeline · 8 Titan modules · Mantle Mainnet
+						</p>
 					</div>
-					<p style={{ marginTop: '6px', fontSize: '0.8rem', fontFamily: 'var(--font-mono)', opacity: 0.7 }}>
-						12 crates · 26,873 LOC · 24-stage pipeline · 8 Titan modules · Mantle Mainnet
-					</p>
 				</div>
 				<div className="toggle-group" style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
 					<div className={`lusion-btn ${telem.connected ? 'connect-state-true' : ''}`} style={{ cursor: 'default', fontSize: '11px' }}>
