@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Send, Loader2, MessageSquare } from 'lucide-react';
+import { Send, Loader2 } from 'lucide-react';
 import type { TelemetryData } from '../hooks/useTelemetry';
 
 interface Message {
@@ -176,16 +176,7 @@ export default function SwarmChat({ telem, orbState }: SwarmChatProps) {
     : '0 0 12px rgba(255,255,255,0.8)';
 
   return (
-    <div className="glass swarm-chat" id="swarm-chat-panel">
-      <div className="card-title">
-        <MessageSquare size={16} style={{ color: 'var(--accent)' }} /> SWARM AGENT
-        {isStreaming && (
-          <span style={{ marginLeft: 'auto', fontSize: '10px', color: 'var(--accent-hover)', fontFamily: 'var(--font-mono)', display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <Loader2 size={12} className="spin" /> STREAMING
-          </span>
-        )}
-      </div>
-
+    <div className="glass swarm-chat" id="swarm-chat-panel" style={{ height: '100%', border: 'none', background: 'transparent' }}>
       {/* Agent Orb — large, centered */}
       <div className={`swarm-chat-orb ${chatOrbState}`}>
         <div className="swarm-chat-orb-inner">
@@ -196,12 +187,6 @@ export default function SwarmChat({ telem, orbState }: SwarmChatProps) {
               transition: 'all 0.15s ease-out', boxShadow: eyeShadow,
               marginTop: blink ? 20 : 0,
             }}>
-              {chatOrbState !== 'working' && !blink && (
-                <div style={{
-                  width: 12, height: 12, background: '#040406', borderRadius: '50%',
-                  position: 'absolute', top: 'calc(50% - 6px)', left: 'calc(50% - 6px)',
-                }} />
-              )}
             </div>
           ))}
         </div>
