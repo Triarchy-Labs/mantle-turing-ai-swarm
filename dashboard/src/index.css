@@ -1176,62 +1176,63 @@ html[data-theme="light"] .lusion-btn-primary:hover {
 
 /* ── Input ── */
 .swarm-chat-input-wrap {
-	display: flex;
-	align-items: center;
-	gap: 0.8rem;
-	padding: 0.4rem 0.4rem 0.4rem 1.6rem;
+	position: relative;
 	margin-top: auto;
-	border: 1px solid rgba(255,255,255,0.1);
-	border-radius: 2.5rem;
-	background: rgba(255,255,255,0.02);
-	transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.swarm-chat-input-wrap:focus-within {
-	border-color: rgba(0,245,255,0.4);
-	box-shadow: 0 0 20px rgba(0,245,255,0.08);
+	box-sizing: border-box;
+	padding-top: 1.2rem;
 }
 
 .swarm-chat-input {
-	flex: 1;
+	width: 100%;
+	height: 4.175rem;
+	padding: 1.34rem;
+	padding-right: 4rem; /* Make room for the button */
+	border: 1px solid var(--border);
+	border-radius: 8px;
 	background: transparent;
-	border: none;
-	padding: 0;
-	color: var(--foreground);
+	font-size: 1.45rem;
 	font-family: var(--font-mono);
-	font-size: 1.1rem;
+	color: var(--foreground);
+	box-sizing: border-box;
 	resize: none;
 	outline: none;
-	min-height: 2rem;
-	height: 2rem;
-	line-height: 2rem;
-	align-self: center;
-	overflow: hidden;
+	transition: border-color 0.3s ease, box-shadow 0.3s ease;
+	line-height: 1.5;
+}
+
+.swarm-chat-input:focus {
+	border-color: rgba(0,245,255,0.4);
+	box-shadow: 0 0 20px rgba(0,245,255,0.08);
 }
 
 .swarm-chat-input::placeholder {
 	color: var(--foreground);
 	opacity: 0.3;
+	text-transform: uppercase;
 }
 
 .swarm-chat-send {
-	width: 3.2rem;
-	height: 3.2rem;
-	border-radius: 50%;
+	position: absolute;
+	top: calc(50% + 0.6rem); /* Adjust for padding-top on wrap */
+	right: 0px;
+	transform: translate(-50%, -50%);
+	width: 2.5rem;
+	height: 2.5rem;
+	border-radius: 999px;
 	border: none;
-	background: rgba(10,10,18,0.8);
-	color: var(--accent);
+	background-color: #ffffff;
+	color: #000000;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	cursor: pointer;
-	transition: all 0.3s ease;
-	flex-shrink: 0;
+	transition: background-color 0.15s ease-in-out, transform 0.3s ease;
+	box-sizing: border-box;
 }
 
 .swarm-chat-send:hover:not(:disabled) {
-	background: #000;
-	transform: scale(1.05);
+	background-color: rgba(255,255,255,0.8);
+	transform: translate(-50%, -50%) scale(1.05);
 }
 
 .swarm-chat-send:disabled {
@@ -1242,7 +1243,7 @@ html[data-theme="light"] .lusion-btn-primary:hover {
 .lusion-dot-icon {
 	width: 6px;
 	height: 6px;
-	background: #fff;
+	background: #000000;
 	border-radius: 50%;
 }
 
