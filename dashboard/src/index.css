@@ -375,33 +375,35 @@ html[data-theme="light"] .glass:hover {
 
 .mdx-arch-line {
 	position: absolute;
-	border-radius: 100%;
-	width: clamp(80rem, 113vw, 200rem);
-	height: clamp(40rem, 50vw, 65rem);
+	border-radius: 50%;
+	width: clamp(120rem, 150vw, 300rem);
+	height: clamp(120rem, 150vw, 300rem);
 	top: 42%;
 	left: 50%;
 	transform: translateX(-50%);
+	pointer-events: none;
 	border: 1px solid #00f5ff;
 	background: linear-gradient(180deg, rgba(0,0,0,0.3), transparent);
-	-webkit-mask-image: linear-gradient(to bottom, #fff 5%, transparent 50%);
-	mask-image: linear-gradient(to bottom, #fff 5%, transparent 50%);
+	-webkit-mask-image: linear-gradient(to bottom, #fff 2%, transparent 20%);
+	mask-image: linear-gradient(to bottom, #fff 2%, transparent 20%);
 	z-index: 2;
 }
 
 .mdx-arch-glass {
 	position: absolute;
-	border-radius: 100%;
-	width: clamp(80rem, 113vw, 200rem);
-	height: clamp(40rem, 50vw, 65rem);
+	border-radius: 50%;
+	width: clamp(120rem, 150vw, 300rem);
+	height: clamp(120rem, 150vw, 300rem);
 	top: 42%;
 	left: 50%;
 	transform: translateX(-50%);
+	pointer-events: none;
 	backdrop-filter: blur(50px);
 	-webkit-backdrop-filter: blur(50px);
 	border: 1px solid rgba(255, 255, 255, 0.05);
 	background: linear-gradient(180deg, rgba(0, 245, 255, 0.02), transparent);
-	-webkit-mask-image: linear-gradient(to bottom, #fff 5%, transparent 50%);
-	mask-image: linear-gradient(to bottom, #fff 5%, transparent 50%);
+	-webkit-mask-image: linear-gradient(to bottom, #fff 2%, transparent 20%);
+	mask-image: linear-gradient(to bottom, #fff 2%, transparent 20%);
 	z-index: 3;
 }
 
