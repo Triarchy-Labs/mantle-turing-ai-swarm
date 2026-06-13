@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Space+Grotesk:wght@300..700&family=JetBrains+Mono:wght@300;400;500&display=swap');
 
 /* Lusion postInvert: light theme inverts WebGL canvas (dump: ThemeController line 48903) */
 html[data-theme="light"] .global-bg-canvas {
@@ -13,8 +13,11 @@ html[data-theme="dark"] .global-bg-canvas {
 :root {
 	--background: #010204;
 	--foreground: #f4f4f5;
+	/* Aventa → Plus Jakarta Sans (closest match: geometric, wide weight range) */
 	--font-heading: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
 	--font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+	/* Orlean → Space Grotesk (closest match: geometric grotesque, interface labels) */
+	--font-ui: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
 	--font-mono: 'Space Mono', 'JetBrains Mono', monospace;
 
 	--space-nav-x: clamp(16px, 4vw, 40px);
@@ -37,15 +40,15 @@ html[data-theme="dark"] .global-bg-canvas {
 
 html[data-theme="light"] {
 	--background: #fafafa;
-	--foreground: #121214;
-	--border: rgba(0, 0, 0, 0.06);
-	--border-hover: rgba(0, 0, 0, 0.18);
-	--glass-bg: rgba(255, 255, 255, 0.82);
-	--glass-bg-hover: rgba(255, 255, 255, 0.92);
-	--accent: #0891b2;
-	--accent-hover: #0e7490;
-	--accent-glow: rgba(8, 145, 178, 0.15);
-	--accent-hover-glow: rgba(14, 116, 144, 0.15);
+	--foreground: #fcfcfd;
+	--border: rgba(255, 255, 255, 0.08);
+	--border-hover: rgba(255, 255, 255, 0.15);
+	--glass-bg: rgba(17, 24, 34, 0.95);
+	--glass-bg-hover: rgba(17, 24, 34, 0.98);
+	--accent: #00f5ff;
+	--accent-hover: #00d4ff;
+	--accent-glow: rgba(0, 245, 255, 0.2);
+	--accent-hover-glow: rgba(0, 212, 255, 0.2);
 }
 
 * {
@@ -100,12 +103,13 @@ body {
 }
 
 html[data-theme="light"] .glass {
-	box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
-	backdrop-filter: blur(12px) saturate(1.1);
-	-webkit-backdrop-filter: blur(12px) saturate(1.1);
+	box-shadow: 0 10px 36px rgba(16, 24, 32, 0.35), 0 0 0 1px rgba(16, 24, 32, 0.06);
+	backdrop-filter: none;
+	-webkit-backdrop-filter: none;
 }
 html[data-theme="light"] .glass:hover {
-	box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+	box-shadow: 0 14px 44px rgba(16, 24, 32, 0.45), 0 0 0 1px rgba(16, 24, 32, 0.08);
+	border-color: rgba(255, 255, 255, 0.12);
 }
 
 /* ============================================================
@@ -143,7 +147,7 @@ html[data-theme="light"] .glass:hover {
 }
 
 html[data-theme="light"] .header h1 {
-	background: linear-gradient(135deg, #111111 0%, #555555 100%);
+	background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.7) 100%);
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
 }
@@ -180,7 +184,8 @@ html[data-theme="light"] .header h1 {
 }
 
 html[data-theme="light"] .toggle-group {
-	background: rgba(255, 255, 255, 0.8);
+	background: rgba(17, 24, 34, 0.85);
+	border-color: rgba(255, 255, 255, 0.08);
 }
 
 .toggle-btn {
@@ -261,7 +266,7 @@ html[data-theme="light"] .toggle-group {
 }
 
 html[data-theme="light"] .metric .val {
-	background: linear-gradient(135deg, #111111 0%, #666666 100%);
+	background: linear-gradient(135deg, #ffffff 0%, #a1a1aa 100%);
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
 }
@@ -468,13 +473,13 @@ html[data-theme="light"] .event-row {
 	display: flex;
 	align-items: center;
 	gap: 10px;
-	font-family: var(--font-mono);
+	font-family: var(--font-ui);
 	border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 	padding-bottom: 10px;
 }
 
 html[data-theme="light"] .card-title {
-	border-bottom-color: rgba(0, 0, 0, 0.08);
+	border-bottom-color: rgba(255, 255, 255, 0.06);
 }
 
 /* ============================================================
@@ -567,7 +572,7 @@ html[data-theme="light"] .card-title {
   padding: 8px 24px;
   border-radius: 40px;
   cursor: pointer;
-  font-family: 'Space Mono', monospace;
+  font-family: var(--font-ui);
   font-size: 0.8rem;
   font-weight: bold;
   letter-spacing: 0.1em;
@@ -581,20 +586,21 @@ html[data-theme="light"] .card-title {
   border-color: rgba(0, 212, 255, 0.4);
 }
 
+/* Light theme: buttons stay dark since cards are dark */
 html[data-theme="light"] .lusion-btn {
-  background: #111;
-  color: #fff;
-  border: 1px solid #222;
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.7);
+  border: 1px solid rgba(255,255,255,0.15);
 }
 html[data-theme="light"] .lusion-btn:hover {
-  background: #000;
-  color: #fff;
-  border-color: #000;
+  background: rgba(0, 212, 255, 0.15);
+  color: #00f5ff;
+  border-color: rgba(0, 212, 255, 0.4);
 }
 html[data-theme="light"] .lusion-btn.connect-state-true {
-  background: #0e7490;
-  color: #fff;
-  border-color: #0e7490;
+  background: rgba(0, 212, 255, 0.1);
+  color: #00f5ff;
+  border-color: rgba(0, 212, 255, 0.5);
 }
 
 /* Primary cyan-filled pill */
@@ -617,15 +623,15 @@ html[data-theme="light"] .lusion-btn.connect-state-true {
   box-shadow: 0 0 60px rgba(0,245,255,0.4);
 }
 
+/* Light theme: primary button uses neon accent on dark cards */
 html[data-theme="light"] .lusion-btn-primary {
-  background: #111;
-  color: #fff;
-  border-color: #111;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  background: #00f5ff;
+  color: #000;
+  border-color: #00f5ff;
+  box-shadow: 0 0 40px rgba(0,245,255,0.25);
 }
 html[data-theme="light"] .lusion-btn-primary:hover {
-  background: #000;
-  box-shadow: 0 6px 30px rgba(0,0,0,0.25);
+  box-shadow: 0 0 60px rgba(0,245,255,0.4);
 }
 
 /* ============================================================
@@ -845,7 +851,7 @@ html[data-theme="light"] .lusion-btn-primary:hover {
 }
 
 html[data-theme="light"] .footer-bar {
-	background: rgba(255,255,255,0.9) !important;
+	background: rgba(17, 24, 34, 0.95) !important;
 }
 
 /* ── Collapsible panel ── */
@@ -873,42 +879,42 @@ html[data-theme="light"] .footer-bar {
 	opacity: 1;
 }
 
-/* ── Light theme: inline-style overrides ── */
+/* ── Light theme: dark card interiors ── */
 html[data-theme="light"] .log-terminal {
-	background: rgba(245,245,248,0.95) !important;
-	border-color: rgba(0,0,0,0.06) !important;
-	box-shadow: inset 0 1px 4px rgba(0,0,0,0.04) !important;
+	background: rgba(4,4,6,0.9) !important;
+	border-color: rgba(255,255,255,0.06) !important;
+	box-shadow: inset 0 2px 10px rgba(0,0,0,0.5) !important;
 }
 
 html[data-theme="light"] .pipeline-stage {
-	background: rgba(245,245,248,0.6) !important;
-	border-color: rgba(0,0,0,0.04) !important;
+	background: rgba(15,15,25,0.3) !important;
+	border-color: rgba(255,255,255,0.03) !important;
 }
 html[data-theme="light"] .pipeline-stage.active {
-	background: rgba(8,145,178,0.06) !important;
-	border-color: rgba(8,145,178,0.25) !important;
+	background: rgba(0,212,255,0.05) !important;
+	border-color: rgba(0,212,255,0.3) !important;
 }
 
 html[data-theme="light"] .market-row {
-	background: rgba(0,0,0,0.02) !important;
-	border-color: rgba(0,0,0,0.04) !important;
+	background: rgba(255,255,255,0.03) !important;
+	border-color: rgba(255,255,255,0.06) !important;
 }
 html[data-theme="light"] .market-row:hover {
-	background: rgba(8,145,178,0.04) !important;
-	border-color: rgba(8,145,178,0.2) !important;
+	background: rgba(0,212,255,0.04) !important;
+	border-color: rgba(0,212,255,0.2) !important;
 }
 
 html[data-theme="light"] .risk-row {
-	background: rgba(0,0,0,0.02) !important;
+	background: rgba(255,255,255,0.03) !important;
 }
 
 html[data-theme="light"] .debate-card {
-	background: rgba(0,0,0,0.02) !important;
-	border-color: rgba(0,0,0,0.04) !important;
+	background: rgba(10,10,18,0.4) !important;
+	border-color: rgba(255,255,255,0.04) !important;
 }
 
 html[data-theme="light"] .vignette-overlay {
-	background: radial-gradient(circle at center, transparent 50%, rgba(250,250,250,0.6) 100%) !important;
+	background: radial-gradient(circle at center, transparent 50%, rgba(250,250,250,0.4) 100%) !important;
 }
 
 /* ── On-chain link styling ── */
@@ -927,7 +933,7 @@ html[data-theme="light"] .vignette-overlay {
 	text-decoration: underline;
 }
 html[data-theme="light"] .onchain-link {
-	color: #0e7490;
+	color: #00f5ff;
 }
 
 /* ============================================================
