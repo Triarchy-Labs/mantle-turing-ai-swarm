@@ -215,7 +215,7 @@ export default function App() {
 				<section className="hero-section" aria-label="Dashboard Hero">
 					<div className="hero-blur-bg">
 						<div className="mdx-blur-cyan"></div>
-						<div className="mdx-glow-core"></div>
+						<img src="/assets/images/blurs/cyan-blur.webp" className="mdx-glow-core" alt="glow" />
 						<div className="mdx-arch-glass"></div>
 						<div className="mdx-arch-line"></div>
 					</div>

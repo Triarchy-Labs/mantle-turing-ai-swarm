@@ -363,29 +363,28 @@ html[data-theme="light"] .glass:hover {
 .mdx-blur-cyan {
 	position: absolute;
 	border-radius: 50%;
-	width: clamp(50rem, 70vw, 90rem);
-	height: clamp(30rem, 40vw, 50rem);
-	top: 27.1rem;
+	width: clamp(50rem, 60vw, 71.2rem);
+	height: clamp(50rem, 60vw, 71.2rem);
+	top: 14rem;
 	left: 50%;
-	transform: translate(-50%, -50%);
-	background: rgba(0, 245, 255, 0.15);
-	filter: blur(180px);
-	-webkit-filter: blur(180px);
+	transform: translateX(-50%);
+	background: rgba(0, 245, 255, 0.2);
+	filter: blur(250px);
+	-webkit-filter: blur(250px);
 	z-index: 1;
 }
 
 .mdx-glow-core {
 	position: absolute;
-	border-radius: 50%;
-	width: clamp(30rem, 50vw, 60rem);
-	height: clamp(10rem, 15vw, 20rem);
-	top: 27.1rem;
+	top: -18%;
 	left: 50%;
-	transform: translate(-50%, -50%);
+	transform: translateX(-50%);
+	width: min(100rem, 100vh);
+	height: min(100rem, 100vh);
+	object-fit: contain;
 	pointer-events: none;
-	background: rgba(0, 245, 255, 0.45);
-	filter: blur(80px);
-	-webkit-filter: blur(80px);
+	filter: hue-rotate(185deg) saturate(1.5) brightness(1.2);
+	-webkit-filter: hue-rotate(185deg) saturate(1.5) brightness(1.2);
 	z-index: 1;
 }
 
