@@ -542,13 +542,13 @@ html[data-theme="light"] .toggle-group {
 
 .metric-pill-btn {
 	position: relative;
-	padding: 2rem 6rem;
-	border-radius: 6rem;
+	padding: 1rem 3rem;
+	border-radius: 3rem;
 	border: 1px solid rgba(255, 255, 255, 0.1);
 	background: transparent;
 	color: #fcfcfd;
 	font-family: 'Aventa', var(--font-ui), sans-serif;
-	font-size: 2.5rem;
+	font-size: 1.25rem;
 	font-weight: 300;
 	cursor: pointer;
 	outline: none;
