@@ -391,7 +391,7 @@ html[data-theme="light"] .glass:hover {
 	-webkit-filter: hue-rotate(185deg);
 	opacity: 0.85;
 	z-index: 1;
-
+}
 
 .mdx-arch-line {
 	position: absolute;
