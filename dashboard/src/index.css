@@ -362,12 +362,12 @@ html[data-theme="light"] .glass:hover {
 .mdx-blur-cyan {
 	position: absolute;
 	border-radius: 50%;
-	width: clamp(60rem, 100vw, 150rem);
-	height: clamp(30rem, 50vw, 80rem);
+	width: clamp(50rem, 70vw, 100rem);
+	height: clamp(50rem, 70vw, 100rem);
 	top: 45%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	background: rgba(0, 245, 255, 0.15); /* Restored cool cyan color */
+	background: rgba(0, 245, 255, 0.2);
 	filter: blur(120px);
 	-webkit-filter: blur(120px);
 	z-index: 1;
@@ -381,10 +381,10 @@ html[data-theme="light"] .glass:hover {
 	top: 42%;
 	left: 50%;
 	transform: translateX(-50%);
-	border: 1px solid #00f5ff; /* Restored cyan arc */
+	border: 1px solid #00f5ff;
 	background: linear-gradient(180deg, rgba(0,0,0,0.3), transparent);
-	-webkit-mask-image: linear-gradient(to bottom, #fff 5%, transparent 25%);
-	mask-image: linear-gradient(to bottom, #fff 5%, transparent 25%);
+	-webkit-mask-image: linear-gradient(to bottom, #fff 5%, transparent 50%);
+	mask-image: linear-gradient(to bottom, #fff 5%, transparent 50%);
 	z-index: 2;
 }
 
@@ -400,8 +400,8 @@ html[data-theme="light"] .glass:hover {
 	-webkit-backdrop-filter: blur(50px);
 	border: 1px solid rgba(255, 255, 255, 0.05);
 	background: linear-gradient(180deg, rgba(0, 245, 255, 0.02), transparent);
-	-webkit-mask-image: linear-gradient(to bottom, #fff 5%, transparent 20%);
-	mask-image: linear-gradient(to bottom, #fff 5%, transparent 20%);
+	-webkit-mask-image: linear-gradient(to bottom, #fff 5%, transparent 50%);
+	mask-image: linear-gradient(to bottom, #fff 5%, transparent 50%);
 	z-index: 3;
 }
 
