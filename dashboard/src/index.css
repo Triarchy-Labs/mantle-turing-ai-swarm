@@ -1031,8 +1031,8 @@ html[data-theme="light"] .lusion-btn-primary:hover {
 }
 
 .swarm-chat-orb.thinking .swarm-chat-orb-inner {
-	border-color: rgba(168,85,247,0.6);
-	box-shadow: 0 0 4rem rgba(168,85,247,0.2), 0 0 8rem rgba(168,85,247,0.08), inset 0 0 3.2rem rgba(168,85,247,0.05);
+	border-color: rgba(0,245,255,0.6);
+	box-shadow: 0 0 4rem rgba(0,245,255,0.2), 0 0 8rem rgba(0,245,255,0.08), inset 0 0 3.2rem rgba(0,245,255,0.05);
 	animation: orbPulse 1.5s ease-in-out infinite;
 }
 

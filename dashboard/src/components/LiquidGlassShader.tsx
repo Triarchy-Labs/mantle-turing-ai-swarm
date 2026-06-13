@@ -224,7 +224,6 @@ void main() {
   // Life decay check for respawn
   positionLife.w -= u_deltaTime * u_simDieSpeed * 0.01;
   if (positionLife.w < 0.0) {
-    vec3 h = hash33(vec3(uv, u_time));
     velInfo.w = 0.0;
   }
 
