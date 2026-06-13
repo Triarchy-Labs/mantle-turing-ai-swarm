@@ -159,8 +159,7 @@ export default function App() {
 						<img src={blurBlack4} className="hero-blur-glass" alt="" />
 					</div>
 					<div className="hero-content">
-						<div className="hero-title-wrapper" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2rem', marginBottom: '2.2rem' }}>
-							<Layers className="green-sweep-text hero-title-icon" />
+						<div className="hero-title-wrapper" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '2.2rem' }}>
 							<h1 className="hero-title" style={{ margin: 0 }}>
 								MANTLE AI SWARM
 							</h1>
