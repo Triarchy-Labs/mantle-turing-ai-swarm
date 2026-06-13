@@ -100,7 +100,7 @@ export default function App() {
 	useEffect(() => {
 		const states: Array<'idle' | 'thinking' | 'working'> = ['idle', 'thinking', 'working'];
 		let i = 0;
-		const t = setInterval(() => { i = (i + 1) % 3; setOrbState(states[i]); }, 5000);
+		const t = setInterval(() => { i = (i + 1) % 3; setOrbState(states[i]); }, 10000);
 		return () => clearInterval(t);
 	}, []);
 
@@ -143,7 +143,7 @@ export default function App() {
 		<>
 			{/* GPGPU Particle Background */}
 			<WebGLErrorBoundary fallback={null}>
-				<LiquidGlassShader theme={theme} mode={analysisRunning || (telem.connected && telem.pipelineStage > 1) || orbState !== 'idle' ? 1 : 0} />
+				<LiquidGlassShader theme={theme} mode={analysisRunning ? 2 : ((telem.connected && telem.pipelineStage >= 22) || orbState === 'working' ? 1 : 0)} />
 			</WebGLErrorBoundary>
 			<CustomCursor />
 
@@ -250,173 +250,202 @@ export default function App() {
 					</div>
 				</section>
 
-				{/* ═══ MAIN GRID: 2 Large Cards ═══ */}
-				<div className="dashboard-grid">
-					{/* LIVE MARKET MONITORING CARD */}
-					<div className="project-grid-item">
-						<article className="project-grid-card" role="region" aria-label="Live Market Data">
-							<div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '1rem', overflowY: 'auto' }}>
+				{/* ═══ BENTO GRID ═══ */}
+				<div className="bento-grid">
+					{/* LIVE MARKET MONITORING CARD (Row 1) */}
+					<article className="bento-card shape-akari" role="region" aria-label="Live Market Data">
+						<div className="lusion-dot"></div>
+						<div className="lusion-top-meta">
+							<div>EXP 001</div>
+							<div>MARKET</div>
+						</div>
+						<div className="bento-content">
+							<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
 								{telem.markets.map(m => (
 									<div key={m.sym} className="market-row" style={{ padding: '1.5rem 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-										<div>
-											<div style={{ fontSize: '1.4rem', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>{m.sym}</div>
-											<div style={{ fontSize: '0.85rem', color: 'var(--foreground)', opacity: 0.5 }}>Vol 24h: {m.vol}</div>
-										</div>
-										<div style={{ fontSize: '1.8rem', fontWeight: 700, fontFamily: 'var(--font-mono)', color: 'var(--accent)' }}>{m.price}</div>
-										<div className={`badge ${m.up ? 'ok' : 'fail'}`} style={{ fontSize: '1rem', padding: '0.5rem 1rem' }}>{m.change}</div>
-										<div className={`lusion-btn ${m.up ? 'connect-state-true' : ''}`} style={{ fontSize: '0.8rem', padding: '0.4rem 1rem' }}>
-											{m.verdict}<br /><span style={{ fontSize: '0.75rem', opacity: 0.7 }}>{m.conf}%</span>
+										<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+											<div>
+												<div style={{ fontSize: '1.4rem', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>{m.sym}</div>
+												<div style={{ fontSize: '0.85rem', color: 'var(--foreground)', opacity: 0.5 }}>Vol 24h: {m.vol}</div>
+											</div>
+											<div style={{ textAlign: 'right' }}>
+												<div style={{ fontSize: '1.8rem', fontWeight: 700, fontFamily: 'var(--font-mono)', color: 'var(--accent)' }}>{m.price}</div>
+												<div className={`badge ${m.up ? 'ok' : 'fail'}`} style={{ fontSize: '1rem', padding: '0.2rem 0.6rem', marginTop: '0.4rem' }}>{m.change}</div>
+											</div>
+											<div className={`lusion-btn ${m.up ? 'connect-state-true' : ''}`} style={{ fontSize: '0.8rem', padding: '0.4rem 1rem' }}>
+												{m.verdict}<br /><span style={{ fontSize: '0.75rem', opacity: 0.7 }}>{m.conf}%</span>
+											</div>
 										</div>
 									</div>
 								))}
 							</div>
-						</article>
-						<div className="project-grid-service">DATA / ORACLE / FEED</div>
-						<div className="project-grid-link">
-							<span className="project-grid-link-text">Live Market</span>
-							<TrendingUp className="project-grid-link-icon" />
 						</div>
-					</div>
-
-					{/* SWARM AGENT CHAT CARD */}
-					<div className="project-grid-item">
-						<article className="project-grid-card" role="region" aria-label="Swarm Agent Chat">
-							<div style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%' }}>
-								<SwarmChat telem={telem} orbState={orbState} />
-							</div>
-						</article>
-						<div className="project-grid-service">AI / LLM / EXECUTION</div>
-						<div className="project-grid-link">
-							<span className="project-grid-link-text">Swarm Agent</span>
-							<MessageSquare className="project-grid-link-icon" />
+						<div className="lusion-bottom-info">
+							<h2 className="lusion-card-title">Live Market Feed</h2>
+							<div className="lusion-card-tags">DATA • ORACLE • ACTIVE</div>
 						</div>
-					</div>
-				</div>
+					</article>
 
-				{/* ═══ SECONDARY GRID: Remaining Components ═══ */}
-				<div className="dashboard-grid" style={{ gridTemplateColumns: '1fr', padding: '0 4rem', gap: '2rem' }}>
-					<div className="dashboard-col-left" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
+					{/* SWARM AGENT CHAT CARD (Row 2, Left) */}
+					<article className="bento-card shape-choochoo" role="region" aria-label="Swarm Agent Chat">
+						<div className="lusion-dot"></div>
+						<div className="lusion-top-meta">
+							<div>EXP 002</div>
+							<div>SWARM</div>
+						</div>
+						<div className="bento-content" style={{ padding: '0 1vw' }}>
+							<SwarmChat telem={telem} orbState={orbState} />
+						</div>
+						<div className="lusion-bottom-info">
+							<h2 className="lusion-card-title">Swarm Agent AI</h2>
+							<div className="lusion-card-tags">AI • LLM • EXECUTION</div>
+						</div>
+					</article>
 
-						{/* SYNAPTIC DECISION PIPELINE */}
-						<div className="glass events-section" role="region" aria-label="Decision Pipeline">
-							<div className="card-title collapsible-header" onClick={() => setExpandedPipeline(!expandedPipeline)} style={{ cursor: 'pointer', display: 'flex', justifyContent: 'space-between' }}>
-								<div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}><Zap size={16} style={{ color: 'var(--accent-hover)' }} /> SYNAPTIC DECISION PIPELINE</div>
-								<span style={{ fontSize: '0.7rem', fontFamily: 'var(--font-mono)', opacity: 0.5 }}>{expandedPipeline ? '▼ COLLAPSE' : `▶ ${effectiveStage}/24 — EXPAND`}</span>
+					{/* RISK MATRIX ENGINE (Row 2, Right) */}
+					<article className="bento-card shape-ion align-right" role="region">
+						<div className="lusion-dot"></div>
+						<div className="lusion-top-meta">
+							<div>EXP 004</div>
+							<div>RISK</div>
+						</div>
+						<div className="bento-content" style={{ fontFamily: 'var(--font-mono)', fontSize: '1rem', display: 'flex', flexDirection: 'column', gap: '2vw' }}>
+							<div style={{ display: 'flex', justifyContent: 'space-between' }}>
+								<span style={{ opacity: 0.5 }}>Dynamic Leverage</span>
+								<span style={{ color: 'var(--accent)', fontWeight: 700, fontSize: '1.4rem' }}>{telem.riskState?.dynamic_leverage.toFixed(1) ?? '—'}×</span>
 							</div>
-							{/* Compact progress bar always visible */}
-							<div style={{ display: 'flex', gap: '2px', marginBottom: expandedPipeline ? '0.8vw' : '0' }}>
+							<div style={{ display: 'flex', justifyContent: 'space-between' }}>
+								<span style={{ opacity: 0.5 }}>ATR Estimate</span>
+								<span style={{ color: 'var(--accent-hover)', fontSize: '1.4rem' }}>{((telem.riskState?.atr_estimate ?? 0) * 100).toFixed(2)}%</span>
+							</div>
+							<div style={{ display: 'flex', justifyContent: 'space-between' }}>
+								<span style={{ opacity: 0.5 }}>Macro Penalty</span>
+								<span style={{ color: telem.riskState?.macro_penalty ? '#ff6b6b' : '#00ff88', fontSize: '1.4rem' }}>{telem.riskState?.macro_penalty.toFixed(2) ?? '0.00'}</span>
+							</div>
+							<div style={{ display: 'flex', justifyContent: 'space-between' }}>
+								<span style={{ opacity: 0.5 }}>Circuit Breaker</span>
+								<span style={{ color: telem.riskState?.circuit_breaker === 'GREEN' ? '#00ff88' : '#ff6b6b', fontWeight: 700, fontSize: '1.4rem' }}>● {telem.riskState?.circuit_breaker ?? 'N/A'}</span>
+							</div>
+							<div style={{ marginTop: 'auto' }}>
+								<div style={{ fontSize: '0.8rem', opacity: 0.4, marginBottom: '0.5vw' }}>LEVERAGE UTILIZATION</div>
+								<div style={{ height: '8px', background: 'rgba(255,255,255,0.05)', borderRadius: '4px', overflow: 'hidden' }}>
+									<div style={{ height: '100%', width: `${((telem.riskState?.dynamic_leverage ?? 5) / 20) * 100}%`, background: 'linear-gradient(90deg, #00ff88, #00d4ff)', borderRadius: '4px', transition: 'width 0.5s ease' }} />
+								</div>
+							</div>
+						</div>
+						<div className="lusion-bottom-info">
+							<h2 className="lusion-card-title">Risk Matrix</h2>
+							<div className="lusion-card-tags">SAFETY • LIMITS • GUARDS</div>
+						</div>
+					</article>
+
+					{/* SYNAPTIC DECISION PIPELINE (Row 4) */}
+					<article className="bento-card shape-hero events-section" role="region" aria-label="Decision Pipeline">
+						<div className="lusion-dot"></div>
+						<div className="lusion-top-meta">
+							<div>EXP 003</div>
+							<div>PIPELINE</div>
+						</div>
+						<div className="bento-content" style={{ justifyContent: 'center' }}>
+							<div className="card-title collapsible-header" onClick={() => setExpandedPipeline(!expandedPipeline)} style={{ cursor: 'pointer', display: 'flex', justifyContent: 'space-between', marginBottom: '2vw' }}>
+								<div style={{ display: 'flex', alignItems: 'center', gap: '1vw' }}><Zap size={20} style={{ color: 'var(--accent-hover)' }} /> <span style={{ fontSize: '1.2rem', letterSpacing: '0.1em' }}>SYNAPTIC DECISION PIPELINE</span></div>
+								<span style={{ fontSize: '0.8rem', fontFamily: 'var(--font-mono)', opacity: 0.5 }}>{expandedPipeline ? '▼ COLLAPSE' : `▶ ${effectiveStage}/24 — EXPAND`}</span>
+							</div>
+							<div style={{ display: 'flex', gap: '4px', marginBottom: expandedPipeline ? '2vw' : '0' }}>
 								{pipelineStages.map((_, idx) => (
-									<div key={idx} style={{ flex: 1, height: '4px', borderRadius: '2px', background: idx < effectiveStage ? 'var(--accent-hover)' : idx === effectiveStage ? 'var(--accent)' : 'rgba(255,255,255,0.06)', transition: 'background 0.3s ease' }} />
+									<div key={idx} style={{ flex: 1, height: '8px', borderRadius: '4px', background: idx < effectiveStage ? 'var(--accent-hover)' : idx === effectiveStage ? 'var(--accent)' : 'rgba(255,255,255,0.06)', transition: 'background 0.3s ease' }} />
 								))}
 							</div>
 							<div className={`collapsible-content ${expandedPipeline ? 'expanded' : 'collapsed'}`} style={{ display: expandedPipeline ? 'block' : 'none' }}>
-								<div role="list" style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+								<div role="list" style={{ display: 'flex', flexWrap: 'wrap', gap: '1vw', marginTop: '1vw' }}>
 									{pipelineStages.map((s, idx) => {
 										const st = idx < effectiveStage ? 'done' : idx === effectiveStage ? 'active' : 'pending';
 										return (
-											<div key={s.n} role="listitem" className={`pipeline-stage ${st === 'active' ? 'active' : ''}`}>
-												<div style={{ display: 'flex', gap: '8px' }}>
+											<div key={s.n} role="listitem" className={`pipeline-stage ${st === 'active' ? 'active' : ''}`} style={{ flex: '1 1 calc(25% - 1vw)' }}>
+												<div style={{ display: 'flex', gap: '8px', fontSize: '0.9rem' }}>
 													<span style={{ color: st === 'active' ? 'var(--accent-hover)' : 'var(--foreground)', opacity: st === 'pending' ? 0.3 : 0.5 }}>[{s.n}]</span>
-													<span style={{ color: st === 'done' ? 'var(--accent-hover)' : st === 'active' ? '#fff' : 'var(--foreground)', opacity: st === 'pending' ? 0.4 : 1, fontWeight: st === 'active' ? 700 : 400 }}>{s.label}</span>
+													<span style={{ color: st === 'done' ? 'var(--accent-hover)' : st === 'active' ? '#fff' : 'var(--foreground)', opacity: st === 'pending' ? 0.4 : 1, fontWeight: st === 'active' ? 700 : 400, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{s.label}</span>
 												</div>
-												<span style={{ fontSize: '0.65rem', textTransform: 'uppercase', fontWeight: 700, color: st === 'done' ? 'var(--accent-hover)' : st === 'active' ? 'var(--accent)' : 'var(--foreground)', opacity: st === 'pending' ? 0.3 : 1 }}>
-													{st === 'done' ? '✓' : st === 'active' ? '◎' : '·'}
-												</span>
 											</div>
 										);
 									})}
 								</div>
 							</div>
 						</div>
+						<div className="lusion-bottom-info">
+							<h2 className="lusion-card-title">Execution State</h2>
+							<div className="lusion-card-tags">STATE • DAG • PROCESS</div>
+						</div>
+					</article>
 
-						{/* RISK + RAMP + POSITIONS GROUP */}
-						<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '24px' }}>
-							{/* Risk Matrix Panel */}
-							<div className="glass" style={{ padding: '20px' }}>
-								<div className="card-title"><Shield size={16} style={{ color: '#00ff88' }} /> RISK MATRIX ENGINE</div>
-								<div style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-									<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-										<span style={{ opacity: 0.5 }}>Dynamic Leverage</span>
-										<span style={{ color: 'var(--accent)', fontWeight: 700 }}>{telem.riskState?.dynamic_leverage.toFixed(1) ?? '—'}×</span>
-									</div>
-									<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-										<span style={{ opacity: 0.5 }}>ATR Estimate</span>
-										<span style={{ color: 'var(--accent-hover)' }}>{((telem.riskState?.atr_estimate ?? 0) * 100).toFixed(2)}%</span>
-									</div>
-									<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-										<span style={{ opacity: 0.5 }}>Macro Penalty</span>
-										<span style={{ color: telem.riskState?.macro_penalty ? '#ff6b6b' : '#00ff88' }}>{telem.riskState?.macro_penalty.toFixed(2) ?? '0.00'}</span>
-									</div>
-									<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-										<span style={{ opacity: 0.5 }}>Circuit Breaker</span>
-										<span style={{ color: telem.riskState?.circuit_breaker === 'GREEN' ? '#00ff88' : '#ff6b6b', fontWeight: 700 }}>● {telem.riskState?.circuit_breaker ?? 'N/A'}</span>
-									</div>
-									{/* Leverage bar */}
-									<div style={{ marginTop: '8px' }}>
-										<div style={{ fontSize: '10px', opacity: 0.4, marginBottom: '4px' }}>LEVERAGE UTILIZATION</div>
-										<div style={{ height: '6px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
-											<div style={{ height: '100%', width: `${((telem.riskState?.dynamic_leverage ?? 5) / 20) * 100}%`, background: 'linear-gradient(90deg, #00ff88, #00d4ff)', borderRadius: '3px', transition: 'width 0.5s ease' }} />
-										</div>
-									</div>
-								</div>
-							</div>
-
-							{/* AutoRamp Capital Phase */}
-							<div className="glass">
-								<div className="card-title"><BarChart3 size={16} style={{ color: 'var(--accent)' }} /> AUTO-RAMP CAPITAL SCALING</div>
-								<div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.6vw' }}>
-									<div className="autoramp-phase-card">
-										<div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--accent)' }}>{telem.rampState?.phase_label ?? 'SEED'}</div>
-										<div style={{ fontSize: '0.7rem', opacity: 0.5, marginTop: '0.2vw' }}>Phase {telem.rampState?.current_phase ?? 0}/4</div>
-									</div>
-									{/* Phase progress bar */}
-									<div style={{ display: 'flex', gap: '3px' }}>
-										{['SEED', 'SPROUT', 'GROWTH', 'MATURE', 'APEX'].map((label, i) => (
-											<div key={label} style={{ flex: 1, height: '4px', borderRadius: '2px', background: i <= (telem.rampState?.current_phase ?? 0) ? 'var(--accent)' : 'rgba(255,255,255,0.05)', transition: 'background 0.3s ease' }} title={label} />
-										))}
-									</div>
-									<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-										<span style={{ opacity: 0.5 }}>Max Position</span>
-										<span style={{ color: 'var(--accent-hover)', fontWeight: 700 }}>{((telem.rampState?.max_position_pct ?? 0.1) * 100).toFixed(0)}%</span>
-									</div>
-									<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-										<span style={{ opacity: 0.5 }}>Kill-Switch Threshold</span>
-										<span style={{ color: '#ff6b6b' }}>{telem.rampState?.daily_loss_kill_pct?.toFixed(0) ?? '3'}% daily loss</span>
-									</div>
-								</div>
-							</div>
-
-							{/* Open Positions */}
-							<div className="glass">
-								<div className="card-title"><Target size={16} style={{ color: 'var(--accent-hover)' }} /> OPEN POSITIONS ({telem.openPositions.length})</div>
-								{telem.openPositions.length === 0 ? (
-									<div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', opacity: 0.3, textAlign: 'center', padding: '2vw 0' }}>NO OPEN POSITIONS</div>
-								) : (
-									<div style={{ display: 'flex', flexDirection: 'column', gap: '0.6vw' }}>
-										{telem.openPositions.map((pos, i) => (
-											<div key={i} className="position-row">
-												<div>
-													<span style={{ fontWeight: 700, marginRight: '8px' }}>{pos.symbol}</span>
-													<span className={`badge ${pos.side === 'Buy' ? 'ok' : 'fail'}`} style={{ fontSize: '0.65rem' }}>{pos.side}</span>
-												</div>
-												<div style={{ display: 'flex', gap: '1vw', opacity: 0.7 }}>
-													<span>${pos.entry_price.toFixed(4)}</span>
-													<span>{Math.floor(pos.hold_duration_secs / 60)}m</span>
-													<span style={{ color: pos.trailing_stop > 0 ? '#00ff88' : 'rgba(255,255,255,0.3)' }}>SL: ${pos.trailing_stop.toFixed(4)}</span>
-												</div>
+					{/* OPEN POSITIONS (Row 3, Left) */}
+					<article className="bento-card shape-choochoo" role="region">
+						<div className="lusion-dot"></div>
+						<div className="lusion-top-meta">
+							<div>EXP 006</div>
+							<div>PORTFOLIO</div>
+						</div>
+						<div className="bento-content">
+							{telem.openPositions.length === 0 ? (
+								<div style={{ fontFamily: 'var(--font-mono)', fontSize: '1rem', opacity: 0.3, textAlign: 'center', margin: 'auto' }}>NO OPEN POSITIONS</div>
+							) : (
+								<div style={{ display: 'flex', flexDirection: 'column', gap: '1.5vw' }}>
+									{telem.openPositions.map((pos, i) => (
+										<div key={i} className="position-row" style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '1vw', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+											<div>
+												<div style={{ fontWeight: 700, fontSize: '1.2rem', marginBottom: '0.5vw' }}>{pos.symbol}</div>
+												<span className={`badge ${pos.side === 'Buy' ? 'ok' : 'fail'}`} style={{ fontSize: '0.8rem' }}>{pos.side}</span>
 											</div>
-										))}
-									</div>
-								)}
+											<div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', opacity: 0.7, fontFamily: 'var(--font-mono)' }}>
+												<span style={{ fontSize: '1.1rem' }}>${pos.entry_price.toFixed(4)}</span>
+												<span style={{ color: pos.trailing_stop > 0 ? '#00ff88' : 'rgba(255,255,255,0.3)', fontSize: '0.8rem', marginTop: '0.5vw' }}>SL: ${pos.trailing_stop.toFixed(4)}</span>
+											</div>
+										</div>
+									))}
+								</div>
+							)}
+						</div>
+						<div className="lusion-bottom-info">
+							<h2 className="lusion-card-title">Positions ({telem.openPositions.length})</h2>
+							<div className="lusion-card-tags">HOLDINGS • ACTIVE</div>
+						</div>
+					</article>
+
+					{/* AUTO-RAMP CAPITAL SCALING (Row 3, Right) */}
+					<article className="bento-card shape-ion align-right" role="region">
+						<div className="lusion-dot"></div>
+						<div className="lusion-top-meta">
+							<div>EXP 005</div>
+							<div>SCALING</div>
+						</div>
+						<div className="bento-content" style={{ fontFamily: 'var(--font-mono)', display: 'flex', flexDirection: 'column', gap: '2vw', justifyContent: 'center' }}>
+							<div style={{ textAlign: 'center' }}>
+								<div style={{ fontSize: '3vw', fontWeight: 800, color: 'var(--accent)' }}>{telem.rampState?.phase_label ?? 'SEED'}</div>
+								<div style={{ fontSize: '1rem', opacity: 0.5, marginTop: '1vw' }}>Phase {telem.rampState?.current_phase ?? 0}/4</div>
+							</div>
+							<div style={{ display: 'flex', gap: '6px', marginTop: '2vw' }}>
+								{['SEED', 'SPROUT', 'GROWTH', 'MATURE', 'APEX'].map((label, i) => (
+									<div key={label} style={{ flex: 1, height: '6px', borderRadius: '3px', background: i <= (telem.rampState?.current_phase ?? 0) ? 'var(--accent)' : 'rgba(255,255,255,0.05)', transition: 'background 0.3s ease' }} title={label} />
+								))}
 							</div>
 						</div>
+						<div className="lusion-bottom-info">
+							<h2 className="lusion-card-title">Auto-Ramp</h2>
+							<div className="lusion-card-tags">CAPITAL • GROWTH</div>
+						</div>
+					</article>
 
-						{/* LOG STREAM */}
-						<div className="glass" role="log" aria-live="polite" aria-label="Synaptic Activity Log">
-							<div className="card-title"><Terminal size={16} /> SYNAPTIC ACTIVITY LOG</div>
-							<div ref={logRef} className="log-terminal">
+					{/* LOG STREAM (Row 5) */}
+					<article className="bento-card shape-akari align-right" role="log" aria-live="polite">
+						<div className="lusion-dot"></div>
+						<div className="lusion-top-meta">
+							<div>EXP 007</div>
+							<div>SYSTEM LOG</div>
+						</div>
+						<div className="bento-content">
+							<div ref={logRef} className="log-terminal" style={{ height: '100%' }}>
 								{telem.logs.map((l, i) => (
-									<div key={i} style={{ display: 'flex', gap: '12px', color: 'var(--foreground)', opacity: 0.7, borderBottom: '1px solid rgba(255,255,255,0.01)', padding: '2px 0' }}>
+									<div key={i} style={{ display: 'flex', gap: '1vw', color: 'var(--foreground)', opacity: 0.7, borderBottom: '1px solid rgba(255,255,255,0.01)', padding: '0.8vw 0', fontSize: '0.9rem', fontFamily: 'var(--font-mono)' }}>
 										<span style={{ color: 'var(--foreground)', opacity: 0.3, minWidth: '90px' }}>{logTime(l.off)}</span>
 										<span style={{ color: l.type === 'success' ? 'var(--accent-hover)' : 'var(--accent)', fontWeight: 700, minWidth: '100px' }}>{l.tag}</span>
 										<span>{l.msg}</span>
@@ -424,110 +453,121 @@ export default function App() {
 								))}
 							</div>
 						</div>
-
-						{/* CONTROL BAR */}
-						<div className="control-bar">
-							<button className="lusion-btn-primary" onClick={handleLaunch} aria-label="Launch Synaptic Analysis">
-								{analysisRunning ? '[ ◎ ANALYSIS RUNNING... ]' : '[ LAUNCH SYNAPTIC ANALYSIS ]'}
-							</button>
-							<button className="lusion-btn connect-btn-hover-fx" onClick={() => window.open(`https://explorer.mantle.xyz/address/0x1150f09ae885e6E7BcC0cb38feDd200d7f580008`, '_blank')} aria-label="View On-Chain Agent NFT"><span>[ VIEW AGENT NFT ON-CHAIN ]</span></button>
+						<div className="lusion-bottom-info">
+							<h2 className="lusion-card-title">Activity Stream</h2>
+							<div className="lusion-card-tags">EVENTS • LOGS • TRACE</div>
 						</div>
+					</article>
 
-					</div>
-
-					{/* ── RIGHT COLUMN ── */}
-					<div className="dashboard-col-right">
-
-						{/* SYNAPTIC CORE — 3D Brain */}
-						{/* SYNAPTIC CORE — 3D Brain */}
-						<div className="glass" style={{ position: 'relative', overflow: 'visible' }}>
-							<div className="card-title"><Eye size={16} style={{ color: 'var(--accent)' }} /> SYNAPTIC CORE — SWARM BRAIN</div>
-
-							{/* Orbiting tech cards */}
-							<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.6vw', marginTop: '0.8vw' }}>
-								{techCards.map(tc => (
-									<div key={tc.label} className="snake-border" style={{
-										padding: '0.6vw 0.8vw', background: 'rgba(0,0,0,0.4)', borderRadius: '0.5rem',
-										border: '1px solid var(--border)', backdropFilter: 'blur(8px)',
-										fontSize: '0.7rem', fontFamily: 'var(--font-mono)', transition: 'all 0.3s ease',
-									}}>
-										<div style={{ color: 'var(--accent-hover)', fontWeight: 700, marginBottom: '2px' }}>{tc.label}</div>
-										<div style={{ color: 'var(--foreground)', opacity: 0.6 }}>{tc.desc}</div>
-									</div>
-								))}
-							</div>
-
+					{/* SYNAPTIC DECISION ARBITRAGE (Row 7) */}
+					<article className="bento-card shape-ion" role="region">
+						<div className="lusion-dot"></div>
+						<div className="lusion-top-meta">
+							<div>EXP 009</div>
+							<div>ARBITRAGE</div>
 						</div>
-
-						{/* SYNAPTIC DECISION ARBITRAGE */}
-						<div className="glass">
-							<div className="card-title"><Network size={16} style={{ color: 'var(--accent)' }} /> SYNAPTIC DECISION ARBITRAGE</div>
-							<div style={{ display: 'flex', flexDirection: 'column', gap: '0.6vw' }}>
+						<div className="bento-content">
+							<div style={{ display: 'flex', flexDirection: 'column', gap: '1.5vw' }}>
 								{telem.debates.map((d, i) => (
 									<div key={i} className="debate-card" style={{
 										background: 'rgba(10,10,18,0.4)', border: '1px solid rgba(255,255,255,0.03)',
-										borderLeft: `3px solid ${d.color}`, borderRadius: '0.5rem', padding: '0.6vw 0.8vw', fontSize: '0.75rem', lineHeight: 1.5,
+										borderLeft: `4px solid ${d.color}`, borderRadius: '1vw', padding: '1.5vw', lineHeight: 1.5,
 									}}>
-										<div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px', fontFamily: 'var(--font-mono)', fontSize: '0.65rem', fontWeight: 700 }}>
+										<div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1vw', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', fontWeight: 700 }}>
 											<span style={{ color: d.color }}>{d.agent}</span>
 											<span style={{ color: 'var(--foreground)', opacity: 0.3 }}>{d.time}</span>
 										</div>
-										<div style={{ color: 'var(--foreground)', opacity: 0.8, fontSize: '0.7rem' }}>{d.msg}</div>
+										<div style={{ color: 'var(--foreground)', opacity: 0.8, fontSize: '1rem' }}>{d.msg}</div>
 									</div>
 								))}
 							</div>
 						</div>
-
-						{/* ON-CHAIN ACTIVITY */}
-						<div className="glass">
-							<div className="card-title"><Globe size={16} style={{ color: 'var(--accent-hover)' }} /> ON-CHAIN ACTIVITY (MANTLE L2)</div>
-							<div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.6vw' }}>
-								{/* Verified Contracts */}
-								<div style={{ padding: '0.6vw 0.8vw', background: 'rgba(0,255,136,0.04)', border: '1px solid rgba(0,255,136,0.12)', borderRadius: '0.5rem' }}>
-									<div style={{ fontSize: '0.65rem', opacity: 0.5, marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.1em' }}>✓ Sourcify Verified Contracts</div>
-									<a href="https://explorer.mantle.xyz/address/0xFA0b5036aF9770B370B33CeBBb42d1E626338383" target="_blank" rel="noopener noreferrer" className="onchain-link" style={{ display: 'block', marginBottom: '4px' }}>
-										→ ERC8004Registry: 0xFA0b...8383
-									</a>
-									<a href="https://explorer.mantle.xyz/address/0x41c51a03FFE750F5df1F6ffc972DBA8265B5a4F4" target="_blank" rel="noopener noreferrer" className="onchain-link" style={{ display: 'block' }}>
-										→ X402FlashLiquidator: 0x41c5...a4F4
-									</a>
-								</div>
-								{/* Agent Identity */}
-								<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-									<span style={{ opacity: 0.5 }}>Agent NFT</span>
-									<span style={{ color: 'var(--accent)' }}>#{telem.agentId} Identity · Rep 94.2%</span>
-								</div>
-								<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-									<span style={{ opacity: 0.5 }}>Network</span>
-									<span style={{ color: 'var(--accent-hover)' }}>Chain {telem.chainId} · Mantle Mainnet</span>
-								</div>
-								<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-									<span style={{ opacity: 0.5 }}>TX Mode</span>
-									<span style={{ color: telem.liveMode ? '#00ff88' : 'var(--accent-hover)' }}>
-										{telem.liveMode ? '◉ LIVE BROADCAST' : '○ DRY-RUN (calldata only)'}
-									</span>
-								</div>
-								{/* TX Feed */}
-								{telem.txHashes.length > 0 && (
-									<div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '8px' }}>
-										<div style={{ marginBottom: '4px', opacity: 0.5, fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Recent Transactions</div>
-										{telem.txHashes.slice(-5).map((hash, i) => (
-											<a key={i} href={`https://explorer.mantle.xyz/tx/${hash}`} target="_blank" rel="noopener noreferrer" className="onchain-link" style={{ display: 'block', marginBottom: '2px' }}>
-												→ {hash.slice(0, 10)}…{hash.slice(-8)}
-											</a>
-										))}
-									</div>
-								)}
-								{/* Mantlescan Buttons */}
-								<div style={{ display: 'flex', gap: '0.5vw', marginTop: '4px' }}>
-									<button className="lusion-btn" style={{ flex: 1 }} onClick={() => window.open('https://explorer.mantle.xyz/address/0xFA0b5036aF9770B370B33CeBBb42d1E626338383', '_blank')}>View Registry ↗</button>
-									<button className="lusion-btn" style={{ flex: 1 }} onClick={() => window.open('https://explorer.mantle.xyz/address/0x1150f09ae885e6E7BcC0cb38feDd200d7f580008', '_blank')}>View Agent NFT ↗</button>
-								</div>
-							</div>
+						<div className="lusion-bottom-info">
+							<h2 className="lusion-card-title">Debate Consensus</h2>
+							<div className="lusion-card-tags">AGENTS • LOGIC • VOTING</div>
 						</div>
+					</article>
 
-					</div>
+					{/* ON-CHAIN ACTIVITY (Row 7, Right) */}
+					<article className="bento-card shape-choochoo align-right" role="region">
+						<div className="lusion-dot"></div>
+						<div className="lusion-top-meta">
+							<div>EXP 010</div>
+							<div>BLOCKCHAIN</div>
+						</div>
+						<div className="bento-content" style={{ fontFamily: 'var(--font-mono)', fontSize: '1rem', display: 'flex', flexDirection: 'column', gap: '2vw' }}>
+							<div style={{ padding: '1.5vw', background: 'rgba(0,255,136,0.04)', border: '1px solid rgba(0,255,136,0.12)', borderRadius: '1vw' }}>
+								<div style={{ fontSize: '0.8rem', opacity: 0.5, marginBottom: '1vw', textTransform: 'uppercase', letterSpacing: '0.1em' }}>✓ Sourcify Verified</div>
+								<a href="https://explorer.mantle.xyz/address/0xFA0b5036aF9770B370B33CeBBb42d1E626338383" target="_blank" rel="noopener noreferrer" className="onchain-link" style={{ display: 'block', marginBottom: '0.5vw' }}>
+									→ ERC8004Registry
+								</a>
+								<a href="https://explorer.mantle.xyz/address/0x41c51a03FFE750F5df1F6ffc972DBA8265B5a4F4" target="_blank" rel="noopener noreferrer" className="onchain-link" style={{ display: 'block' }}>
+									→ X402FlashLiquidator
+								</a>
+							</div>
+							<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+								<span style={{ opacity: 0.5 }}>Agent NFT</span>
+								<span style={{ color: 'var(--accent)', fontWeight: 700 }}>#{telem.agentId} Identity</span>
+							</div>
+							<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+								<span style={{ opacity: 0.5 }}>Network</span>
+								<span style={{ color: 'var(--accent-hover)', fontWeight: 700 }}>Chain {telem.chainId}</span>
+							</div>
+							<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+								<span style={{ opacity: 0.5 }}>TX Mode</span>
+								<span style={{ color: telem.liveMode ? '#00ff88' : 'var(--accent-hover)', fontWeight: 700 }}>
+									{telem.liveMode ? '◉ LIVE TX' : '○ DRY-RUN'}
+								</span>
+							</div>
+							{telem.txHashes.length > 0 && (
+								<div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '2vw', marginTop: 'auto' }}>
+									<div style={{ marginBottom: '1vw', opacity: 0.5, fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Recent TXs</div>
+									{telem.txHashes.slice(-3).map((hash, i) => (
+										<a key={i} href={`https://explorer.mantle.xyz/tx/${hash}`} target="_blank" rel="noopener noreferrer" className="onchain-link" style={{ display: 'block', marginBottom: '0.5vw' }}>
+											→ {hash.slice(0, 10)}…{hash.slice(-8)}
+										</a>
+									))}
+								</div>
+							)}
+						</div>
+						<div className="lusion-bottom-info">
+							<h2 className="lusion-card-title">On-Chain Activity</h2>
+							<div className="lusion-card-tags">MANTLE L2 • TX • VERIFIED</div>
+						</div>
+					</article>
 
+					{/* SYNAPTIC CORE — 3D Brain (Row 6) */}
+					<article className="bento-card shape-choochoo align-right" role="region">
+						<div className="lusion-dot"></div>
+						<div className="lusion-top-meta">
+							<div>EXP 008</div>
+							<div>CORE</div>
+						</div>
+						<div className="bento-content" style={{ display: 'flex', flexDirection: 'column', gap: '1.5vw' }}>
+							{techCards.map(tc => (
+								<div key={tc.label} className="snake-border" style={{
+									padding: '1.5vw', background: 'rgba(0,0,0,0.4)', borderRadius: '1vw',
+									border: '1px solid var(--border)', backdropFilter: 'blur(8px)',
+									fontFamily: 'var(--font-mono)', transition: 'all 0.3s ease',
+								}}>
+									<div style={{ color: 'var(--accent-hover)', fontWeight: 700, marginBottom: '0.5vw', fontSize: '1rem' }}>{tc.label}</div>
+									<div style={{ color: 'var(--foreground)', opacity: 0.6, fontSize: '0.85rem' }}>{tc.desc}</div>
+								</div>
+							))}
+						</div>
+						<div className="lusion-bottom-info">
+							<h2 className="lusion-card-title">Swarm Brain</h2>
+							<div className="lusion-card-tags">MODULES • TECH • NEURAL</div>
+						</div>
+					</article>
+				</div>
+
+				{/* CONTROL BAR (Centered below grid) */}
+				<div className="control-bar" style={{ display: 'flex', justifyContent: 'center', gap: '2rem', marginBottom: '4rem', padding: '0 4rem' }}>
+					<button className="lusion-btn-primary" onClick={handleLaunch} aria-label="Launch Synaptic Analysis">
+						{analysisRunning ? '[ ◎ ANALYSIS RUNNING... ]' : '[ LAUNCH SYNAPTIC ANALYSIS ]'}
+					</button>
+					<button className="lusion-btn connect-btn-hover-fx" onClick={() => window.open(`https://explorer.mantle.xyz/address/0x1150f09ae885e6E7BcC0cb38feDd200d7f580008`, '_blank')} aria-label="View On-Chain Agent NFT"><span>[ VIEW AGENT NFT ON-CHAIN ]</span></button>
 				</div>
 
 				{/* ═══ FOOTER ═══ */}

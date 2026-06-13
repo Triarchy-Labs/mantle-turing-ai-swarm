@@ -26,7 +26,7 @@ import FsrRcasPass from "./FsrRcasPass";
 // FSR-optimized DPR: scene renders at reduced resolution, EASU upscales with edge-aware reconstruction.
 // This is how Lusion achieves 60fps with 16K particles — render cheap, upscale smart.
 const TIER_CONFIG = {
-	high: { particles: 16384, smaa: SMAAPreset.HIGH, bloomIntensity: 1.5, dpr: [0.6, 1.0] as [number, number] },
+	high: { particles: 16384, smaa: SMAAPreset.HIGH, bloomIntensity: 1.5, dpr: [0.6, 1.5] as [number, number] },
 	mid:  { particles: 8192,  smaa: SMAAPreset.MEDIUM, bloomIntensity: 1.0, dpr: [0.5, 0.75] as [number, number] },
 	low:  { particles: 4096,  smaa: SMAAPreset.LOW, bloomIntensity: 0.6, dpr: [0.5, 0.5] as [number, number] },
 };
@@ -37,10 +37,17 @@ const TIER_CONFIG = {
 
 import { GPUComputationRenderer } from "three/examples/jsm/misc/GPUComputationRenderer.js";
 
-// Render: EXACT Lusion dump values
-const U_OPACITY = "0.32";
-const U_P_SIZE_MUL = "0.4"; 
-const U_P_SOFT_MUL = "0.92"; 
+// Render: Calibrated for dark-bg pipeline to match Lusion's volumetric cloud aesthetic.
+// Lusion renders BLACK particles on WHITE FBO → invert. Overlap creates dense clouds via
+// subtractive accumulation. Our white-on-dark pipeline needs compensation:
+// - Opacity: 0.32 (Lusion) × 2.5 = 0.80 (dark-bg accumulation parity)
+// - Size: 0.4 (Lusion) × 2.0 = 0.80 (visible bokeh clouds at distance)
+// - Softness: 0.92 × 1.3 = 1.2 (larger soft halos for cloud blending)
+const U_OPACITY = "0.80";    // dark-bg compensation — Lusion=0.32 on white FBO
+const U_P_SIZE_MUL = "0.80"; // 2x Lusion — clouds visible at all depths
+const U_P_SOFT_MUL = "1.2";  // 1.3x Lusion — softer halos for cloud merging
+// focusDist=0.32 → focus at 3.2 from camera → creates DOF size variation:
+// near particles ~17px, center ~37px, far ~65px (huge bokeh)
 const U_FOCUS_DIST = "0.32";
 
 // Lusion EXACT spawn/kill (строки 48653-48664)
@@ -279,24 +286,26 @@ void main() {
 }
 `;
 
-// ── Render Vertex Shader (строка 48602) — reads from FBO ──
+// ── Render Vertex Shader — Lusion EXACT (строка 64751 dump) ──
+// v_color is declared but NOT assigned = vec3(0,0,0) = black particles.
+// Lusion renders black particles on white FBO, then inverts in Final pass.
 const gpgpuVertexShader = /* glsl */ `
 uniform sampler2D u_currPosTex;
 uniform vec2 uResolution;
 attribute vec2 a_simUv;
-attribute vec3 customColor;
 varying vec3 vColor;
 varying float vSoftness;
 varying float vOpacity;
 
-// Lusion EXACT sizeFromLife (строка 48602)
+// Lusion EXACT sizeFromLife (строка 64751)
 float sizeFromLife(float life) {
   float cut = 0.008;
   return (1.0 - smoothstep(1.0 - cut, 1.0, life)) * smoothstep(0.0, cut, life);
 }
 
 void main() {
-  vColor = customColor;
+  // White particles on dark background (pre-inverted Lusion pipeline)
+  vColor = vec3(1.0);
   
   // Read position + life from GPGPU FBO texture
   vec4 positionLife = texture2D(u_currPosTex, a_simUv);
@@ -305,7 +314,7 @@ void main() {
   
   vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
   
-  // Lusion EXACT pSize (строка 48602)
+  // Lusion EXACT pSize (строка 64751)
   float dist = ${U_FOCUS_DIST} * 10.0;
   float coef = abs(-mvPosition.z - dist) * 0.3 + pow(max(0.0, -mvPosition.z - dist), 2.5) * 0.5;
   
@@ -336,29 +345,21 @@ function LiquidNebula({ particles, mode }: { particles: number; mode: number }) 
 
 	const modeRatio = useRef(0);
 	const screenBoundsHelper = useRef(new THREE.Vector3(4.0, 3.8, 1.0));
+	const lastMode = useRef(0);
+	const logoAllowed = useRef(true);
 	const [paintTexture, setPaintTexture] = useState<THREE.Texture | null>(null);
 	const pointerRef = useUnifiedPointer();
 
-	// Create sim UVs + colors (immutable, initialized once)
-	const [simUvs, colors] = useState(() => {
+	// Create sim UVs (immutable, initialized once) — Lusion EXACT (строка 64858-64860)
+	// No per-particle colors needed: vColor stays vec3(0) = black, inverted by Final pass
+	const simUvs = useMemo(() => {
 		const uvs = new Float32Array(particleCount * 2);
-		const col = new Float32Array(particleCount * 3);
-		const baseColor = new THREE.Color("#d4d0c8");
-
-		const secondaryColor = new THREE.Color("#00c8e0");
-
 		for (let i = 0; i < particleCount; i++) {
-			const x = (i % texSize) / texSize;
-			const y = Math.floor(i / texSize) / texSize;
-			uvs[i * 2] = x;
-			uvs[i * 2 + 1] = y;
-			const c = Math.random() > 0.35 ? secondaryColor : baseColor;
-			col[i * 3] = c.r;
-			col[i * 3 + 1] = c.g;
-			col[i * 3 + 2] = c.b;
+			uvs[i * 2] = ((i % texSize) + 0.5) / texSize;
+			uvs[i * 2 + 1] = (Math.floor(i / texSize) + 0.5) / texSize;
 		}
-		return [uvs, col];
-	})[0];
+		return uvs;
+	}, [particleCount, texSize]);
 
 	// Dummy positions (vertex shader reads from FBO, not from position attribute)
 	const dummyPositions = useMemo(() => new Float32Array(particleCount * 3), [particleCount]);
@@ -542,7 +543,6 @@ function LiquidNebula({ particles, mode }: { particles: number; mode: number }) 
 		const dpr = gl.getPixelRatio();
 		return {
 			u_currPosTex: { value: null as THREE.Texture | null },
-			uTheme: { value: 0.0 },
 			uResolution: { value: new THREE.Vector2(size.width * dpr, size.height * dpr) },
 		};
 	}, [size, gl]);
@@ -554,7 +554,16 @@ function LiquidNebula({ particles, mode }: { particles: number; mode: number }) 
 		const clampedDelta = Math.min(delta, 0.05); // cap at 50ms
 
 		// Transition code matching Lusion burst mechanics
-		const isMode1 = mode === 1;
+		if (mode > 0 && lastMode.current === 0) {
+			// Probabilistic gate: 33% chance to allow logo assembly on this cycle (mode === 2 always allowed)
+			logoAllowed.current = mode === 2 ? true : (Math.random() < 0.33);
+		}
+		if (mode === 0) {
+			logoAllowed.current = false;
+		}
+		lastMode.current = mode;
+
+		const isMode1 = mode > 0 && logoAllowed.current;
 		const targetRatio = isMode1 ? 1.0 : 0.0;
 		// Lerp progress over ~0.6 seconds
 		modeRatio.current += (targetRatio - modeRatio.current) * clampedDelta * 1.5;
@@ -640,16 +649,16 @@ function LiquidNebula({ particles, mode }: { particles: number; mode: number }) 
 		if (materialRef.current) {
 			const dpr = state.viewport.dpr;
 			materialRef.current.uniforms.u_currPosTex.value = posTex;
-			materialRef.current.uniforms.uTheme.value = 0.0;
 			materialRef.current.uniforms.uResolution.value.set(size.width * dpr, size.height * dpr);
 		}
 	});
 
-	const themedFragmentShader = `
+	// Lusion EXACT fragment shader (строка 64753 dump)
+	// v_color = vec3(0) → black particles on white FBO → inverted by Final pass
+	const lusionFragmentShader = `
       varying vec3 vColor;
       varying float vSoftness;
       varying float vOpacity;
-      uniform float uTheme;
 
       float linearStep(float edge0, float edge1, float x) {
         return clamp((x - edge0) / (edge1 - edge0), 0.0, 1.0);
@@ -658,8 +667,7 @@ function LiquidNebula({ particles, mode }: { particles: number; mode: number }) 
       void main() {
         float d = length(gl_PointCoord.xy * 2.0 - 1.0);
         float b = linearStep(0.0, vSoftness + fwidth(d), 1.0 - d);
-        vec3 finalColor = mix(vColor, vec3(0.05, 0.05, 0.05), uTheme);
-        vec3 color = finalColor * b * vOpacity;
+        vec3 color = vColor * b * vOpacity;
         gl_FragColor = vec4(color, b * vOpacity);
       }
     `;
@@ -671,17 +679,16 @@ function LiquidNebula({ particles, mode }: { particles: number; mode: number }) 
 				<bufferGeometry>
 					<bufferAttribute attach="attributes-position" args={[dummyPositions, 3]} />
 					<bufferAttribute attach="attributes-a_simUv" args={[simUvs, 2]} />
-					<bufferAttribute attach="attributes-customColor" args={[colors, 3]} />
 				</bufferGeometry>
 				<shaderMaterial
 					ref={materialRef}
 					vertexShader={gpgpuVertexShader}
-					fragmentShader={themedFragmentShader}
+					fragmentShader={lusionFragmentShader}
 					uniforms={uniforms}
 					transparent
 					depthWrite={false}
 					depthTest={false}
-					blending={THREE.AdditiveBlending}
+					blending={THREE.NormalBlending}
 					extensions-derivatives={true}
 				/>
 			</points>
