@@ -342,7 +342,7 @@ html[data-theme="light"] .glass:hover {
 	position: relative;
 	width: 100%;
 	min-height: 42vh;
-	padding: 18rem 0 12rem;
+	padding: 24rem 0 12rem;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -364,9 +364,9 @@ html[data-theme="light"] .glass:hover {
 	border-radius: 50%;
 	width: clamp(40rem, 60vw, 71.2rem);
 	height: clamp(40rem, 60vw, 71.2rem);
-	top: 45%;
+	top: 14rem;
 	left: 50%;
-	transform: translate(-50%, -50%);
+	transform: translateX(-50%);
 	background: rgba(0, 245, 255, 0.2);
 	filter: blur(250px);
 	-webkit-filter: blur(250px);
@@ -378,7 +378,7 @@ html[data-theme="light"] .glass:hover {
 	border-radius: 50%;
 	width: clamp(80rem, 90vw, 112.9rem);
 	height: clamp(80rem, 90vw, 112.9rem);
-	top: 42%;
+	top: 27.1rem;
 	left: 50%;
 	transform: translateX(-50%);
 	pointer-events: none;
@@ -394,7 +394,7 @@ html[data-theme="light"] .glass:hover {
 	border-radius: 50%;
 	width: clamp(80rem, 90vw, 112.9rem);
 	height: clamp(80rem, 90vw, 112.9rem);
-	top: 42%;
+	top: 27.1rem;
 	left: 50%;
 	transform: translateX(-50%);
 	pointer-events: none;
