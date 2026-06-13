@@ -204,107 +204,222 @@ html[data-theme="light"] .glass:hover {
 	animation: greenSweep 6s ease-in-out infinite;
 }
 
-.header h1 {
-	font-family: var(--font-heading);
-	font-size: 3.52rem;
-	font-weight: 700;
-	letter-spacing: -0.03em;
-	background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.6) 100%);
-	-webkit-background-clip: text;
-	-webkit-text-fill-color: transparent;
-}
-
-html[data-theme="light"] .header h1 {
-	background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.7) 100%);
-	-webkit-background-clip: text;
-	-webkit-text-fill-color: transparent;
-}
-
-.triarchy-logo-link {
-	font-family: 'Aventa', var(--font-heading);
-	text-decoration: none;
-	color: var(--foreground);
-	transition: opacity 0.3s ease, transform 0.3s ease;
-	display: flex;
-	align-items: center;
-	gap: 12px;
-}
-
-.triarchy-logo-link:hover {
-	opacity: 0.85;
-	transform: scale(0.98);
-}
-
-.triarchy-logo-glyph {
-	font-size: 2.88rem;
-	font-weight: 800;
-	color: var(--accent);
-	text-shadow: 0 0 15px var(--accent-glow);
-	animation: pulse 4s infinite ease-in-out;
-}
-
-.triarchy-logo-text {
-	font-family: 'Aventa', var(--font-heading);
-	font-size: 1.76rem;
-	font-weight: 800;
-	letter-spacing: 0.25em;
-	background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.6) 100%);
-	-webkit-background-clip: text;
-	-webkit-text-fill-color: transparent;
-	display: block;
-	line-height: 1;
-}
-
-html[data-theme="light"] .triarchy-logo-text {
-	background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.7) 100%);
-	-webkit-background-clip: text;
-	-webkit-text-fill-color: transparent;
-}
-
-.triarchy-logo-sub {
-	font-family: 'Aventa', var(--font-heading);
-	font-size: 0.96rem;
-	font-weight: 300;
-	letter-spacing: 0.52em;
-	opacity: 0.5;
-	margin-top: 2px;
-	display: block;
-	line-height: 1;
-}
-
-.header-left-container {
-	display: flex;
-	align-items: center;
-	gap: 1.2vw;
-}
-
-.header-divider {
-	height: 3.2rem;
-	width: 1px;
-	background: var(--border);
-}
-
-.header-title-block {
-	display: flex;
-	flex-direction: column;
-}
-
+/* ============================================================
+   TRANSPARENT FIXED HEADER & LOGO (MDX Blueprint 1:1)
+   ============================================================ */
 .header {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 100;
+	padding: 4.1rem 6.9rem;
+	background: transparent;
+	border: none;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	margin-bottom: 2.2vw;
-	flex-wrap: wrap;
-	gap: 1.5vw;
+	transition: all 0.3s ease;
+	pointer-events: auto;
 }
 
-.header p {
-	color: var(--foreground);
-	opacity: 0.65;
-	font-size: 1.52rem;
-	margin-top: 0.4vw;
+@media screen and (max-width: 991px) {
+	.header {
+		padding: 2rem;
+	}
+}
+
+.triarchy-logo-wrapper {
 	display: flex;
 	align-items: center;
+	pointer-events: auto;
+	text-decoration: none;
+}
+
+.triarchy-logo-text {
+	font-family: var(--font-heading);
+	font-size: 2.2rem;
+	font-weight: 800;
+	letter-spacing: 0.25em;
+	color: #ffffff;
+	text-transform: uppercase;
+	cursor: pointer;
+	transition: opacity 0.3s ease;
+}
+
+.triarchy-logo-text:hover {
+	opacity: 0.8;
+}
+
+.triarchy-logo-divider {
+	color: rgba(255, 255, 255, 0.25);
+	font-size: 1.6rem;
+	margin: 0 2rem;
+	user-select: none;
+}
+
+.triarchy-logo-btn {
+	width: 3.6rem;
+	height: 3.6rem;
+	border-radius: 50%;
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.triarchy-logo-btn:hover {
+	border-color: rgba(255, 255, 255, 0.6);
+	background-color: rgba(255, 255, 255, 0.05);
+}
+
+.triarchy-logo-glyph {
+	font-size: 1.6rem;
+	color: var(--foreground);
+	transition: transform 0.4s ease;
+}
+
+.triarchy-logo-btn:hover .triarchy-logo-glyph {
+	transform: rotate(60deg) scale(1.1);
+}
+
+.header-right-stats {
+	display: flex;
+	align-items: center;
+	font-family: var(--font-mono);
+	font-size: 1.2rem;
+	color: rgba(255, 255, 255, 0.5);
+}
+
+.stats-label {
+	color: var(--accent);
+	font-weight: 700;
+	letter-spacing: 1px;
+}
+
+.stats-divider {
+	margin: 0 1.5rem;
+	color: rgba(255, 255, 255, 0.2);
+}
+
+.stats-cycle {
+	color: #fff;
+	font-weight: 500;
+}
+
+.header-menu-btn {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	width: 2.2rem;
+	height: 1rem;
+	cursor: pointer;
+	pointer-events: auto;
+}
+
+.header-menu-btn .bar {
+	width: 100%;
+	height: 1px;
+	background-color: #ffffff;
+	transition: transform 0.3s ease, width 0.3s ease, opacity 0.3s ease;
+}
+
+.header-menu-btn:hover .bar:first-child {
+	transform: translateY(1px);
+}
+
+.header-menu-btn:hover .bar:last-child {
+	transform: translateY(-1px);
+	width: 70%;
+}
+
+/* ============================================================
+   HERO SECTION & MDX BLURS (1:1 Blueprint)
+   ============================================================ */
+.hero-section {
+	position: relative;
+	width: 100%;
+	min-height: 42vh;
+	padding: 18rem 0 12rem;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	overflow: visible;
+	z-index: 2;
+}
+
+.hero-blur-bg {
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	pointer-events: none;
+}
+
+.hero-blur-red {
+	position: absolute;
+	top: -5%;
+	width: 110rem;
+	height: auto;
+	opacity: 0.6;
+	mix-blend-mode: screen;
+	z-index: 1;
+	transform: translateY(-10%);
+}
+
+.hero-blur-glass {
+	position: absolute;
+	top: 5%;
+	width: 120rem;
+	height: auto;
+	backdrop-filter: blur(48px) saturate(1.2);
+	-webkit-backdrop-filter: blur(48px) saturate(1.2);
+	border-radius: 50%;
+	z-index: 2;
+	transform: translateY(-10%);
+	box-shadow: inset 0 2px 20px rgba(255, 255, 255, 0.05), 0 -10px 40px rgba(0, 0, 0, 0.5);
+}
+
+.hero-content {
+	position: relative;
+	z-index: 3;
+	max-width: 120rem;
+	padding: 0 2rem;
+}
+
+.hero-title {
+	font-family: var(--font-heading);
+	font-size: clamp(2.4rem, 4.2vw, 5.6rem);
+	font-weight: 800;
+	letter-spacing: -0.03em;
+	text-transform: uppercase;
+	background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.65) 100%);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	line-height: 1.1;
+	margin-bottom: 2.2rem;
+	text-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+}
+
+.hero-title-icon {
+	width: clamp(3rem, 5vw, 6.4rem);
+	height: clamp(3rem, 5vw, 6.4rem);
+	stroke-width: 1.25;
+}
+
+.hero-subtitle {
+	font-family: var(--font-mono);
+	font-size: 1.35rem;
+	font-weight: 400;
+	color: var(--foreground);
+	opacity: 0.6;
+	letter-spacing: 0.02em;
 }
 
 /* ============================================================
@@ -361,6 +476,7 @@ html[data-theme="light"] .toggle-group {
 	display: grid;
 	grid-template-columns: repeat(4, 1fr);
 	gap: 1.2vw;
+	margin-top: 4.5rem;
 	margin-bottom: 1.5vw;
 }
 

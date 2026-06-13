@@ -1,11 +1,13 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Activity, Zap, Globe, Terminal, Network, Layers, Cpu, Eye, TrendingUp, Wifi, WifiOff, Shield, AlertTriangle, BarChart3, Target } from 'lucide-react';
+import { Activity, Zap, Globe, Terminal, Network, Layers, Cpu, Eye, TrendingUp, Shield, AlertTriangle, BarChart3, Target } from 'lucide-react';
 import './index.css';
 import LiquidGlassShader from './components/LiquidGlassShader';
 import CustomCursor from './components/CustomCursor';
 import { WebGLErrorBoundary } from './components/WebGLErrorBoundary';
 import { useTelemetry } from './hooks/useTelemetry';
 import SwarmChat from './components/SwarmChat';
+import blurBlack4 from './assets/blur-black-4.webp';
+import redBlur from './assets/red-blur.webp';
 
 /* ── Pipeline stages ── */
 const pipelineStages = [
@@ -127,43 +129,47 @@ export default function App() {
 			<div className="vignette-overlay" style={{ position: 'fixed', inset: 0, background: 'radial-gradient(circle at center, transparent 30%, rgba(4,4,6,0.8) 100%)', zIndex: -98, pointerEvents: 'none' }} />
 
 			{/* ═══ HEADER ═══ */}
-			<header className="header glass snake-border" role="banner" aria-label="Mantle AI Swarm Dashboard">
-				<div className="header-left-container">
-					{/* Triarchy Labs Logo */}
-					<a href="https://github.com/Triarchy-Labs" target="_blank" rel="noopener noreferrer" className="triarchy-logo-link" title="Triarchy Labs GitHub">
-						<div className="triarchy-logo-glyph">⬡</div>
-						<div style={{ display: 'flex', flexDirection: 'column' }}>
-							<span className="triarchy-logo-text">TRIARCHY</span>
-							<span className="triarchy-logo-sub">LABS</span>
-						</div>
-					</a>
-
-					{/* Vertical Divider */}
-					<div className="header-divider" />
-
-					{/* App Title & Info */}
-					<div className="header-title-block">
-						<div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap' }}>
-							<Layers size={18} className="green-sweep-text" />
-							<h1 style={{ margin: 0 }}>
-								MANTLE AI SWARM ACTIVITY MATRIX
-								<span className="lusion-btn connect-state-true" style={{ fontSize: '0.7rem', padding: '0.2rem 0.6rem', verticalAlign: 'middle', marginLeft: '0.6rem', display: 'inline-block' }}>V5.0 LIVE</span>
-							</h1>
-						</div>
-						<p style={{ marginTop: '0.3vw', fontSize: '0.75rem', fontFamily: 'var(--font-mono)', opacity: 0.7 }}>
-							12 crates · 26,873 LOC · 24-stage pipeline · 8 Titan modules · Mantle Mainnet
-						</p>
+			<header className="header" role="banner" aria-label="Mantle AI Swarm Dashboard">
+				<a href="https://github.com/Triarchy-Labs" target="_blank" rel="noopener noreferrer" className="triarchy-logo-wrapper" title="Triarchy Labs GitHub">
+					<span className="triarchy-logo-text">TRIARCHY</span>
+					<span className="triarchy-logo-divider">|</span>
+					<div className="triarchy-logo-btn">
+						<span className="triarchy-logo-glyph">⬡</span>
 					</div>
-				</div>
-				<div className="toggle-group" style={{ display: 'flex', gap: '0.8vw', alignItems: 'center' }}>
-					<div className={`lusion-btn ${telem.connected ? 'connect-state-true' : ''}`} style={{ cursor: 'default', fontSize: '0.7rem' }}>
-						{telem.connected ? <Wifi size={12} style={{ marginRight: '6px' }} /> : <WifiOff size={12} style={{ marginRight: '6px', opacity: 0.5 }} />}
-						{telem.connected ? (telem.liveMode ? 'LIVE TX' : 'CONNECTED') : 'MOCK'} · CYCLE {cycle}
+				</a>
+
+				<div className="header-right-container" style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
+					<div className="header-right-stats">
+						<span className="stats-label">{telem.connected ? (telem.liveMode ? 'LIVE TX' : 'CONNECTED') : 'MOCK'}</span>
+						<span className="stats-divider">|</span>
+						<span className="stats-cycle">CYCLE {cycle}</span>
+					</div>
+					<div className="header-menu-btn" aria-label="Menu">
+						<span className="bar"></span>
+						<span className="bar"></span>
 					</div>
 				</div>
 			</header>
 
 			<main>
+				{/* ═══ HERO SECTION ═══ */}
+				<section className="hero-section">
+					<div className="hero-blur-bg">
+						<img src={redBlur} className="hero-blur-red" alt="" />
+						<img src={blurBlack4} className="hero-blur-glass" alt="" />
+					</div>
+					<div className="hero-content">
+						<div className="hero-title-wrapper" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2rem', marginBottom: '2.2rem' }}>
+							<Layers className="green-sweep-text hero-title-icon" />
+							<h1 className="hero-title" style={{ margin: 0 }}>
+								MANTLE AI SWARM ACTIVITY MATRIX
+							</h1>
+						</div>
+						<p className="hero-subtitle">
+							12 crates · 26,873 LOC · 24-stage pipeline · 8 Titan modules · Mantle Mainnet
+						</p>
+					</div>
+				</section>
 				{/* ═══ STATS GRID ═══ */}
 				{/* ═══ PRIMARY METRICS ═══ */}
 				<section className="metrics" aria-label="Key Performance Metrics">
