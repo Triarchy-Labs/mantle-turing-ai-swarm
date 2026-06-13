@@ -1139,21 +1139,20 @@ html[data-theme="light"] .lusion-btn-primary:hover {
 }
 
 .swarm-chat-msg {
-	padding: 1rem 1.5rem;
-	border-radius: 0.8rem;
+	padding: 1rem 0;
 	font-size: 1.2rem;
 	line-height: 1.55;
 	font-family: var(--font-mono);
 }
 
 .swarm-chat-msg.assistant {
-	background: rgba(0,245,255,0.04);
 	border-left: 2px solid rgba(0,245,255,0.3);
+	padding-left: 1.5rem;
 }
 
 .swarm-chat-msg.user {
-	background: rgba(255,255,255,0.03);
 	border-left: 2px solid rgba(255,255,255,0.15);
+	padding-left: 1.5rem;
 }
 
 .swarm-chat-msg-label {
@@ -1781,23 +1780,12 @@ a:focus-visible,
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	padding: 1.8rem 2.2rem;
-	border-radius: 1.28rem;
-	background: rgba(255, 255, 255, 0.03);
-	border: 1px solid var(--border);
-	margin-bottom: 1.6rem;
+	padding: 1rem 0;
+	margin-bottom: 0.5rem;
 	transition: all 0.3s ease;
-	cursor: pointer;
 }
+
 .market-row:hover {
-	border-color: rgba(0, 212, 255, 0.35);
-	background: rgba(0, 212, 255, 0.04);
-}
-html[data-theme="light"] .market-row {
-	background: rgba(255, 255, 255, 0.03) !important;
-	border-color: rgba(255, 255, 255, 0.06) !important;
-}
-html[data-theme="light"] .market-row:hover {
 	background: rgba(0, 212, 255, 0.04) !important;
 	border-color: rgba(0, 212, 255, 0.2) !important;
 }

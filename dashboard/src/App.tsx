@@ -463,8 +463,7 @@ export default function App() {
 							<div style={{ display: 'flex', flexDirection: 'column', gap: '1.5vw' }}>
 								{telem.debates.map((d, i) => (
 									<div key={i} className="debate-card" style={{
-										background: 'rgba(10,10,18,0.4)', border: '1px solid rgba(255,255,255,0.03)',
-										borderLeft: `4px solid ${d.color}`, borderRadius: '1vw', padding: '1.5vw', lineHeight: 1.5,
+										borderLeft: `2px solid ${d.color}`, paddingLeft: '1.5vw', lineHeight: 1.5,
 									}}>
 										<div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1vw', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', fontWeight: 700 }}>
 											<span style={{ color: d.color }}>{d.agent}</span>
@@ -489,7 +488,7 @@ export default function App() {
 							<div>BLOCKCHAIN</div>
 						</div>
 						<div className="bento-content" style={{ fontFamily: 'var(--font-mono)', fontSize: '1rem', display: 'flex', flexDirection: 'column', gap: '2vw' }}>
-							<div style={{ padding: '1.5vw', background: 'rgba(0,255,136,0.04)', border: '1px solid rgba(0,255,136,0.12)', borderRadius: '1vw' }}>
+							<div style={{ paddingBottom: '1.5vw', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
 								<div style={{ fontSize: '0.8rem', opacity: 0.5, marginBottom: '1vw', textTransform: 'uppercase', letterSpacing: '0.1em' }}>✓ Sourcify Verified</div>
 								<a href="https://explorer.mantle.xyz/address/0xFA0b5036aF9770B370B33CeBBb42d1E626338383" target="_blank" rel="noopener noreferrer" className="onchain-link" style={{ display: 'block', marginBottom: '0.5vw' }}>
 									→ ERC8004Registry
@@ -537,11 +536,11 @@ export default function App() {
 							<div>CORE</div>
 						</div>
 						<div className="bento-content" style={{ display: 'flex', flexDirection: 'column', gap: '1.5vw' }}>
-							{techCards.map(tc => (
-								<div key={tc.label} className="snake-border" style={{
-									padding: '1.5vw', background: 'rgba(0,0,0,0.4)', borderRadius: '1vw',
-									border: '1px solid var(--border)', backdropFilter: 'blur(8px)',
-									fontFamily: 'var(--font-mono)', transition: 'all 0.3s ease',
+							{techCards.map((tc, idx) => (
+								<div key={tc.label} style={{
+									paddingBottom: '1vw',
+									borderBottom: idx === techCards.length - 1 ? 'none' : '1px solid rgba(255,255,255,0.05)',
+									fontFamily: 'var(--font-mono)'
 								}}>
 									<div style={{ color: 'var(--accent-hover)', fontWeight: 700, marginBottom: '0.5vw', fontSize: '1rem' }}>{tc.label}</div>
 									<div style={{ color: 'var(--foreground)', opacity: 0.6, fontSize: '0.85rem' }}>{tc.desc}</div>

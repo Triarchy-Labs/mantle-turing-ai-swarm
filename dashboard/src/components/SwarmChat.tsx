@@ -176,7 +176,7 @@ export default function SwarmChat({ telem, orbState }: SwarmChatProps) {
     : '0 0 12px rgba(255,255,255,0.8)';
 
   return (
-    <div className="glass swarm-chat" id="swarm-chat-panel" style={{ height: '100%', border: 'none', background: 'transparent' }}>
+    <div className="swarm-chat" id="swarm-chat-panel" style={{ height: '100%', border: 'none', background: 'transparent' }}>
       {/* Agent Orb — large, centered */}
       <div className={`swarm-chat-orb ${chatOrbState}`}>
         <div className="swarm-chat-orb-inner">
