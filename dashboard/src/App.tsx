@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Activity, Zap, Globe, Terminal, Network, Eye, TrendingUp, Shield, BarChart3, Target, MessageSquare } from 'lucide-react';
+import { Zap, Globe, Terminal, Network, Eye, TrendingUp, Shield, BarChart3, Target, MessageSquare } from 'lucide-react';
 import './index.css';
 import LiquidGlassShader from './components/LiquidGlassShader';
 import CustomCursor from './components/CustomCursor';
@@ -170,11 +170,11 @@ export default function App() {
 				</section>
 				{/* ═══ METRICS PILLS (5 CAPSULES) ═══ */}
 				<section className="metrics-pills" aria-label="Key Performance Metrics">
-					<div className="metric-pill"><Zap size={14} style={{ color: 'var(--accent-hover)' }} /> PNL <span className="val green">{telem.pnl}</span></div>
-					<div className="metric-pill"><TrendingUp size={14} style={{ color: 'var(--accent-hover)' }} /> WIN RATE <span className="val green">{telem.winRate}</span></div>
-					<div className="metric-pill"><Activity size={14} style={{ color: 'var(--accent)' }} /> UPTIME <span className="val cyan">{fmtUptime}</span></div>
-					<div className="metric-pill"><Target size={14} style={{ color: 'var(--accent)' }} /> TRADES <span className="val cyan">{telem.totalTrades}</span></div>
-					<div className="metric-pill"><Shield size={14} style={{ color: telem.riskState?.circuit_breaker === 'GREEN' ? '#00ff88' : '#ff6b6b' }} /> CIRCUIT <span className="val" style={{ color: telem.riskState?.circuit_breaker === 'GREEN' ? '#00ff88' : '#ff6b6b' }}>{telem.riskState?.circuit_breaker ?? 'N/A'}</span></div>
+					<div className="metric-pill active">PNL<span className="val">{telem.pnl}</span></div>
+					<div className="metric-pill">WIN RATE<span className="val">{telem.winRate}</span></div>
+					<div className="metric-pill">UPTIME<span className="val">{fmtUptime}</span></div>
+					<div className="metric-pill">TRADES<span className="val">{telem.totalTrades}</span></div>
+					<div className="metric-pill">CIRCUIT<span className="val">{telem.riskState?.circuit_breaker ?? 'N/A'}</span></div>
 				</section>
 
 				{/* ═══ MAIN GRID: 2 Large Cards ═══ */}
