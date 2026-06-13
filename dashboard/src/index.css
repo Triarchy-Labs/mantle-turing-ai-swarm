@@ -342,7 +342,8 @@ html[data-theme="light"] .glass:hover {
 	position: relative;
 	width: 100%;
 	min-height: 42vh;
-	padding: 16rem 0 12rem;
+	padding-top: min(29.7rem, 29.7vh);
+	padding-bottom: min(14rem, 14vh);
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-start;
@@ -364,9 +365,9 @@ html[data-theme="light"] .glass:hover {
 	border-radius: 50%;
 	width: clamp(40rem, 60vw, 71.2rem);
 	height: clamp(40rem, 60vw, 71.2rem);
-	top: 23.5rem;
+	top: 14rem;
 	left: 50%;
-	transform: translate(-50%, -50%);
+	transform: translateX(-50%);
 	background: rgba(0, 245, 255, 0.2);
 	filter: blur(250px);
 	-webkit-filter: blur(250px);
@@ -378,7 +379,7 @@ html[data-theme="light"] .glass:hover {
 	border-radius: 50%;
 	width: clamp(80rem, 90vw, 112.9rem);
 	height: clamp(80rem, 90vw, 112.9rem);
-	top: 18rem;
+	top: 27.1rem;
 	left: 50%;
 	transform: translateX(-50%);
 	pointer-events: none;
@@ -394,7 +395,7 @@ html[data-theme="light"] .glass:hover {
 	border-radius: 50%;
 	width: clamp(80rem, 90vw, 112.9rem);
 	height: clamp(80rem, 90vw, 112.9rem);
-	top: 18rem;
+	top: 27.1rem;
 	left: 50%;
 	transform: translateX(-50%);
 	pointer-events: none;
@@ -416,7 +417,7 @@ html[data-theme="light"] .glass:hover {
 
 .hero-title {
 	font-family: 'Orlean', 'Aventa', var(--font-ui), sans-serif;
-	font-size: clamp(12rem, 18vw, 25rem); /* Massive scale for MDX visual parity */
+	font-size: min(20rem, 20vh); /* Massive scale for MDX visual parity */
 	font-weight: 300;
 	letter-spacing: -0.02em;
 	text-transform: uppercase;
