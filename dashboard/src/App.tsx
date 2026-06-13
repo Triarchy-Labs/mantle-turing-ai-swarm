@@ -246,7 +246,8 @@ export default function App() {
 				{/* ═══ BENTO GRID ═══ */}
 				<div className="bento-grid">
 					{/* LIVE MARKET MONITORING CARD (Row 1) */}
-					<article className="bento-card shape-akari" role="region" aria-label="Live Market Data">
+					<div className="shape-akari" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+					<article className="bento-card " role="region" aria-label="Live Market Data" style={{ flexGrow: 1, margin: 0 }}>
 						<div className="lusion-dot"></div>
 						<div className="lusion-top-meta">
 							<div>EXP 001</div>
@@ -273,14 +274,16 @@ export default function App() {
 								))}
 							</div>
 						</div>
-						<div className="lusion-bottom-info">
-							<h2 className="lusion-card-title">Live Market Feed</h2>
-							<div className="lusion-card-tags">DATA • ORACLE • ACTIVE</div>
-						</div>
-					</article>
+						</article>
+					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
+						<div className="lusion-card-tags" style={{ fontSize: '0.8rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>DATA • ORACLE • ACTIVE</div>
+						<h2 className="lusion-card-title" style={{ fontSize: '1.8rem', fontWeight: 300, letterSpacing: '-0.02em', margin: 0 }}>Live Market Feed</h2>
+					</div>
+				</div>
 
 					{/* SWARM AGENT CHAT CARD (Row 2, Left) */}
-					<article className="bento-card shape-choochoo" role="region" aria-label="Swarm Agent Chat">
+					<div className="shape-choochoo" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+					<article className="bento-card " role="region" aria-label="Swarm Agent Chat" style={{ flexGrow: 1, margin: 0 }}>
 						<div className="lusion-dot"></div>
 						<div className="lusion-top-meta">
 							<div>EXP 002</div>
@@ -289,14 +292,16 @@ export default function App() {
 						<div className="bento-content" style={{ padding: '0 1vw' }}>
 							<SwarmChat telem={telem} orbState={orbState} />
 						</div>
-						<div className="lusion-bottom-info">
-							<h2 className="lusion-card-title">Swarm Agent AI</h2>
-							<div className="lusion-card-tags">AI • LLM • EXECUTION</div>
-						</div>
-					</article>
+						</article>
+					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
+						<div className="lusion-card-tags" style={{ fontSize: '0.8rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>AI • LLM • EXECUTION</div>
+						<h2 className="lusion-card-title" style={{ fontSize: '1.8rem', fontWeight: 300, letterSpacing: '-0.02em', margin: 0 }}>Swarm Agent AI</h2>
+					</div>
+				</div>
 
 					{/* RISK MATRIX ENGINE (Row 2, Right) */}
-					<article className="bento-card shape-ion align-right" role="region">
+					<div className="shape-ion align-right" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+					<article className="bento-card " role="region" style={{ flexGrow: 1, margin: 0 }}>
 						<div className="lusion-dot"></div>
 						<div className="lusion-top-meta">
 							<div>EXP 004</div>
@@ -326,14 +331,16 @@ export default function App() {
 								</div>
 							</div>
 						</div>
-						<div className="lusion-bottom-info">
-							<h2 className="lusion-card-title">Risk Matrix</h2>
-							<div className="lusion-card-tags">SAFETY • LIMITS • GUARDS</div>
-						</div>
-					</article>
+						</article>
+					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
+						<div className="lusion-card-tags" style={{ fontSize: '0.8rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>SAFETY • LIMITS • GUARDS</div>
+						<h2 className="lusion-card-title" style={{ fontSize: '1.8rem', fontWeight: 300, letterSpacing: '-0.02em', margin: 0 }}>Risk Matrix</h2>
+					</div>
+				</div>
 
 					{/* SYNAPTIC DECISION PIPELINE (Row 4) */}
-					<article className="bento-card shape-hero events-section" role="region" aria-label="Decision Pipeline">
+					<div className="shape-hero" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+					<article className="bento-card events-section" role="region" aria-label="Decision Pipeline" style={{ flexGrow: 1, margin: 0 }}>
 						<div className="lusion-dot"></div>
 						<div className="lusion-top-meta">
 							<div>EXP 003</div>
@@ -365,14 +372,16 @@ export default function App() {
 								</div>
 							</div>
 						</div>
-						<div className="lusion-bottom-info">
-							<h2 className="lusion-card-title">Execution State</h2>
-							<div className="lusion-card-tags">STATE • DAG • PROCESS</div>
-						</div>
-					</article>
+						</article>
+					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
+						<div className="lusion-card-tags" style={{ fontSize: '0.8rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>STATE • DAG • PROCESS</div>
+						<h2 className="lusion-card-title" style={{ fontSize: '1.8rem', fontWeight: 300, letterSpacing: '-0.02em', margin: 0 }}>Execution State</h2>
+					</div>
+				</div>
 
 					{/* OPEN POSITIONS (Row 3, Left) */}
-					<article className="bento-card shape-choochoo" role="region">
+					<div className="shape-choochoo" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+					<article className="bento-card " role="region" style={{ flexGrow: 1, margin: 0 }}>
 						<div className="lusion-dot"></div>
 						<div className="lusion-top-meta">
 							<div>EXP 006</div>
@@ -398,14 +407,16 @@ export default function App() {
 								</div>
 							)}
 						</div>
-						<div className="lusion-bottom-info">
-							<h2 className="lusion-card-title">Positions ({telem.openPositions.length})</h2>
-							<div className="lusion-card-tags">HOLDINGS • ACTIVE</div>
-						</div>
-					</article>
+						</article>
+					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
+						<div className="lusion-card-tags" style={{ fontSize: '0.8rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>HOLDINGS • ACTIVE</div>
+						<h2 className="lusion-card-title" style={{ fontSize: '1.8rem', fontWeight: 300, letterSpacing: '-0.02em', margin: 0 }}>Positions ({telem.openPositions.length})</h2>
+					</div>
+				</div>
 
 					{/* AUTO-RAMP CAPITAL SCALING (Row 3, Right) */}
-					<article className="bento-card shape-ion align-right" role="region">
+					<div className="shape-ion align-right" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+					<article className="bento-card " role="region" style={{ flexGrow: 1, margin: 0 }}>
 						<div className="lusion-dot"></div>
 						<div className="lusion-top-meta">
 							<div>EXP 005</div>
@@ -422,14 +433,16 @@ export default function App() {
 								))}
 							</div>
 						</div>
-						<div className="lusion-bottom-info">
-							<h2 className="lusion-card-title">Auto-Ramp</h2>
-							<div className="lusion-card-tags">CAPITAL • GROWTH</div>
-						</div>
-					</article>
+						</article>
+					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
+						<div className="lusion-card-tags" style={{ fontSize: '0.8rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>CAPITAL • GROWTH</div>
+						<h2 className="lusion-card-title" style={{ fontSize: '1.8rem', fontWeight: 300, letterSpacing: '-0.02em', margin: 0 }}>Auto-Ramp</h2>
+					</div>
+				</div>
 
 					{/* LOG STREAM (Row 5) */}
-					<article className="bento-card shape-akari align-right" role="log" aria-live="polite">
+					<div className="shape-akari align-right" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+					<article className="bento-card " role="log" aria-live="polite" style={{ flexGrow: 1, margin: 0 }}>
 						<div className="lusion-dot"></div>
 						<div className="lusion-top-meta">
 							<div>EXP 007</div>
@@ -446,14 +459,16 @@ export default function App() {
 								))}
 							</div>
 						</div>
-						<div className="lusion-bottom-info">
-							<h2 className="lusion-card-title">Activity Stream</h2>
-							<div className="lusion-card-tags">EVENTS • LOGS • TRACE</div>
-						</div>
-					</article>
+						</article>
+					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
+						<div className="lusion-card-tags" style={{ fontSize: '0.8rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>EVENTS • LOGS • TRACE</div>
+						<h2 className="lusion-card-title" style={{ fontSize: '1.8rem', fontWeight: 300, letterSpacing: '-0.02em', margin: 0 }}>Activity Stream</h2>
+					</div>
+				</div>
 
 					{/* SYNAPTIC DECISION ARBITRAGE (Row 7) */}
-					<article className="bento-card shape-ion" role="region">
+					<div className="shape-ion" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+					<article className="bento-card " role="region" style={{ flexGrow: 1, margin: 0 }}>
 						<div className="lusion-dot"></div>
 						<div className="lusion-top-meta">
 							<div>EXP 009</div>
@@ -474,14 +489,16 @@ export default function App() {
 								))}
 							</div>
 						</div>
-						<div className="lusion-bottom-info">
-							<h2 className="lusion-card-title">Debate Consensus</h2>
-							<div className="lusion-card-tags">AGENTS • LOGIC • VOTING</div>
-						</div>
-					</article>
+						</article>
+					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
+						<div className="lusion-card-tags" style={{ fontSize: '0.8rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>AGENTS • LOGIC • VOTING</div>
+						<h2 className="lusion-card-title" style={{ fontSize: '1.8rem', fontWeight: 300, letterSpacing: '-0.02em', margin: 0 }}>Debate Consensus</h2>
+					</div>
+				</div>
 
 					{/* ON-CHAIN ACTIVITY (Row 7, Right) */}
-					<article className="bento-card shape-choochoo align-right" role="region">
+					<div className="shape-choochoo align-right" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+					<article className="bento-card " role="region" style={{ flexGrow: 1, margin: 0 }}>
 						<div className="lusion-dot"></div>
 						<div className="lusion-top-meta">
 							<div>EXP 010</div>
@@ -522,14 +539,16 @@ export default function App() {
 								</div>
 							)}
 						</div>
-						<div className="lusion-bottom-info">
-							<h2 className="lusion-card-title">On-Chain Activity</h2>
-							<div className="lusion-card-tags">MANTLE L2 • TX • VERIFIED</div>
-						</div>
-					</article>
+						</article>
+					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
+						<div className="lusion-card-tags" style={{ fontSize: '0.8rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>MANTLE L2 • TX • VERIFIED</div>
+						<h2 className="lusion-card-title" style={{ fontSize: '1.8rem', fontWeight: 300, letterSpacing: '-0.02em', margin: 0 }}>On-Chain Activity</h2>
+					</div>
+				</div>
 
 					{/* SYNAPTIC CORE — 3D Brain (Row 6) */}
-					<article className="bento-card shape-choochoo align-right" role="region">
+					<div className="shape-choochoo align-right" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+					<article className="bento-card " role="region" style={{ flexGrow: 1, margin: 0 }}>
 						<div className="lusion-dot"></div>
 						<div className="lusion-top-meta">
 							<div>EXP 008</div>
@@ -547,11 +566,12 @@ export default function App() {
 								</div>
 							))}
 						</div>
-						<div className="lusion-bottom-info">
-							<h2 className="lusion-card-title">Swarm Brain</h2>
-							<div className="lusion-card-tags">MODULES • TECH • NEURAL</div>
-						</div>
-					</article>
+						</article>
+					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
+						<div className="lusion-card-tags" style={{ fontSize: '0.8rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>MODULES • TECH • NEURAL</div>
+						<h2 className="lusion-card-title" style={{ fontSize: '1.8rem', fontWeight: 300, letterSpacing: '-0.02em', margin: 0 }}>Swarm Brain</h2>
+					</div>
+				</div>
 				</div>
 
 				{/* CONTROL BAR (Centered below grid) */}
