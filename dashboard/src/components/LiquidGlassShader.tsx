@@ -5,8 +5,9 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import {
 	EffectComposer,
 	SMAA,
+	Bloom
 } from "@react-three/postprocessing";
-import { SMAAPreset } from "postprocessing";
+import { SMAAPreset, Resolution } from "postprocessing";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import * as THREE from "three";
@@ -34,10 +35,10 @@ const TIER_CONFIG = {
 
 import { GPUComputationRenderer } from "three/examples/jsm/misc/GPUComputationRenderer.js";
 
-// Render: boosted to compensate for missing Bloom postprocessing (physics remain 1:1)
-const U_OPACITY = "0.95";
-const U_P_SIZE_MUL = "4.0"; // Increased from 1.6 for larger particles
-const U_P_SOFT_MUL = "3.5"; // Increased from 2.5 to match larger size
+// Render: EXACT Lusion dump values
+const U_OPACITY = "0.32";
+const U_P_SIZE_MUL = "0.4"; 
+const U_P_SOFT_MUL = "0.92"; 
 const U_FOCUS_DIST = "0.32";
 
 // Lusion EXACT spawn/kill (строки 48653-48664)
@@ -364,17 +365,17 @@ function LiquidNebula({ particles }: { particles: number }) {
 		posVar.material.uniforms.u_defaultPosTex = { value: defaultPosDataTex };
 		posVar.material.uniforms.u_time = { value: 0 };
 		posVar.material.uniforms.u_deltaTime = { value: 0.016 };
-		posVar.material.uniforms.u_simSpeed = { value: 0.04 }; // Reduced from 0.12
-		posVar.material.uniforms.u_simDieSpeed = { value: 0.15 }; // Reduced from 0.32
+		posVar.material.uniforms.u_simSpeed = { value: 0.12 }; // Lusion exact
+		posVar.material.uniforms.u_simDieSpeed = { value: 0.32 }; // Lusion exact
 		posVar.material.uniforms.u_curlNoiseScale = { value: new THREE.Vector3(0.2, 0.6, 0.2) };
 		posVar.material.uniforms.u_curlStrength = { value: new THREE.Vector3(0.2, 0.12, 0.12) };
-		posVar.material.uniforms.u_curlStrMul = { value: 0.3 };  // Reduced from 0.8
+		posVar.material.uniforms.u_curlStrMul = { value: 0.8 };  // Lusion exact
 		posVar.material.uniforms.u_bounds = { value: new THREE.Vector3(7.0, 5.0, 2.0) };
 
 		// Velocity uniforms — adjusted for slower, more graceful movement
 		velVar.material.uniforms.u_deltaTime = { value: 0.016 };
 		velVar.material.uniforms.u_time = { value: 0 };
-		velVar.material.uniforms.u_simDieSpeed = { value: 0.15 }; // Reduced from 0.32
+		velVar.material.uniforms.u_simDieSpeed = { value: 0.32 }; // Lusion exact
 		velVar.material.uniforms.u_windForce = { value: new THREE.Vector3(0.16, 0.0, 0.0) }; // Lusion exact (line 148)
 		velVar.material.uniforms.u_windStrMul = { value: 1 };  // Lusion exact (line 152)
 		velVar.material.uniforms.u_mouseStrength = { value: 0.2 };  // Lusion exact (line 155)
@@ -532,9 +533,18 @@ function AdaptivePostProcessing({ tier }: { tier: DeviceTier }) {
 	}
 
 	// mid + high: Full FSR pipeline (EASU → RCAS)
+	// Lusion exact Bloom: luminanceThreshold=0.1, smoothWidth=1.0, iterative mipmap blur
 	return (
 		<EffectComposer multisampling={0}>
 			<SMAA preset={cfg.smaa} />
+			<Bloom
+				luminanceThreshold={0.1}
+				luminanceSmoothing={1.0}
+				intensity={1.0}
+				mipmapBlur={true}
+				resolutionX={Resolution.AUTO_SIZE}
+				resolutionY={Resolution.AUTO_SIZE}
+			/>
 			<FsrEasuPass sharpness={tier === "high" ? 0.5 : 0.35} />
 			<FsrRcasPass sharpness={1.0} />
 			<LusionFinalPass tintOpacity={0} vignetteFrom={0.6} vignetteTo={1.6} />
