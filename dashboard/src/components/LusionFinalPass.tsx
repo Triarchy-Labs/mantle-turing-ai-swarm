@@ -135,6 +135,7 @@ const LusionFinalPass = forwardRef(function LusionFinalPass(
     contrast?: number;
     brightness?: number;
     tintOpacity?: number;
+    invert?: number;
   },
   ref
 ) {
@@ -145,6 +146,7 @@ const LusionFinalPass = forwardRef(function LusionFinalPass(
     contrast = 0,
     brightness = 0,
     tintOpacity = 0.05,
+    invert = 0,
   } = props;
 
   const { size } = useThree();
@@ -159,8 +161,9 @@ const LusionFinalPass = forwardRef(function LusionFinalPass(
       contrast,
       brightness,
       tintOpacity,
+      invert,
     });
-  }, [vignetteFrom, vignetteTo, saturation, contrast, brightness, tintOpacity]);
+  }, [vignetteFrom, vignetteTo, saturation, contrast, brightness, tintOpacity, invert]);
 
   // Update dither seed every frame (Lusion line 42790: Math.random() * 1000)
   useFrame(() => {
