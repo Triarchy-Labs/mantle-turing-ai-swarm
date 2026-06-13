@@ -587,7 +587,7 @@ export default function LiquidGlassShader({ theme = "dark" }: { theme?: "dark" |
 				pointerEvents: "none",
 			}}
 		>
-			<Canvas dpr={cfg.dpr} camera={{ position: [0, 0, 5], fov: 45 }}>
+			<Canvas dpr={cfg.dpr} camera={{ position: [0, 0, 5], fov: 60 }}>
 				<color attach="background" args={["#010204"]} />
 				{/* Architecture Models and Lights removed to maximize FPS and fix background */}
 				
