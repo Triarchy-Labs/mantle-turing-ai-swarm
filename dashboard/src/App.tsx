@@ -184,8 +184,9 @@ export default function App() {
 			</WebGLErrorBoundary>
 			<CustomCursor />
 
-			{/* Vignette overlay */}
+			{/* Vignette & Noise overlays for post-processing dithering */}
 			<div className="vignette-overlay" style={{ position: 'fixed', inset: 0, background: 'radial-gradient(circle at center, transparent 30%, rgba(4,4,6,0.8) 100%)', zIndex: -98, pointerEvents: 'none' }} />
+			<div className="noise-overlay" />
 
 			{/* ═══ HEADER ═══ */}
 			<header className="header" role="banner" aria-label="Mantle AI Swarm Dashboard">
