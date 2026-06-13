@@ -1,13 +1,11 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Activity, Zap, Globe, Terminal, Network, Layers, Cpu, Eye, TrendingUp, Shield, AlertTriangle, BarChart3, Target } from 'lucide-react';
+import { Activity, Zap, Globe, Terminal, Network, Eye, TrendingUp, Shield, BarChart3, Target, MessageSquare } from 'lucide-react';
 import './index.css';
 import LiquidGlassShader from './components/LiquidGlassShader';
 import CustomCursor from './components/CustomCursor';
 import { WebGLErrorBoundary } from './components/WebGLErrorBoundary';
 import { useTelemetry } from './hooks/useTelemetry';
 import SwarmChat from './components/SwarmChat';
-import blurBlack4 from './assets/blur-black-4.webp';
-import redBlur from './assets/red-blur.webp';
 
 /* ── Pipeline stages ── */
 const pipelineStages = [
@@ -170,45 +168,49 @@ export default function App() {
 						</p>
 					</div>
 				</section>
-				{/* ═══ STATS GRID ═══ */}
-				{/* ═══ PRIMARY METRICS ═══ */}
-				<section className="metrics" aria-label="Key Performance Metrics">
-					<div className="glass metric"><h3><Zap size={14} style={{ color: 'var(--accent-hover)' }} /> PnL</h3><div className="val green">{telem.pnl}</div></div>
-					<div className="glass metric"><h3><TrendingUp size={14} style={{ color: 'var(--accent-hover)' }} /> Win Rate</h3><div className="val green">{telem.winRate}</div></div>
-					<div className="glass metric"><h3><Cpu size={14} style={{ color: 'var(--accent)' }} /> Cycle</h3><div className="val cyan">{cycle}</div></div>
-					<div className="glass metric"><h3><Shield size={14} style={{ color: telem.riskState?.circuit_breaker === 'GREEN' ? '#00ff88' : '#ff6b6b' }} /> Circuit</h3><div className="val" style={{ color: telem.riskState?.circuit_breaker === 'GREEN' ? '#00ff88' : '#ff6b6b' }}>{telem.riskState?.circuit_breaker ?? 'N/A'}</div></div>
-				</section>
-				{/* ═══ SECONDARY METRICS ═══ */}
-				<section className="metrics" aria-label="Secondary Metrics" style={{ marginTop: '-0.8vw' }}>
-					<div className="glass metric secondary"><h3><Activity size={12} /> Uptime</h3><div className="val cyan">{fmtUptime}</div></div>
-					<div className="glass metric secondary"><h3><BarChart3 size={12} /> Balance</h3><div className="val cyan">{telem.balance}</div></div>
-					<div className="glass metric secondary"><h3><AlertTriangle size={12} style={{ color: '#ff6b6b' }} /> Max DD</h3><div className="val" style={{ color: '#ff6b6b' }}>{telem.maxDrawdown}</div></div>
-					<div className="glass metric secondary"><h3><Target size={12} /> Trades</h3><div className="val cyan">{telem.totalTrades}</div></div>
+				{/* ═══ METRICS PILLS (5 CAPSULES) ═══ */}
+				<section className="metrics-pills" aria-label="Key Performance Metrics">
+					<div className="metric-pill"><Zap size={14} style={{ color: 'var(--accent-hover)' }} /> PNL <span className="val green">{telem.pnl}</span></div>
+					<div className="metric-pill"><TrendingUp size={14} style={{ color: 'var(--accent-hover)' }} /> WIN RATE <span className="val green">{telem.winRate}</span></div>
+					<div className="metric-pill"><Activity size={14} style={{ color: 'var(--accent)' }} /> UPTIME <span className="val cyan">{fmtUptime}</span></div>
+					<div className="metric-pill"><Target size={14} style={{ color: 'var(--accent)' }} /> TRADES <span className="val cyan">{telem.totalTrades}</span></div>
+					<div className="metric-pill"><Shield size={14} style={{ color: telem.riskState?.circuit_breaker === 'GREEN' ? '#00ff88' : '#ff6b6b' }} /> CIRCUIT <span className="val" style={{ color: telem.riskState?.circuit_breaker === 'GREEN' ? '#00ff88' : '#ff6b6b' }}>{telem.riskState?.circuit_breaker ?? 'N/A'}</span></div>
 				</section>
 
-				{/* ═══ MAIN GRID: Market + Synaptic Core ═══ */}
+				{/* ═══ MAIN GRID: 2 Large Cards ═══ */}
 				<div className="dashboard-grid">
-
-					{/* ── LEFT COLUMN ── */}
-					<div className="dashboard-col-left">
-
-						{/* LIVE MARKET MONITORING */}
-						<div className="glass events-section" role="region" aria-label="Live Market Data">
-							<div className="card-title"><TrendingUp size={16} style={{ color: 'var(--accent-hover)' }} /> LIVE MARKET MONITORING {telem.connected && <span style={{ fontSize: '0.65rem', color: 'var(--accent-success)', marginLeft: '0.5vw' }}>● LIVE</span>}</div>
+					{/* LIVE MARKET MONITORING CARD */}
+					<article className="mdx-card" role="region" aria-label="Live Market Data">
+						<div className="mdx-card-title"><TrendingUp size={18} style={{ color: 'var(--accent-hover)' }} /> LIVE MARKET MONITORING {telem.connected && <span style={{ fontSize: '0.75rem', color: 'var(--accent-success)', marginLeft: '1rem', letterSpacing: '2px' }}>● LIVE</span>}</div>
+						<div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
 							{telem.markets.map(m => (
-								<div key={m.sym} className="market-row">
+								<div key={m.sym} className="market-row" style={{ padding: '1rem 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
 									<div>
-										<div style={{ fontSize: '1.2rem', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>{m.sym}</div>
-										<div style={{ fontSize: '0.7rem', color: 'var(--foreground)', opacity: 0.5 }}>Vol 24h: {m.vol}</div>
+										<div style={{ fontSize: '1.4rem', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>{m.sym}</div>
+										<div style={{ fontSize: '0.85rem', color: 'var(--foreground)', opacity: 0.5 }}>Vol 24h: {m.vol}</div>
 									</div>
-									<div style={{ fontSize: '1.5rem', fontWeight: 700, fontFamily: 'var(--font-mono)', color: 'var(--accent)' }}>{m.price}</div>
-									<div className={`badge ${m.up ? 'ok' : 'fail'}`}>{m.change}</div>
-									<div className={`lusion-btn ${m.up ? 'connect-state-true' : ''}`} style={{ fontSize: '0.7rem', padding: '0.25rem 0.75rem' }}>
-										{m.verdict}<br /><span style={{ fontSize: '0.65rem', opacity: 0.7 }}>{m.conf}%</span>
+									<div style={{ fontSize: '1.8rem', fontWeight: 700, fontFamily: 'var(--font-mono)', color: 'var(--accent)' }}>{m.price}</div>
+									<div className={`badge ${m.up ? 'ok' : 'fail'}`} style={{ fontSize: '1rem', padding: '0.5rem 1rem' }}>{m.change}</div>
+									<div className={`lusion-btn ${m.up ? 'connect-state-true' : ''}`} style={{ fontSize: '0.8rem', padding: '0.4rem 1rem' }}>
+										{m.verdict}<br /><span style={{ fontSize: '0.75rem', opacity: 0.7 }}>{m.conf}%</span>
 									</div>
 								</div>
 							))}
 						</div>
+					</article>
+
+					{/* SWARM AGENT CHAT CARD */}
+					<article className="mdx-card" role="region" aria-label="Swarm Agent Chat">
+						<div className="mdx-card-title"><MessageSquare size={18} style={{ color: 'var(--accent)' }} /> SWARM AGENT</div>
+						<div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+							<SwarmChat telem={telem} orbState={orbState} />
+						</div>
+					</article>
+				</div>
+
+				{/* ═══ SECONDARY GRID: Remaining Components ═══ */}
+				<div className="dashboard-grid" style={{ gridTemplateColumns: '1fr', padding: '0 4rem', gap: '2rem' }}>
+					<div className="dashboard-col-left" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
 
 						{/* SYNAPTIC DECISION PIPELINE */}
 						<div className="glass events-section" role="region" aria-label="Decision Pipeline">
@@ -351,8 +353,7 @@ export default function App() {
 					{/* ── RIGHT COLUMN ── */}
 					<div className="dashboard-col-right">
 
-						{/* SWARM AGENT CHAT */}
-						<SwarmChat telem={telem} orbState={orbState} />
+						{/* SYNAPTIC CORE — 3D Brain */}
 						{/* SYNAPTIC CORE — 3D Brain */}
 						<div className="glass" style={{ position: 'relative', overflow: 'visible' }}>
 							<div className="card-title"><Eye size={16} style={{ color: 'var(--accent)' }} /> SYNAPTIC CORE — SWARM BRAIN</div>
