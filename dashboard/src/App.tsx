@@ -201,10 +201,18 @@ export default function App() {
 
 				<div className="header-right-container" style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
 					<div className="header-right-stats">
-						<span className="stats-label">{telem.connected ? (telem.liveMode ? 'LIVE TX' : 'CONNECTED') : 'MOCK'}</span>
-						<span className="stats-divider">|</span>
+						<span className="stats-label">{telem.connected ? (telem.liveMode ? 'LIVE TX' : 'CONNECTED') : ''}</span>
+						{telem.connected && <span className="stats-divider">|</span>}
 						<span className="stats-cycle">CYCLE {cycle}</span>
 					</div>
+					<button
+						className="theme-toggle-dl"
+						onClick={() => setTheme(t => t === 'dark' ? 'light' : 'dark')}
+						aria-label="Toggle dark/light mode"
+					>
+						<span className={`theme-letter ${theme === 'dark' ? 'active' : ''}`}>D</span>
+						<span className={`theme-letter ${theme === 'light' ? 'active' : ''}`}>L</span>
+					</button>
 					<div className="header-menu-btn" aria-label="Menu">
 						<span className="bar"></span>
 						<span className="bar"></span>
@@ -226,21 +234,36 @@ export default function App() {
 								MANTLE
 							</h1>
 						</div>
-						<p className="hero-subtitle">
-							12 crates · 26,873 LOC · 24-stage pipeline · 8 Titan modules · Mantle Mainnet
-						</p>
+						<div className="hero-bottom-layout">
+							<div className="hero-bottom-left">
+								<p className="mdx-two-tone-text">
+									Autonomous AI swarm operating on Mantle L2.<br/>
+									<span className="faded">We don't just execute trades — we shape the on-chain future.</span>
+								</p>
+								<div 
+									className="metrics-pills" 
+									aria-label="Key Performance Metrics" 
+								>
+									<MetricPill label="PNL" value={telem.pnl} isActive={!globalPillHover} onHoverChange={setGlobalPillHover} />
+									<MetricPill label="WIN RATE" value={telem.winRate} onHoverChange={setGlobalPillHover} />
+									<MetricPill label="UPTIME" value={fmtUptime} onHoverChange={setGlobalPillHover} />
+									<MetricPill label="TRADES" value={telem.totalTrades.toString()} onHoverChange={setGlobalPillHover} />
+									<MetricPill label="CIRCUIT" value={telem.riskState?.circuit_breaker ?? 'N/A'} onHoverChange={setGlobalPillHover} />
+								</div>
+							</div>
+							<div className="hero-bottom-right">
+							</div>
+						</div>
 					</div>
-				</section>
-				{/* ═══ METRICS PILLS (5 CAPSULES) ═══ */}
-				<section 
-					className="metrics-pills" 
-					aria-label="Key Performance Metrics" 
-				>
-					<MetricPill label="PNL" value={telem.pnl} isActive={!globalPillHover} onHoverChange={setGlobalPillHover} />
-					<MetricPill label="WIN RATE" value={telem.winRate} onHoverChange={setGlobalPillHover} />
-					<MetricPill label="UPTIME" value={fmtUptime} onHoverChange={setGlobalPillHover} />
-					<MetricPill label="TRADES" value={telem.totalTrades.toString()} onHoverChange={setGlobalPillHover} />
-					<MetricPill label="CIRCUIT" value={telem.riskState?.circuit_breaker ?? 'N/A'} onHoverChange={setGlobalPillHover} />
+					<div className="tech-stats-bar">
+						<span>12 CRATES</span>
+						<span className="tech-dot">·</span>
+						<span>26,873 LOC</span>
+						<span className="tech-dot">·</span>
+						<span>24-STAGE PIPELINE</span>
+						<span className="tech-dot">·</span>
+						<span>8 TITAN MODULES</span>
+					</div>
 				</section>
 
 				{/* ═══ BENTO GRID ═══ */}
@@ -588,10 +611,7 @@ export default function App() {
 					<span>Last Update: {footerTime}</span>
 				</div>
 
-				{/* Theme switcher */}
-				<button onClick={() => setTheme(t => t === 'dark' ? 'light' : 'dark')} className="lusion-btn connect-btn-hover-fx" style={{ position: 'fixed', bottom: '1.5rem', right: '1.5rem', zIndex: 100 }} aria-label="Toggle dark/light mode">
-					<span>{theme === 'dark' ? '◉ DARK' : '◌ LIGHT'}</span>
-				</button>
+
 			</main>
 		</>
 	);
