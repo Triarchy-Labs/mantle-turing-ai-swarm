@@ -1007,7 +1007,7 @@ export default function App() {
 							alignItems: 'center',
 							aspectRatio: 'auto',
 						}}>
-							<button className="lusion-btn-primary" onClick={handleLaunch} aria-label="Launch Synaptic Analysis" style={{ padding: '1.5rem 2.5rem' }}>
+							<button className="lusion-btn-primary" onClick={handleLaunch} aria-label="Launch Synaptic Analysis" style={{ padding: '1.5rem 0', width: '100%', textAlign: 'center', display: 'flex', justifyContent: 'center' }}>
 								{analysisRunning ? '[ ◎ RUNNING... ]' : '[ LAUNCH ANALYSIS ]'}
 							</button>
 						</div>
