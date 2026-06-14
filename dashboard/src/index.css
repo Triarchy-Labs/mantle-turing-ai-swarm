@@ -1967,8 +1967,10 @@ a:focus-visible,
 .risk-metrics-scroll {
 	max-height: 13.5rem;
 	overflow-y: auto;
-	padding-right: 0.5rem;
-	margin-right: -0.5rem;
+	padding-right: 5.5rem;
+	margin-right: -5.5rem;
+	scrollbar-width: thin;
+	scrollbar-color: rgba(0, 212, 255, 0.1) transparent;
 }
 
 .risk-metrics-scroll::-webkit-scrollbar {
@@ -1976,13 +1978,17 @@ a:focus-visible,
 }
 
 .risk-metrics-scroll::-webkit-scrollbar-track {
-	background: rgba(255, 255, 255, 0.02);
+	background: transparent;
 	border-radius: 3rem;
 }
 
 .risk-metrics-scroll::-webkit-scrollbar-thumb {
-	background: rgba(0, 212, 255, 0.3);
+	background: rgba(0, 212, 255, 0.1);
 	border-radius: 3rem;
+}
+
+.risk-metrics-scroll:hover::-webkit-scrollbar-thumb {
+	background: rgba(0, 212, 255, 0.3);
 }
 
 .risk-metrics-scroll::-webkit-scrollbar-thumb:hover {
@@ -2324,8 +2330,6 @@ html[data-theme="light"] .log-terminal {
 	height: 100%;
 	-webkit-backface-visibility: hidden;
 	backface-visibility: hidden;
-	border-radius: inherit;
-	background: inherit;
 }
 
 .flip-card-back {
