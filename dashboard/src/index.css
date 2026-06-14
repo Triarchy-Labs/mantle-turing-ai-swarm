@@ -2460,17 +2460,17 @@ html[data-theme="dark"] .text-reveal-container.is-revealed .text-reveal-word:hov
 
 /* VERDICT HOVER CAPSULE */
 .verdict-capsule {
-	position: relative;
+	position: absolute;
+	right: 0;
 	display: flex;
 	align-items: center;
-	justify-content: center;
+	justify-content: flex-end;
 	height: 4.5rem;
-	width: 4.5rem;
+	width: 1rem;
 	border-radius: 3rem;
 	cursor: pointer;
 	transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 	border: 1px solid transparent;
-	margin-left: 1rem;
 	box-sizing: border-box;
 }
 
@@ -2500,6 +2500,7 @@ html[data-theme="dark"] .text-reveal-container.is-revealed .text-reveal-word:hov
 	width: 8.5rem;
 	background: rgba(0, 212, 255, 0.05);
 	border-color: rgba(0, 212, 255, 0.2);
+	justify-content: center;
 }
 
 .verdict-capsule:hover .verdict-dot {

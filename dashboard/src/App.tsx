@@ -405,7 +405,7 @@ export default function App() {
 							<div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flex: 1, paddingTop: '3.5rem' }}>
 								{telem.markets.map(m => (
 									<div key={m.sym} className="market-row" style={{ padding: '0' }}>
-										<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem' }}>
+										<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', position: 'relative', paddingRight: '2.5rem' }}>
 											<div style={{ minWidth: '40%' }}>
 												<div style={{ display: 'flex', alignItems: 'center', gap: '0.7rem' }}>
 													<span style={{ fontSize: '2.4rem', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>{m.sym}</span>
@@ -995,7 +995,7 @@ export default function App() {
 				</div>
 
 				{/* ═══ FOOTER ═══ */}
-				<div className="glass footer-bar">
+				<div className="footer-bar" style={{ background: 'transparent', border: 'none', boxShadow: 'none' }}>
 					<span>Build: v5.0-triarchy · 24-stage pipeline →</span>
 					<span style={{ color: 'var(--accent-hover)' }}>⬡ SYSTEM ACTIVE · MANTLE DOMAIN</span>
 					<span>Last Update: {footerTime}</span>
