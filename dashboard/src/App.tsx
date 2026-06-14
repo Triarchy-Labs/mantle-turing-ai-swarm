@@ -39,15 +39,7 @@ const pipelineStages = [
 /* ── Debates & logs now come from useTelemetry hook ── */
 
 
-/* ── Orbiting tech cards around 3D stone ── */
-const techCards = [
-	{ label: 'ERC-8004', desc: 'Swarm Identity NFT', angle: 0 },
-	{ label: 'Curl-Noise', desc: 'GPGPU Particle Physics', angle: 60 },
-	{ label: 'IPC mmap()', desc: 'Zero-Copy L0 Shared Memory', angle: 120 },
-	{ label: '6-Layer Brain', desc: 'Multi-Agent Decision Engine', angle: 180 },
-	{ label: 'Rust WASM', desc: '12-Container Architecture', angle: 240 },
-	{ label: 'Mantle L2', desc: 'Low-Fee On-Chain Settlement', angle: 300 },
-];
+
 
 const MetricPill = ({ 
 	label, 
