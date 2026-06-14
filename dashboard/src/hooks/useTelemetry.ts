@@ -114,6 +114,8 @@ export interface MarketRow {
   up: boolean;
   conf: number;
   verdict: string;
+  regime?: string;
+  liq?: string;
 }
 
 export interface TelemetryData {
@@ -201,9 +203,10 @@ const MOCK_DATA: TelemetryData = {
   pipelineStage: 10,
   pipelineTotal: 24,
   markets: [
-    { sym: 'MNT', price: '$0.7833', vol: '$1,248,092', change: '+4.58%', up: true, conf: 82.5, verdict: 'BUY' },
-    { sym: 'WMNT', price: '$0.7841', vol: '$842,104', change: '+4.64%', up: true, conf: 78.4, verdict: 'BUY' },
-    { sym: 'ETH', price: '$3,224.03', vol: '$41,209,500', change: '-1.75%', up: false, conf: 55.6, verdict: 'HOLD' },
+    { sym: 'MNT', price: '$0.5533', vol: '$162,908', change: '+1.20%', up: true, conf: 82.5, verdict: 'BUY', regime: 'TRENDING_UP', liq: '$3.4M' },
+    { sym: 'USDe', price: '$1.0002', vol: '$168,847', change: '+0.02%', up: true, conf: 71.2, verdict: 'HOLD', regime: 'RANGING', liq: '$3.4M' },
+    { sym: 'ETH', price: '$1,670.32', vol: '$477', change: '-0.11%', up: false, conf: 55.6, verdict: 'HOLD', regime: 'RANGING', liq: '$2.2K' },
+    { sym: 'USDT', price: '$1.0000', vol: '$50,230', change: '+0.00%', up: true, conf: 50.0, verdict: 'HOLD', regime: 'RANGING', liq: '$1.1M' },
   ],
   debates: MOCK_DEBATES,
   logs: MOCK_LOGS,
@@ -277,7 +280,7 @@ function generateDemoTick(prev: TelemetryData, dexPrices: Partial<MarketRow>[]):
     uptimeSecs: elapsed,
     pipelineStage,
     pipelineTotal: 24,
-    markets: markets.map((m, i) => i === 0 ? { ...m, verdict: verdicts[verdictIdx], conf: 70 + Math.random() * 15 } : m),
+    markets: markets.map((m, i) => i === 0 ? { ...m, verdict: verdicts[verdictIdx], conf: Math.round((70 + Math.random() * 15) * 10) / 10 } : m),
     debates,
     logs,
     txHashes: cycle > 0 ? [`0x${Math.random().toString(16).slice(2, 10)}...${Math.random().toString(16).slice(2, 6)}`] : [],
@@ -334,6 +337,8 @@ function mapResponse(resp: TelemetryResponse): TelemetryData {
     up: s.price_change_24h >= 0,
     conf: Math.round(s.confidence * 10) / 10,
     verdict: mapVerdict(s.verdict),
+    regime: s.regime || 'RANGING',
+    liq: s.liquidity_usd ? formatVolume(s.liquidity_usd) : undefined,
   }));
 
   const ps = resp.paper_stats;
@@ -390,62 +395,43 @@ function mapResponse(resp: TelemetryResponse): TelemetryData {
 
 async function fetchClientSideFallbackPrices(): Promise<Partial<MarketRow>[]> {
   try {
-    const res = await fetch("https://api.dexscreener.com/latest/dex/tokens/0x78c1b0C915c4FAA5FffA6CAbf0219DA63d7f4cb8,0xdEAddEaDdeadDEadDEADDEaddEADDEAddead1111");
+    // WMNT + WETH + USDe + USDT addresses on Mantle
+    const tokens = [
+      '0x78c1b0C915c4FAA5FffA6CAbf0219DA63d7f4cb8', // WMNT
+      '0xdEAddEaDdeadDEadDEADDEaddEADDEAddead1111', // WETH
+      '0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34', // USDe
+      '0x201EBa5CC46D216Ce6DC03F6a759e8E766e956aE', // USDT
+    ].join(',');
+    const res = await fetch(`https://api.dexscreener.com/latest/dex/tokens/${tokens}`);
     if (!res.ok) return [];
     const json = await res.json();
     if (!json.pairs || !Array.isArray(json.pairs)) return [];
     
     const mantlePairs = json.pairs.filter((p: any) => p.chainId === 'mantle');
     
-    // Find best pair for WMNT
-    const wmntPairs = mantlePairs.filter((p: any) => p.baseToken.address.toLowerCase() === '0x78c1b0c915c4faa5fffa6cabf0219da63d7f4cb8');
-    const bestWmnt = wmntPairs.reduce((prev: any, current: any) => {
-      const prevLiq = prev.liquidity?.usd || 0;
-      const currLiq = current.liquidity?.usd || 0;
-      return currLiq > prevLiq ? current : prev;
-    }, wmntPairs[0]);
+    function findBestPair(addr: string) {
+      const pairs = mantlePairs.filter((p: any) => p.baseToken.address.toLowerCase() === addr.toLowerCase());
+      if (!pairs.length) return null;
+      return pairs.reduce((prev: any, curr: any) => (curr.liquidity?.usd || 0) > (prev.liquidity?.usd || 0) ? curr : prev, pairs[0]);
+    }
 
-    // Find best pair for WETH
-    const wethPairs = mantlePairs.filter((p: any) => p.baseToken.address.toLowerCase() === '0xdeaddeaddeaddeaddeaddeaddeaddeaddead1111');
-    const bestWeth = wethPairs.reduce((prev: any, current: any) => {
-      const prevLiq = prev.liquidity?.usd || 0;
-      const currLiq = current.liquidity?.usd || 0;
-      return currLiq > prevLiq ? current : prev;
-    }, wethPairs[0]);
+    function pairToRow(pair: any, sym: string): Partial<MarketRow> {
+      const priceVal = parseFloat(pair.priceUsd || '0');
+      const volVal = pair.volume?.h24 || 0;
+      const changeVal = pair.priceChange?.h24 || 0;
+      const liqVal = pair.liquidity?.usd || 0;
+      return { sym, price: formatPrice(priceVal), vol: formatVolume(volVal), change: formatChange(changeVal), up: changeVal >= 0, liq: formatVolume(liqVal) };
+    }
 
     const results: Partial<MarketRow>[] = [];
-    if (bestWmnt) {
-      const priceVal = parseFloat(bestWmnt.priceUsd || '0');
-      const volVal = bestWmnt.volume?.h24 || 0;
-      const changeVal = bestWmnt.priceChange?.h24 || 0;
-      results.push({
-        sym: 'MNT',
-        price: formatPrice(priceVal),
-        vol: formatVolume(volVal),
-        change: formatChange(changeVal),
-        up: changeVal >= 0,
-      });
-      results.push({
-        sym: 'WMNT',
-        price: formatPrice(priceVal + 0.0008), // small spread
-        vol: formatVolume(volVal * 0.7),
-        change: formatChange(changeVal),
-        up: changeVal >= 0,
-      });
-    }
-
-    if (bestWeth) {
-      const priceVal = parseFloat(bestWeth.priceUsd || '0');
-      const volVal = bestWeth.volume?.h24 || 0;
-      const changeVal = bestWeth.priceChange?.h24 || 0;
-      results.push({
-        sym: 'ETH',
-        price: formatPrice(priceVal),
-        vol: formatVolume(volVal),
-        change: formatChange(changeVal),
-        up: changeVal >= 0,
-      });
-    }
+    const wmnt = findBestPair('0x78c1b0C915c4FAA5FffA6CAbf0219DA63d7f4cb8');
+    if (wmnt) results.push(pairToRow(wmnt, 'MNT'));
+    const usde = findBestPair('0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34');
+    if (usde) results.push(pairToRow(usde, 'USDe'));
+    const weth = findBestPair('0xdEAddEaDdeadDEadDEADDEaddEADDEAddead1111');
+    if (weth) results.push(pairToRow(weth, 'ETH'));
+    const usdt = findBestPair('0x201EBa5CC46D216Ce6DC03F6a759e8E766e956aE');
+    if (usdt) results.push(pairToRow(usdt, 'USDT'));
 
     return results;
   } catch (e) {

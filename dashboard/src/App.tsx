@@ -276,18 +276,21 @@ export default function App() {
 							<div>EXP 001</div>
 							<div>MARKET</div>
 						</div>
-						<div className="bento-content">
-							<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+						<div className="bento-content" style={{ overflow: 'auto' }}>
+							<div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
 								{telem.markets.map(m => (
-									<div key={m.sym} className="market-row" style={{ padding: '1.5rem 0' }}>
+									<div key={m.sym} className="market-row" style={{ padding: '0.8rem 0', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
 										<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
 											<div>
-												<div style={{ fontSize: '1.4rem', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>{m.sym}</div>
-												<div style={{ fontSize: '0.85rem', color: 'var(--foreground)', opacity: 0.5 }}>Vol 24h: {m.vol}</div>
+												<div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+													<span style={{ fontSize: '1.4rem', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>{m.sym}</span>
+													{m.regime && <span style={{ fontSize: '0.6rem', padding: '0.15rem 0.5rem', borderRadius: '3px', background: 'rgba(0,212,255,0.08)', color: 'var(--accent)', fontFamily: 'var(--font-mono)', letterSpacing: '0.04em', fontWeight: 600 }}>{m.regime === 'TRENDING_UP' ? '↑ TREND' : m.regime === 'TRENDING_DOWN' ? '↓ TREND' : m.regime === 'VOLATILE' ? '⚡ VOL' : '~ RANGE'}</span>}
+												</div>
+												<div style={{ fontSize: '0.75rem', color: 'var(--foreground)', opacity: 0.4, fontFamily: 'var(--font-mono)', marginTop: '0.25rem' }}>Vol {m.vol}{m.liq ? ` · Liq ${m.liq}` : ''}</div>
 											</div>
 											<div style={{ textAlign: 'right' }}>
-												<div style={{ fontSize: '1.8rem', fontWeight: 700, fontFamily: 'var(--font-mono)', color: 'var(--accent)' }}>{m.price}</div>
-												<div className={`badge ${m.up ? 'ok' : 'fail'}`} style={{ fontSize: '1rem', padding: '0.2rem 0.6rem', marginTop: '0.4rem' }}>{m.change}</div>
+												<div style={{ fontSize: '1.6rem', fontWeight: 700, fontFamily: 'var(--font-mono)', color: 'var(--accent)' }}>{m.price}</div>
+												<div className={`badge ${m.up ? 'ok' : 'fail'}`} style={{ fontSize: '0.85rem', padding: '0.15rem 0.5rem', marginTop: '0.3rem' }}>{m.change}</div>
 											</div>
 											<div className={`lusion-btn ${m.up ? 'connect-state-true' : ''}`} style={{ fontSize: '0.8rem', padding: '0.4rem 1rem' }}>
 												{m.verdict}<br /><span style={{ fontSize: '0.75rem', opacity: 0.7 }}>{m.conf}%</span>
