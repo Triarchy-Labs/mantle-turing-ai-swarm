@@ -658,8 +658,8 @@ export default function App() {
 					{/* OPEN POSITIONS (Row 3, Left) */}
 					<div className="shape-choochoo" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
 					<article className="bento-card " role="region" style={{ flexGrow: 1, margin: 0, padding: 0, overflow: 'hidden' }}>
-						<div className="lusion-dot" style={{ top: '2.5vw', left: '2.5vw' }}></div>
-						<div className="lusion-top-meta" style={{ position: 'absolute', top: '2.5vw', left: '2.5vw', right: '2.5vw', zIndex: 10 }}>
+						<div className="lusion-dot"></div>
+						<div className="lusion-top-meta">
 							<div>006</div>
 							<div>NEURAL SENSOR</div>
 						</div>
