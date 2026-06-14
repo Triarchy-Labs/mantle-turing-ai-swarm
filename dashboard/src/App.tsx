@@ -871,16 +871,20 @@ export default function App() {
 							<div style={{ display: 'flex', flexDirection: 'column', gap: '1vw' }}>
 								{(telem as any).decisions?.map((d: any, i: number) => (
 									<div key={i} className="decision-row" style={{
-										display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.8vw',
-										border: '1px solid rgba(255,255,255,0.05)', borderRadius: '4px', background: 'rgba(255,255,255,0.02)'
+										display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem 0'
 									}}>
-										<div style={{ display: 'flex', flexDirection: 'column', gap: '0.3vw' }}>
+										<div style={{ display: 'flex', flexDirection: 'column', gap: '0.3vw', flex: 1, paddingRight: '1rem' }}>
 											<div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.5rem', fontWeight: 700 }}>
 												{d.sym} <span style={{ opacity: 0.4, fontSize: '1.4rem', marginLeft: '0.5vw' }}>{d.time}</span>
 											</div>
 											<div style={{ fontSize: '1.5rem', opacity: 0.7, fontFamily: 'var(--font-mono)' }}>{d.reason}</div>
 										</div>
-										<span className={`badge ${d.verdict === 'EXECUTED' ? 'ok' : d.verdict === 'HOLD' ? '' : 'fail'}`} style={{ fontSize: '1.4rem' }}>
+										<span style={{ 
+											fontSize: '1.4rem', 
+											fontWeight: 700, 
+											letterSpacing: '0.1em',
+											color: d.verdict === 'EXECUTED' ? '#00f5ff' : d.verdict === 'HOLD' ? 'var(--foreground)' : 'var(--accent)'
+										}}>
 											{d.verdict}
 										</span>
 									</div>
