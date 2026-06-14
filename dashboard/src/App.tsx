@@ -976,14 +976,21 @@ export default function App() {
 				</div>
 
 				{/* CONTROL BAR (Centered below grid) */}
-				<div className="control-bar" style={{ display: 'flex', justifyContent: 'center', gap: '2rem', marginBottom: '4rem', padding: '0 4rem', position: 'relative' }}>
+				<div className="control-bar" style={{ 
+					display: 'flex', 
+					justifyContent: 'space-between', 
+					width: '100%',
+					maxWidth: '1400px',
+					margin: '0 auto 4rem auto', 
+					position: 'relative' 
+				}}>
 					<button className="lusion-btn-primary" onClick={handleLaunch} aria-label="Launch Synaptic Analysis">
 						{analysisRunning ? '[ ◎ ANALYSIS RUNNING... ]' : '[ LAUNCH SYNAPTIC ANALYSIS ]'}
 					</button>
 					<button className="lusion-btn connect-btn-hover-fx" onClick={() => window.open(`https://explorer.mantle.xyz/address/0x1150f09ae885e6E7BcC0cb38feDd200d7f580008`, '_blank')} aria-label="View On-Chain Agent NFT"><span>[ VIEW AGENT NFT ON-CHAIN ]</span></button>
 					
 					{/* Scroll to Top Button */}
-					<div style={{ position: 'absolute', right: '4rem', top: '50%', marginTop: '-2.5rem', animation: 'pulse-drift 4s ease-in-out infinite' }}>
+					<div style={{ position: 'absolute', right: '-6rem', top: '50%', marginTop: '-2.5rem', animation: 'pulse-drift 4s ease-in-out infinite' }}>
 						<button 
 							className="lusion-btn-up" 
 							onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
@@ -997,9 +1004,16 @@ export default function App() {
 				</div>
 
 				{/* ═══ FOOTER ═══ */}
-				<div className="footer-bar" style={{ background: 'transparent', border: 'none', boxShadow: 'none' }}>
+				<div className="footer-bar" style={{ 
+					background: 'transparent', 
+					border: 'none', 
+					boxShadow: 'none',
+					fontWeight: 600,
+					opacity: 0.5,
+					letterSpacing: '0.05em'
+				}}>
 					<span>Build: v5.0-triarchy · 24-stage pipeline →</span>
-					<span style={{ color: 'var(--accent-hover)' }}>⬡ SYSTEM ACTIVE · MANTLE DOMAIN</span>
+					<span style={{ color: 'var(--accent)' }}>⬡ SYSTEM ACTIVE · MANTLE DOMAIN</span>
 					<span>Last Update: {footerTime}</span>
 				</div>
 
