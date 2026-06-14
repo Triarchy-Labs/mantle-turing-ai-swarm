@@ -191,21 +191,21 @@ const NeuralLoom = ({ telem, hasPositions }: { telem: any, hasPositions: boolean
 						style={{ left: `${p.x}%`, top: `${p.y}%` }} 
 					/>
 				))}
-
-				{!hasPositions && (
-					<div className="loom-core-status">
-						<div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.9rem', letterSpacing: '0.15em', color: 'var(--accent)', animation: 'pulse 4s infinite' }}>
-							ZERO EXPOSURE
-						</div>
-						<div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', letterSpacing: '0.1em', opacity: 0.6, marginTop: '0.5rem' }}>
-							SWARM IS HUNTING
-						</div>
-						<div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', opacity: 0.4, marginTop: '0.5rem', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '0.5rem', width: '100%' }}>
-							CYCLE: {telem.cycle} | UP: {telem.uptimeSecs}s
-						</div>
-					</div>
-				)}
 			</div>
+
+			{!hasPositions && (
+				<div className="loom-core-status">
+					<div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.9rem', letterSpacing: '0.15em', color: 'var(--accent)', animation: 'pulse 4s infinite' }}>
+						ZERO EXPOSURE
+					</div>
+					<div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', letterSpacing: '0.1em', opacity: 0.6, marginTop: '0.5rem' }}>
+						SWARM IS HUNTING
+					</div>
+					<div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.5rem', opacity: 0.3, marginTop: '0.8rem', letterSpacing: '0.1em' }}>
+						CYCLE: {telem.cycle} | UP: {telem.uptimeSecs}s
+					</div>
+				</div>
+			)}
 		</div>
 	);
 };
