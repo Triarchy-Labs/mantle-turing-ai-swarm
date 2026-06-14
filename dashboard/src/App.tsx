@@ -478,26 +478,28 @@ export default function App() {
 								</div>
 
 								{/* Risk rows */}
-								{[
-									{ label: 'Dynamic Leverage', value: `${(telem.riskState?.dynamic_leverage ?? 0).toFixed(1)}×`, accent: true, bold: true },
-									{ label: 'Risk Appetite', value: `${((telem.riskState?.risk_appetite ?? 0) * 100).toFixed(0)}%`, accent: true },
-									{ label: 'EWMA Confidence', value: `${((telem.riskState?.ewma_confidence ?? 0) * 100).toFixed(1)}%`, accent: true },
-									{ label: 'ATR Estimate', value: `${((telem.riskState?.atr_estimate ?? 0) * 100).toFixed(2)}%`, accent: false },
-									{ label: 'Pre-trade Factor', value: `${((telem.riskState?.pretrade_factor ?? 0) * 100).toFixed(0)}%`, accent: false },
-									{ label: 'Macro Penalty', value: (telem.riskState?.macro_penalty ?? 0).toFixed(3), accent: false, warn: (telem.riskState?.macro_penalty ?? 0) > 0.05 },
-									{ label: 'Max Position', value: `${((telem.rampState?.max_position_pct ?? 0.1) * 100).toFixed(0)}%`, accent: false },
-									{ label: 'Daily Loss Kill', value: `${telem.rampState?.daily_loss_kill_pct ?? 3.0}%`, accent: false, warn: true },
-								].map((row, i) => (
-									<div key={i} className="risk-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.45rem 0', transition: 'transform 0.2s ease' }}>
-										<span style={{ opacity: 0.5, fontSize: '2.4rem' }}>{row.label}</span>
-										<span style={{
-											color: row.warn ? 'rgba(0,212,255,0.45)' : row.accent ? 'var(--accent)' : 'var(--foreground)',
-											fontWeight: row.bold ? 700 : 500,
-											fontSize: row.bold ? '1.5rem' : '1.2rem',
-											fontFamily: 'var(--font-mono)',
-										}}>{row.value}</span>
-									</div>
-								))}
+								<div className="risk-metrics-scroll">
+									{[
+										{ label: 'Dynamic Leverage', value: `${(telem.riskState?.dynamic_leverage ?? 0).toFixed(1)}×`, accent: true, bold: true },
+										{ label: 'Risk Appetite', value: `${((telem.riskState?.risk_appetite ?? 0) * 100).toFixed(0)}%`, accent: true },
+										{ label: 'EWMA Confidence', value: `${((telem.riskState?.ewma_confidence ?? 0) * 100).toFixed(1)}%`, accent: true },
+										{ label: 'ATR Estimate', value: `${((telem.riskState?.atr_estimate ?? 0) * 100).toFixed(2)}%`, accent: false },
+										{ label: 'Pre-trade Factor', value: `${((telem.riskState?.pretrade_factor ?? 0) * 100).toFixed(0)}%`, accent: false },
+										{ label: 'Macro Penalty', value: (telem.riskState?.macro_penalty ?? 0).toFixed(3), accent: false, warn: (telem.riskState?.macro_penalty ?? 0) > 0.05 },
+										{ label: 'Max Position', value: `${((telem.rampState?.max_position_pct ?? 0.1) * 100).toFixed(0)}%`, accent: false },
+										{ label: 'Daily Loss Kill', value: `${telem.rampState?.daily_loss_kill_pct ?? 3.0}%`, accent: false, warn: true },
+									].map((row, i) => (
+										<div key={i} className="risk-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.45rem 0', transition: 'transform 0.2s ease' }}>
+											<span style={{ opacity: 0.5, fontSize: '2.4rem' }}>{row.label}</span>
+											<span style={{
+												color: row.warn ? 'rgba(0,212,255,0.45)' : row.accent ? 'var(--accent)' : 'var(--foreground)',
+												fontWeight: row.bold ? 700 : 500,
+												fontSize: row.bold ? '1.5rem' : '1.2rem',
+												fontFamily: 'var(--font-mono)',
+											}}>{row.value}</span>
+										</div>
+									))}
+								</div>
 
 								{/* Circuit Breaker — special row */}
 								<div className="risk-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem 0', borderTop: '1px solid rgba(255,255,255,0.04)', marginTop: '0.3rem' }}>
