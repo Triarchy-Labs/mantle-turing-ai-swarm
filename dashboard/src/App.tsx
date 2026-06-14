@@ -995,7 +995,8 @@ export default function App() {
 						marginTop: 0,
 						paddingBottom: 0,
 						minHeight: 0,
-						rowGap: 0
+						rowGap: 0,
+						width: '100%'
 					}}>
 						{/* Dummy div to force columns 1-5 to hold their width, matching Card 007 */}
 						<div style={{ gridColumn: 'span 5' }}></div>
