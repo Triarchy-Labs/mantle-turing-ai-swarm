@@ -977,20 +977,34 @@ export default function App() {
 
 				{/* CONTROL BAR (Centered below grid) */}
 				<div className="control-bar" style={{ 
-					display: 'flex', 
-					justifyContent: 'space-between', 
-					width: '100%',
-					maxWidth: '1400px',
-					margin: '0 auto 4rem auto', 
-					position: 'relative' 
+					marginBottom: '4rem', 
+					padding: '0 4rem', 
+					position: 'relative',
+					width: '100%' 
 				}}>
-					<button className="lusion-btn-primary" onClick={handleLaunch} aria-label="Launch Synaptic Analysis">
-						{analysisRunning ? '[ ◎ ANALYSIS RUNNING... ]' : '[ LAUNCH SYNAPTIC ANALYSIS ]'}
-					</button>
-					<button className="lusion-btn connect-btn-hover-fx" onClick={() => window.open(`https://explorer.mantle.xyz/address/0x1150f09ae885e6E7BcC0cb38feDd200d7f580008`, '_blank')} aria-label="View On-Chain Agent NFT"><span>[ VIEW AGENT NFT ON-CHAIN ]</span></button>
+					{/* Grid aligned with the cards above */}
+					<div style={{
+						display: 'grid', 
+						gridTemplateColumns: '1fr 1fr', 
+						gap: '2vw', 
+						width: '100%',
+						maxWidth: '1400px',
+						margin: '0 auto', 
+					}}>
+						{/* Left column (empty, under Card 007) */}
+						<div></div>
+
+						{/* Right column (buttons under Card 008) */}
+						<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+							<button className="lusion-btn-primary" onClick={handleLaunch} aria-label="Launch Synaptic Analysis">
+								{analysisRunning ? '[ ◎ ANALYSIS RUNNING... ]' : '[ LAUNCH SYNAPTIC ANALYSIS ]'}
+							</button>
+							<button className="lusion-btn connect-btn-hover-fx" onClick={() => window.open(`https://explorer.mantle.xyz/address/0x1150f09ae885e6E7BcC0cb38feDd200d7f580008`, '_blank')} aria-label="View On-Chain Agent NFT"><span>[ VIEW AGENT NFT ON-CHAIN ]</span></button>
+						</div>
+					</div>
 					
 					{/* Scroll to Top Button */}
-					<div style={{ position: 'absolute', right: '-6rem', top: '50%', marginTop: '-2.5rem', animation: 'pulse-drift 4s ease-in-out infinite' }}>
+					<div style={{ position: 'absolute', right: '4rem', top: '50%', marginTop: '-2.5rem', animation: 'pulse-drift 4s ease-in-out infinite' }}>
 						<button 
 							className="lusion-btn-up" 
 							onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
