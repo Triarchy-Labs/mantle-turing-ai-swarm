@@ -300,7 +300,7 @@ export default function App() {
 						</article>
 					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
 						<div className="lusion-card-tags" style={{ fontSize: '0.8rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>DATA • ORACLE • ACTIVE</div>
-						<h2 className="lusion-card-title" style={{ fontSize: '1.8rem', fontWeight: 300, letterSpacing: '-0.02em', margin: 0 }}>Live Market Feed</h2>
+						<h2 className="lusion-card-title">Live Market Feed</h2>
 					</div>
 				</div>
 
@@ -318,7 +318,7 @@ export default function App() {
 						</article>
 					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
 						<div className="lusion-card-tags" style={{ fontSize: '0.8rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>AI • LLM • EXECUTION</div>
-						<h2 className="lusion-card-title" style={{ fontSize: '1.8rem', fontWeight: 300, letterSpacing: '-0.02em', margin: 0 }}>Swarm Agent AI</h2>
+						<h2 className="lusion-card-title">Swarm Agent AI</h2>
 					</div>
 				</div>
 
@@ -357,7 +357,7 @@ export default function App() {
 						</article>
 					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
 						<div className="lusion-card-tags" style={{ fontSize: '0.8rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>SAFETY • LIMITS • GUARDS</div>
-						<h2 className="lusion-card-title" style={{ fontSize: '1.8rem', fontWeight: 300, letterSpacing: '-0.02em', margin: 0 }}>Risk Matrix</h2>
+						<h2 className="lusion-card-title">Risk Matrix</h2>
 					</div>
 				</div>
 
@@ -398,7 +398,7 @@ export default function App() {
 						</article>
 					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
 						<div className="lusion-card-tags" style={{ fontSize: '0.8rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>STATE • DAG • PROCESS</div>
-						<h2 className="lusion-card-title" style={{ fontSize: '1.8rem', fontWeight: 300, letterSpacing: '-0.02em', margin: 0 }}>Execution State</h2>
+						<h2 className="lusion-card-title">Execution State</h2>
 					</div>
 				</div>
 
@@ -433,7 +433,7 @@ export default function App() {
 						</article>
 					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
 						<div className="lusion-card-tags" style={{ fontSize: '0.8rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>HOLDINGS • ACTIVE</div>
-						<h2 className="lusion-card-title" style={{ fontSize: '1.8rem', fontWeight: 300, letterSpacing: '-0.02em', margin: 0 }}>Positions ({telem.openPositions.length})</h2>
+						<h2 className="lusion-card-title">Positions ({telem.openPositions.length})</h2>
 					</div>
 				</div>
 
@@ -459,7 +459,7 @@ export default function App() {
 						</article>
 					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
 						<div className="lusion-card-tags" style={{ fontSize: '0.8rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>CAPITAL • GROWTH</div>
-						<h2 className="lusion-card-title" style={{ fontSize: '1.8rem', fontWeight: 300, letterSpacing: '-0.02em', margin: 0 }}>Auto-Ramp</h2>
+						<h2 className="lusion-card-title">Auto-Ramp</h2>
 					</div>
 				</div>
 
@@ -485,7 +485,7 @@ export default function App() {
 						</article>
 					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
 						<div className="lusion-card-tags" style={{ fontSize: '0.8rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>EVENTS • LOGS • TRACE</div>
-						<h2 className="lusion-card-title" style={{ fontSize: '1.8rem', fontWeight: 300, letterSpacing: '-0.02em', margin: 0 }}>Activity Stream</h2>
+						<h2 className="lusion-card-title">Activity Stream</h2>
 					</div>
 				</div>
 
@@ -515,7 +515,7 @@ export default function App() {
 						</article>
 					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
 						<div className="lusion-card-tags" style={{ fontSize: '0.8rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>AGENTS • LOGIC • VOTING</div>
-						<h2 className="lusion-card-title" style={{ fontSize: '1.8rem', fontWeight: 300, letterSpacing: '-0.02em', margin: 0 }}>Debate Consensus</h2>
+						<h2 className="lusion-card-title">Debate Consensus</h2>
 					</div>
 				</div>
 
@@ -565,7 +565,7 @@ export default function App() {
 						</article>
 					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
 						<div className="lusion-card-tags" style={{ fontSize: '0.8rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>MANTLE L2 • TX • VERIFIED</div>
-						<h2 className="lusion-card-title" style={{ fontSize: '1.8rem', fontWeight: 300, letterSpacing: '-0.02em', margin: 0 }}>On-Chain Activity</h2>
+						<h2 className="lusion-card-title">On-Chain Activity</h2>
 					</div>
 				</div>
 
@@ -591,7 +591,7 @@ export default function App() {
 						</article>
 					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
 						<div className="lusion-card-tags" style={{ fontSize: '0.8rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>MODULES • TECH • NEURAL</div>
-						<h2 className="lusion-card-title" style={{ fontSize: '1.8rem', fontWeight: 300, letterSpacing: '-0.02em', margin: 0 }}>Swarm Brain</h2>
+						<h2 className="lusion-card-title">Swarm Brain</h2>
 					</div>
 				</div>
 				</div>
