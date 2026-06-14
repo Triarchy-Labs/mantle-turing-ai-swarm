@@ -627,15 +627,15 @@ html[data-theme="light"] .toggle-group {
 }
 
 .metrics .metric.secondary .val {
-	font-size: 2.16rem;
+	font-size: 2.8rem;
 }
 
 .metrics .metric.secondary h3 {
-	font-size: 1.12rem;
+	font-size: 1.5rem;
 }
 
 .metric h3 {
-	font-size: 1.28rem;
+	font-size: 1.7rem;
 	text-transform: uppercase;
 	letter-spacing: 0.08em;
 	color: var(--foreground);
@@ -772,7 +772,7 @@ html[data-theme="light"] .toggle-group {
 
 .mdx-card-title {
 	font-family: 'Fixel Display', var(--font-heading);
-	font-size: 1.5rem;
+	font-size: 2rem;
 	font-weight: 500;
 	letter-spacing: 1px;
 	margin-bottom: 2rem;
@@ -783,7 +783,7 @@ html[data-theme="light"] .toggle-group {
 }
 
 .metric .val {
-	font-size: 3.52rem;
+	font-size: 4.5rem;
 	font-weight: 700;
 	font-family: var(--font-heading);
 	letter-spacing: -0.02em;
@@ -868,7 +868,7 @@ html[data-theme="light"] .event-row {
 }
 
 .event-label {
-	font-size: 1.12rem;
+	font-size: 1.5rem;
 	color: var(--foreground);
 	opacity: 0.45;
 	text-transform: uppercase;
@@ -878,7 +878,7 @@ html[data-theme="light"] .event-row {
 
 .event-val {
 	font-family: var(--font-mono);
-	font-size: 1.36rem;
+	font-size: 1.8rem;
 	font-weight: 500;
 }
 
@@ -893,7 +893,7 @@ html[data-theme="light"] .event-row {
 .badge {
 	padding: 4px 10px;
 	border-radius: 6px;
-	font-size: 1.12rem;
+	font-size: 1.5rem;
 	font-weight: 700;
 	display: inline-block;
 	font-family: var(--font-mono);
@@ -1239,7 +1239,7 @@ html[data-theme="light"] .lusion-btn-primary:hover {
 
 .swarm-chat-msg {
 	padding: 1rem 0;
-	font-size: 1.2rem;
+	font-size: 1.6rem;
 	line-height: 1.55;
 	font-family: var(--font-mono);
 }
@@ -1464,7 +1464,7 @@ html[data-theme="light"] .lusion-btn-primary:hover {
 	top: 2.5vw;
 	left: 2.5vw;
 	font-family: var(--font-mono);
-	font-size: 0.7rem;
+	font-size: 0.95rem;
 	opacity: 0.5;
 	text-transform: uppercase;
 	letter-spacing: 0.1em;
@@ -1583,7 +1583,7 @@ html[data-theme="light"] .lusion-btn-primary:hover {
 	align-items: center;
 	padding: 1vw 1.5vw;
 	border-radius: 1.28rem;
-	font-size: 1.2rem;
+	font-size: 1.6rem;
 	font-family: var(--font-mono);
 	margin-top: 2vw;
 	opacity: 0.8;
@@ -1930,7 +1930,7 @@ a:focus-visible,
 	padding: 0.64rem 1.28rem;
 	border-radius: 0.64rem;
 	font-family: var(--font-mono);
-	font-size: 1.2rem;
+	font-size: 1.6rem;
 	background: rgba(15, 15, 25, 0.3);
 	border: 1px solid rgba(255, 255, 255, 0.03);
 	transition: all 0.3s ease;
@@ -1963,7 +1963,7 @@ html[data-theme="light"] .pipeline-stage.active {
 	background: rgba(10, 10, 18, 0.4);
 	border: 1px solid rgba(255, 255, 255, 0.03);
 	font-family: var(--font-mono);
-	font-size: 1.28rem;
+	font-size: 1.7rem;
 }
 html[data-theme="light"] .position-row {
 	background: rgba(10, 10, 18, 0.4) !important;
@@ -1973,7 +1973,7 @@ html[data-theme="light"] .position-row {
 	height: 24rem;
 	overflow-y: auto;
 	font-family: var(--font-mono);
-	font-size: 1.2rem;
+	font-size: 1.6rem;
 	line-height: 1.8;
 	padding: 1.6rem;
 	background: rgba(4, 4, 6, 0.9);
