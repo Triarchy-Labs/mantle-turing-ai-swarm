@@ -2128,3 +2128,106 @@ html[data-theme="light"] .log-terminal {
 	border-radius: 50%;
 	box-shadow: 0 0 12px var(--accent);
 }
+
+/* --- 3D FLIP CARD --- */
+.flip-card-container {
+	perspective: 1000px;
+	width: 100%;
+	height: 100%;
+	min-height: 250px;
+}
+
+.flip-card-inner {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
+	transform-style: preserve-3d;
+}
+
+.flip-card-inner.is-flipped {
+	transform: rotateY(180deg);
+}
+
+.flip-card-front, .flip-card-back {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
+	border-radius: inherit;
+	background: inherit;
+}
+
+.flip-card-back {
+	transform: rotateY(180deg);
+	display: flex;
+	flex-direction: column;
+}
+
+/* --- TOOLTIPS --- */
+.phase-step {
+	position: relative;
+	cursor: pointer;
+}
+
+.phase-tooltip {
+	position: absolute;
+	bottom: 100%;
+	left: 50%;
+	transform: translateX(-50%) translateY(10px);
+	background: rgba(0, 0, 0, 0.85);
+	border: 1px solid var(--accent-muted);
+	padding: 0.75rem;
+	border-radius: 4px;
+	width: max-content;
+	opacity: 0;
+	visibility: hidden;
+	transition: all 0.2s ease;
+	pointer-events: none;
+	z-index: 10;
+	backdrop-filter: blur(4px);
+	box-shadow: 0 5px 15px rgba(0, 212, 255, 0.1);
+	text-align: left;
+	font-family: var(--font-mono);
+}
+
+.phase-step:hover .phase-tooltip {
+	opacity: 1;
+	visibility: visible;
+	transform: translateX(-50%) translateY(-10px);
+}
+
+.phase-tooltip::after {
+	content: '';
+	position: absolute;
+	top: 100%;
+	left: 50%;
+	transform: translateX(-50%);
+	border-width: 5px;
+	border-style: solid;
+	border-color: var(--accent-muted) transparent transparent transparent;
+}
+
+/* Custom Range Slider */
+input[type=range].cyber-slider {
+	-webkit-appearance: none;
+	width: 100%;
+	background: transparent;
+}
+input[type=range].cyber-slider::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	height: 16px;
+	width: 8px;
+	background: var(--accent);
+	cursor: pointer;
+	box-shadow: 0 0 10px var(--accent-glow);
+	margin-top: -6px;
+}
+input[type=range].cyber-slider::-webkit-slider-runnable-track {
+	width: 100%;
+	height: 4px;
+	cursor: pointer;
+	background: rgba(0, 212, 255, 0.2);
+	border-radius: 2px;
+}

@@ -133,6 +133,10 @@ export default function App() {
 	const uptime = telem.uptimeSecs;
 	const effectiveStage = analysisRunning ? activeStage : telem.pipelineStage;
 	const [expandedPipeline, setExpandedPipeline] = useState(false);
+	const [isAutoRampFlipped, setIsAutoRampFlipped] = useState(false);
+	const [manualPhaseOverride, setManualPhaseOverride] = useState<number | null>(null);
+	const [overrideFlash, setOverrideFlash] = useState<number | null>(null);
+	const [configValues, setConfigValues] = useState({ lossKill: 3.0, maxCap: 100 });
 
 	// Orb state cycling
 	useEffect(() => {
@@ -574,53 +578,134 @@ export default function App() {
 
 					{/* AUTO-RAMP CAPITAL SCALING (Row 3, Right) */}
 					<div className="shape-ion align-right" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-					<article className="bento-card " role="region" style={{ flexGrow: 1, margin: 0 }}>
-						<div className="lusion-dot"></div>
-						<div className="lusion-top-meta">
-							<div>EXP 005</div>
-							<div>SCALING</div>
-						</div>
-						<div className="bento-content" style={{ fontFamily: 'var(--font-mono)', display: 'flex', flexDirection: 'column', gap: '1.5rem', justifyContent: 'center' }}>
-							<div style={{ textAlign: 'center' }}>
-								<div style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--accent)', textShadow: '0 0 20px var(--accent-glow)', letterSpacing: '0.05em' }}>
-									{telem.rampState?.phase_label ?? 'SEED'}
-								</div>
-								<div style={{ fontSize: '0.9rem', opacity: 0.5, marginTop: '0.5rem', letterSpacing: '0.1em' }}>
-									PHASE {telem.rampState?.current_phase ?? 1} OF 5
-								</div>
-							</div>
-							
-							<div style={{ display: 'flex', alignItems: 'flex-end', height: '80px', gap: '8px', padding: '0 1rem' }}>
-								{['SEED', 'SPROUT', 'GROWTH', 'MATURE', 'APEX'].map((label, i) => {
-									const phaseNum = i + 1;
-									const currentPhase = telem.rampState?.current_phase ?? 1;
-									const isActive = phaseNum === currentPhase;
-									const isPassed = phaseNum < currentPhase;
-									
-									return (
-										<div key={label} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }} title={label}>
-											<div style={{ 
-												width: '100%', 
-												height: `${20 + i * 15}px`, 
-												borderRadius: '2px', 
-												background: isActive ? 'var(--accent)' : isPassed ? 'var(--accent-muted)' : 'rgba(255,255,255,0.05)', 
-												boxShadow: isActive ? '0 0 15px var(--accent-glow)' : 'none',
-												transition: 'all 0.4s ease'
-											}} />
-											<div style={{ 
-												fontSize: '0.6rem', 
-												opacity: isActive ? 1 : isPassed ? 0.7 : 0.3, 
-												color: isActive ? 'var(--accent)' : 'inherit',
-												fontWeight: isActive ? 700 : 400
-											}}>
-												{label}
+					<article className="bento-card" role="region" style={{ flexGrow: 1, margin: 0, padding: 0, overflow: 'visible', background: 'transparent', border: 'none' }}>
+						<div className="flip-card-container">
+							<div className={`flip-card-inner ${isAutoRampFlipped ? 'is-flipped' : ''}`}>
+								{/* --- FRONT: VISUALIZER --- */}
+								<div className="flip-card-front bento-card" style={{ margin: 0, padding: '1.5rem', display: 'flex', flexDirection: 'column' }}>
+									<div className="lusion-dot"></div>
+									<div className="lusion-top-meta">
+										<div>EXP 005</div>
+										<div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+											{manualPhaseOverride !== null && <span style={{ color: '#ff4444', animation: 'blink 1s infinite' }}>OVERRIDE ACTIVE</span>}
+											<span>SCALING</span>
+											<button onClick={() => setIsAutoRampFlipped(true)} style={{ background: 'none', border: 'none', color: 'var(--foreground)', opacity: 0.5, cursor: 'pointer', fontSize: '1rem', padding: '0 5px' }} title="Configure">⚙</button>
+										</div>
+									</div>
+									<div className="bento-content" style={{ fontFamily: 'var(--font-mono)', display: 'flex', flexDirection: 'column', gap: '1.5rem', justifyContent: 'center', flex: 1 }}>
+										<div style={{ textAlign: 'center' }}>
+											<div style={{ fontSize: '2.5rem', fontWeight: 800, color: manualPhaseOverride ? '#ff4444' : 'var(--accent)', textShadow: manualPhaseOverride ? '0 0 20px rgba(255,68,68,0.5)' : '0 0 20px var(--accent-glow)', letterSpacing: '0.05em', transition: 'color 0.3s' }}>
+												{overrideFlash !== null ? 'OVERRIDE...' : (manualPhaseOverride ? ['SEED', 'SPROUT', 'GROWTH', 'MATURE', 'APEX'][manualPhaseOverride - 1] : (telem.rampState?.phase_label ?? 'SEED'))}
+											</div>
+											<div style={{ fontSize: '0.9rem', opacity: 0.5, marginTop: '0.5rem', letterSpacing: '0.1em' }}>
+												PHASE {manualPhaseOverride || telem.rampState?.current_phase || 1} OF 5
 											</div>
 										</div>
-									);
-								})}
+										
+										<div style={{ display: 'flex', alignItems: 'flex-end', height: '80px', gap: '8px', padding: '0 1rem' }}>
+											{['SEED', 'SPROUT', 'GROWTH', 'MATURE', 'APEX'].map((label, i) => {
+												const phaseNum = i + 1;
+												const actualPhase = telem.rampState?.current_phase ?? 1;
+												const currentPhase = manualPhaseOverride || actualPhase;
+												const isActive = phaseNum === currentPhase;
+												const isPassed = phaseNum < currentPhase;
+												const isOverride = manualPhaseOverride === phaseNum;
+												
+												const limits = ['Max Cap: 10%', 'Max Cap: 25%', 'Max Cap: 50%', 'Max Cap: 75%', 'Max Cap: 100%'];
+												const reqs = ['Req: 2 Wins', 'Req: 3 Wins', 'Req: 5 Wins', 'Req: 10 Wins', 'Apex Mode'];
+												
+												return (
+													<div 
+														key={label} 
+														className="phase-step"
+														onClick={() => {
+															setOverrideFlash(phaseNum);
+															setTimeout(() => setOverrideFlash(null), 500);
+															setManualPhaseOverride(phaseNum);
+														}}
+														style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}
+													>
+														<div className="phase-tooltip">
+															<div style={{ color: 'var(--accent)', marginBottom: '4px', fontWeight: 'bold' }}>{label}</div>
+															<div>{limits[i]}</div>
+															<div style={{ opacity: 0.7 }}>{reqs[i]}</div>
+															<div style={{ color: '#ff4444', marginTop: '4px', opacity: 0.8 }}>Click to Override</div>
+														</div>
+														<div style={{ 
+															width: '100%', 
+															height: `${20 + i * 15}px`, 
+															borderRadius: '2px', 
+															background: isOverride ? '#ff4444' : isActive ? 'var(--accent)' : isPassed ? 'var(--accent-muted)' : 'rgba(255,255,255,0.05)', 
+															boxShadow: isOverride ? '0 0 15px rgba(255,68,68,0.5)' : isActive ? '0 0 15px var(--accent-glow)' : 'none',
+															transition: 'all 0.4s ease'
+														}} />
+														<div style={{ 
+															fontSize: '0.6rem', 
+															opacity: isActive ? 1 : isPassed ? 0.7 : 0.3, 
+															color: isOverride ? '#ff4444' : isActive ? 'var(--accent)' : 'inherit',
+															fontWeight: isActive ? 700 : 400
+														}}>
+															{label}
+														</div>
+													</div>
+												);
+											})}
+										</div>
+									</div>
+								</div>
+
+								{/* --- BACK: CONFIG --- */}
+								<div className="flip-card-back bento-card" style={{ margin: 0, padding: '1.5rem', background: 'var(--background)' }}>
+									<div className="lusion-dot" style={{ background: '#ff4444', boxShadow: '0 0 10px #ff4444' }}></div>
+									<div className="lusion-top-meta">
+										<div>CONFIG</div>
+										<div style={{ color: '#ff4444' }}>SUPERVISOR</div>
+									</div>
+									<div className="bento-content" style={{ fontFamily: 'var(--font-mono)', display: 'flex', flexDirection: 'column', gap: '1.5rem', flex: 1, justifyContent: 'center' }}>
+										<div>
+											<div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', opacity: 0.7, fontSize: '0.8rem' }}>
+												<span>Daily Loss Kill</span>
+												<span style={{ color: 'var(--accent)' }}>{configValues.lossKill.toFixed(1)}%</span>
+											</div>
+											<input type="range" min="1.0" max="10.0" step="0.1" value={configValues.lossKill} onChange={e => setConfigValues({...configValues, lossKill: parseFloat(e.target.value)})} className="cyber-slider" />
+										</div>
+										<div>
+											<div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', opacity: 0.7, fontSize: '0.8rem' }}>
+												<span>Max Position Cap</span>
+												<span style={{ color: 'var(--accent)' }}>{configValues.maxCap}%</span>
+											</div>
+											<input type="range" min="10" max="100" step="5" value={configValues.maxCap} onChange={e => setConfigValues({...configValues, maxCap: parseInt(e.target.value)})} className="cyber-slider" />
+										</div>
+										<button 
+											onClick={() => setIsAutoRampFlipped(false)}
+											style={{ 
+												background: 'var(--accent-muted)', 
+												border: '1px solid var(--accent)', 
+												color: 'var(--accent)', 
+												padding: '0.75rem', 
+												fontFamily: 'var(--font-mono)', 
+												letterSpacing: '0.1em',
+												cursor: 'pointer',
+												marginTop: '1rem',
+												transition: 'all 0.2s',
+												fontWeight: 'bold'
+											}}
+										>
+											DEPLOY PARAMS
+										</button>
+										{manualPhaseOverride !== null && (
+											<button 
+												onClick={() => { setManualPhaseOverride(null); setIsAutoRampFlipped(false); }}
+												style={{ background: 'transparent', border: '1px solid #ff4444', color: '#ff4444', padding: '0.5rem', fontFamily: 'var(--font-mono)', fontSize: '0.7rem', cursor: 'pointer' }}
+											>
+												RESET OVERRIDE
+											</button>
+										)}
+									</div>
+								</div>
 							</div>
 						</div>
-						</article>
+					</article>
 					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
 						<div className="lusion-card-tags" style={{ fontSize: '0.8rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>CAPITAL • GROWTH</div>
 						<h2 className="lusion-card-title">Auto-Ramp</h2>
