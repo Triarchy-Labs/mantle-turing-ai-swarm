@@ -1000,7 +1000,7 @@ html[data-theme="light"] .event-row {
    ============================================================ */
 .card-title {
 	font-family: 'Fixel Display', var(--font-heading);
-	font-size: 13px;
+	font-size: 1.3rem;
 	font-weight: 300;
 	text-transform: uppercase;
 	letter-spacing: 1px;
@@ -1735,7 +1735,7 @@ html[data-theme="light"] .vignette-overlay {
 	color: var(--accent);
 	text-decoration: none;
 	font-family: var(--font-mono);
-	font-size: 12px;
+	font-size: 1.2rem;
 	transition: opacity 0.2s ease;
 	display: inline-flex;
 	align-items: center;
@@ -1781,7 +1781,7 @@ html[data-theme="light"] .onchain-link {
 	}
 	.header h1 { font-size: 2.56rem; }
 	.metric .val { font-size: 3.2rem; }
-	.card-title { font-size: 11px; letter-spacing: 1px; }
+	.card-title { font-size: 1.1rem; letter-spacing: 1px; }
 }
 
 /* ── Tablet Portrait (481px – 768px) ── */
@@ -1856,7 +1856,7 @@ html[data-theme="light"] .onchain-link {
 		font-size: 1.12rem;
 	}
 	.card-title {
-		font-size: 10px;
+		font-size: 1.0rem;
 		letter-spacing: 0.5px;
 	}
 	.connect-btn-base {

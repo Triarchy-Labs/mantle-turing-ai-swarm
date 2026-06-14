@@ -195,13 +195,13 @@ const NeuralLoom = ({ telem, hasPositions }: { telem: any, hasPositions: boolean
 
 			{!hasPositions && (
 				<div className="loom-core-status">
-					<div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.05rem', letterSpacing: '0.15em', color: 'var(--accent)', animation: 'pulse 4s infinite' }}>
+					<div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.5rem', letterSpacing: '0.15em', color: 'var(--accent)', animation: 'pulse 4s infinite' }}>
 						ZERO EXPOSURE
 					</div>
-					<div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.0rem', letterSpacing: '0.1em', opacity: 0.6, marginTop: '0.5rem' }}>
+					<div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.4rem', letterSpacing: '0.1em', opacity: 0.6, marginTop: '0.5rem' }}>
 						SWARM IS HUNTING
 					</div>
-					<div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', opacity: 0.3, marginTop: '0.8rem', letterSpacing: '0.1em' }}>
+					<div style={{ fontFamily: 'var(--font-mono)', fontSize: '2.4rem', opacity: 0.3, marginTop: '0.8rem', letterSpacing: '0.1em' }}>
 						CYCLE: {telem.cycle} | UP: {telem.uptimeSecs}s
 					</div>
 				</div>
@@ -296,8 +296,8 @@ export default function App() {
 
 	if (!mounted) return (
 		<div style={{ position: 'fixed', inset: 0, background: '#010204', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-			<div style={{ color: 'var(--accent)', fontFamily: 'var(--font-mono)', fontSize: '1.05rem', opacity: 0.6, textAlign: 'center' }}>
-				<div style={{ fontSize: '2rem', marginBottom: '12px', animation: 'pulse 2s infinite' }}>⬡</div>
+			<div style={{ color: 'var(--accent)', fontFamily: 'var(--font-mono)', fontSize: '1.5rem', opacity: 0.6, textAlign: 'center' }}>
+				<div style={{ fontSize: '3.2rem', marginBottom: '12px', animation: 'pulse 2s infinite' }}>⬡</div>
 				INITIALIZING SWARM...
 			</div>
 		</div>
@@ -409,17 +409,17 @@ export default function App() {
 										<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem' }}>
 											<div style={{ minWidth: '40%' }}>
 												<div style={{ display: 'flex', alignItems: 'center', gap: '0.7rem' }}>
-													<span style={{ fontSize: '1.6rem', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>{m.sym}</span>
-													{m.regime && <span style={{ fontSize: '1.0rem', padding: '0.2rem 0.6rem', borderRadius: '3px', background: 'rgba(0,212,255,0.08)', color: 'var(--accent)', fontFamily: 'var(--font-mono)', letterSpacing: '0.04em', fontWeight: 600 }}>{m.regime === 'TRENDING_UP' ? '↑ TREND' : m.regime === 'TRENDING_DOWN' ? '↓ TREND' : m.regime === 'VOLATILE' ? '⚡ VOL' : '~ RANGE'}{m.regimeConf ? ` ${m.regimeConf}%` : ''}</span>}
+													<span style={{ fontSize: '2.4rem', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>{m.sym}</span>
+													{m.regime && <span style={{ fontSize: '1.4rem', padding: '0.2rem 0.6rem', borderRadius: '3px', background: 'rgba(0,212,255,0.08)', color: 'var(--accent)', fontFamily: 'var(--font-mono)', letterSpacing: '0.04em', fontWeight: 600 }}>{m.regime === 'TRENDING_UP' ? '↑ TREND' : m.regime === 'TRENDING_DOWN' ? '↓ TREND' : m.regime === 'VOLATILE' ? '⚡ VOL' : '~ RANGE'}{m.regimeConf ? ` ${m.regimeConf}%` : ''}</span>}
 												</div>
-												<div style={{ fontSize: '1.0rem', color: 'var(--foreground)', opacity: 0.5, fontFamily: 'var(--font-mono)', marginTop: '0.3rem' }}>Vol {m.vol}{m.liq ? ` · Liq ${m.liq}` : ''}{m.buySell ? ` · B/S ${m.buySell}` : ''}</div>
+												<div style={{ fontSize: '1.4rem', color: 'var(--foreground)', opacity: 0.5, fontFamily: 'var(--font-mono)', marginTop: '0.3rem' }}>Vol {m.vol}{m.liq ? ` · Liq ${m.liq}` : ''}{m.buySell ? ` · B/S ${m.buySell}` : ''}</div>
 											</div>
 											<div style={{ textAlign: 'right', flex: '1' }}>
-												<div style={{ fontSize: '1.8rem', fontWeight: 700, fontFamily: 'var(--font-mono)', color: 'var(--accent)' }}>{m.price}</div>
-												<div className={`badge ${m.up ? 'ok' : 'fail'}`} style={{ fontSize: '1.1rem', padding: '0.2rem 0.6rem', marginTop: '0.3rem' }}>{m.change}</div>
+												<div style={{ fontSize: '2.8rem', fontWeight: 700, fontFamily: 'var(--font-mono)', color: 'var(--accent)' }}>{m.price}</div>
+												<div className={`badge ${m.up ? 'ok' : 'fail'}`} style={{ fontSize: '2.4rem', padding: '0.2rem 0.6rem', marginTop: '0.3rem' }}>{m.change}</div>
 											</div>
-											<div className={`lusion-btn ${m.up ? 'connect-state-true' : ''}`} style={{ fontSize: '1.0rem', padding: '0.5rem 1.2rem' }}>
-												{m.verdict}<br /><span style={{ fontSize: '1.05rem', opacity: 0.7 }}>{m.conf}%</span>
+											<div className={`lusion-btn ${m.up ? 'connect-state-true' : ''}`} style={{ fontSize: '1.4rem', padding: '0.5rem 1.2rem' }}>
+												{m.verdict}<br /><span style={{ fontSize: '1.5rem', opacity: 0.7 }}>{m.conf}%</span>
 											</div>
 										</div>
 									</div>
@@ -428,7 +428,7 @@ export default function App() {
 						</div>
 						</article>
 					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
-						<div className="lusion-card-tags" style={{ fontSize: '1.1rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>DATA • ORACLE • ACTIVE</div>
+						<div className="lusion-card-tags" style={{ fontSize: '2.4rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>DATA • ORACLE • ACTIVE</div>
 						<h2 className="lusion-card-title"><TextReveal>Live Market Feed</TextReveal></h2>
 					</div>
 				</div>
@@ -446,7 +446,7 @@ export default function App() {
 						</div>
 						</article>
 					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
-						<div className="lusion-card-tags" style={{ fontSize: '1.1rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>AI • LLM • EXECUTION</div>
+						<div className="lusion-card-tags" style={{ fontSize: '2.4rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>AI • LLM • EXECUTION</div>
 						<h2 className="lusion-card-title"><TextReveal>Swarm Agent AI</TextReveal></h2>
 					</div>
 				</div>
@@ -459,18 +459,18 @@ export default function App() {
 							<div>004</div>
 							<div>RISK ENGINE</div>
 						</div>
-						<div className="bento-content" style={{ fontFamily: 'var(--font-mono)', fontSize: '1rem', overflow: 'auto', margin: 0 }}>
+						<div className="bento-content" style={{ fontFamily: 'var(--font-mono)', fontSize: '1.4rem', overflow: 'auto', margin: 0 }}>
 							<div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flex: 1, paddingTop: '3.5rem', gap: '0.4rem' }}>
 
 								{/* Ramp Phase Badge */}
 								<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
 									<div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-										<span style={{ fontSize: '1.05rem', padding: '0.25rem 0.7rem', borderRadius: '4px', background: 'rgba(0,212,255,0.1)', border: '1px solid rgba(0,212,255,0.2)', color: 'var(--accent)', fontWeight: 700, letterSpacing: '0.08em' }}>
+										<span style={{ fontSize: '1.5rem', padding: '0.25rem 0.7rem', borderRadius: '4px', background: 'rgba(0,212,255,0.1)', border: '1px solid rgba(0,212,255,0.2)', color: 'var(--accent)', fontWeight: 700, letterSpacing: '0.08em' }}>
 											{telem.rampState?.phase_label ?? 'SEED'}
 										</span>
-										<span style={{ fontSize: '1.1rem', opacity: 0.4 }}>Phase {telem.rampState?.current_phase ?? 1}/5</span>
+										<span style={{ fontSize: '2.4rem', opacity: 0.4 }}>Phase {telem.rampState?.current_phase ?? 1}/5</span>
 									</div>
-									<div style={{ fontSize: '1.05rem', opacity: 0.4 }}>
+									<div style={{ fontSize: '1.5rem', opacity: 0.4 }}>
 										↑{telem.rampState?.total_promotions ?? 0} ↓{telem.rampState?.total_demotions ?? 0}
 									</div>
 								</div>
@@ -487,7 +487,7 @@ export default function App() {
 									{ label: 'Daily Loss Kill', value: `${telem.rampState?.daily_loss_kill_pct ?? 3.0}%`, accent: false, warn: true },
 								].map((row, i) => (
 									<div key={i} className="risk-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.45rem 0', transition: 'transform 0.2s ease' }}>
-										<span style={{ opacity: 0.5, fontSize: '1.1rem' }}>{row.label}</span>
+										<span style={{ opacity: 0.5, fontSize: '2.4rem' }}>{row.label}</span>
 										<span style={{
 											color: row.warn ? 'rgba(0,212,255,0.45)' : row.accent ? 'var(--accent)' : 'var(--foreground)',
 											fontWeight: row.bold ? 700 : 500,
@@ -499,8 +499,8 @@ export default function App() {
 
 								{/* Circuit Breaker — special row */}
 								<div className="risk-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem 0', borderTop: '1px solid rgba(255,255,255,0.04)', marginTop: '0.3rem' }}>
-									<span style={{ opacity: 0.5, fontSize: '1.1rem' }}>Circuit Breaker</span>
-									<span style={{ color: telem.riskState?.circuit_breaker === 'GREEN' ? 'var(--accent)' : 'rgba(0,212,255,0.45)', fontWeight: 700, fontSize: '1.2rem' }}>
+									<span style={{ opacity: 0.5, fontSize: '2.4rem' }}>Circuit Breaker</span>
+									<span style={{ color: telem.riskState?.circuit_breaker === 'GREEN' ? 'var(--accent)' : 'rgba(0,212,255,0.45)', fontWeight: 700, fontSize: '2.8rem' }}>
 										● {telem.riskState?.circuit_breaker === 'GREEN' ? 'ACTIVE' : (telem.riskState?.circuit_breaker ?? 'N/A')}
 									</span>
 								</div>
@@ -514,8 +514,8 @@ export default function App() {
 									].map((bar, i) => (
 										<div key={i}>
 											<div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.3rem' }}>
-												<span style={{ fontSize: '1.0rem', opacity: 0.4, letterSpacing: '0.06em' }}>{bar.label}</span>
-												<span style={{ fontSize: '1.0rem', color: 'var(--accent)', fontFamily: 'var(--font-mono)' }}>{bar.value.toFixed(0)}%</span>
+												<span style={{ fontSize: '1.4rem', opacity: 0.4, letterSpacing: '0.06em' }}>{bar.label}</span>
+												<span style={{ fontSize: '1.4rem', color: 'var(--accent)', fontFamily: 'var(--font-mono)' }}>{bar.value.toFixed(0)}%</span>
 											</div>
 											<div style={{ height: '6px', background: 'rgba(255,255,255,0.04)', borderRadius: '3px', overflow: 'hidden' }}>
 												<div style={{
@@ -534,7 +534,7 @@ export default function App() {
 						</div>
 						</article>
 					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
-						<div className="lusion-card-tags" style={{ fontSize: '1.1rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>SAFETY • LIMITS • GUARDS</div>
+						<div className="lusion-card-tags" style={{ fontSize: '2.4rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>SAFETY • LIMITS • GUARDS</div>
 						<h2 className="lusion-card-title">Risk Matrix</h2>
 					</div>
 				</div>
@@ -554,7 +554,7 @@ export default function App() {
 								<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
 									<div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
 										<Zap size={18} style={{ color: 'var(--accent-hover)' }} />
-										<span style={{ fontSize: '1.1rem', letterSpacing: '0.08em', fontFamily: 'var(--font-mono)', opacity: 0.7 }}>SYNAPTIC DECISION PIPELINE</span>
+										<span style={{ fontSize: '2.4rem', letterSpacing: '0.08em', fontFamily: 'var(--font-mono)', opacity: 0.7 }}>SYNAPTIC DECISION PIPELINE</span>
 									</div>
 									<div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
 										{/* Verdict badge */}
@@ -565,19 +565,19 @@ export default function App() {
 											const vBg = v === 'BUY' ? 'var(--accent-glow)' : v === 'SELL' ? 'rgba(0,212,255,0.1)' : 'rgba(255,255,255,0.05)';
 											const vBorder = v === 'BUY' ? 'var(--accent-hover-glow)' : v === 'SELL' ? 'rgba(0,212,255,0.2)' : 'rgba(255,255,255,0.1)';
 											return (
-												<span style={{ fontSize: '1.1rem', padding: '0.2rem 0.6rem', borderRadius: '4px', background: vBg, border: `1px solid ${vBorder}`, color: vColor, fontWeight: 700, fontFamily: 'var(--font-mono)', letterSpacing: '0.1em' }}>
+												<span style={{ fontSize: '2.4rem', padding: '0.2rem 0.6rem', borderRadius: '4px', background: vBg, border: `1px solid ${vBorder}`, color: vColor, fontWeight: 700, fontFamily: 'var(--font-mono)', letterSpacing: '0.1em' }}>
 													{v}
 												</span>
 											);
 										})()}
-										<span style={{ fontSize: '1.0rem', fontFamily: 'var(--font-mono)', opacity: 0.5 }}>{effectiveStage}/24</span>
+										<span style={{ fontSize: '1.4rem', fontFamily: 'var(--font-mono)', opacity: 0.5 }}>{effectiveStage}/24</span>
 									</div>
 								</div>
 
 								{/* Active stage name */}
 								<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.4rem 0' }}>
 									<span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--accent)', boxShadow: '0 0 8px var(--accent)', animation: 'blink 2s ease infinite' }} />
-									<span style={{ fontSize: '1rem', fontFamily: 'var(--font-mono)', color: 'var(--accent)', fontWeight: 600 }}>
+									<span style={{ fontSize: '1.4rem', fontFamily: 'var(--font-mono)', color: 'var(--accent)', fontWeight: 600 }}>
 										{pipelineStages[effectiveStage]?.label ?? pipelineStages[0].label}
 									</span>
 								</div>
@@ -603,7 +603,7 @@ export default function App() {
 										{ label: 'EXEC', span: '15–18' },
 										{ label: 'AUDIT', span: '19–24' },
 									].map((g, i) => (
-										<span key={i} style={{ fontSize: '0.6rem', fontFamily: 'var(--font-mono)', opacity: 0.3, letterSpacing: '0.06em', textAlign: 'center' }}>
+										<span key={i} style={{ fontSize: '1.4rem', fontFamily: 'var(--font-mono)', opacity: 0.3, letterSpacing: '0.06em', textAlign: 'center' }}>
 											{g.label}
 										</span>
 									))}
@@ -618,14 +618,14 @@ export default function App() {
 										{ label: 'Consensus', value: `${telem.benchmark?.agreements ?? 0}/${telem.benchmark?.total_cycles ?? 0}` },
 									].map((stat, i) => (
 										<div key={i} style={{ textAlign: 'center' }}>
-											<div style={{ fontSize: '0.65rem', opacity: 0.35, fontFamily: 'var(--font-mono)', letterSpacing: '0.05em', marginBottom: '0.2rem' }}>{stat.label}</div>
-											<div style={{ fontSize: '1rem', color: 'var(--accent)', fontFamily: 'var(--font-mono)', fontWeight: 600 }}>{stat.value}</div>
+											<div style={{ fontSize: '2.4rem', opacity: 0.35, fontFamily: 'var(--font-mono)', letterSpacing: '0.05em', marginBottom: '0.2rem' }}>{stat.label}</div>
+											<div style={{ fontSize: '1.4rem', color: 'var(--accent)', fontFamily: 'var(--font-mono)', fontWeight: 600 }}>{stat.value}</div>
 										</div>
 									))}
 								</div>
 
 								{/* Expand/collapse toggle */}
-								<div className="risk-row" onClick={() => setExpandedPipeline(!expandedPipeline)} style={{ cursor: 'pointer', display: 'flex', justifyContent: 'center', padding: '0.3rem', opacity: 0.4, fontSize: '1.05rem', fontFamily: 'var(--font-mono)', letterSpacing: '0.08em' }}>
+								<div className="risk-row" onClick={() => setExpandedPipeline(!expandedPipeline)} style={{ cursor: 'pointer', display: 'flex', justifyContent: 'center', padding: '0.3rem', opacity: 0.4, fontSize: '1.5rem', fontFamily: 'var(--font-mono)', letterSpacing: '0.08em' }}>
 									{expandedPipeline ? '▼ COLLAPSE STAGES' : '▶ EXPAND ALL 24 STAGES'}
 								</div>
 
@@ -636,9 +636,9 @@ export default function App() {
 											const st = idx < effectiveStage ? 'done' : idx === effectiveStage ? 'active' : 'pending';
 											return (
 												<div key={s.n} role="listitem" className={`pipeline-stage ${st === 'active' ? 'active' : ''}`} style={{ flex: '1 1 calc(25% - 0.6rem)', padding: '0.5rem 0.8rem' }}>
-													<div style={{ display: 'flex', gap: '6px', fontSize: '1.1rem', alignItems: 'center' }}>
-														<span style={{ color: st === 'done' ? 'var(--accent-hover)' : st === 'active' ? 'var(--accent)' : 'var(--foreground)', opacity: st === 'pending' ? 0.25 : 0.5, fontSize: '1.0rem' }}>{s.n}</span>
-														<span style={{ color: st === 'done' ? 'var(--accent-hover)' : st === 'active' ? '#fff' : 'var(--foreground)', opacity: st === 'pending' ? 0.3 : 1, fontWeight: st === 'active' ? 700 : 400, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontSize: '1.05rem' }}>{s.label}</span>
+													<div style={{ display: 'flex', gap: '6px', fontSize: '2.4rem', alignItems: 'center' }}>
+														<span style={{ color: st === 'done' ? 'var(--accent-hover)' : st === 'active' ? 'var(--accent)' : 'var(--foreground)', opacity: st === 'pending' ? 0.25 : 0.5, fontSize: '1.4rem' }}>{s.n}</span>
+														<span style={{ color: st === 'done' ? 'var(--accent-hover)' : st === 'active' ? '#fff' : 'var(--foreground)', opacity: st === 'pending' ? 0.3 : 1, fontWeight: st === 'active' ? 700 : 400, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontSize: '1.5rem' }}>{s.label}</span>
 													</div>
 												</div>
 											);
@@ -650,7 +650,7 @@ export default function App() {
 						</div>
 						</article>
 					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
-						<div className="lusion-card-tags" style={{ fontSize: '1.1rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>STATE • DAG • PROCESS</div>
+						<div className="lusion-card-tags" style={{ fontSize: '2.4rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>STATE • DAG • PROCESS</div>
 						<h2 className="lusion-card-title">Execution State</h2>
 					</div>
 				</div>
@@ -672,12 +672,12 @@ export default function App() {
 										{telem.openPositions.map((pos, i) => (
 											<div key={i} className="position-row" style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '1vw', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
 												<div>
-													<div style={{ fontWeight: 700, fontSize: '1.2rem', marginBottom: '0.5vw' }}>{pos.symbol}</div>
-													<span className={`badge ${pos.side === 'Buy' ? 'ok' : 'fail'}`} style={{ fontSize: '1.1rem' }}>{pos.side}</span>
+													<div style={{ fontWeight: 700, fontSize: '2.8rem', marginBottom: '0.5vw' }}>{pos.symbol}</div>
+													<span className={`badge ${pos.side === 'Buy' ? 'ok' : 'fail'}`} style={{ fontSize: '2.4rem' }}>{pos.side}</span>
 												</div>
 												<div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', opacity: 0.9, fontFamily: 'var(--font-mono)' }}>
-													<span style={{ fontSize: '1.1rem' }}>${pos.entry_price.toFixed(4)}</span>
-													<span style={{ color: pos.trailing_stop > 0 ? '#00f5ff' : 'rgba(255,255,255,0.3)', fontSize: '1.1rem', marginTop: '0.5vw' }}>SL: ${pos.trailing_stop.toFixed(4)}</span>
+													<span style={{ fontSize: '2.4rem' }}>${pos.entry_price.toFixed(4)}</span>
+													<span style={{ color: pos.trailing_stop > 0 ? '#00f5ff' : 'rgba(255,255,255,0.3)', fontSize: '2.4rem', marginTop: '0.5vw' }}>SL: ${pos.trailing_stop.toFixed(4)}</span>
 												</div>
 											</div>
 										))}
@@ -687,7 +687,7 @@ export default function App() {
 						</div>
 						</article>
 					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
-						<div className="lusion-card-tags" style={{ fontSize: '1.1rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>GRID • IMMERSIVE • ALPHA</div>
+						<div className="lusion-card-tags" style={{ fontSize: '2.4rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>GRID • IMMERSIVE • ALPHA</div>
 						<h2 className="lusion-card-title"><TextReveal>{telem.openPositions.length === 0 ? 'Neural Topology' : `Execution Targets (${telem.openPositions.length})`}</TextReveal></h2>
 					</div>
 				</div>
@@ -705,15 +705,15 @@ export default function App() {
 										<div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
 											{manualPhaseOverride !== null && <span style={{ color: '#00a8cc', animation: 'blink 1s infinite' }}>OVERRIDE ACTIVE</span>}
 											<span>SCALING</span>
-											<button onClick={() => setIsAutoRampFlipped(true)} style={{ background: 'none', border: 'none', color: 'var(--foreground)', opacity: 0.5, cursor: 'pointer', fontSize: '1rem', padding: '0 5px' }} title="Configure">⚙</button>
+											<button onClick={() => setIsAutoRampFlipped(true)} style={{ background: 'none', border: 'none', color: 'var(--foreground)', opacity: 0.5, cursor: 'pointer', fontSize: '1.4rem', padding: '0 5px' }} title="Configure">⚙</button>
 										</div>
 									</div>
 									<div className="bento-content" style={{ fontFamily: 'var(--font-mono)', display: 'flex', flexDirection: 'column', gap: '1.5rem', justifyContent: 'center', flex: 1 }}>
 										<div style={{ textAlign: 'center' }}>
-											<div style={{ fontSize: '2.5rem', fontWeight: 800, color: manualPhaseOverride ? '#00a8cc' : 'var(--accent)', textShadow: manualPhaseOverride ? '0 0 20px rgba(0,168,204,0.5)' : '0 0 20px var(--accent-glow)', letterSpacing: '0.05em', transition: 'color 0.3s' }}>
+											<div style={{ fontSize: '3.8rem', fontWeight: 800, color: manualPhaseOverride ? '#00a8cc' : 'var(--accent)', textShadow: manualPhaseOverride ? '0 0 20px rgba(0,168,204,0.5)' : '0 0 20px var(--accent-glow)', letterSpacing: '0.05em', transition: 'color 0.3s' }}>
 												{overrideFlash !== null ? 'OVERRIDE...' : (manualPhaseOverride ? ['SEED', 'SPROUT', 'GROWTH', 'MATURE', 'APEX'][manualPhaseOverride - 1] : (telem.rampState?.phase_label ?? 'SEED'))}
 											</div>
-											<div style={{ fontSize: '1.05rem', opacity: 0.5, marginTop: '0.5rem', letterSpacing: '0.1em' }}>
+											<div style={{ fontSize: '1.5rem', opacity: 0.5, marginTop: '0.5rem', letterSpacing: '0.1em' }}>
 												PHASE {manualPhaseOverride || telem.rampState?.current_phase || 1} OF 5
 											</div>
 										</div>
@@ -756,7 +756,7 @@ export default function App() {
 															transition: 'all 0.4s ease'
 														}} />
 														<div style={{ 
-															fontSize: '0.6rem', 
+															fontSize: '1.4rem', 
 															opacity: isActive ? 1 : isPassed ? 0.7 : 0.3, 
 															color: isOverride ? '#00a8cc' : isActive ? 'var(--accent)' : 'inherit',
 															fontWeight: isActive ? 700 : 400
@@ -779,14 +779,14 @@ export default function App() {
 									</div>
 									<div className="bento-content" style={{ fontFamily: 'var(--font-mono)', display: 'flex', flexDirection: 'column', gap: '1.5rem', flex: 1, justifyContent: 'center' }}>
 										<div>
-											<div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', opacity: 0.7, fontSize: '1.1rem' }}>
+											<div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', opacity: 0.7, fontSize: '2.4rem' }}>
 												<span>Daily Loss Kill</span>
 												<span style={{ color: 'var(--accent)' }}>{configValues.lossKill.toFixed(1)}%</span>
 											</div>
 											<input type="range" min="1.0" max="10.0" step="0.1" value={configValues.lossKill} onChange={e => setConfigValues({...configValues, lossKill: parseFloat(e.target.value)})} className="cyber-slider" />
 										</div>
 										<div>
-											<div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', opacity: 0.7, fontSize: '1.1rem' }}>
+											<div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', opacity: 0.7, fontSize: '2.4rem' }}>
 												<span>Max Position Cap</span>
 												<span style={{ color: 'var(--accent)' }}>{configValues.maxCap}%</span>
 											</div>
@@ -812,7 +812,7 @@ export default function App() {
 										{manualPhaseOverride !== null && (
 											<button 
 												onClick={() => { setManualPhaseOverride(null); setIsAutoRampFlipped(false); }}
-												style={{ background: 'transparent', border: '1px solid #00a8cc', color: '#00a8cc', padding: '0.5rem', fontFamily: 'var(--font-mono)', fontSize: '1.0rem', cursor: 'pointer' }}
+												style={{ background: 'transparent', border: '1px solid #00a8cc', color: '#00a8cc', padding: '0.5rem', fontFamily: 'var(--font-mono)', fontSize: '1.4rem', cursor: 'pointer' }}
 											>
 												RESET OVERRIDE
 											</button>
@@ -823,7 +823,7 @@ export default function App() {
 						</div>
 					</article>
 					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
-						<div className="lusion-card-tags" style={{ fontSize: '1.1rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>CAPITAL • GROWTH</div>
+						<div className="lusion-card-tags" style={{ fontSize: '2.4rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>CAPITAL • GROWTH</div>
 						<h2 className="lusion-card-title">Auto-Ramp</h2>
 					</div>
 				</div>
@@ -839,7 +839,7 @@ export default function App() {
 						<div className="bento-content">
 							<div ref={logRef} className="log-terminal" style={{ height: '100%', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
 								{telem.logs.map((l, i) => (
-									<div key={i} className="log-row" style={{ display: 'flex', gap: '1vw', color: 'var(--foreground)', opacity: 0.8, padding: '0.8vw 0', fontSize: '1.0rem', fontFamily: 'var(--font-mono)' }}>
+									<div key={i} className="log-row" style={{ display: 'flex', gap: '1vw', color: 'var(--foreground)', opacity: 0.8, padding: '0.8vw 0', fontSize: '1.4rem', fontFamily: 'var(--font-mono)' }}>
 										<span style={{ color: 'var(--foreground)', opacity: 0.3, minWidth: '85px' }}>{logTime(l.off)}</span>
 										<span style={{ color: l.type === 'success' ? '#00f5ff' : 'var(--accent)', fontWeight: 700, minWidth: '95px' }}>{l.tag}</span>
 										<span style={{ opacity: 0.9 }}>{l.msg}</span>
@@ -850,7 +850,7 @@ export default function App() {
 						</div>
 						</article>
 					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
-						<div className="lusion-card-tags" style={{ fontSize: '1.1rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>EVENTS • LOGS • TRACE</div>
+						<div className="lusion-card-tags" style={{ fontSize: '2.4rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>EVENTS • LOGS • TRACE</div>
 						<h2 className="lusion-card-title"><TextReveal>Activity Stream</TextReveal></h2>
 					</div>
 				</div>
@@ -871,12 +871,12 @@ export default function App() {
 										border: '1px solid rgba(255,255,255,0.05)', borderRadius: '4px', background: 'rgba(255,255,255,0.02)'
 									}}>
 										<div style={{ display: 'flex', flexDirection: 'column', gap: '0.3vw' }}>
-											<div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.05rem', fontWeight: 700 }}>
-												{d.sym} <span style={{ opacity: 0.4, fontSize: '1.0rem', marginLeft: '0.5vw' }}>{d.time}</span>
+											<div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.5rem', fontWeight: 700 }}>
+												{d.sym} <span style={{ opacity: 0.4, fontSize: '1.4rem', marginLeft: '0.5vw' }}>{d.time}</span>
 											</div>
-											<div style={{ fontSize: '1.05rem', opacity: 0.7, fontFamily: 'var(--font-mono)' }}>{d.reason}</div>
+											<div style={{ fontSize: '1.5rem', opacity: 0.7, fontFamily: 'var(--font-mono)' }}>{d.reason}</div>
 										</div>
-										<span className={`badge ${d.verdict === 'EXECUTED' ? 'ok' : d.verdict === 'HOLD' ? '' : 'fail'}`} style={{ fontSize: '1.0rem' }}>
+										<span className={`badge ${d.verdict === 'EXECUTED' ? 'ok' : d.verdict === 'HOLD' ? '' : 'fail'}`} style={{ fontSize: '1.4rem' }}>
 											{d.verdict}
 										</span>
 									</div>
@@ -885,7 +885,7 @@ export default function App() {
 						</div>
 						</article>
 					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
-						<div className="lusion-card-tags" style={{ fontSize: '1.1rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>ALPHA • VERDICTS • HISTORY</div>
+						<div className="lusion-card-tags" style={{ fontSize: '2.4rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>ALPHA • VERDICTS • HISTORY</div>
 						<h2 className="lusion-card-title"><TextReveal>Decision Journal</TextReveal></h2>
 					</div>
 				</div>
@@ -898,14 +898,14 @@ export default function App() {
 							<div>010</div>
 							<div>BLOCKCHAIN</div>
 						</div>
-						<div className="bento-content" style={{ fontFamily: 'var(--font-mono)', fontSize: '1rem', display: 'flex', flexDirection: 'column', gap: '2vw' }}>
+						<div className="bento-content" style={{ fontFamily: 'var(--font-mono)', fontSize: '1.4rem', display: 'flex', flexDirection: 'column', gap: '2vw' }}>
 							<div style={{ paddingBottom: '1.5vw' }}>
-								<div style={{ fontSize: '1.1rem', opacity: 0.5, marginBottom: '1vw', textTransform: 'uppercase', letterSpacing: '0.1em' }}>✓ Sourcify Verified</div>
+								<div style={{ fontSize: '2.4rem', opacity: 0.5, marginBottom: '1vw', textTransform: 'uppercase', letterSpacing: '0.1em' }}>✓ Sourcify Verified</div>
 								<a href="https://explorer.mantle.xyz/address/0xFA0b5036aF9770B370B33CeBBb42d1E626338383" target="_blank" rel="noopener noreferrer" className="onchain-link" style={{ display: 'block', marginBottom: '0.5vw' }}>
-									→ 0xFA0b...38383 <span style={{ opacity: 0.4, fontSize: '1.0rem' }}>(Registry)</span>
+									→ 0xFA0b...38383 <span style={{ opacity: 0.4, fontSize: '1.4rem' }}>(Registry)</span>
 								</a>
 								<a href="https://explorer.mantle.xyz/address/0x41c51a03FFE750F5df1F6ffc972DBA8265B5a4F4" target="_blank" rel="noopener noreferrer" className="onchain-link" style={{ display: 'block' }}>
-									→ 0x41c5...5a4F4 <span style={{ opacity: 0.4, fontSize: '1.0rem' }}>(Liquidator)</span>
+									→ 0x41c5...5a4F4 <span style={{ opacity: 0.4, fontSize: '1.4rem' }}>(Liquidator)</span>
 								</a>
 							</div>
 							<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -924,7 +924,7 @@ export default function App() {
 							</div>
 							{telem.txHashes.length > 0 && (
 								<div style={{ paddingTop: '2vw', marginTop: 'auto' }}>
-									<div style={{ marginBottom: '1vw', opacity: 0.5, fontSize: '1.1rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Recent TXs</div>
+									<div style={{ marginBottom: '1vw', opacity: 0.5, fontSize: '2.4rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Recent TXs</div>
 									{telem.txHashes.slice(-3).map((hash, i) => (
 										<a key={i} href={`https://explorer.mantle.xyz/tx/${hash}`} target="_blank" rel="noopener noreferrer" className="onchain-link" style={{ display: 'block', marginBottom: '0.5vw' }}>
 											→ {hash.slice(0, 10)}…{hash.slice(-8)}
@@ -935,7 +935,7 @@ export default function App() {
 						</div>
 						</article>
 					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
-						<div className="lusion-card-tags" style={{ fontSize: '1.1rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>MANTLE L2 • TX • VERIFIED</div>
+						<div className="lusion-card-tags" style={{ fontSize: '2.4rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>MANTLE L2 • TX • VERIFIED</div>
 						<h2 className="lusion-card-title"><TextReveal>On-Chain Activity</TextReveal></h2>
 					</div>
 				</div>
@@ -951,7 +951,7 @@ export default function App() {
 						<div className="bento-content" style={{ display: 'flex', flexDirection: 'column', gap: '1vw' }}>
 							{(telem as any).memoryStream?.map((m: any, idx: number) => (
 								<div key={idx} className="db-matrix-row" style={{
-									fontFamily: 'var(--font-mono)', fontSize: '1.05rem', padding: '0.5vw', borderLeft: `2px solid ${m.action === 'VECTOR_WRITE' ? '#00f5ff' : 'var(--accent)'}`
+									fontFamily: 'var(--font-mono)', fontSize: '1.5rem', padding: '0.5vw', borderLeft: `2px solid ${m.action === 'VECTOR_WRITE' ? '#00f5ff' : 'var(--accent)'}`
 								}}>
 									<div style={{ display: 'flex', justifyContent: 'space-between', opacity: 0.6, marginBottom: '0.2vw' }}>
 										<span style={{ color: m.action === 'VECTOR_WRITE' ? '#00f5ff' : 'inherit' }}>[{m.action}]</span>
@@ -965,7 +965,7 @@ export default function App() {
 						</div>
 						</article>
 					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
-						<div className="lusion-card-tags" style={{ fontSize: '1.1rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>RAG • VECTORS • KNOWLEDGE</div>
+						<div className="lusion-card-tags" style={{ fontSize: '2.4rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>RAG • VECTORS • KNOWLEDGE</div>
 						<h2 className="lusion-card-title"><TextReveal>Memory Nexus</TextReveal></h2>
 					</div>
 				</div>
