@@ -1386,7 +1386,7 @@ html[data-theme="light"] .lusion-btn-primary:hover {
 
 .bento-card {
 	position: relative;
-	background: rgba(255, 255, 255, 0.03);
+	background: rgba(0, 0, 0, 0.2);
 	border: 1px solid rgba(255, 255, 255, 0.05); 
 	border-radius: 1.5vw;
 	padding: 2.5vw; 
