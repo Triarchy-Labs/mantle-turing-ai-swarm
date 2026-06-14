@@ -194,13 +194,13 @@ const NeuralLoom = ({ telem, hasPositions }: { telem: any, hasPositions: boolean
 
 			{!hasPositions && (
 				<div className="loom-core-status">
-					<div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.8rem', letterSpacing: '0.15em', color: 'var(--accent)', animation: 'pulse 4s infinite' }}>
+					<div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.5rem', letterSpacing: '0.15em', color: 'var(--accent)', animation: 'pulse 4s infinite' }}>
 						ZERO EXPOSURE
 					</div>
-					<div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', letterSpacing: '0.1em', opacity: 0.6, marginTop: '0.3rem' }}>
+					<div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.45rem', letterSpacing: '0.1em', opacity: 0.6, marginTop: '0.2rem' }}>
 						SWARM IS HUNTING
 					</div>
-					<div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.2rem', opacity: 0.3, marginTop: '0.4rem', letterSpacing: '0.1em' }}>
+					<div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', opacity: 0.3, marginTop: '0.2rem', letterSpacing: '0.1em' }}>
 						CYCLE: {telem.cycle} | UP: {telem.uptimeSecs}s
 					</div>
 				</div>
@@ -843,7 +843,7 @@ export default function App() {
 						<div className="bento-content">
 							<div ref={logRef} className="log-terminal" style={{ height: '100%', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
 								{telem.logs.map((l, i) => (
-									<div key={i} className="log-row" style={{ display: 'flex', gap: '1vw', color: 'var(--foreground)', opacity: 0.8, padding: '0.8vw 0', fontSize: '1.4rem', fontFamily: 'var(--font-mono)' }}>
+									<div key={i} className="log-row" style={{ display: 'flex', gap: '1rem', color: 'var(--foreground)', opacity: 0.8, padding: '0.2rem 0', fontSize: '1.2rem', fontFamily: 'var(--font-mono)' }}>
 										<span style={{ color: 'var(--foreground)', opacity: 0.3, minWidth: '85px' }}>{logTime(l.off)}</span>
 										<span style={{ color: l.type === 'success' ? '#00f5ff' : 'var(--accent)', fontWeight: 700, minWidth: '95px' }}>{l.tag}</span>
 										<span style={{ opacity: 0.9 }}>{l.msg}</span>

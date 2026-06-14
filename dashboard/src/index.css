@@ -2237,8 +2237,8 @@ html[data-theme="light"] .log-terminal {
 	justify-content: center;
 	text-align: right;
 	background: rgba(0,0,0,0.5);
-	padding: 0.8rem 1.5rem;
-	border-radius: 1.5rem;
+	padding: 0.4rem 0.8rem;
+	border-radius: 0.8rem;
 	border: 1px solid rgba(0,245,255,0.1);
 	backdrop-filter: blur(8px);
 	box-shadow: 0 0 15px rgba(0,0,0,0.8);
