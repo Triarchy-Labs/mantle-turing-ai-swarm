@@ -327,34 +327,83 @@ export default function App() {
 
 					{/* RISK MATRIX ENGINE (Row 2, Right) */}
 					<div className="shape-ion align-right" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-					<article className="bento-card " role="region" style={{ flexGrow: 1, margin: 0 }}>
+					<article className="bento-card " role="region" aria-label="Risk Matrix Engine" style={{ flexGrow: 1, margin: 0 }}>
 						<div className="lusion-dot"></div>
 						<div className="lusion-top-meta">
-							<div>EXP 004</div>
-							<div>RISK</div>
+							<div>004</div>
+							<div>RISK ENGINE</div>
 						</div>
-						<div className="bento-content" style={{ fontFamily: 'var(--font-mono)', fontSize: '1rem', display: 'flex', flexDirection: 'column', gap: '2vw' }}>
-							<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-								<span style={{ opacity: 0.5 }}>Dynamic Leverage</span>
-								<span style={{ color: 'var(--accent)', fontWeight: 700, fontSize: '1.4rem' }}>{telem.riskState?.dynamic_leverage.toFixed(1) ?? '—'}×</span>
-							</div>
-							<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-								<span style={{ opacity: 0.5 }}>ATR Estimate</span>
-								<span style={{ color: 'var(--accent-hover)', fontSize: '1.4rem' }}>{((telem.riskState?.atr_estimate ?? 0) * 100).toFixed(2)}%</span>
-							</div>
-							<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-								<span style={{ opacity: 0.5 }}>Macro Penalty</span>
-								<span style={{ color: telem.riskState?.macro_penalty ? 'rgba(0, 212, 255, 0.45)' : '#00f5ff', fontSize: '1.4rem' }}>{telem.riskState?.macro_penalty.toFixed(2) ?? '0.00'}</span>
-							</div>
-							<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-								<span style={{ opacity: 0.5 }}>Circuit Breaker</span>
-								<span style={{ color: telem.riskState?.circuit_breaker === 'GREEN' ? '#00f5ff' : 'rgba(0, 212, 255, 0.45)', fontWeight: 700, fontSize: '1.4rem' }}>● {telem.riskState?.circuit_breaker === 'GREEN' ? 'ACTIVE' : (telem.riskState?.circuit_breaker ?? 'N/A')}</span>
-							</div>
-							<div style={{ marginTop: 'auto' }}>
-								<div style={{ fontSize: '0.8rem', opacity: 0.4, marginBottom: '0.5vw' }}>LEVERAGE UTILIZATION</div>
-								<div style={{ height: '8px', background: 'rgba(255,255,255,0.05)', borderRadius: '4px', overflow: 'hidden' }}>
-									<div style={{ height: '100%', width: `${((telem.riskState?.dynamic_leverage ?? 5) / 20) * 100}%`, background: 'linear-gradient(90deg, #00f5ff, #00d4ff)', borderRadius: '4px', transition: 'width 0.5s ease' }} />
+						<div className="bento-content" style={{ fontFamily: 'var(--font-mono)', fontSize: '1rem', overflow: 'auto', margin: 0 }}>
+							<div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flex: 1, paddingTop: '3.5rem', gap: '0.4rem' }}>
+
+								{/* Ramp Phase Badge */}
+								<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+									<div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+										<span style={{ fontSize: '0.75rem', padding: '0.25rem 0.7rem', borderRadius: '4px', background: 'rgba(0,212,255,0.1)', border: '1px solid rgba(0,212,255,0.2)', color: 'var(--accent)', fontWeight: 700, letterSpacing: '0.08em' }}>
+											{telem.rampState?.phase_label ?? 'SEED'}
+										</span>
+										<span style={{ fontSize: '0.8rem', opacity: 0.4 }}>Phase {telem.rampState?.current_phase ?? 1}/5</span>
+									</div>
+									<div style={{ fontSize: '0.75rem', opacity: 0.4 }}>
+										↑{telem.rampState?.total_promotions ?? 0} ↓{telem.rampState?.total_demotions ?? 0}
+									</div>
 								</div>
+
+								{/* Risk rows */}
+								{[
+									{ label: 'Dynamic Leverage', value: `${(telem.riskState?.dynamic_leverage ?? 0).toFixed(1)}×`, accent: true, bold: true },
+									{ label: 'Risk Appetite', value: `${((telem.riskState?.risk_appetite ?? 0) * 100).toFixed(0)}%`, accent: true },
+									{ label: 'EWMA Confidence', value: `${((telem.riskState?.ewma_confidence ?? 0) * 100).toFixed(1)}%`, accent: true },
+									{ label: 'ATR Estimate', value: `${((telem.riskState?.atr_estimate ?? 0) * 100).toFixed(2)}%`, accent: false },
+									{ label: 'Pre-trade Factor', value: `${((telem.riskState?.pretrade_factor ?? 0) * 100).toFixed(0)}%`, accent: false },
+									{ label: 'Macro Penalty', value: (telem.riskState?.macro_penalty ?? 0).toFixed(3), accent: false, warn: (telem.riskState?.macro_penalty ?? 0) > 0.05 },
+									{ label: 'Max Position', value: `${((telem.rampState?.max_position_pct ?? 0.1) * 100).toFixed(0)}%`, accent: false },
+									{ label: 'Daily Loss Kill', value: `${telem.rampState?.daily_loss_kill_pct ?? 3.0}%`, accent: false, warn: true },
+								].map((row, i) => (
+									<div key={i} className="risk-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.45rem 0', transition: 'transform 0.2s ease' }}>
+										<span style={{ opacity: 0.5, fontSize: '0.95rem' }}>{row.label}</span>
+										<span style={{
+											color: row.warn ? 'rgba(0,212,255,0.45)' : row.accent ? 'var(--accent)' : 'var(--foreground)',
+											fontWeight: row.bold ? 700 : 500,
+											fontSize: row.bold ? '1.5rem' : '1.2rem',
+											fontFamily: 'var(--font-mono)',
+										}}>{row.value}</span>
+									</div>
+								))}
+
+								{/* Circuit Breaker — special row */}
+								<div className="risk-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem 0', borderTop: '1px solid rgba(255,255,255,0.04)', marginTop: '0.3rem' }}>
+									<span style={{ opacity: 0.5, fontSize: '0.95rem' }}>Circuit Breaker</span>
+									<span style={{ color: telem.riskState?.circuit_breaker === 'GREEN' ? 'var(--accent)' : 'rgba(0,212,255,0.45)', fontWeight: 700, fontSize: '1.2rem' }}>
+										● {telem.riskState?.circuit_breaker === 'GREEN' ? 'ACTIVE' : (telem.riskState?.circuit_breaker ?? 'N/A')}
+									</span>
+								</div>
+
+								{/* Progress bars section */}
+								<div style={{ marginTop: '0.6rem', display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+									{[
+										{ label: 'LEVERAGE UTILIZATION', value: ((telem.riskState?.dynamic_leverage ?? 5) / 20) * 100 },
+										{ label: 'RISK APPETITE', value: (telem.riskState?.risk_appetite ?? 0.85) * 100 },
+										{ label: 'EWMA CONFIDENCE', value: (telem.riskState?.ewma_confidence ?? 0.72) * 100 },
+									].map((bar, i) => (
+										<div key={i}>
+											<div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.3rem' }}>
+												<span style={{ fontSize: '0.7rem', opacity: 0.4, letterSpacing: '0.06em' }}>{bar.label}</span>
+												<span style={{ fontSize: '0.7rem', color: 'var(--accent)', fontFamily: 'var(--font-mono)' }}>{bar.value.toFixed(0)}%</span>
+											</div>
+											<div style={{ height: '6px', background: 'rgba(255,255,255,0.04)', borderRadius: '3px', overflow: 'hidden' }}>
+												<div style={{
+													height: '100%',
+													width: `${Math.min(bar.value, 100)}%`,
+													background: bar.value > 80 ? 'linear-gradient(90deg, #00f5ff, #00d4ff)' : 'linear-gradient(90deg, rgba(0,212,255,0.3), rgba(0,212,255,0.6))',
+													borderRadius: '3px',
+													transition: 'width 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
+												}} />
+											</div>
+										</div>
+									))}
+								</div>
+
 							</div>
 						</div>
 						</article>

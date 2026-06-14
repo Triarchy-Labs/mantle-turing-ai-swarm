@@ -1950,6 +1950,15 @@ a:focus-visible,
 	cursor: pointer;
 }
 
+/* ── Risk row hover ── */
+.risk-row {
+	transition: transform 0.2s ease;
+}
+.risk-row:hover {
+	transform: scale(1.012);
+	transform-origin: left center;
+}
+
 /* ============================================================
    HIGH-CONTRAST MODE (forced-colors for corporate/accessibility)
    ============================================================ */
