@@ -435,9 +435,11 @@ export default function App() {
 										{(() => {
 											const mnt = telem.markets?.[0];
 											const v = mnt?.verdict ?? 'HOLD';
-											const vColor = v === 'BUY' ? 'var(--accent)' : v === 'SELL' ? 'rgba(0,212,255,0.45)' : 'rgba(255,255,255,0.4)';
+											const vColor = v === 'BUY' ? 'var(--accent)' : v === 'SELL' ? 'var(--accent-muted, rgba(0,212,255,0.45))' : 'rgba(255,255,255,0.4)';
+											const vBg = v === 'BUY' ? 'var(--accent-glow)' : v === 'SELL' ? 'rgba(0,212,255,0.1)' : 'rgba(255,255,255,0.05)';
+											const vBorder = v === 'BUY' ? 'var(--accent-hover-glow)' : v === 'SELL' ? 'rgba(0,212,255,0.2)' : 'rgba(255,255,255,0.1)';
 											return (
-												<span style={{ fontSize: '0.8rem', padding: '0.2rem 0.6rem', borderRadius: '4px', background: `${vColor}15`, border: `1px solid ${vColor}40`, color: vColor, fontWeight: 700, fontFamily: 'var(--font-mono)', letterSpacing: '0.1em' }}>
+												<span style={{ fontSize: '0.8rem', padding: '0.2rem 0.6rem', borderRadius: '4px', background: vBg, border: `1px solid ${vBorder}`, color: vColor, fontWeight: 700, fontFamily: 'var(--font-mono)', letterSpacing: '0.1em' }}>
 													{v}
 												</span>
 											);
