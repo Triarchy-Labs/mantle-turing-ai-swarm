@@ -657,17 +657,17 @@ export default function App() {
 
 					{/* OPEN POSITIONS (Row 3, Left) */}
 					<div className="shape-choochoo" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-					<article className="bento-card " role="region" style={{ flexGrow: 1, margin: 0 }}>
-						<div className="lusion-dot"></div>
-						<div className="lusion-top-meta">
+					<article className="bento-card " role="region" style={{ flexGrow: 1, margin: 0, padding: 0, overflow: 'hidden' }}>
+						<div className="lusion-dot" style={{ top: '2.5vw', left: '2.5vw' }}></div>
+						<div className="lusion-top-meta" style={{ position: 'absolute', top: '2.5vw', left: '2.5vw', right: '2.5vw', zIndex: 10 }}>
 							<div>006</div>
 							<div>NEURAL SENSOR</div>
 						</div>
-						<div className="bento-content" style={{ position: 'relative', overflow: 'hidden', padding: '0' }}>
+						<div className="bento-content" style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, overflow: 'hidden', padding: 0, margin: 0 }}>
 							<NeuralLoom telem={telem} hasPositions={telem.openPositions.length > 0} />
 
 							{telem.openPositions.length > 0 && (
-								<div className="glass-positions-layer">
+								<div className="glass-positions-layer" style={{ padding: '2.5vw', width: '100%', height: '100%', boxSizing: 'border-box' }}>
 									<div style={{ display: 'flex', flexDirection: 'column', gap: '1.5vw' }}>
 										{telem.openPositions.map((pos, i) => (
 											<div key={i} className="position-row" style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '1vw', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
@@ -687,8 +687,8 @@ export default function App() {
 						</div>
 						</article>
 					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
-						<div className="lusion-card-tags" style={{ fontSize: '0.8rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>HOLDINGS • ACTIVE</div>
-						<h2 className="lusion-card-title">{telem.openPositions.length === 0 ? 'Portfolio' : `Active Positions (${telem.openPositions.length})`}</h2>
+						<div className="lusion-card-tags" style={{ fontSize: '0.8rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>GRID • IMMERSIVE • ALPHA</div>
+						<h2 className="lusion-card-title"><TextReveal>{telem.openPositions.length === 0 ? 'Neural Topology' : `Execution Targets (${telem.openPositions.length})`}</TextReveal></h2>
 					</div>
 				</div>
 
