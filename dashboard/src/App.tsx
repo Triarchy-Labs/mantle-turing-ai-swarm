@@ -845,8 +845,7 @@ export default function App() {
 										<span style={{ opacity: 0.9 }}>{l.msg}</span>
 									</div>
 								))}
-								{/* Auto-scroll anchor */}
-								<div style={{ float: 'left', clear: 'both' }} ref={(el) => { if (el) el.scrollIntoView({ behavior: 'smooth' }); }}></div>
+								{/* Auto-scroll anchor removed to prevent window scroll hijacking */}
 							</div>
 						</div>
 						</article>
