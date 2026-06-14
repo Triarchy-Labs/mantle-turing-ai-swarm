@@ -334,7 +334,7 @@ export default function SwarmChat({ telem, orbState }: SwarmChatProps) {
       </div>
 
       {/* Model names */}
-      <div style={{ textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: '1.6rem', opacity: 0.3, letterSpacing: '0.06em', padding: '0.3rem 0' }}>
+      <div style={{ textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: 'clamp(10px, 1.6rem, 16px)', opacity: 0.3, letterSpacing: '0.06em', padding: '0.3rem 0' }}>
         5 LLMs · 31B–600B params · multi-agent consensus
       </div>
 

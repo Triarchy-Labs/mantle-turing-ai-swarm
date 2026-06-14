@@ -1324,7 +1324,7 @@ html[data-theme="light"] .lusion-btn-glass:hover {
 }
 
 .swarm-chat-msg-label {
-	font-size: 1.5rem;
+	font-size: clamp(10px, 1.5rem, 15px);
 	font-weight: 700;
 	text-transform: uppercase;
 	letter-spacing: 0.1em;
@@ -1340,7 +1340,7 @@ html[data-theme="light"] .lusion-btn-glass:hover {
 	color: var(--foreground);
 	white-space: pre-wrap;
 	word-break: break-word;
-	font-size: 1.6rem;
+	font-size: clamp(12px, 1.6rem, 16px);
 	line-height: 1.5;
 }
 
@@ -1349,7 +1349,7 @@ html[data-theme="light"] .lusion-btn-glass:hover {
 	font-family: var(--font-mono);
 	color: var(--accent);
 	opacity: 0.8;
-	font-size: 1.6rem;
+	font-size: clamp(12px, 1.6rem, 16px);
 }
 
 .swarm-cursor {
@@ -1411,7 +1411,7 @@ html[data-theme="light"] .lusion-btn-glass:hover {
 	border: 1px solid var(--border);
 	border-radius: 8px;
 	background: transparent;
-	font-size: 1.45rem;
+	font-size: clamp(12px, 1.45rem, 15px);
 	font-family: var(--font-mono);
 	color: var(--foreground);
 	box-sizing: border-box;

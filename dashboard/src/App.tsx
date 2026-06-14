@@ -467,10 +467,10 @@ export default function App() {
 								{/* Ramp Phase Badge */}
 								<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
 									<div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-										<span style={{ fontSize: '1.5rem', padding: '0.3rem 1.2rem', borderRadius: '3rem', background: 'rgba(0,212,255,0.1)', border: '1px solid rgba(0,212,255,0.2)', color: 'var(--accent)', fontWeight: 700, letterSpacing: '0.08em' }}>
+										<span style={{ fontSize: 'clamp(10px, 1.5rem, 15px)', padding: '0.3rem 1.2rem', borderRadius: '3rem', background: 'rgba(0,212,255,0.1)', border: '1px solid rgba(0,212,255,0.2)', color: 'var(--accent)', fontWeight: 700, letterSpacing: '0.08em' }}>
 											{telem.rampState?.phase_label ?? 'SEED'}
 										</span>
-										<span style={{ fontSize: '2.4rem', opacity: 0.4 }}>Phase {telem.rampState?.current_phase ?? 1}/5</span>
+										<span style={{ fontSize: 'clamp(14px, 2.4rem, 24px)', opacity: 0.4 }}>Phase {telem.rampState?.current_phase ?? 1}/5</span>
 									</div>
 									<div style={{ fontSize: '1.5rem', opacity: 0.4 }}>
 										↑{telem.rampState?.total_promotions ?? 0} ↓{telem.rampState?.total_demotions ?? 0}
@@ -490,7 +490,7 @@ export default function App() {
 										{ label: 'Daily Loss Kill', value: `${telem.rampState?.daily_loss_kill_pct ?? 3.0}%`, accent: false, warn: true },
 									].map((row, i) => (
 										<div key={i} className="risk-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.45rem 0', transition: 'transform 0.2s ease' }}>
-											<span style={{ opacity: 0.5, fontSize: '2.4rem' }}>{row.label}</span>
+											<span style={{ opacity: 0.5, fontSize: 'clamp(14px, 2.4rem, 24px)' }}>{row.label}</span>
 											<span style={{
 												color: row.warn ? 'rgba(0,212,255,0.45)' : row.accent ? 'var(--accent)' : 'var(--foreground)',
 												fontWeight: row.bold ? 700 : 500,
@@ -503,8 +503,8 @@ export default function App() {
 
 								{/* Circuit Breaker — special row */}
 								<div className="risk-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem 0', borderTop: '1px solid rgba(255,255,255,0.04)', marginTop: '0.3rem' }}>
-									<span style={{ opacity: 0.5, fontSize: '2.4rem' }}>Circuit Breaker</span>
-									<span style={{ color: telem.riskState?.circuit_breaker === 'GREEN' ? 'var(--accent)' : 'rgba(0,212,255,0.45)', fontWeight: 700, fontSize: '2.8rem' }}>
+									<span style={{ opacity: 0.5, fontSize: 'clamp(14px, 2.4rem, 24px)' }}>Circuit Breaker</span>
+									<span style={{ color: telem.riskState?.circuit_breaker === 'GREEN' ? 'var(--accent)' : 'rgba(0,212,255,0.45)', fontWeight: 700, fontSize: 'clamp(16px, 2.8rem, 28px)' }}>
 										● {telem.riskState?.circuit_breaker === 'GREEN' ? 'ACTIVE' : (telem.riskState?.circuit_breaker ?? 'N/A')}
 									</span>
 								</div>
@@ -707,15 +707,15 @@ export default function App() {
 										<div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
 											{manualPhaseOverride !== null && <span style={{ color: '#00a8cc', animation: 'blink 1s infinite' }}>OVERRIDE ACTIVE</span>}
 											<span>SCALING</span>
-											<button onClick={() => setIsAutoRampFlipped(true)} style={{ background: 'none', border: 'none', color: 'var(--foreground)', opacity: 0.5, cursor: 'pointer', fontSize: '1.4rem', padding: '0 5px' }} title="Configure">⚙</button>
+											<button onClick={() => setIsAutoRampFlipped(true)} style={{ background: 'none', border: 'none', color: 'var(--foreground)', opacity: 0.5, cursor: 'pointer', fontSize: 'clamp(10px, 1.4rem, 14px)', padding: '0 5px' }} title="Configure">⚙</button>
 										</div>
 									</div>
 									<div className="bento-content" style={{ fontFamily: 'var(--font-mono)', display: 'flex', flexDirection: 'column', gap: '1.5rem', justifyContent: 'center', flex: 1 }}>
 										<div style={{ textAlign: 'center' }}>
-											<div style={{ fontSize: '3.8rem', fontWeight: 800, color: manualPhaseOverride ? '#00a8cc' : 'var(--accent)', textShadow: manualPhaseOverride ? '0 0 20px rgba(0,168,204,0.5)' : '0 0 20px var(--accent-glow)', letterSpacing: '0.05em', transition: 'color 0.3s' }}>
+											<div style={{ fontSize: 'clamp(20px, 3.8rem, 38px)', fontWeight: 800, color: manualPhaseOverride ? '#00a8cc' : 'var(--accent)', textShadow: manualPhaseOverride ? '0 0 20px rgba(0,168,204,0.5)' : '0 0 20px var(--accent-glow)', letterSpacing: '0.05em', transition: 'color 0.3s' }}>
 												{overrideFlash !== null ? 'OVERRIDE...' : (manualPhaseOverride ? ['SEED', 'SPROUT', 'GROWTH', 'MATURE', 'APEX'][manualPhaseOverride - 1] : (telem.rampState?.phase_label ?? 'SEED'))}
 											</div>
-											<div style={{ fontSize: '1.5rem', opacity: 0.5, marginTop: '0.5rem', letterSpacing: '0.1em' }}>
+											<div style={{ fontSize: 'clamp(10px, 1.5rem, 15px)', opacity: 0.5, marginTop: '0.5rem', letterSpacing: '0.1em' }}>
 												PHASE {manualPhaseOverride || telem.rampState?.current_phase || 1} OF 5
 											</div>
 										</div>
@@ -758,7 +758,7 @@ export default function App() {
 															transition: 'all 0.4s ease'
 														}} />
 														<div style={{ 
-															fontSize: '1.4rem', 
+															fontSize: 'clamp(10px, 1.4rem, 14px)', 
 															opacity: isActive ? 1 : isPassed ? 0.7 : 0.3, 
 															color: isOverride ? '#00a8cc' : isActive ? 'var(--accent)' : 'inherit',
 															fontWeight: isActive ? 700 : 400
