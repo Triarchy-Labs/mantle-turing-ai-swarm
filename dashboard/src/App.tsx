@@ -7,7 +7,7 @@ import { WebGLErrorBoundary } from './components/WebGLErrorBoundary';
 import { useTelemetry } from './hooks/useTelemetry';
 import SwarmChat from './components/SwarmChat';
 import NoiseOverlay from './components/NoiseOverlay';
-
+import Lenis from 'lenis';
 /* ── Pipeline stages ── */
 const pipelineStages = [
 	{ n: '01', label: 'MARKET DATA INGESTION' },
@@ -219,6 +219,29 @@ export default function App() {
 	const [footerTime, setFooterTime] = useState(new Date().toLocaleTimeString('en-US', { hour12: false }));
 	const [globalPillHover, setGlobalPillHover] = useState(false);
 	const logRef = useRef<HTMLDivElement>(null);
+
+	// Lenis smooth scroll setup
+	useEffect(() => {
+		const lenis = new Lenis({
+			duration: 1.2,
+			easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+			orientation: 'vertical',
+			gestureOrientation: 'vertical',
+			smoothWheel: true,
+			touchMultiplier: 2,
+		});
+
+		function raf(time: number) {
+			lenis.raf(time);
+			requestAnimationFrame(raf);
+		}
+
+		requestAnimationFrame(raf);
+
+		return () => {
+			lenis.destroy();
+		};
+	}, []);
 
 	useEffect(() => {
 		setMounted(true);
