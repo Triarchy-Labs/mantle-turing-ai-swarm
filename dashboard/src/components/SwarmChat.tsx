@@ -80,6 +80,7 @@ export default function SwarmChat({ telem, orbState }: SwarmChatProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const orbRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   // ── Blink timer ──
   useEffect(() => {
@@ -139,8 +140,13 @@ export default function SwarmChat({ telem, orbState }: SwarmChatProps) {
 
   // ── Auto-scroll ──
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTo({
+        top: messagesContainerRef.current.scrollHeight,
+        behavior: 'smooth'
+      });
+    }
+  }, [messages, terminalText]);
 
   // ── Orb state from parent ──
   useEffect(() => {
@@ -303,7 +309,7 @@ export default function SwarmChat({ telem, orbState }: SwarmChatProps) {
       </div>
 
       {/* Terminal-style typewriter message */}
-      <div className="swarm-chat-messages">
+      <div ref={messagesContainerRef} className="swarm-chat-messages">
         <div className="swarm-chat-msg assistant">
           <div className="swarm-chat-msg-label">◈ SWARM</div>
           <div className="swarm-chat-msg-content swarm-terminal-line">
