@@ -115,7 +115,9 @@ export interface MarketRow {
   conf: number;
   verdict: string;
   regime?: string;
+  regimeConf?: number;
   liq?: string;
+  buySell?: string;
 }
 
 export interface TelemetryData {
@@ -203,10 +205,10 @@ const MOCK_DATA: TelemetryData = {
   pipelineStage: 10,
   pipelineTotal: 24,
   markets: [
-    { sym: 'MNT', price: '$0.5533', vol: '$162,908', change: '+1.20%', up: true, conf: 82.5, verdict: 'BUY', regime: 'TRENDING_UP', liq: '$3.4M' },
-    { sym: 'USDe', price: '$1.0002', vol: '$168,847', change: '+0.02%', up: true, conf: 71.2, verdict: 'HOLD', regime: 'RANGING', liq: '$3.4M' },
-    { sym: 'ETH', price: '$1,670.32', vol: '$477', change: '-0.11%', up: false, conf: 55.6, verdict: 'HOLD', regime: 'RANGING', liq: '$2.2K' },
-    { sym: 'USDT', price: '$1.0000', vol: '$50,230', change: '+0.00%', up: true, conf: 50.0, verdict: 'HOLD', regime: 'RANGING', liq: '$1.1M' },
+    { sym: 'MNT', price: '$0.5533', vol: '$162,908', change: '+1.20%', up: true, conf: 82.5, verdict: 'BUY', regime: 'TRENDING_UP', regimeConf: 87, liq: '$3.4M', buySell: '82.9%' },
+    { sym: 'USDe', price: '$1.0002', vol: '$168,847', change: '+0.02%', up: true, conf: 71.2, verdict: 'HOLD', regime: 'RANGING', regimeConf: 64, liq: '$3.4M', buySell: '53.2%' },
+    { sym: 'ETH', price: '$1,670.32', vol: '$477', change: '-0.11%', up: false, conf: 55.6, verdict: 'HOLD', regime: 'RANGING', regimeConf: 58, liq: '$2.2K', buySell: '46.7%' },
+    { sym: 'USDT', price: '$1.0000', vol: '$50,230', change: '+0.00%', up: true, conf: 50.0, verdict: 'HOLD', regime: 'RANGING', regimeConf: 72, liq: '$1.1M', buySell: '52.4%' },
   ],
   debates: MOCK_DEBATES,
   logs: MOCK_LOGS,
@@ -338,7 +340,9 @@ function mapResponse(resp: TelemetryResponse): TelemetryData {
     conf: Math.round(s.confidence * 10) / 10,
     verdict: mapVerdict(s.verdict),
     regime: s.regime || 'RANGING',
+    regimeConf: s.regime_confidence ? Math.round(s.regime_confidence * 100) : undefined,
     liq: s.liquidity_usd ? formatVolume(s.liquidity_usd) : undefined,
+    buySell: s.buy_sell_ratio ? `${(s.buy_sell_ratio * 100).toFixed(1)}%` : undefined,
   }));
 
   const ps = resp.paper_stats;

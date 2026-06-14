@@ -284,9 +284,9 @@ export default function App() {
 											<div>
 												<div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
 													<span style={{ fontSize: '1.4rem', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>{m.sym}</span>
-													{m.regime && <span style={{ fontSize: '0.6rem', padding: '0.15rem 0.5rem', borderRadius: '3px', background: 'rgba(0,212,255,0.08)', color: 'var(--accent)', fontFamily: 'var(--font-mono)', letterSpacing: '0.04em', fontWeight: 600 }}>{m.regime === 'TRENDING_UP' ? '↑ TREND' : m.regime === 'TRENDING_DOWN' ? '↓ TREND' : m.regime === 'VOLATILE' ? '⚡ VOL' : '~ RANGE'}</span>}
+													{m.regime && <span style={{ fontSize: '0.6rem', padding: '0.15rem 0.5rem', borderRadius: '3px', background: 'rgba(0,212,255,0.08)', color: 'var(--accent)', fontFamily: 'var(--font-mono)', letterSpacing: '0.04em', fontWeight: 600 }}>{m.regime === 'TRENDING_UP' ? '↑ TREND' : m.regime === 'TRENDING_DOWN' ? '↓ TREND' : m.regime === 'VOLATILE' ? '⚡ VOL' : '~ RANGE'}{m.regimeConf ? ` ${m.regimeConf}%` : ''}</span>}
 												</div>
-												<div style={{ fontSize: '0.75rem', color: 'var(--foreground)', opacity: 0.4, fontFamily: 'var(--font-mono)', marginTop: '0.25rem' }}>Vol {m.vol}{m.liq ? ` · Liq ${m.liq}` : ''}</div>
+												<div style={{ fontSize: '0.75rem', color: 'var(--foreground)', opacity: 0.4, fontFamily: 'var(--font-mono)', marginTop: '0.25rem' }}>Vol {m.vol}{m.liq ? ` · Liq ${m.liq}` : ''}{m.buySell ? ` · B/S ${m.buySell}` : ''}</div>
 											</div>
 											<div style={{ textAlign: 'right' }}>
 												<div style={{ fontSize: '1.6rem', fontWeight: 700, fontFamily: 'var(--font-mono)', color: 'var(--accent)' }}>{m.price}</div>
