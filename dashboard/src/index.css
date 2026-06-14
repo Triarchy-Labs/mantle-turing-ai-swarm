@@ -1967,8 +1967,8 @@ a:focus-visible,
 .risk-metrics-scroll {
 	max-height: 13.5rem;
 	overflow-y: auto;
-	padding-right: 5.5rem;
-	margin-right: -5.5rem;
+	padding-right: 6.5rem;
+	margin-right: -6.5rem;
 	scrollbar-width: thin;
 	scrollbar-color: rgba(0, 212, 255, 0.1) transparent;
 }
@@ -1983,16 +1983,19 @@ a:focus-visible,
 }
 
 .risk-metrics-scroll::-webkit-scrollbar-thumb {
-	background: rgba(0, 212, 255, 0.1);
+	background-color: rgba(0, 212, 255, 0.1);
 	border-radius: 3rem;
+	background-clip: padding-box;
+	border-top: 1.5rem solid transparent;
+	border-bottom: 1.5rem solid transparent;
 }
 
-.risk-metrics-scroll:hover::-webkit-scrollbar-thumb {
-	background: rgba(0, 212, 255, 0.3);
+.bento-card:hover .risk-metrics-scroll::-webkit-scrollbar-thumb {
+	background-color: rgba(0, 212, 255, 0.3);
 }
 
 .risk-metrics-scroll::-webkit-scrollbar-thumb:hover {
-	background: rgba(0, 212, 255, 0.6);
+	background-color: rgba(0, 212, 255, 0.6) !important;
 }
 
 /* ============================================================
