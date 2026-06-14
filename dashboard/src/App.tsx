@@ -194,13 +194,13 @@ const NeuralLoom = ({ telem, hasPositions }: { telem: any, hasPositions: boolean
 
 			{!hasPositions && (
 				<div className="loom-core-status">
-					<div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.5rem', letterSpacing: '0.15em', color: 'var(--accent)', animation: 'pulse 4s infinite' }}>
+					<div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.8rem', letterSpacing: '0.15em', color: 'var(--accent)', animation: 'pulse 4s infinite' }}>
 						ZERO EXPOSURE
 					</div>
-					<div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.4rem', letterSpacing: '0.1em', opacity: 0.6, marginTop: '0.5rem' }}>
+					<div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', letterSpacing: '0.1em', opacity: 0.6, marginTop: '0.3rem' }}>
 						SWARM IS HUNTING
 					</div>
-					<div style={{ fontFamily: 'var(--font-mono)', fontSize: '2.4rem', opacity: 0.3, marginTop: '0.8rem', letterSpacing: '0.1em' }}>
+					<div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.2rem', opacity: 0.3, marginTop: '0.4rem', letterSpacing: '0.1em' }}>
 						CYCLE: {telem.cycle} | UP: {telem.uptimeSecs}s
 					</div>
 				</div>
