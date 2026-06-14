@@ -539,7 +539,15 @@ export default function App() {
 						</div>
 						<div className="bento-content">
 							{telem.openPositions.length === 0 ? (
-								<div style={{ fontFamily: 'var(--font-mono)', fontSize: '1rem', opacity: 0.3, textAlign: 'center', margin: 'auto' }}>NO OPEN POSITIONS</div>
+								<div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', opacity: 0.8, margin: 'auto', padding: '2rem 0' }}>
+									<div className="radar-scanner" style={{ marginBottom: '1.5rem' }}></div>
+									<div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.9rem', letterSpacing: '0.2em', color: 'var(--accent)', animation: 'blink 2s infinite' }}>
+										AWAITING OPTIMAL ENTRY
+									</div>
+									<div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', letterSpacing: '0.1em', opacity: 0.5, marginTop: '0.5rem' }}>
+										SCANNING MARKETS
+									</div>
+								</div>
 							) : (
 								<div style={{ display: 'flex', flexDirection: 'column', gap: '1.5vw' }}>
 									{telem.openPositions.map((pos, i) => (
@@ -572,15 +580,44 @@ export default function App() {
 							<div>EXP 005</div>
 							<div>SCALING</div>
 						</div>
-						<div className="bento-content" style={{ fontFamily: 'var(--font-mono)', display: 'flex', flexDirection: 'column', gap: '2vw', justifyContent: 'center' }}>
+						<div className="bento-content" style={{ fontFamily: 'var(--font-mono)', display: 'flex', flexDirection: 'column', gap: '1.5rem', justifyContent: 'center' }}>
 							<div style={{ textAlign: 'center' }}>
-								<div style={{ fontSize: '3vw', fontWeight: 800, color: 'var(--accent)' }}>{telem.rampState?.phase_label ?? 'SEED'}</div>
-								<div style={{ fontSize: '1rem', opacity: 0.5, marginTop: '1vw' }}>Phase {telem.rampState?.current_phase ?? 0}/4</div>
+								<div style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--accent)', textShadow: '0 0 20px var(--accent-glow)', letterSpacing: '0.05em' }}>
+									{telem.rampState?.phase_label ?? 'SEED'}
+								</div>
+								<div style={{ fontSize: '0.9rem', opacity: 0.5, marginTop: '0.5rem', letterSpacing: '0.1em' }}>
+									PHASE {telem.rampState?.current_phase ?? 1} OF 5
+								</div>
 							</div>
-							<div style={{ display: 'flex', gap: '6px', marginTop: '2vw' }}>
-								{['SEED', 'SPROUT', 'GROWTH', 'MATURE', 'APEX'].map((label, i) => (
-									<div key={label} style={{ flex: 1, height: '6px', borderRadius: '3px', background: i <= (telem.rampState?.current_phase ?? 0) ? 'var(--accent)' : 'rgba(255,255,255,0.05)', transition: 'background 0.3s ease' }} title={label} />
-								))}
+							
+							<div style={{ display: 'flex', alignItems: 'flex-end', height: '80px', gap: '8px', padding: '0 1rem' }}>
+								{['SEED', 'SPROUT', 'GROWTH', 'MATURE', 'APEX'].map((label, i) => {
+									const phaseNum = i + 1;
+									const currentPhase = telem.rampState?.current_phase ?? 1;
+									const isActive = phaseNum === currentPhase;
+									const isPassed = phaseNum < currentPhase;
+									
+									return (
+										<div key={label} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }} title={label}>
+											<div style={{ 
+												width: '100%', 
+												height: `${20 + i * 15}px`, 
+												borderRadius: '2px', 
+												background: isActive ? 'var(--accent)' : isPassed ? 'var(--accent-muted)' : 'rgba(255,255,255,0.05)', 
+												boxShadow: isActive ? '0 0 15px var(--accent-glow)' : 'none',
+												transition: 'all 0.4s ease'
+											}} />
+											<div style={{ 
+												fontSize: '0.6rem', 
+												opacity: isActive ? 1 : isPassed ? 0.7 : 0.3, 
+												color: isActive ? 'var(--accent)' : 'inherit',
+												fontWeight: isActive ? 700 : 400
+											}}>
+												{label}
+											</div>
+										</div>
+									);
+								})}
 							</div>
 						</div>
 						</article>
