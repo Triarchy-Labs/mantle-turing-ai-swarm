@@ -418,33 +418,106 @@ export default function App() {
 					<article className="bento-card events-section" role="region" aria-label="Decision Pipeline" style={{ flexGrow: 1, margin: 0 }}>
 						<div className="lusion-dot"></div>
 						<div className="lusion-top-meta">
-							<div>EXP 003</div>
-							<div>PIPELINE</div>
+							<div>003</div>
+							<div>24-STAGE PIPELINE</div>
 						</div>
-						<div className="bento-content" style={{ justifyContent: 'center' }}>
-							<div className="card-title collapsible-header" onClick={() => setExpandedPipeline(!expandedPipeline)} style={{ cursor: 'pointer', display: 'flex', justifyContent: 'space-between', marginBottom: '2vw' }}>
-								<div style={{ display: 'flex', alignItems: 'center', gap: '1vw' }}><Zap size={20} style={{ color: 'var(--accent-hover)' }} /> <span style={{ fontSize: '1.2rem', letterSpacing: '0.1em' }}>SYNAPTIC DECISION PIPELINE</span></div>
-								<span style={{ fontSize: '0.8rem', fontFamily: 'var(--font-mono)', opacity: 0.5 }}>{expandedPipeline ? '▼ COLLAPSE' : `▶ ${effectiveStage}/24 — EXPAND`}</span>
-							</div>
-							<div style={{ display: 'flex', gap: '4px', marginBottom: expandedPipeline ? '2vw' : '0' }}>
-								{pipelineStages.map((_, idx) => (
-									<div key={idx} style={{ flex: 1, height: '8px', borderRadius: '4px', background: idx < effectiveStage ? 'var(--accent-hover)' : idx === effectiveStage ? 'var(--accent)' : 'rgba(255,255,255,0.06)', transition: 'background 0.3s ease' }} />
-								))}
-							</div>
-							<div className={`collapsible-content ${expandedPipeline ? 'expanded' : 'collapsed'}`} style={{ display: expandedPipeline ? 'block' : 'none' }}>
-								<div role="list" style={{ display: 'flex', flexWrap: 'wrap', gap: '1vw', marginTop: '1vw' }}>
-									{pipelineStages.map((s, idx) => {
-										const st = idx < effectiveStage ? 'done' : idx === effectiveStage ? 'active' : 'pending';
-										return (
-											<div key={s.n} role="listitem" className={`pipeline-stage ${st === 'active' ? 'active' : ''}`} style={{ flex: '1 1 calc(25% - 1vw)' }}>
-												<div style={{ display: 'flex', gap: '8px', fontSize: '0.9rem' }}>
-													<span style={{ color: st === 'active' ? 'var(--accent-hover)' : 'var(--foreground)', opacity: st === 'pending' ? 0.3 : 0.5 }}>[{s.n}]</span>
-													<span style={{ color: st === 'done' ? 'var(--accent-hover)' : st === 'active' ? '#fff' : 'var(--foreground)', opacity: st === 'pending' ? 0.4 : 1, fontWeight: st === 'active' ? 700 : 400, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{s.label}</span>
-												</div>
-											</div>
-										);
-									})}
+						<div className="bento-content" style={{ justifyContent: 'flex-start', overflow: 'auto' }}>
+							<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', flex: 1, paddingTop: '3.5rem' }}>
+
+								{/* Header row: title + verdict badge + stage counter */}
+								<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+									<div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+										<Zap size={18} style={{ color: 'var(--accent-hover)' }} />
+										<span style={{ fontSize: '1.1rem', letterSpacing: '0.08em', fontFamily: 'var(--font-mono)', opacity: 0.7 }}>SYNAPTIC DECISION PIPELINE</span>
+									</div>
+									<div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+										{/* Verdict badge */}
+										{(() => {
+											const mnt = telem.markets?.[0];
+											const v = mnt?.verdict ?? 'HOLD';
+											const vColor = v === 'BUY' ? 'var(--accent)' : v === 'SELL' ? 'rgba(0,212,255,0.45)' : 'rgba(255,255,255,0.4)';
+											return (
+												<span style={{ fontSize: '0.8rem', padding: '0.2rem 0.6rem', borderRadius: '4px', background: `${vColor}15`, border: `1px solid ${vColor}40`, color: vColor, fontWeight: 700, fontFamily: 'var(--font-mono)', letterSpacing: '0.1em' }}>
+													{v}
+												</span>
+											);
+										})()}
+										<span style={{ fontSize: '0.85rem', fontFamily: 'var(--font-mono)', opacity: 0.5 }}>{effectiveStage}/24</span>
+									</div>
 								</div>
+
+								{/* Active stage name */}
+								<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.4rem 0' }}>
+									<span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--accent)', boxShadow: '0 0 8px var(--accent)', animation: 'blink 2s ease infinite' }} />
+									<span style={{ fontSize: '1rem', fontFamily: 'var(--font-mono)', color: 'var(--accent)', fontWeight: 600 }}>
+										{pipelineStages[effectiveStage]?.label ?? pipelineStages[0].label}
+									</span>
+								</div>
+
+								{/* Progress bar — each segment with tooltip */}
+								<div style={{ display: 'flex', gap: '3px' }}>
+									{pipelineStages.map((s, idx) => (
+										<div key={idx} title={`[${s.n}] ${s.label}`} style={{
+											flex: 1, height: '8px', borderRadius: '4px', cursor: 'default',
+											background: idx < effectiveStage ? 'var(--accent-hover)' : idx === effectiveStage ? 'var(--accent)' : 'rgba(255,255,255,0.06)',
+											transition: 'background 0.3s ease',
+											boxShadow: idx === effectiveStage ? '0 0 6px var(--accent)' : 'none',
+										}} />
+									))}
+								</div>
+
+								{/* Stage group labels under bar */}
+								<div style={{ display: 'flex', justifyContent: 'space-between', padding: '0 0.2rem' }}>
+									{[
+										{ label: 'ANALYSIS', span: '01–03' },
+										{ label: 'DEBATE', span: '04–08' },
+										{ label: 'RISK', span: '09–14' },
+										{ label: 'EXEC', span: '15–18' },
+										{ label: 'AUDIT', span: '19–24' },
+									].map((g, i) => (
+										<span key={i} style={{ fontSize: '0.6rem', fontFamily: 'var(--font-mono)', opacity: 0.3, letterSpacing: '0.06em', textAlign: 'center' }}>
+											{g.label}
+										</span>
+									))}
+								</div>
+
+								{/* Benchmark stats row */}
+								<div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderTop: '1px solid rgba(255,255,255,0.04)', marginTop: '0.3rem' }}>
+									{[
+										{ label: 'Cycles', value: telem.benchmark?.total_cycles ?? 0 },
+										{ label: 'Agreement', value: `${(telem.benchmark?.agreement_rate ?? 0).toFixed(1)}%` },
+										{ label: 'AI Conf.', value: `${((telem.benchmark?.ai_avg_confidence ?? 0) * 100).toFixed(0)}%` },
+										{ label: 'Consensus', value: `${telem.benchmark?.agreements ?? 0}/${telem.benchmark?.total_cycles ?? 0}` },
+									].map((stat, i) => (
+										<div key={i} style={{ textAlign: 'center' }}>
+											<div style={{ fontSize: '0.65rem', opacity: 0.35, fontFamily: 'var(--font-mono)', letterSpacing: '0.05em', marginBottom: '0.2rem' }}>{stat.label}</div>
+											<div style={{ fontSize: '1rem', color: 'var(--accent)', fontFamily: 'var(--font-mono)', fontWeight: 600 }}>{stat.value}</div>
+										</div>
+									))}
+								</div>
+
+								{/* Expand/collapse toggle */}
+								<div className="risk-row" onClick={() => setExpandedPipeline(!expandedPipeline)} style={{ cursor: 'pointer', display: 'flex', justifyContent: 'center', padding: '0.3rem', opacity: 0.4, fontSize: '0.75rem', fontFamily: 'var(--font-mono)', letterSpacing: '0.08em' }}>
+									{expandedPipeline ? '▼ COLLAPSE STAGES' : '▶ EXPAND ALL 24 STAGES'}
+								</div>
+
+								{/* Expanded stage list */}
+								{expandedPipeline && (
+									<div role="list" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem', marginTop: '0.3rem' }}>
+										{pipelineStages.map((s, idx) => {
+											const st = idx < effectiveStage ? 'done' : idx === effectiveStage ? 'active' : 'pending';
+											return (
+												<div key={s.n} role="listitem" className={`pipeline-stage ${st === 'active' ? 'active' : ''}`} style={{ flex: '1 1 calc(25% - 0.6rem)', padding: '0.5rem 0.8rem' }}>
+													<div style={{ display: 'flex', gap: '6px', fontSize: '0.8rem', alignItems: 'center' }}>
+														<span style={{ color: st === 'done' ? 'var(--accent-hover)' : st === 'active' ? 'var(--accent)' : 'var(--foreground)', opacity: st === 'pending' ? 0.25 : 0.5, fontSize: '0.7rem' }}>{s.n}</span>
+														<span style={{ color: st === 'done' ? 'var(--accent-hover)' : st === 'active' ? '#fff' : 'var(--foreground)', opacity: st === 'pending' ? 0.3 : 1, fontWeight: st === 'active' ? 700 : 400, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontSize: '0.75rem' }}>{s.label}</span>
+													</div>
+												</div>
+											);
+										})}
+									</div>
+								)}
+
 							</div>
 						</div>
 						</article>
