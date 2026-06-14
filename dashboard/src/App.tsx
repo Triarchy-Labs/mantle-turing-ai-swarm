@@ -538,18 +538,27 @@ export default function App() {
 					<article className="bento-card " role="region" style={{ flexGrow: 1, margin: 0 }}>
 						<div className="lusion-dot"></div>
 						<div className="lusion-top-meta">
-							<div>EXP 006</div>
+							<div>006</div>
 							<div>PORTFOLIO</div>
 						</div>
 						<div className="bento-content">
 							{telem.openPositions.length === 0 ? (
 								<div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', opacity: 0.8, margin: 'auto', padding: '2rem 0' }}>
-									<div className="radar-scanner" style={{ marginBottom: '1.5rem' }}></div>
-									<div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.9rem', letterSpacing: '0.2em', color: 'var(--accent)', animation: 'blink 2s infinite' }}>
+									<div className="sonar-container" style={{ marginBottom: '2.5rem' }}>
+										<div className="sonar-ring sonar-ring-1"></div>
+										<div className="sonar-ring sonar-ring-2"></div>
+										<div className="sonar-ring sonar-ring-3"></div>
+										<div className="sonar-sweep"></div>
+										<div className="sonar-core"></div>
+										<div className="sonar-target sonar-target-1"></div>
+										<div className="sonar-target sonar-target-2"></div>
+										<div className="sonar-target sonar-target-3"></div>
+									</div>
+									<div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.9rem', letterSpacing: '0.2em', color: 'var(--accent)', animation: 'breathing 4s ease-in-out infinite' }}>
 										AWAITING OPTIMAL ENTRY
 									</div>
 									<div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', letterSpacing: '0.1em', opacity: 0.5, marginTop: '0.5rem' }}>
-										SCANNING MARKETS
+										SCANNING: CYCLE {telem.cycle}
 									</div>
 								</div>
 							) : (
@@ -572,7 +581,7 @@ export default function App() {
 						</article>
 					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
 						<div className="lusion-card-tags" style={{ fontSize: '0.8rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>HOLDINGS • ACTIVE</div>
-						<h2 className="lusion-card-title">Positions ({telem.openPositions.length})</h2>
+						<h2 className="lusion-card-title">{telem.openPositions.length === 0 ? 'Portfolio' : `Active Positions (${telem.openPositions.length})`}</h2>
 					</div>
 				</div>
 
@@ -585,7 +594,7 @@ export default function App() {
 								<div className="flip-card-front bento-card" style={{ margin: 0, padding: '1.5rem', display: 'flex', flexDirection: 'column' }}>
 									<div className="lusion-dot"></div>
 									<div className="lusion-top-meta">
-										<div>EXP 005</div>
+										<div>005</div>
 										<div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
 											{manualPhaseOverride !== null && <span style={{ color: '#00a8cc', animation: 'blink 1s infinite' }}>OVERRIDE ACTIVE</span>}
 											<span>SCALING</span>
