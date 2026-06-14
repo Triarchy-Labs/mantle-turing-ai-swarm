@@ -587,14 +587,14 @@ export default function App() {
 									<div className="lusion-top-meta">
 										<div>EXP 005</div>
 										<div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-											{manualPhaseOverride !== null && <span style={{ color: '#ff4444', animation: 'blink 1s infinite' }}>OVERRIDE ACTIVE</span>}
+											{manualPhaseOverride !== null && <span style={{ color: '#00a8cc', animation: 'blink 1s infinite' }}>OVERRIDE ACTIVE</span>}
 											<span>SCALING</span>
 											<button onClick={() => setIsAutoRampFlipped(true)} style={{ background: 'none', border: 'none', color: 'var(--foreground)', opacity: 0.5, cursor: 'pointer', fontSize: '1rem', padding: '0 5px' }} title="Configure">⚙</button>
 										</div>
 									</div>
 									<div className="bento-content" style={{ fontFamily: 'var(--font-mono)', display: 'flex', flexDirection: 'column', gap: '1.5rem', justifyContent: 'center', flex: 1 }}>
 										<div style={{ textAlign: 'center' }}>
-											<div style={{ fontSize: '2.5rem', fontWeight: 800, color: manualPhaseOverride ? '#ff4444' : 'var(--accent)', textShadow: manualPhaseOverride ? '0 0 20px rgba(255,68,68,0.5)' : '0 0 20px var(--accent-glow)', letterSpacing: '0.05em', transition: 'color 0.3s' }}>
+											<div style={{ fontSize: '2.5rem', fontWeight: 800, color: manualPhaseOverride ? '#00a8cc' : 'var(--accent)', textShadow: manualPhaseOverride ? '0 0 20px rgba(0,168,204,0.5)' : '0 0 20px var(--accent-glow)', letterSpacing: '0.05em', transition: 'color 0.3s' }}>
 												{overrideFlash !== null ? 'OVERRIDE...' : (manualPhaseOverride ? ['SEED', 'SPROUT', 'GROWTH', 'MATURE', 'APEX'][manualPhaseOverride - 1] : (telem.rampState?.phase_label ?? 'SEED'))}
 											</div>
 											<div style={{ fontSize: '0.9rem', opacity: 0.5, marginTop: '0.5rem', letterSpacing: '0.1em' }}>
@@ -629,20 +629,20 @@ export default function App() {
 															<div style={{ color: 'var(--accent)', marginBottom: '4px', fontWeight: 'bold' }}>{label}</div>
 															<div>{limits[i]}</div>
 															<div style={{ opacity: 0.7 }}>{reqs[i]}</div>
-															<div style={{ color: '#ff4444', marginTop: '4px', opacity: 0.8 }}>Click to Override</div>
+															<div style={{ color: '#00a8cc', marginTop: '4px', opacity: 0.8 }}>Click to Override</div>
 														</div>
 														<div style={{ 
 															width: '100%', 
 															height: `${20 + i * 15}px`, 
 															borderRadius: '2px', 
-															background: isOverride ? '#ff4444' : isActive ? 'var(--accent)' : isPassed ? 'var(--accent-muted)' : 'rgba(255,255,255,0.05)', 
-															boxShadow: isOverride ? '0 0 15px rgba(255,68,68,0.5)' : isActive ? '0 0 15px var(--accent-glow)' : 'none',
+															background: isOverride ? '#00a8cc' : isActive ? 'var(--accent)' : isPassed ? 'var(--accent-muted)' : 'rgba(255,255,255,0.05)', 
+															boxShadow: isOverride ? '0 0 15px rgba(0,168,204,0.5)' : isActive ? '0 0 15px var(--accent-glow)' : 'none',
 															transition: 'all 0.4s ease'
 														}} />
 														<div style={{ 
 															fontSize: '0.6rem', 
 															opacity: isActive ? 1 : isPassed ? 0.7 : 0.3, 
-															color: isOverride ? '#ff4444' : isActive ? 'var(--accent)' : 'inherit',
+															color: isOverride ? '#00a8cc' : isActive ? 'var(--accent)' : 'inherit',
 															fontWeight: isActive ? 700 : 400
 														}}>
 															{label}
@@ -656,10 +656,10 @@ export default function App() {
 
 								{/* --- BACK: CONFIG --- */}
 								<div className="flip-card-back bento-card" style={{ margin: 0, padding: '1.5rem', background: 'var(--background)' }}>
-									<div className="lusion-dot" style={{ background: '#ff4444', boxShadow: '0 0 10px #ff4444' }}></div>
+									<div className="lusion-dot" style={{ background: '#00a8cc', boxShadow: '0 0 10px #00a8cc' }}></div>
 									<div className="lusion-top-meta">
 										<div>CONFIG</div>
-										<div style={{ color: '#ff4444' }}>SUPERVISOR</div>
+										<div style={{ color: '#00a8cc' }}>SUPERVISOR</div>
 									</div>
 									<div className="bento-content" style={{ fontFamily: 'var(--font-mono)', display: 'flex', flexDirection: 'column', gap: '1.5rem', flex: 1, justifyContent: 'center' }}>
 										<div>
@@ -696,7 +696,7 @@ export default function App() {
 										{manualPhaseOverride !== null && (
 											<button 
 												onClick={() => { setManualPhaseOverride(null); setIsAutoRampFlipped(false); }}
-												style={{ background: 'transparent', border: '1px solid #ff4444', color: '#ff4444', padding: '0.5rem', fontFamily: 'var(--font-mono)', fontSize: '0.7rem', cursor: 'pointer' }}
+												style={{ background: 'transparent', border: '1px solid #00a8cc', color: '#00a8cc', padding: '0.5rem', fontFamily: 'var(--font-mono)', fontSize: '0.7rem', cursor: 'pointer' }}
 											>
 												RESET OVERRIDE
 											</button>
