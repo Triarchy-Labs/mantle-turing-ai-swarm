@@ -2056,16 +2056,9 @@ html[data-theme="light"] .position-row {
 	font-family: var(--font-mono);
 	font-size: 1.6rem;
 	line-height: 1.8;
-	padding: 1.6rem;
-	background: rgba(4, 4, 6, 0.9);
-	border: 1px solid var(--border);
-	border-radius: 0.96rem;
-	box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.8);
 }
 html[data-theme="light"] .log-terminal {
-	background: rgba(4, 4, 6, 0.9) !important;
-	border-color: rgba(255, 255, 255, 0.06) !important;
-	box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.5) !important;
+	/* No extra styles needed now */
 }
 
 .autoramp-phase-card {
