@@ -105,8 +105,8 @@ html[data-theme="dark"] .global-bg-canvas {
 	--accent-hover: #00d4ff;
 	--accent-glow: rgba(0, 245, 255, 0.35);
 	--accent-hover-glow: rgba(0, 212, 255, 0.35);
-	--accent-purple: #a855f7;
-	--accent-success: #20e250;
+	--accent-muted: rgba(0, 212, 255, 0.45);
+	--accent-success: #00f5ff;
 	--border: rgba(255, 255, 255, 0.08);
 	--border-hover: rgba(0, 212, 255, 0.4);
 	--glass-bg: #000000;
@@ -819,11 +819,11 @@ html[data-theme="light"] .metric .val {
 .metric .val.green {
 	background: linear-gradient(
 		90deg,
-		#a855f7 0%,
+		#00d4ff 0%,
 		#00f5ff 25%,
-		#c084fc 50%,
+		#a1d4e0 50%,
 		#00f5ff 75%,
-		#a855f7 100%
+		#00d4ff 100%
 	);
 	background-size: 200% auto;
 	-webkit-background-clip: text;
@@ -919,9 +919,9 @@ html[data-theme="light"] .event-row {
 }
 
 .badge.fail {
-	background: rgba(248, 113, 113, 0.12);
-	color: #f87171;
-	border: 1px solid rgba(248, 113, 113, 0.25);
+	background: rgba(0, 212, 255, 0.06);
+	color: rgba(0, 212, 255, 0.45);
+	border: 1px solid rgba(0, 212, 255, 0.15);
 }
 
 .status-dot {

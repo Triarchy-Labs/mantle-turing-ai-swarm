@@ -144,26 +144,26 @@ export interface TelemetryData {
 }
 
 // ── Mock fallback (used when backend is offline) ──
-const ROLE_COLORS: Record<string, string> = { bull: '#a855f7', bear: '#00f5ff', macro: '#00d4ff' };
+const ROLE_COLORS: Record<string, string> = { bull: '#7dd4e0', bear: '#00f5ff', macro: '#00d4ff' };
 
 const MOCK_DEBATES = [
-  { agent: 'Veldora (Synthesis)', color: '#a855f7', msg: 'Trade volume surged 14% in 4h. Movement vector confirms BUY signal.', time: '' },
+  { agent: 'Veldora (Synthesis)', color: '#7dd4e0', msg: 'Trade volume surged 14% in 4h. Movement vector confirms BUY signal.', time: '' },
   { agent: 'Zegion (Executor)', color: '#00f5ff', msg: 'Must verify liquidity depth on Agni pools before order entry.', time: '' },
   { agent: 'Diablo (Architect)', color: '#00d4ff', msg: 'SMA(20) crossed above SMA(50). Strong bullish impulse for MNT.', time: '' },
 ];
 
 // Extended debate pool for animated demo rotation
 const DEMO_DEBATE_POOL = [
-  { agent: 'Veldora (Synthesis)', color: '#a855f7', msg: 'Trade volume surged 14% in 4h. Movement vector confirms BUY signal.' },
+  { agent: 'Veldora (Synthesis)', color: '#7dd4e0', msg: 'Trade volume surged 14% in 4h. Movement vector confirms BUY signal.' },
   { agent: 'Zegion (Executor)', color: '#00f5ff', msg: 'Must verify liquidity depth on Agni pools before order entry.' },
   { agent: 'Diablo (Architect)', color: '#00d4ff', msg: 'SMA(20) crossed above SMA(50). Strong bullish impulse for MNT.' },
-  { agent: 'Veldora (Synthesis)', color: '#a855f7', msg: 'On-chain whale accumulation detected: 3 wallets bought 2.1M MNT in 6h.' },
+  { agent: 'Veldora (Synthesis)', color: '#7dd4e0', msg: 'On-chain whale accumulation detected: 3 wallets bought 2.1M MNT in 6h.' },
   { agent: 'Zegion (Executor)', color: '#00f5ff', msg: 'ATR volatility band narrowing — breakout imminent. Preparing limit orders.' },
   { agent: 'Diablo (Architect)', color: '#00d4ff', msg: 'Macro regime shifting from RANGING to TRENDING_UP. HMM confidence: 0.87.' },
-  { agent: 'Veldora (Synthesis)', color: '#a855f7', msg: 'Correlation matrix shows MNT-ETH decoupling. Independent alpha opportunity.' },
+  { agent: 'Veldora (Synthesis)', color: '#7dd4e0', msg: 'Correlation matrix shows MNT-ETH decoupling. Independent alpha opportunity.' },
   { agent: 'Zegion (Executor)', color: '#00f5ff', msg: 'Paper trade P&L +$44.91 this cycle. Win streak: 3. No risk flags.' },
   { agent: 'Diablo (Architect)', color: '#00d4ff', msg: 'ERC-8004 reputation score updated on-chain. Agent credibility: 94.2%.' },
-  { agent: 'Veldora (Synthesis)', color: '#a855f7', msg: 'EWMA affective memory suggests positive momentum persistence for 12h.' },
+  { agent: 'Veldora (Synthesis)', color: '#7dd4e0', msg: 'EWMA affective memory suggests positive momentum persistence for 12h.' },
   { agent: 'Zegion (Executor)', color: '#00f5ff', msg: 'Kelly criterion sizing: 2.3% of portfolio. Risk-adjusted entry confirmed.' },
   { agent: 'Diablo (Architect)', color: '#00d4ff', msg: 'Pre-trade 5-filter gate passed: drawdown OK, streak OK, correlation OK.' },
 ];

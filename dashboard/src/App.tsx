@@ -341,16 +341,16 @@ export default function App() {
 							</div>
 							<div style={{ display: 'flex', justifyContent: 'space-between' }}>
 								<span style={{ opacity: 0.5 }}>Macro Penalty</span>
-								<span style={{ color: telem.riskState?.macro_penalty ? '#ff6b6b' : '#00ff88', fontSize: '1.4rem' }}>{telem.riskState?.macro_penalty.toFixed(2) ?? '0.00'}</span>
+								<span style={{ color: telem.riskState?.macro_penalty ? 'rgba(0, 212, 255, 0.45)' : '#00f5ff', fontSize: '1.4rem' }}>{telem.riskState?.macro_penalty.toFixed(2) ?? '0.00'}</span>
 							</div>
 							<div style={{ display: 'flex', justifyContent: 'space-between' }}>
 								<span style={{ opacity: 0.5 }}>Circuit Breaker</span>
-								<span style={{ color: telem.riskState?.circuit_breaker === 'GREEN' ? '#00ff88' : '#ff6b6b', fontWeight: 700, fontSize: '1.4rem' }}>● {telem.riskState?.circuit_breaker ?? 'N/A'}</span>
+								<span style={{ color: telem.riskState?.circuit_breaker === 'GREEN' ? '#00f5ff' : 'rgba(0, 212, 255, 0.45)', fontWeight: 700, fontSize: '1.4rem' }}>● {telem.riskState?.circuit_breaker === 'GREEN' ? 'ACTIVE' : (telem.riskState?.circuit_breaker ?? 'N/A')}</span>
 							</div>
 							<div style={{ marginTop: 'auto' }}>
 								<div style={{ fontSize: '0.8rem', opacity: 0.4, marginBottom: '0.5vw' }}>LEVERAGE UTILIZATION</div>
 								<div style={{ height: '8px', background: 'rgba(255,255,255,0.05)', borderRadius: '4px', overflow: 'hidden' }}>
-									<div style={{ height: '100%', width: `${((telem.riskState?.dynamic_leverage ?? 5) / 20) * 100}%`, background: 'linear-gradient(90deg, #00ff88, #00d4ff)', borderRadius: '4px', transition: 'width 0.5s ease' }} />
+									<div style={{ height: '100%', width: `${((telem.riskState?.dynamic_leverage ?? 5) / 20) * 100}%`, background: 'linear-gradient(90deg, #00f5ff, #00d4ff)', borderRadius: '4px', transition: 'width 0.5s ease' }} />
 								</div>
 							</div>
 						</div>
@@ -423,7 +423,7 @@ export default function App() {
 											</div>
 											<div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', opacity: 0.7, fontFamily: 'var(--font-mono)' }}>
 												<span style={{ fontSize: '1.1rem' }}>${pos.entry_price.toFixed(4)}</span>
-												<span style={{ color: pos.trailing_stop > 0 ? '#00ff88' : 'rgba(255,255,255,0.3)', fontSize: '0.8rem', marginTop: '0.5vw' }}>SL: ${pos.trailing_stop.toFixed(4)}</span>
+												<span style={{ color: pos.trailing_stop > 0 ? '#00f5ff' : 'rgba(255,255,255,0.3)', fontSize: '0.8rem', marginTop: '0.5vw' }}>SL: ${pos.trailing_stop.toFixed(4)}</span>
 											</div>
 										</div>
 									))}
@@ -547,7 +547,7 @@ export default function App() {
 							</div>
 							<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
 								<span style={{ opacity: 0.5 }}>TX Mode</span>
-								<span style={{ color: telem.liveMode ? '#00ff88' : 'var(--accent-hover)', fontWeight: 700 }}>
+								<span style={{ color: telem.liveMode ? '#00f5ff' : 'var(--accent-hover)', fontWeight: 700 }}>
 									{telem.liveMode ? '◉ LIVE TX' : '○ DRY-RUN'}
 								</span>
 							</div>
