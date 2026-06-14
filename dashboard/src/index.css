@@ -2179,7 +2179,70 @@ html[data-theme="light"] .log-terminal {
 	border: 1px solid rgba(0,245,255,0.1);
 	backdrop-filter: blur(8px);
 	box-shadow: 0 0 30px rgba(0,0,0,0.8);
+	transition: all 0.5s ease;
 }
+
+/* --- CRT & EFFECTS --- */
+.crt-overlay {
+	position: absolute;
+	top: 0; left: 0; width: 100%; height: 100%;
+	background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%);
+	background-size: 100% 4px;
+	pointer-events: none;
+	z-index: 50;
+}
+
+.loom-ripple {
+	position: absolute;
+	border-radius: 50%;
+	border: 1px solid rgba(0, 245, 255, 0.8);
+	transform: translate(-50%, -50%) rotateX(70deg);
+	animation: ripple-expand 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+	pointer-events: none;
+	z-index: 2;
+}
+
+@keyframes ripple-expand {
+	0% { width: 0; height: 0; opacity: 1; box-shadow: 0 0 20px rgba(0,245,255,0.8) inset; }
+	100% { width: 400px; height: 400px; opacity: 0; box-shadow: 0 0 5px rgba(0,245,255,0) inset; }
+}
+
+/* Combat Mode Overrides */
+.neural-loom-container.combat-mode {
+	position: absolute;
+	top: 0; left: 0; width: 100%; height: 100%;
+	margin: 0;
+	z-index: 1;
+	opacity: 0.3;
+}
+
+.neural-loom-container.combat-mode .loom-grid {
+	background-image: 
+		linear-gradient(rgba(184, 41, 255, 0.25) 1px, transparent 1px),
+		linear-gradient(90deg, rgba(184, 41, 255, 0.25) 1px, transparent 1px);
+	animation: grid-flow 4s linear infinite;
+}
+
+.neural-loom-container.combat-mode .loom-orbit {
+	border-color: rgba(184, 41, 255, 0.25);
+}
+
+.neural-loom-container.combat-mode .loom-anomaly {
+	background: #b829ff;
+	box-shadow: 0 0 15px 3px rgba(184, 41, 255, 0.6);
+}
+
+.glass-positions-layer {
+	position: relative;
+	z-index: 10;
+	backdrop-filter: blur(6px);
+	background: rgba(0,0,0,0.3);
+	border-radius: 8px;
+	padding: 1rem;
+	border: 1px solid rgba(255,255,255,0.05);
+	min-height: 100%;
+}
+
 
 /* --- 3D FLIP CARD --- */
 .flip-card-container {

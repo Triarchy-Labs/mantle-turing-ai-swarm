@@ -111,6 +111,93 @@ const MetricPill = ({
 	);
 };
 
+const NeuralLoom = ({ telem, hasPositions }: { telem: any, hasPositions: boolean }) => {
+	const loomRef = useRef<HTMLDivElement>(null);
+	const [pings, setPings] = useState<{ id: number, x: number, y: number }[]>([]);
+
+	const handleMouseMove = useCallback((e: React.MouseEvent) => {
+		if (!loomRef.current) return;
+		const rect = loomRef.current.getBoundingClientRect();
+		const x = e.clientX - rect.left - rect.width / 2;
+		const y = e.clientY - rect.top - rect.height / 2;
+		
+		const rotateX = -(y / rect.height) * 15;
+		const rotateY = (x / rect.width) * 15;
+
+		loomRef.current.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+	}, []);
+
+	const handleMouseLeave = useCallback(() => {
+		if (!loomRef.current) return;
+		loomRef.current.style.transform = 'rotateX(0deg) rotateY(0deg)';
+		loomRef.current.style.transition = 'transform 0.5s ease';
+	}, []);
+
+	const handleMouseEnter = useCallback(() => {
+		if (!loomRef.current) return;
+		loomRef.current.style.transition = 'none';
+	}, []);
+
+	const handleClick = useCallback((e: React.MouseEvent) => {
+		if (!loomRef.current) return;
+		const rect = loomRef.current.getBoundingClientRect();
+		const x = ((e.clientX - rect.left) / rect.width) * 100;
+		const y = ((e.clientY - rect.top) / rect.height) * 100;
+		
+		const newPing = { id: Date.now(), x, y };
+		setPings(prev => [...prev, newPing]);
+		
+		setTimeout(() => {
+			setPings(prev => prev.filter(p => p.id !== newPing.id));
+		}, 1500);
+	}, []);
+
+	return (
+		<div 
+			className={`neural-loom-container ${hasPositions ? 'combat-mode' : ''}`}
+			onMouseMove={handleMouseMove}
+			onMouseLeave={handleMouseLeave}
+			onMouseEnter={handleMouseEnter}
+			onClick={handleClick}
+			style={{ perspective: '800px', transformStyle: 'preserve-3d', ...(hasPositions ? {} : { flex: 1, margin: 'auto' }) }}
+		>
+			<div className="crt-overlay"></div>
+			
+			<div ref={loomRef} style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0, transformStyle: 'preserve-3d', willChange: 'transform' }}>
+				<div className="loom-grid"></div>
+				<div className="loom-orbit loom-orbit-1"></div>
+				<div className="loom-orbit loom-orbit-2"></div>
+				
+				<div className="loom-anomaly" style={{ top: `${(telem.cycle * 13) % 80 + 10}%`, left: `${(telem.cycle * 17) % 80 + 10}%`, opacity: 1, animation: 'none' }}></div>
+				<div className="loom-anomaly" style={{ top: `${(telem.cycle * 23) % 80 + 10}%`, left: `${(telem.cycle * 29) % 80 + 10}%`, opacity: 1, animation: 'none' }}></div>
+				<div className="loom-anomaly" style={{ top: `${(telem.cycle * 31) % 80 + 10}%`, left: `${(telem.cycle * 37) % 80 + 10}%`, opacity: 1, animation: 'none' }}></div>
+
+				{pings.map(p => (
+					<div 
+						key={p.id} 
+						className="loom-ripple" 
+						style={{ left: `${p.x}%`, top: `${p.y}%` }} 
+					/>
+				))}
+
+				{!hasPositions && (
+					<div className="loom-core-status">
+						<div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.9rem', letterSpacing: '0.15em', color: 'var(--accent)', animation: 'pulse 4s infinite' }}>
+							ZERO EXPOSURE
+						</div>
+						<div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', letterSpacing: '0.1em', opacity: 0.6, marginTop: '0.5rem' }}>
+							SWARM IS HUNTING
+						</div>
+						<div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', opacity: 0.4, marginTop: '0.5rem', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '0.5rem', width: '100%' }}>
+							CYCLE: {telem.cycle} | UP: {telem.uptimeSecs}s
+						</div>
+					</div>
+				)}
+			</div>
+		</div>
+	);
+};
+
 export default function App() {
 	const telem = useTelemetry();
 	const [theme, setTheme] = useState<'dark' | 'light'>('dark');
@@ -541,44 +628,25 @@ export default function App() {
 							<div>006</div>
 							<div>PORTFOLIO</div>
 						</div>
-						<div className="bento-content">
-							{telem.openPositions.length === 0 ? (
-								<div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', opacity: 0.8, margin: 'auto', padding: '1rem 0' }}>
-									<div className="neural-loom-container">
-										<div className="loom-grid"></div>
-										<div className="loom-orbit loom-orbit-1"></div>
-										<div className="loom-orbit loom-orbit-2"></div>
-										<div className="loom-anomaly loom-anomaly-1"></div>
-										<div className="loom-anomaly loom-anomaly-2"></div>
-										<div className="loom-anomaly loom-anomaly-3"></div>
-										
-										<div className="loom-core-status">
-											<div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.9rem', letterSpacing: '0.15em', color: 'var(--accent)', animation: 'pulse 4s infinite' }}>
-												ZERO EXPOSURE
+						<div className="bento-content" style={{ position: 'relative', overflow: 'hidden', padding: telem.openPositions.length > 0 ? '0' : '1.5vw' }}>
+							<NeuralLoom telem={telem} hasPositions={telem.openPositions.length > 0} />
+
+							{telem.openPositions.length > 0 && (
+								<div className="glass-positions-layer">
+									<div style={{ display: 'flex', flexDirection: 'column', gap: '1.5vw' }}>
+										{telem.openPositions.map((pos, i) => (
+											<div key={i} className="position-row" style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '1vw', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+												<div>
+													<div style={{ fontWeight: 700, fontSize: '1.2rem', marginBottom: '0.5vw' }}>{pos.symbol}</div>
+													<span className={`badge ${pos.side === 'Buy' ? 'ok' : 'fail'}`} style={{ fontSize: '0.8rem' }}>{pos.side}</span>
+												</div>
+												<div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', opacity: 0.9, fontFamily: 'var(--font-mono)' }}>
+													<span style={{ fontSize: '1.1rem' }}>${pos.entry_price.toFixed(4)}</span>
+													<span style={{ color: pos.trailing_stop > 0 ? '#00f5ff' : 'rgba(255,255,255,0.3)', fontSize: '0.8rem', marginTop: '0.5vw' }}>SL: ${pos.trailing_stop.toFixed(4)}</span>
+												</div>
 											</div>
-											<div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', letterSpacing: '0.1em', opacity: 0.6, marginTop: '0.5rem' }}>
-												SWARM IS HUNTING
-											</div>
-											<div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', opacity: 0.4, marginTop: '0.5rem', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '0.5rem', width: '100%' }}>
-												CYCLE: {telem.cycle} | UP: {telem.uptimeSecs}s
-											</div>
-										</div>
+										))}
 									</div>
-								</div>
-							) : (
-								<div style={{ display: 'flex', flexDirection: 'column', gap: '1.5vw' }}>
-									{telem.openPositions.map((pos, i) => (
-										<div key={i} className="position-row" style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '1vw' }}>
-											<div>
-												<div style={{ fontWeight: 700, fontSize: '1.2rem', marginBottom: '0.5vw' }}>{pos.symbol}</div>
-												<span className={`badge ${pos.side === 'Buy' ? 'ok' : 'fail'}`} style={{ fontSize: '0.8rem' }}>{pos.side}</span>
-											</div>
-											<div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', opacity: 0.7, fontFamily: 'var(--font-mono)' }}>
-												<span style={{ fontSize: '1.1rem' }}>${pos.entry_price.toFixed(4)}</span>
-												<span style={{ color: pos.trailing_stop > 0 ? '#00f5ff' : 'rgba(255,255,255,0.3)', fontSize: '0.8rem', marginTop: '0.5vw' }}>SL: ${pos.trailing_stop.toFixed(4)}</span>
-											</div>
-										</div>
-									))}
 								</div>
 							)}
 						</div>
