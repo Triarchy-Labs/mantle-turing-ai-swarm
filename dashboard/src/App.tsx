@@ -840,7 +840,7 @@ export default function App() {
 							<div>009</div>
 							<div>DECISION LOG</div>
 						</div>
-						<div className="bento-content" style={{ overflowY: 'auto' }}>
+						<div className="bento-content">
 							<div style={{ display: 'flex', flexDirection: 'column', gap: '1vw' }}>
 								{(telem as any).decisions?.map((d: any, i: number) => (
 									<div key={i} className="decision-row" style={{
@@ -925,7 +925,7 @@ export default function App() {
 							<div>008</div>
 							<div>MEMORY DB</div>
 						</div>
-						<div className="bento-content" style={{ display: 'flex', flexDirection: 'column', gap: '1vw', overflowY: 'auto' }}>
+						<div className="bento-content" style={{ display: 'flex', flexDirection: 'column', gap: '1vw' }}>
 							{(telem as any).memoryStream?.map((m: any, idx: number) => (
 								<div key={idx} className="db-matrix-row" style={{
 									fontFamily: 'var(--font-mono)', fontSize: '0.75rem', padding: '0.5vw', borderLeft: `2px solid ${m.action === 'VECTOR_WRITE' ? '#00f5ff' : 'var(--accent)'}`
