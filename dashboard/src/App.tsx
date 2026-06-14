@@ -978,24 +978,23 @@ export default function App() {
 				{/* CONTROL BAR (Centered below grid) */}
 				<div className="control-bar" style={{ 
 					marginBottom: '4rem', 
-					padding: '0 4rem', 
 					position: 'relative',
 					width: '100%' 
 				}}>
 					{/* Grid aligned with the cards above */}
-					<div style={{
-						display: 'grid', 
-						gridTemplateColumns: '1fr 1fr', 
-						gap: '2vw', 
-						width: '100%',
-						maxWidth: '1400px',
-						margin: '0 auto', 
+					<div className="bento-grid" style={{
+						marginTop: 0,
+						paddingBottom: 0,
+						minHeight: 0,
+						rowGap: 0
 					}}>
-						{/* Left column (empty, under Card 007) */}
-						<div></div>
-
-						{/* Right column (buttons under Card 008) */}
-						<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+						{/* Buttons explicitly mapped to Card 008's grid coordinates */}
+						<div className="shape-choochoo align-right" style={{ 
+							display: 'flex', 
+							justifyContent: 'space-between', 
+							alignItems: 'center',
+							aspectRatio: 'auto',
+						}}>
 							<button className="lusion-btn-primary" onClick={handleLaunch} aria-label="Launch Synaptic Analysis">
 								{analysisRunning ? '[ ◎ ANALYSIS RUNNING... ]' : '[ LAUNCH SYNAPTIC ANALYSIS ]'}
 							</button>
