@@ -972,11 +972,24 @@ export default function App() {
 				</div>
 
 				{/* CONTROL BAR (Centered below grid) */}
-				<div className="control-bar" style={{ display: 'flex', justifyContent: 'center', gap: '2rem', marginBottom: '4rem', padding: '0 4rem' }}>
+				<div className="control-bar" style={{ display: 'flex', justifyContent: 'center', gap: '2rem', marginBottom: '4rem', padding: '0 4rem', position: 'relative' }}>
 					<button className="lusion-btn-primary" onClick={handleLaunch} aria-label="Launch Synaptic Analysis">
 						{analysisRunning ? '[ ◎ ANALYSIS RUNNING... ]' : '[ LAUNCH SYNAPTIC ANALYSIS ]'}
 					</button>
 					<button className="lusion-btn connect-btn-hover-fx" onClick={() => window.open(`https://explorer.mantle.xyz/address/0x1150f09ae885e6E7BcC0cb38feDd200d7f580008`, '_blank')} aria-label="View On-Chain Agent NFT"><span>[ VIEW AGENT NFT ON-CHAIN ]</span></button>
+					
+					{/* Scroll to Top Button */}
+					<div style={{ position: 'absolute', right: '4rem', top: '50%', marginTop: '-2.5rem', animation: 'pulse-drift 4s ease-in-out infinite' }}>
+						<button 
+							className="lusion-btn-up" 
+							onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+							aria-label="Scroll to top"
+						>
+							<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+								<path d="M12 19V5M5 12l7-7 7 7"/>
+							</svg>
+						</button>
+					</div>
 				</div>
 
 				{/* ═══ FOOTER ═══ */}
