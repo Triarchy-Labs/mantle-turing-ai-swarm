@@ -95,7 +95,7 @@ html[data-theme="dark"] .global-bg-canvas {
 	--font-body: 'Onest', 'Aventa', -apple-system, BlinkMacSystemFont, sans-serif;
 	/* Orlean → Space Grotesk (closest match: geometric grotesque, interface labels) */
 	--font-ui: 'Space Grotesk', 'Aventa', sans-serif;
-	--font-mono: 'Space Mono', 'JetBrains Mono', monospace;
+	--font-mono: 'JetBrains Mono', 'Space Mono', monospace;
 
 	--space-nav-x: clamp(1.92rem, 3vw, 4rem);
 	--space-nav-y: clamp(1.28rem, 1.5vw, 2.4rem);
@@ -308,7 +308,7 @@ html[data-theme="light"] .glass:hover {
 .header-right-stats {
 	display: flex;
 	align-items: center;
-	font-family: 'Aventa', var(--font-mono);
+	font-family: var(--font-mono);
 	font-size: 1.2rem;
 	color: rgba(255, 255, 255, 0.5);
 }
@@ -542,7 +542,7 @@ html[data-theme="light"] .mdx-hero-title {
 	justify-content: flex-end;
 	flex-wrap: wrap;
 	gap: 1.5rem;
-	font-family: 'Aventa', var(--font-mono);
+	font-family: var(--font-mono);
 	font-size: 1.12rem;
 	opacity: 0.5;
 	text-transform: uppercase;
@@ -1573,7 +1573,7 @@ html[data-theme="light"] .bento-card:hover {
 }
 
 .lusion-card-tags {
-	font-family: 'Aventa', var(--font-mono);
+	font-family: var(--font-mono);
 	font-size: 0.65rem;
 	font-weight: 600;
 	opacity: 0.5;
@@ -1642,7 +1642,7 @@ html[data-theme="light"] .bento-card:hover {
 	justify-content: flex-end;
 	align-items: center;
 	gap: 2rem;
-	font-family: 'Aventa', var(--font-mono);
+	font-family: var(--font-mono);
 	font-size: 1.12rem;
 	opacity: 0.4;
 	text-transform: uppercase;
