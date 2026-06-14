@@ -312,8 +312,8 @@ export default function App() {
 					<article className="bento-card " role="region" aria-label="Swarm Agent Chat" style={{ flexGrow: 1, margin: 0 }}>
 						<div className="lusion-dot"></div>
 						<div className="lusion-top-meta">
-							<div>EXP 002</div>
-							<div>SWARM</div>
+							<div>002</div>
+							<div>MULTI-LLM CONSENSUS</div>
 						</div>
 						<div className="bento-content" style={{ padding: '0 1vw' }}>
 							<SwarmChat telem={telem} orbState={orbState} />
