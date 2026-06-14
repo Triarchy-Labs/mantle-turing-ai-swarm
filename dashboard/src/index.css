@@ -1178,6 +1178,41 @@ html[data-theme="light"] .lusion-btn-primary:hover {
   box-shadow: 0 0.64rem 4rem rgba(0,245,255,0.25);
 }
 
+.lusion-btn-glass {
+	background: rgba(0, 0, 0, 0.2);
+	border: 1px solid rgba(255, 255, 255, 0.05);
+	backdrop-filter: blur(10px);
+	color: rgba(255, 255, 255, 0.5);
+	padding: 1rem 2rem;
+	border-radius: 4px;
+	font-family: var(--font-mono);
+	font-size: 1.2rem;
+	letter-spacing: 0.1em;
+	cursor: pointer;
+	transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+	white-space: nowrap;
+}
+
+.lusion-btn-glass:hover {
+	background: rgba(255, 255, 255, 0.9);
+	color: #000;
+	border-color: rgba(255, 255, 255, 1);
+	box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+}
+
+html[data-theme="light"] .lusion-btn-glass {
+	background: rgba(255, 255, 255, 0.2);
+	border: 1px solid rgba(0, 0, 0, 0.05);
+	color: rgba(0, 0, 0, 0.5);
+}
+
+html[data-theme="light"] .lusion-btn-glass:hover {
+	background: rgba(0, 0, 0, 0.9);
+	color: #fff;
+	border-color: rgba(0, 0, 0, 1);
+	box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
 /* ============================================================
    SWARM CHAT — AI Agent Chat Interface
    ============================================================ */

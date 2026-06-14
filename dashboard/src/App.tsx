@@ -938,9 +938,14 @@ export default function App() {
 							)}
 						</div>
 						</article>
-					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
-						<div className="lusion-card-tags" style={{ fontSize: '2.4rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>MANTLE L2 • TX • VERIFIED</div>
-						<h2 className="lusion-card-title"><TextReveal>On-Chain Activity</TextReveal></h2>
+					<div className="lusion-external-info" style={{ padding: '0 0.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginTop: '1.5rem' }}>
+						<div>
+							<div className="lusion-card-tags" style={{ fontSize: '2.4rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>MANTLE L2 • TX • VERIFIED</div>
+							<h2 className="lusion-card-title"><TextReveal>On-Chain Activity</TextReveal></h2>
+						</div>
+						<button className="lusion-btn-glass" onClick={() => window.open(`https://explorer.mantle.xyz/address/0x1150f09ae885e6E7BcC0cb38feDd200d7f580008`, '_blank')} aria-label="View On-Chain Agent NFT">
+							[ VIEW AGENT NFT ]
+						</button>
 					</div>
 				</div>
 
@@ -994,14 +999,13 @@ export default function App() {
 						{/* Buttons explicitly mapped to Card 008's grid coordinates */}
 						<div className="shape-choochoo align-right" style={{ 
 							display: 'flex', 
-							justifyContent: 'space-between', 
+							justifyContent: 'flex-start', 
 							alignItems: 'center',
 							aspectRatio: 'auto',
 						}}>
 							<button className="lusion-btn-primary" onClick={handleLaunch} aria-label="Launch Synaptic Analysis" style={{ padding: '1.5rem 2.5rem' }}>
 								{analysisRunning ? '[ ◎ RUNNING... ]' : '[ LAUNCH ANALYSIS ]'}
 							</button>
-							<button className="lusion-btn connect-btn-hover-fx" onClick={() => window.open(`https://explorer.mantle.xyz/address/0x1150f09ae885e6E7BcC0cb38feDd200d7f580008`, '_blank')} aria-label="View On-Chain Agent NFT" style={{ padding: '1.5rem 2.5rem' }}><span>[ VIEW AGENT NFT ]</span></button>
 						</div>
 					</div>
 					
