@@ -874,7 +874,7 @@ html[data-theme="light"] .event-row {
 }
 
 .event-row:hover {
-	transform: translateX(4px) scale(1.01);
+	transform: translateX(3px);
 }
 
 .event-label {
@@ -1715,8 +1715,7 @@ html[data-theme="light"] .market-row {
 	border-color: rgba(255,255,255,0.06) !important;
 }
 html[data-theme="light"] .market-row:hover {
-	transform: scale(1.015);
-	transform-origin: left center;
+	transform: translateX(3px);
 }
 
 html[data-theme="light"] .risk-row {
@@ -1952,11 +1951,11 @@ a:focus-visible,
 
 /* ── Risk row hover ── */
 .risk-row {
-	transition: transform 0.2s ease;
+	transition: opacity 0.4s ease, transform 0.4s ease;
 }
 .risk-row:hover {
-	transform: scale(1.012);
-	transform-origin: left center;
+	opacity: 1 !important;
+	transform: translateX(3px);
 }
 
 /* ============================================================
@@ -1998,12 +1997,11 @@ a:focus-visible,
 	display: block;
 	width: 100%;
 	padding: 0;
-	transition: all 0.3s ease;
+	transition: transform 0.4s ease;
 }
 
 .market-row:hover {
-	transform: scale(1.015);
-	transform-origin: left center;
+	transform: translateX(3px);
 }
 
 .pipeline-stage {
