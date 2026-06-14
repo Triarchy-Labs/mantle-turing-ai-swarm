@@ -7,6 +7,7 @@ import { WebGLErrorBoundary } from './components/WebGLErrorBoundary';
 import { useTelemetry } from './hooks/useTelemetry';
 import SwarmChat from './components/SwarmChat';
 import NoiseOverlay from './components/NoiseOverlay';
+import TextReveal from './components/TextReveal';
 import Lenis from 'lenis';
 /* ── Pipeline stages ── */
 const pipelineStages = [
@@ -428,7 +429,7 @@ export default function App() {
 						</article>
 					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
 						<div className="lusion-card-tags" style={{ fontSize: '0.8rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>DATA • ORACLE • ACTIVE</div>
-						<h2 className="lusion-card-title">Live Market Feed</h2>
+						<h2 className="lusion-card-title"><TextReveal>Live Market Feed</TextReveal></h2>
 					</div>
 				</div>
 
@@ -446,7 +447,7 @@ export default function App() {
 						</article>
 					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
 						<div className="lusion-card-tags" style={{ fontSize: '0.8rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>AI • LLM • EXECUTION</div>
-						<h2 className="lusion-card-title">Swarm Agent AI</h2>
+						<h2 className="lusion-card-title"><TextReveal>Swarm Agent AI</TextReveal></h2>
 					</div>
 				</div>
 
@@ -851,7 +852,7 @@ export default function App() {
 						</article>
 					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
 						<div className="lusion-card-tags" style={{ fontSize: '0.8rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>EVENTS • LOGS • TRACE</div>
-						<h2 className="lusion-card-title">Activity Stream</h2>
+						<h2 className="lusion-card-title"><TextReveal>Activity Stream</TextReveal></h2>
 					</div>
 				</div>
 
@@ -886,7 +887,7 @@ export default function App() {
 						</article>
 					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
 						<div className="lusion-card-tags" style={{ fontSize: '0.8rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>ALPHA • VERDICTS • HISTORY</div>
-						<h2 className="lusion-card-title">Decision Journal</h2>
+						<h2 className="lusion-card-title"><TextReveal>Decision Journal</TextReveal></h2>
 					</div>
 				</div>
 
@@ -936,7 +937,7 @@ export default function App() {
 						</article>
 					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
 						<div className="lusion-card-tags" style={{ fontSize: '0.8rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>MANTLE L2 • TX • VERIFIED</div>
-						<h2 className="lusion-card-title">On-Chain Activity</h2>
+						<h2 className="lusion-card-title"><TextReveal>On-Chain Activity</TextReveal></h2>
 					</div>
 				</div>
 
@@ -966,7 +967,7 @@ export default function App() {
 						</article>
 					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
 						<div className="lusion-card-tags" style={{ fontSize: '0.8rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>RAG • VECTORS • KNOWLEDGE</div>
-						<h2 className="lusion-card-title">Memory Nexus</h2>
+						<h2 className="lusion-card-title"><TextReveal>Memory Nexus</TextReveal></h2>
 					</div>
 				</div>
 				</div>
