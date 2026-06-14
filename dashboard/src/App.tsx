@@ -412,14 +412,17 @@ export default function App() {
 													<span style={{ fontSize: '2.4rem', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>{m.sym}</span>
 													{m.regime && <span style={{ fontSize: '1.4rem', padding: '0.2rem 0.6rem', borderRadius: '3px', background: 'rgba(0,212,255,0.08)', color: 'var(--accent)', fontFamily: 'var(--font-mono)', letterSpacing: '0.04em', fontWeight: 600 }}>{m.regime === 'TRENDING_UP' ? '↑ TREND' : m.regime === 'TRENDING_DOWN' ? '↓ TREND' : m.regime === 'VOLATILE' ? '⚡ VOL' : '~ RANGE'}{m.regimeConf ? ` ${m.regimeConf}%` : ''}</span>}
 												</div>
-												<div style={{ fontSize: '1.4rem', color: 'var(--foreground)', opacity: 0.5, fontFamily: 'var(--font-mono)', marginTop: '0.3rem' }}>Vol {m.vol}{m.liq ? ` · Liq ${m.liq}` : ''}{m.buySell ? ` · B/S ${m.buySell}` : ''}</div>
+												<div style={{ fontSize: '1.4rem', color: 'var(--foreground)', opacity: 0.25, fontFamily: 'var(--font-mono)', marginTop: '0.3rem' }}>Vol {m.vol}{m.liq ? ` · Liq ${m.liq}` : ''}{m.buySell ? ` · B/S ${m.buySell}` : ''}</div>
 											</div>
 											<div style={{ textAlign: 'right', flex: '1', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'center' }}>
-												<div style={{ fontSize: '1.6rem', fontFamily: 'var(--font-mono)', color: m.up ? 'var(--accent)' : 'rgba(0, 212, 255, 0.45)', opacity: 0.7, marginBottom: '0.4rem', fontWeight: 600 }}>{m.change}</div>
+												<div style={{ fontSize: '1.6rem', fontFamily: 'var(--font-mono)', color: '#fcfcfd', opacity: 0.35, marginBottom: '0.4rem', fontWeight: 500 }}>{m.change}</div>
 												<div style={{ fontSize: '2.8rem', fontWeight: 700, fontFamily: 'var(--font-mono)', color: 'var(--accent)', lineHeight: 1 }}>{m.price}</div>
 											</div>
-											<div className={`lusion-btn ${m.up ? 'connect-state-true' : ''}`} style={{ fontSize: '1.4rem', padding: '0.5rem 1.2rem' }}>
-												{m.verdict}<br /><span style={{ fontSize: '1.5rem', opacity: 0.7 }}>{m.conf}%</span>
+											<div className="verdict-capsule">
+												<div className="verdict-dot" style={{ background: `rgba(0, 212, 255, ${Math.max(0.15, (m.conf - 40) / 60)})`, boxShadow: `0 0 12px rgba(0, 212, 255, ${Math.max(0.15, (m.conf - 40) / 60) + 0.2})` }}></div>
+												<div className="verdict-content">
+													{m.verdict}<br /><span style={{ fontSize: '1.5rem', opacity: 0.7 }}>{m.conf}%</span>
+												</div>
 											</div>
 										</div>
 									</div>

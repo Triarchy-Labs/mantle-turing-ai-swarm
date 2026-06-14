@@ -2457,3 +2457,57 @@ html[data-theme="dark"] .text-reveal-container.is-revealed .text-reveal-word:hov
 	0%, 100% { transform: translateY(0); }
 	50% { transform: translateY(-8px); }
 }
+
+/* VERDICT HOVER CAPSULE */
+.verdict-capsule {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 4.5rem;
+	width: 4.5rem;
+	border-radius: 3rem;
+	cursor: pointer;
+	transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+	border: 1px solid transparent;
+	margin-left: 1rem;
+	box-sizing: border-box;
+}
+
+.verdict-dot {
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	transition: all 0.3s ease;
+}
+
+.verdict-content {
+	position: absolute;
+	opacity: 0;
+	transform: scale(0.8) translateX(5px);
+	transition: all 0.3s ease;
+	font-size: 1.4rem;
+	line-height: 1.2;
+	text-align: center;
+	pointer-events: none;
+	color: #fcfcfd;
+	white-space: nowrap;
+	font-family: var(--font-mono);
+	letter-spacing: 0.05em;
+}
+
+.verdict-capsule:hover {
+	width: 8.5rem;
+	background: rgba(0, 212, 255, 0.05);
+	border-color: rgba(0, 212, 255, 0.2);
+}
+
+.verdict-capsule:hover .verdict-dot {
+	opacity: 0;
+	transform: scale(0);
+}
+
+.verdict-capsule:hover .verdict-content {
+	opacity: 1;
+	transform: scale(1) translateX(0);
+}
