@@ -2489,14 +2489,15 @@ html[data-theme="dark"] .text-reveal-container.is-revealed .text-reveal-word:hov
 	right: 0;
 	display: flex;
 	align-items: center;
-	justify-content: flex-end;
+	justify-content: flex-start;
 	height: 4.5rem;
-	width: 1rem;
+	width: 1.5rem;
 	border-radius: 3rem;
 	cursor: pointer;
 	transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 	border: 1px solid transparent;
 	box-sizing: border-box;
+	z-index: 10;
 }
 
 .verdict-dot {
@@ -2504,12 +2505,13 @@ html[data-theme="dark"] .text-reveal-container.is-revealed .text-reveal-word:hov
 	height: 10px;
 	border-radius: 50%;
 	transition: all 0.3s ease;
+	margin: 0 auto;
 }
 
 .verdict-content {
 	position: absolute;
 	opacity: 0;
-	transform: scale(0.8) translateX(5px);
+	transform: scale(0.8) translateX(-10px);
 	transition: all 0.3s ease;
 	font-size: 1.4rem;
 	line-height: 1.2;
@@ -2519,13 +2521,18 @@ html[data-theme="dark"] .text-reveal-container.is-revealed .text-reveal-word:hov
 	white-space: nowrap;
 	font-family: var(--font-mono);
 	letter-spacing: 0.05em;
+	left: 1.5rem;
 }
 
 .verdict-capsule:hover {
 	width: 8.5rem;
+	right: -7rem;
 	background: rgba(0, 212, 255, 0.05);
 	border-color: rgba(0, 212, 255, 0.2);
+	backdrop-filter: blur(8px);
+	-webkit-backdrop-filter: blur(8px);
 	justify-content: center;
+	z-index: 100;
 }
 
 .verdict-capsule:hover .verdict-dot {
