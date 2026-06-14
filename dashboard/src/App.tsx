@@ -543,22 +543,26 @@ export default function App() {
 						</div>
 						<div className="bento-content">
 							{telem.openPositions.length === 0 ? (
-								<div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', opacity: 0.8, margin: 'auto', padding: '2rem 0' }}>
-									<div className="sonar-container" style={{ marginBottom: '2.5rem' }}>
-										<div className="sonar-ring sonar-ring-1"></div>
-										<div className="sonar-ring sonar-ring-2"></div>
-										<div className="sonar-ring sonar-ring-3"></div>
-										<div className="sonar-sweep"></div>
-										<div className="sonar-core"></div>
-										<div className="sonar-target sonar-target-1"></div>
-										<div className="sonar-target sonar-target-2"></div>
-										<div className="sonar-target sonar-target-3"></div>
-									</div>
-									<div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.9rem', letterSpacing: '0.2em', color: 'var(--accent)', animation: 'breathing 4s ease-in-out infinite' }}>
-										AWAITING OPTIMAL ENTRY
-									</div>
-									<div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', letterSpacing: '0.1em', opacity: 0.5, marginTop: '0.5rem' }}>
-										SCANNING: CYCLE {telem.cycle}
+								<div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', opacity: 0.8, margin: 'auto', padding: '1rem 0' }}>
+									<div className="neural-loom-container">
+										<div className="loom-grid"></div>
+										<div className="loom-orbit loom-orbit-1"></div>
+										<div className="loom-orbit loom-orbit-2"></div>
+										<div className="loom-anomaly loom-anomaly-1"></div>
+										<div className="loom-anomaly loom-anomaly-2"></div>
+										<div className="loom-anomaly loom-anomaly-3"></div>
+										
+										<div className="loom-core-status">
+											<div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.9rem', letterSpacing: '0.15em', color: 'var(--accent)', animation: 'pulse 4s infinite' }}>
+												ZERO EXPOSURE
+											</div>
+											<div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', letterSpacing: '0.1em', opacity: 0.6, marginTop: '0.5rem' }}>
+												SWARM IS HUNTING
+											</div>
+											<div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', opacity: 0.4, marginTop: '0.5rem', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '0.5rem', width: '100%' }}>
+												CYCLE: {telem.cycle} | UP: {telem.uptimeSecs}s
+											</div>
+										</div>
 									</div>
 								</div>
 							) : (

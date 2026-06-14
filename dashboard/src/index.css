@@ -2093,76 +2093,93 @@ html[data-theme="light"] .log-terminal {
 	to { transform: rotate(360deg); }
 }
 
-.sonar-container {
+/* --- THE NEURAL LOOM (Hunting Mode) --- */
+.neural-loom-container {
 	position: relative;
-	width: 160px;
-	height: 160px;
-	border-radius: 50%;
+	width: 100%;
+	height: 180px;
+	overflow: hidden;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	margin: 0 auto;
+	border-radius: 8px;
+	perspective: 600px;
+	margin-bottom: 1.5rem;
 }
 
-.sonar-ring {
+.loom-grid {
+	position: absolute;
+	top: -50%; left: -50%; right: -50%; bottom: -50%;
+	width: 200%;
+	height: 200%;
+	background-image: 
+		linear-gradient(rgba(0, 245, 255, 0.08) 1px, transparent 1px),
+		linear-gradient(90deg, rgba(0, 245, 255, 0.08) 1px, transparent 1px);
+	background-size: 30px 30px;
+	transform: rotateX(70deg) translateY(-100px);
+	animation: grid-flow 10s linear infinite;
+	mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 80%);
+	-webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 80%);
+}
+
+@keyframes grid-flow {
+	0% { background-position: 0 0; }
+	100% { background-position: 0 150px; }
+}
+
+.loom-orbit {
 	position: absolute;
 	border-radius: 50%;
-	border: 1px solid var(--accent);
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
+	border: 1px dashed rgba(0, 245, 255, 0.15);
+	top: 50%; left: 50%;
+	transform-origin: center center;
 }
 
-.sonar-ring-1 { width: 100%; height: 100%; opacity: 0.05; }
-.sonar-ring-2 { width: 70%; height: 70%; opacity: 0.1; }
-.sonar-ring-3 { width: 40%; height: 40%; opacity: 0.15; }
+.loom-orbit-1 { width: 140%; height: 140%; margin-top: -70%; margin-left: -70%; animation: orbit-spin 20s linear infinite; }
+.loom-orbit-2 { width: 220%; height: 220%; margin-top: -110%; margin-left: -110%; border-color: rgba(0, 245, 255, 0.05); animation: orbit-spin 35s linear infinite reverse; }
 
-.sonar-sweep {
+@keyframes orbit-spin {
+	from { transform: rotateX(70deg) rotateZ(0deg); }
+	to { transform: rotateX(70deg) rotateZ(360deg); }
+}
+
+.loom-anomaly {
 	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	border-radius: 50%;
-	background: conic-gradient(from 0deg, transparent 70%, rgba(0, 245, 255, 0.05) 90%, rgba(0, 245, 255, 0.3) 100%);
-	animation: radar-spin 6s linear infinite;
-	opacity: 0.8;
-}
-
-.sonar-core {
 	width: 4px;
 	height: 4px;
 	background: var(--accent);
 	border-radius: 50%;
-	box-shadow: 0 0 15px 4px var(--accent-glow);
-	z-index: 2;
-	animation: pulse 4s ease-in-out infinite;
-}
-
-.sonar-target {
-	position: absolute;
-	width: 3px;
-	height: 3px;
-	background: var(--accent);
-	border-radius: 50%;
+	box-shadow: 0 0 15px 3px var(--accent-glow);
 	opacity: 0;
+	z-index: 5;
 }
 
-@keyframes target-ping {
-	0% { opacity: 0; transform: scale(0.5); box-shadow: none; }
-	10% { opacity: 1; transform: scale(1.5); box-shadow: 0 0 8px var(--accent); }
+@keyframes anomaly-ping {
+	0% { opacity: 0; transform: scale(0.5); }
+	10% { opacity: 1; transform: scale(1.5); }
 	30% { opacity: 0; transform: scale(0.5); }
 	100% { opacity: 0; }
 }
 
-@keyframes breathing {
-	0%, 100% { opacity: 0.4; }
-	50% { opacity: 1; text-shadow: 0 0 8px var(--accent-glow); }
-}
+.loom-anomaly-1 { top: 30%; left: 20%; animation: anomaly-ping 8s ease-out infinite 1s; }
+.loom-anomaly-2 { top: 60%; left: 80%; animation: anomaly-ping 8s ease-out infinite 4s; }
+.loom-anomaly-3 { top: 40%; left: 60%; animation: anomaly-ping 8s ease-out infinite 6s; }
 
-.sonar-target-1 { top: 25%; left: 70%; animation: target-ping 6s linear infinite 1.5s; }
-.sonar-target-2 { top: 65%; left: 30%; animation: target-ping 6s linear infinite 4.5s; }
-.sonar-target-3 { top: 35%; left: 25%; animation: target-ping 6s linear infinite 3.8s; }
+.loom-core-status {
+	position: absolute;
+	z-index: 10;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	background: rgba(0,0,0,0.5);
+	padding: 1.5rem;
+	border-radius: 8px;
+	border: 1px solid rgba(0,245,255,0.1);
+	backdrop-filter: blur(8px);
+	box-shadow: 0 0 30px rgba(0,0,0,0.8);
+}
 
 /* --- 3D FLIP CARD --- */
 .flip-card-container {
