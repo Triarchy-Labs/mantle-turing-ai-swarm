@@ -1380,15 +1380,15 @@ html[data-theme="light"] .lusion-btn-primary:hover {
 	padding: 2.5vw; 
 	display: flex;
 	flex-direction: column;
-	backdrop-filter: blur(20px);
-	-webkit-backdrop-filter: blur(20px);
+	backdrop-filter: blur(22px);
+	-webkit-backdrop-filter: blur(22px);
 	transition: background 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
 				backdrop-filter 0.4s cubic-bezier(0.16, 1, 0.3, 1),
 				border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .bento-card:hover {
-	background: #050505;
+	background: #000000;
 	backdrop-filter: none;
 	-webkit-backdrop-filter: none;
 	border-color: rgba(255, 255, 255, 0.15);
