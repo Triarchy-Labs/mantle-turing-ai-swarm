@@ -256,7 +256,7 @@ export default function App() {
 						<div className="bento-content">
 							<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
 								{telem.markets.map(m => (
-									<div key={m.sym} className="market-row" style={{ padding: '1.5rem 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+									<div key={m.sym} className="market-row" style={{ padding: '1.5rem 0' }}>
 										<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
 											<div>
 												<div style={{ fontSize: '1.4rem', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>{m.sym}</div>
@@ -393,7 +393,7 @@ export default function App() {
 							) : (
 								<div style={{ display: 'flex', flexDirection: 'column', gap: '1.5vw' }}>
 									{telem.openPositions.map((pos, i) => (
-										<div key={i} className="position-row" style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '1vw', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+										<div key={i} className="position-row" style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '1vw' }}>
 											<div>
 												<div style={{ fontWeight: 700, fontSize: '1.2rem', marginBottom: '0.5vw' }}>{pos.symbol}</div>
 												<span className={`badge ${pos.side === 'Buy' ? 'ok' : 'fail'}`} style={{ fontSize: '0.8rem' }}>{pos.side}</span>
@@ -451,7 +451,7 @@ export default function App() {
 						<div className="bento-content">
 							<div ref={logRef} className="log-terminal" style={{ height: '100%' }}>
 								{telem.logs.map((l, i) => (
-									<div key={i} style={{ display: 'flex', gap: '1vw', color: 'var(--foreground)', opacity: 0.7, borderBottom: '1px solid rgba(255,255,255,0.01)', padding: '0.8vw 0', fontSize: '0.9rem', fontFamily: 'var(--font-mono)' }}>
+									<div key={i} style={{ display: 'flex', gap: '1vw', color: 'var(--foreground)', opacity: 0.7, padding: '0.8vw 0', fontSize: '0.9rem', fontFamily: 'var(--font-mono)' }}>
 										<span style={{ color: 'var(--foreground)', opacity: 0.3, minWidth: '90px' }}>{logTime(l.off)}</span>
 										<span style={{ color: l.type === 'success' ? 'var(--accent-hover)' : 'var(--accent)', fontWeight: 700, minWidth: '100px' }}>{l.tag}</span>
 										<span>{l.msg}</span>
@@ -505,7 +505,7 @@ export default function App() {
 							<div>BLOCKCHAIN</div>
 						</div>
 						<div className="bento-content" style={{ fontFamily: 'var(--font-mono)', fontSize: '1rem', display: 'flex', flexDirection: 'column', gap: '2vw' }}>
-							<div style={{ paddingBottom: '1.5vw', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+							<div style={{ paddingBottom: '1.5vw' }}>
 								<div style={{ fontSize: '0.8rem', opacity: 0.5, marginBottom: '1vw', textTransform: 'uppercase', letterSpacing: '0.1em' }}>✓ Sourcify Verified</div>
 								<a href="https://explorer.mantle.xyz/address/0xFA0b5036aF9770B370B33CeBBb42d1E626338383" target="_blank" rel="noopener noreferrer" className="onchain-link" style={{ display: 'block', marginBottom: '0.5vw' }}>
 									→ ERC8004Registry
@@ -529,7 +529,7 @@ export default function App() {
 								</span>
 							</div>
 							{telem.txHashes.length > 0 && (
-								<div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '2vw', marginTop: 'auto' }}>
+								<div style={{ paddingTop: '2vw', marginTop: 'auto' }}>
 									<div style={{ marginBottom: '1vw', opacity: 0.5, fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Recent TXs</div>
 									{telem.txHashes.slice(-3).map((hash, i) => (
 										<a key={i} href={`https://explorer.mantle.xyz/tx/${hash}`} target="_blank" rel="noopener noreferrer" className="onchain-link" style={{ display: 'block', marginBottom: '0.5vw' }}>
@@ -557,8 +557,7 @@ export default function App() {
 						<div className="bento-content" style={{ display: 'flex', flexDirection: 'column', gap: '1.5vw' }}>
 							{techCards.map((tc, idx) => (
 								<div key={tc.label} style={{
-									paddingBottom: '1vw',
-									borderBottom: idx === techCards.length - 1 ? 'none' : '1px solid rgba(255,255,255,0.05)',
+									paddingBottom: idx === techCards.length - 1 ? '0' : '2.5vw',
 									fontFamily: 'var(--font-mono)'
 								}}>
 									<div style={{ color: 'var(--accent-hover)', fontWeight: 700, marginBottom: '0.5vw', fontSize: '1rem' }}>{tc.label}</div>
