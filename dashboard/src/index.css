@@ -1490,10 +1490,10 @@ html[data-theme="light"] .lusion-btn-primary:hover {
 
 .lusion-card-title {
 	font-family: 'Fixel Display', var(--font-heading);
-	font-size: 4.5vw;
+	font-size: 2.8vw;
 	font-weight: 400;
 	letter-spacing: -0.03em;
-	margin-bottom: 0.5rem;
+	margin: 0;
 }
 
 .lusion-card-tags {
