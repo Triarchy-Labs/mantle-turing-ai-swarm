@@ -461,7 +461,7 @@ export default function App() {
 							<div>004</div>
 							<div>RISK ENGINE</div>
 						</div>
-						<div className="bento-content" style={{ fontFamily: 'var(--font-mono)', fontSize: '1.4rem', overflow: 'auto', margin: 0 }}>
+						<div className="bento-content" style={{ fontFamily: 'var(--font-mono)', fontSize: '1.4rem', overflow: 'visible', margin: 0 }}>
 							<div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flex: 1, paddingTop: '3.5rem', gap: '0.4rem' }}>
 
 								{/* Ramp Phase Badge */}

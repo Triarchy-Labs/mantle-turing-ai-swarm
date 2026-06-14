@@ -1197,15 +1197,15 @@ html[data-theme="light"] .lusion-btn-primary:hover {
 }
 
 .swarm-chat-orb-inner {
-	width: 12.5rem;
-	height: 12.5rem;
+	width: 16rem;
+	height: 16rem;
 	border-radius: 50%;
 	background: radial-gradient(circle at 40% 35%, rgba(0,245,255,0.12) 0%, rgba(5,5,12,0.95) 70%);
 	border: 2px solid rgba(0,245,255,0.25);
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	gap: 2rem;
+	gap: 2.5rem;
 	transition: all 0.4s ease;
 	box-shadow: 0 0 3.2rem rgba(0,245,255,0.08), inset 0 0 3.2rem rgba(0,245,255,0.05);
 }
@@ -1967,8 +1967,8 @@ a:focus-visible,
 .risk-metrics-scroll {
 	max-height: 13.5rem;
 	overflow-y: auto;
-	padding-right: 1.5rem;
-	margin-right: -1.5rem;
+	padding-right: 0.5rem;
+	margin-right: -0.5rem;
 }
 
 .risk-metrics-scroll::-webkit-scrollbar {

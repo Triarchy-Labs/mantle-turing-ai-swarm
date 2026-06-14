@@ -283,12 +283,12 @@ export default function SwarmChat({ telem, orbState }: SwarmChatProps) {
   const showArrow = isHovered || input.trim().length > 0;
 
   // Orb eyes config
-  const eyeH = chatOrbState === 'working' ? 12 : chatOrbState === 'thinking' ? 36 : 44;
-  const eyeR = chatOrbState === 'working' ? '5px' : '14px';
+  const eyeH = chatOrbState === 'working' ? '1.6rem' : chatOrbState === 'thinking' ? '4.7rem' : '5.7rem';
+  const eyeR = chatOrbState === 'working' ? '0.7rem' : '1.8rem';
   const eyeBg = chatOrbState === 'working' ? 'var(--accent-hover)' : '#fff';
   const eyeShadow = chatOrbState === 'working'
-    ? '0 0 20px var(--accent-hover), 0 0 40px var(--accent-hover)'
-    : '0 0 12px rgba(255,255,255,0.8)';
+    ? '0 0 2rem var(--accent-hover), 0 0 4rem var(--accent-hover)'
+    : '0 0 1.2rem rgba(255,255,255,0.8)';
 
   return (
     <div ref={containerRef} className="swarm-chat" id="swarm-chat-panel" style={{ height: '100%', border: 'none', background: 'transparent' }}>
@@ -297,10 +297,10 @@ export default function SwarmChat({ telem, orbState }: SwarmChatProps) {
         <div className="swarm-chat-orb-inner">
           {['left', 'right'].map(side => (
             <div key={side} style={{
-              width: 28, height: blink ? 3 : eyeH, background: eyeBg,
+              width: '3.6rem', height: blink ? '0.4rem' : eyeH, background: eyeBg,
               borderRadius: eyeR, position: 'relative', overflow: 'hidden',
               transition: 'all 0.15s ease-out', boxShadow: eyeShadow,
-              marginTop: blink ? 20 : 0,
+              marginTop: blink ? '2.6rem' : 0,
               transform: `translate(${mouseOffset.x}px, ${mouseOffset.y}px)`,
             }}>
             </div>
