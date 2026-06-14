@@ -114,6 +114,13 @@ const MetricPill = ({
 const NeuralLoom = ({ telem, hasPositions }: { telem: any, hasPositions: boolean }) => {
 	const loomRef = useRef<HTMLDivElement>(null);
 	const [pings, setPings] = useState<{ id: number, x: number, y: number }[]>([]);
+	const [hoveredAnomaly, setHoveredAnomaly] = useState<string | null>(null);
+
+	const anomalies = [
+		{ id: 1, label: "LIQUIDITY IMBALANCE", top: `${(telem.cycle * 13) % 80 + 10}%`, left: `${(telem.cycle * 17) % 80 + 10}%` },
+		{ id: 2, label: "WHALE TX DETECTED", top: `${(telem.cycle * 23) % 80 + 10}%`, left: `${(telem.cycle * 29) % 80 + 10}%` },
+		{ id: 3, label: "NEWS SENTIMENT SPIKE", top: `${(telem.cycle * 31) % 80 + 10}%`, left: `${(telem.cycle * 37) % 80 + 10}%` },
+	];
 
 	const handleMouseMove = useCallback((e: React.MouseEvent) => {
 		if (!loomRef.current) return;
@@ -168,9 +175,21 @@ const NeuralLoom = ({ telem, hasPositions }: { telem: any, hasPositions: boolean
 				<div className="loom-orbit loom-orbit-1"></div>
 				<div className="loom-orbit loom-orbit-2"></div>
 				
-				<div className="loom-anomaly" style={{ top: `${(telem.cycle * 13) % 80 + 10}%`, left: `${(telem.cycle * 17) % 80 + 10}%`, opacity: 1, animation: 'none' }}></div>
-				<div className="loom-anomaly" style={{ top: `${(telem.cycle * 23) % 80 + 10}%`, left: `${(telem.cycle * 29) % 80 + 10}%`, opacity: 1, animation: 'none' }}></div>
-				<div className="loom-anomaly" style={{ top: `${(telem.cycle * 31) % 80 + 10}%`, left: `${(telem.cycle * 37) % 80 + 10}%`, opacity: 1, animation: 'none' }}></div>
+				{anomalies.map(a => (
+					<div 
+						key={a.id}
+						className="loom-anomaly" 
+						style={{ top: a.top, left: a.left, opacity: 1, animation: 'none' }}
+						onMouseEnter={() => setHoveredAnomaly(a.label)}
+						onMouseLeave={() => setHoveredAnomaly(null)}
+					>
+						{hoveredAnomaly === a.label && (
+							<div className="anomaly-tooltip">
+								{a.label}
+							</div>
+						)}
+					</div>
+				))}
 
 				{pings.map(p => (
 					<div 
@@ -626,9 +645,9 @@ export default function App() {
 						<div className="lusion-dot"></div>
 						<div className="lusion-top-meta">
 							<div>006</div>
-							<div>PORTFOLIO</div>
+							<div>NEURAL SENSOR</div>
 						</div>
-						<div className="bento-content" style={{ position: 'relative', overflow: 'hidden', padding: telem.openPositions.length > 0 ? '0' : '1.5vw' }}>
+						<div className="bento-content" style={{ position: 'relative', overflow: 'hidden', padding: '0' }}>
 							<NeuralLoom telem={telem} hasPositions={telem.openPositions.length > 0} />
 
 							{telem.openPositions.length > 0 && (

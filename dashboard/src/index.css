@@ -2095,31 +2095,31 @@ html[data-theme="light"] .log-terminal {
 
 /* --- THE NEURAL LOOM (Hunting Mode) --- */
 .neural-loom-container {
-	position: relative;
+	position: absolute;
+	top: 0; left: 0; right: 0; bottom: 0;
 	width: 100%;
-	height: 180px;
+	height: 100%;
 	overflow: hidden;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	border-radius: 8px;
-	perspective: 600px;
-	margin-bottom: 1.5rem;
+	perspective: 1000px;
 }
 
 .loom-grid {
 	position: absolute;
-	top: -50%; left: -50%; right: -50%; bottom: -50%;
-	width: 200%;
-	height: 200%;
+	top: -150%; left: -150%; right: -150%; bottom: -150%;
+	width: 400%;
+	height: 400%;
 	background-image: 
 		linear-gradient(rgba(0, 245, 255, 0.08) 1px, transparent 1px),
 		linear-gradient(90deg, rgba(0, 245, 255, 0.08) 1px, transparent 1px);
-	background-size: 30px 30px;
-	transform: rotateX(70deg) translateY(-100px);
+	background-size: 40px 40px;
+	transform: rotateX(75deg) translateY(-50px);
 	animation: grid-flow 10s linear infinite;
-	mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 80%);
-	-webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 80%);
+	mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 60%);
+	-webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 60%);
 }
 
 @keyframes grid-flow {
@@ -2145,13 +2145,41 @@ html[data-theme="light"] .log-terminal {
 
 .loom-anomaly {
 	position: absolute;
-	width: 4px;
-	height: 4px;
+	width: 6px;
+	height: 6px;
 	background: var(--accent);
 	border-radius: 50%;
-	box-shadow: 0 0 15px 3px var(--accent-glow);
+	box-shadow: 0 0 15px 4px var(--accent-glow);
 	opacity: 0;
 	z-index: 5;
+	cursor: crosshair;
+	transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.loom-anomaly:hover {
+	transform: scale(2) !important;
+	box-shadow: 0 0 25px 8px var(--accent-glow);
+}
+
+.anomaly-tooltip {
+	position: absolute;
+	top: -35px;
+	left: 50%;
+	transform: translateX(-50%);
+	background: rgba(4, 4, 6, 0.9);
+	color: #00f5ff;
+	padding: 6px 10px;
+	border-radius: 4px;
+	font-family: var(--font-mono);
+	font-size: 0.75rem;
+	white-space: nowrap;
+	pointer-events: none;
+	border: 1px solid rgba(0, 245, 255, 0.2);
+	z-index: 100;
+	box-shadow: 0 0 15px rgba(0, 245, 255, 0.1);
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	animation: fade-in 0.2s ease forwards;
 }
 
 @keyframes anomaly-ping {
