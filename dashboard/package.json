@@ -20,6 +20,7 @@
     "postprocessing": "^6.39.1",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
+    "react-markdown": "^10.1.0",
     "three": "^0.184.0",
     "three-stdlib": "^2.36.1",
     "viem": "^2.48.8",

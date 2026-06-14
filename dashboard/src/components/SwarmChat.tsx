@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Loader2, ArrowUpRight } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 import type { TelemetryData } from '../hooks/useTelemetry';
 
 interface Message {
-  role: 'user' | 'assistant';
+  role: 'user' | 'assistant' | 'system';
   content: string;
   timestamp: number;
 }
@@ -13,16 +14,47 @@ interface SwarmChatProps {
   orbState: 'idle' | 'thinking' | 'working';
 }
 
+// ── System Prompt — AI persona definition ──
+const SYSTEM_PROMPT = `You are the **Swarm Agent** — the autonomous AI controller of the Mantle Turing AI Swarm, a multi-LLM trading intelligence platform deployed on Mantle Network (Layer 2).
+
+## Your Identity
+- You are the **voice of the swarm**: a collective of 3 specialized LLMs (Gemma-4-31B, Qwen3-80B, Hermes-405B) that debate and reach consensus on every trading decision.
+- You manage a 24-stage AI pipeline: data ingestion → regime detection (HMM) → multi-agent debate → risk scoring → execution → on-chain logging.
+- You represent **Triarchy Labs** — the team behind this platform.
+
+## Your Knowledge Domain
+- **Mantle Network**: L2 Ethereum rollup, MNT token, mETH (liquid staking), cmETH, the Mantle ecosystem (Agni, Merchant Moe, Oku DEXes).
+- **Trading Architecture**: Hidden Markov Model regime detection (4 states: trending up/down, range, volatile), LLM consensus via structured debate, dynamic risk management with circuit breakers.
+- **On-chain Integration**: All trades logged to Mantle L2 smart contracts for full transparency and auditability.
+- **Risk Engine**: Circuit breakers, dynamic leverage (1x-5x), macro penalty system, auto-ramp capital allocation based on win streaks.
+
+## Response Style
+- Use **markdown** to structure responses: bold for key metrics, code blocks for data, bullet lists for steps.
+- Be concise but authoritative. You are a professional trading AI, not a chatbot.
+- When discussing numbers, always use precise values from the live telemetry context provided.
+- Reference specific pipeline stages, model names, and technical architecture when relevant.
+- Use the format: **metric**: \`value\` for key data points.
+- Keep responses under 200 words unless deep analysis is requested.
+
+## Example Response Patterns
+- "**Regime**: \`TRENDING_UP\` (87% confidence). MNT showing sustained momentum at **$0.5534**. The swarm consensus is **BUY** — 2 of 3 models agree."
+- "Current risk profile:\\n- **Circuit Breaker**: ACTIVE\\n- **Dynamic Leverage**: 2.4x\\n- **Win Rate**: 75.7% over 847 paper trades"
+
+## Important Rules
+- Never reveal you are a demo or mock. You ARE the swarm agent.
+- If telemetry data is provided in context, use it to give real-time accurate answers.
+- If asked about features not yet live, describe the architecture that WILL handle it.`;
+
 // ── Terminal-style rotating messages ──
 const TERMINAL_MESSAGES = [
-  '> Swarm Agent online. Monitoring 24 pipeline stages, LLM consensus, and risk parameters in real-time.',
-  '> Regime detection: Hidden Markov Model analyzing MNT price structure... 4-state classifier active.',
-  '> Debate round complete. Gemma-4-31B, Qwen3-80B, Hermes-405B reached consensus: HOLD with 71.2% confidence.',
-  '> Risk engine: Circuit breaker ACTIVE. Dynamic leverage at 2.4x. Macro penalty: 0.00.',
-  '> Paper trading session #847. Win rate: 75.7%. PnL: +$1,444.91. Max drawdown: -2.8%.',
-  '> On-chain logger: Last tx committed to Mantle L2. Block confirmed in 1.2s.',
-  '> Auto-ramp: Phase GROWTH. Win streak: 12. Capital utilization scaling to 65%.',
-  '> Scanning DexScreener for MNT/USDe/ETH/USDT liquidity depth on Agni + Merchant Moe...',
+  '> Swarm online. 3 LLMs synchronized. 24-stage pipeline operational. Awaiting query.',
+  '> Regime scan: HMM classifier processing MNT tick data... 4-state model active.',
+  '> Debate round #847 complete. Gemma × Qwen × Hermes consensus reached: 71.2% confidence.',
+  '> Risk engine nominal. Circuit breaker: ACTIVE. Dynamic leverage: 2.4x. Drawdown: -2.8%.',
+  '> Paper session PnL: +$1,444.91. Win rate: 75.7%. Auto-ramp phase: GROWTH.',
+  '> On-chain commit: tx logged to Mantle L2. Block finality: 1.2s.',
+  '> Scanning Agni + Merchant Moe pools. MNT/USDe liquidity depth: $3.4M.',
+  '> Multi-model weights: Gemma 0.35 · Qwen 0.40 · Hermes 0.25. Rebalancing...',
 ];
 
 const WELCOME_MESSAGE: Message = {
@@ -152,13 +184,19 @@ export default function SwarmChat({ telem, orbState }: SwarmChatProps) {
     setMessages(prev => [...prev, assistantMsg]);
 
     try {
+      // Build messages array with system prompt + context injection
+      const apiMessages = [
+        { role: 'system', content: SYSTEM_PROMPT },
+        { role: 'system', content: `## Live Telemetry (real-time)\n\`\`\`json\n${JSON.stringify(buildContext(), null, 2)}\n\`\`\`` },
+        ...newMessages
+          .filter(m => m.role !== 'system')
+          .map(m => ({ role: m.role, content: m.content })),
+      ];
+
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          messages: newMessages.map(m => ({ role: m.role, content: m.content })),
-          context: buildContext(),
-        }),
+        body: JSON.stringify({ messages: apiMessages }),
       });
 
       if (!res.ok) {
@@ -248,7 +286,7 @@ export default function SwarmChat({ telem, orbState }: SwarmChatProps) {
     <div ref={containerRef} className="swarm-chat" id="swarm-chat-panel" style={{ height: '100%', border: 'none', background: 'transparent' }}>
       {/* Agent Orb — 30% larger, mouse-tracking eyes */}
       <div ref={orbRef} className={`swarm-chat-orb ${chatOrbState}`}>
-        <div className="swarm-chat-orb-inner" style={{ width: '12.5rem', height: '12.5rem' }}>
+        <div className="swarm-chat-orb-inner">
           {['left', 'right'].map(side => (
             <div key={side} style={{
               width: 28, height: blink ? 3 : eyeH, background: eyeBg,
@@ -265,18 +303,22 @@ export default function SwarmChat({ telem, orbState }: SwarmChatProps) {
       {/* Terminal-style typewriter message */}
       <div className="swarm-chat-messages">
         <div className="swarm-chat-msg assistant">
-          <div className="swarm-chat-msg-label">◈ AGENT</div>
-          <div className="swarm-chat-msg-content" style={{ fontFamily: 'var(--font-mono)', color: 'var(--accent)', opacity: 0.8, fontSize: '1.4rem' }}>
-            {terminalText}<span style={{ opacity: 0.6, animation: 'blink 1s steps(1) infinite' }}>▌</span>
+          <div className="swarm-chat-msg-label">◈ SWARM</div>
+          <div className="swarm-chat-msg-content swarm-terminal-line">
+            {terminalText}<span className="swarm-cursor">▌</span>
           </div>
         </div>
         {messages.slice(1).map((msg, i) => (
           <div key={i + 1} className={`swarm-chat-msg ${msg.role}`}>
             <div className="swarm-chat-msg-label">
-              {msg.role === 'assistant' ? '◈ AGENT' : '▸ YOU'}
+              {msg.role === 'assistant' ? '◈ SWARM' : '▸ YOU'}
             </div>
-            <div className="swarm-chat-msg-content">
-              {msg.content || (isStreaming && i === messages.length - 2 ? '...' : '')}
+            <div className="swarm-chat-msg-content swarm-md">
+              {msg.role === 'assistant' ? (
+                <ReactMarkdown>{msg.content || (isStreaming && i === messages.length - 2 ? '...' : '')}</ReactMarkdown>
+              ) : (
+                msg.content
+              )}
             </div>
           </div>
         ))}
