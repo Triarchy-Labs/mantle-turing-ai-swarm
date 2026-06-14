@@ -874,9 +874,7 @@ html[data-theme="light"] .event-row {
 }
 
 .event-row:hover {
-	transform: translateX(4px);
-	border-color: rgba(0, 212, 255, 0.35);
-	background: rgba(0, 212, 255, 0.04);
+	transform: translateX(4px) scale(1.01);
 }
 
 .event-label {
@@ -1661,8 +1659,8 @@ html[data-theme="light"] .market-row {
 	border-color: rgba(255,255,255,0.06) !important;
 }
 html[data-theme="light"] .market-row:hover {
-	background: rgba(0,212,255,0.04) !important;
-	border-color: rgba(0,212,255,0.2) !important;
+	transform: scale(1.015);
+	transform-origin: left center;
 }
 
 html[data-theme="light"] .risk-row {
@@ -1939,8 +1937,8 @@ a:focus-visible,
 }
 
 .market-row:hover {
-	background: rgba(0, 212, 255, 0.04) !important;
-	border-color: rgba(0, 212, 255, 0.2) !important;
+	transform: scale(1.015);
+	transform-origin: left center;
 }
 
 .pipeline-stage {
