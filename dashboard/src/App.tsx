@@ -276,7 +276,7 @@ export default function App() {
 							<div>001</div>
 							<div>DEXSCREENER LIVE</div>
 						</div>
-						<div className="bento-content" style={{ overflow: 'auto' }}>
+						<div className="bento-content" style={{ overflow: 'auto', margin: '1vw 0' }}>
 							<div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly', flex: 1 }}>
 								{telem.markets.map(m => (
 									<div key={m.sym} className="market-row" style={{ padding: '0' }}>
