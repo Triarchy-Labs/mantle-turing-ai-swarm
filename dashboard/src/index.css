@@ -669,13 +669,13 @@ html[data-theme="light"] .toggle-group {
 
 .metric-pill-btn {
 	position: relative;
-	padding: 1rem 3rem;
-	border-radius: 3rem;
+	padding: 1.4rem 5.5rem;
+	border-radius: 4rem;
 	border: 1px solid rgba(255, 255, 255, 0.1);
 	background: transparent;
 	color: #fcfcfd;
 	font-family: 'Aventa', var(--font-ui), sans-serif;
-	font-size: 1.25rem;
+	font-size: 1.4rem;
 	font-weight: 300;
 	cursor: pointer;
 	outline: none;
@@ -730,16 +730,21 @@ html[data-theme="light"] .toggle-group {
 	white-space: nowrap;
 	text-transform: uppercase;
 	letter-spacing: 2px;
+	display: flex;
+	align-items: center;
+	line-height: 1;
 }
 
 .metric-pill-btn .pill-label {
 	color: inherit;
+	opacity: 0.7;
 }
 
 .metric-pill-btn .pill-val {
 	font-family: var(--font-mono);
-	margin-left: 1rem;
+	margin-left: 1.5rem;
 	color: inherit;
+	font-weight: 500;
 }
 
 
