@@ -798,18 +798,20 @@ export default function App() {
 					<article className="bento-card " role="log" aria-live="polite" style={{ flexGrow: 1, margin: 0 }}>
 						<div className="lusion-dot"></div>
 						<div className="lusion-top-meta">
-							<div>EXP 007</div>
+							<div>007</div>
 							<div>SYSTEM LOG</div>
 						</div>
 						<div className="bento-content">
-							<div ref={logRef} className="log-terminal" style={{ height: '100%' }}>
+							<div ref={logRef} className="log-terminal" style={{ height: '100%', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
 								{telem.logs.map((l, i) => (
-									<div key={i} style={{ display: 'flex', gap: '1vw', color: 'var(--foreground)', opacity: 0.7, padding: '0.8vw 0', fontSize: '0.9rem', fontFamily: 'var(--font-mono)' }}>
-										<span style={{ color: 'var(--foreground)', opacity: 0.3, minWidth: '90px' }}>{logTime(l.off)}</span>
-										<span style={{ color: l.type === 'success' ? 'var(--accent-hover)' : 'var(--accent)', fontWeight: 700, minWidth: '100px' }}>{l.tag}</span>
-										<span>{l.msg}</span>
+									<div key={i} className="log-row" style={{ display: 'flex', gap: '1vw', color: 'var(--foreground)', opacity: 0.8, padding: '0.8vw 0', fontSize: '0.85rem', fontFamily: 'var(--font-mono)' }}>
+										<span style={{ color: 'var(--foreground)', opacity: 0.3, minWidth: '85px' }}>{logTime(l.off)}</span>
+										<span style={{ color: l.type === 'success' ? '#00f5ff' : 'var(--accent)', fontWeight: 700, minWidth: '95px' }}>{l.tag}</span>
+										<span style={{ opacity: 0.9 }}>{l.msg}</span>
 									</div>
 								))}
+								{/* Auto-scroll anchor */}
+								<div style={{ float: 'left', clear: 'both' }} ref={(el) => { if (el) el.scrollIntoView({ behavior: 'smooth' }); }}></div>
 							</div>
 						</div>
 						</article>
@@ -819,33 +821,38 @@ export default function App() {
 					</div>
 				</div>
 
-					{/* SYNAPTIC DECISION ARBITRAGE (Row 7) */}
+					{/* SYNAPTIC DECISION JOURNAL (Row 7) */}
 					<div className="shape-ion" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
 					<article className="bento-card " role="region" style={{ flexGrow: 1, margin: 0 }}>
 						<div className="lusion-dot"></div>
 						<div className="lusion-top-meta">
-							<div>EXP 009</div>
-							<div>ARBITRAGE</div>
+							<div>009</div>
+							<div>DECISION LOG</div>
 						</div>
-						<div className="bento-content">
-							<div style={{ display: 'flex', flexDirection: 'column', gap: '1.5vw' }}>
-								{telem.debates.map((d, i) => (
-									<div key={i} className="debate-card" style={{
-										borderLeft: `2px solid ${d.color}`, paddingLeft: '1.5vw', lineHeight: 1.5,
+						<div className="bento-content" style={{ overflowY: 'auto' }}>
+							<div style={{ display: 'flex', flexDirection: 'column', gap: '1vw' }}>
+								{(telem as any).decisions?.map((d: any, i: number) => (
+									<div key={i} className="decision-row" style={{
+										display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.8vw',
+										border: '1px solid rgba(255,255,255,0.05)', borderRadius: '4px', background: 'rgba(255,255,255,0.02)'
 									}}>
-										<div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1vw', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', fontWeight: 700 }}>
-											<span style={{ color: d.color }}>{d.agent}</span>
-											<span style={{ color: 'var(--foreground)', opacity: 0.3 }}>{d.time}</span>
+										<div style={{ display: 'flex', flexDirection: 'column', gap: '0.3vw' }}>
+											<div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.9rem', fontWeight: 700 }}>
+												{d.sym} <span style={{ opacity: 0.4, fontSize: '0.7rem', marginLeft: '0.5vw' }}>{d.time}</span>
+											</div>
+											<div style={{ fontSize: '0.75rem', opacity: 0.7, fontFamily: 'var(--font-mono)' }}>{d.reason}</div>
 										</div>
-										<div style={{ color: 'var(--foreground)', opacity: 0.8, fontSize: '1rem' }}>{d.msg}</div>
+										<span className={`badge ${d.verdict === 'EXECUTED' ? 'ok' : d.verdict === 'HOLD' ? '' : 'fail'}`} style={{ fontSize: '0.7rem' }}>
+											{d.verdict}
+										</span>
 									</div>
 								))}
 							</div>
 						</div>
 						</article>
 					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
-						<div className="lusion-card-tags" style={{ fontSize: '0.8rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>AGENTS • LOGIC • VOTING</div>
-						<h2 className="lusion-card-title">Debate Consensus</h2>
+						<div className="lusion-card-tags" style={{ fontSize: '0.8rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>ALPHA • VERDICTS • HISTORY</div>
+						<h2 className="lusion-card-title">Decision Journal</h2>
 					</div>
 				</div>
 
@@ -854,17 +861,17 @@ export default function App() {
 					<article className="bento-card " role="region" style={{ flexGrow: 1, margin: 0 }}>
 						<div className="lusion-dot"></div>
 						<div className="lusion-top-meta">
-							<div>EXP 010</div>
+							<div>010</div>
 							<div>BLOCKCHAIN</div>
 						</div>
 						<div className="bento-content" style={{ fontFamily: 'var(--font-mono)', fontSize: '1rem', display: 'flex', flexDirection: 'column', gap: '2vw' }}>
 							<div style={{ paddingBottom: '1.5vw' }}>
 								<div style={{ fontSize: '0.8rem', opacity: 0.5, marginBottom: '1vw', textTransform: 'uppercase', letterSpacing: '0.1em' }}>✓ Sourcify Verified</div>
 								<a href="https://explorer.mantle.xyz/address/0xFA0b5036aF9770B370B33CeBBb42d1E626338383" target="_blank" rel="noopener noreferrer" className="onchain-link" style={{ display: 'block', marginBottom: '0.5vw' }}>
-									→ ERC8004Registry
+									→ 0xFA0b...38383 <span style={{ opacity: 0.4, fontSize: '0.7rem' }}>(Registry)</span>
 								</a>
 								<a href="https://explorer.mantle.xyz/address/0x41c51a03FFE750F5df1F6ffc972DBA8265B5a4F4" target="_blank" rel="noopener noreferrer" className="onchain-link" style={{ display: 'block' }}>
-									→ X402FlashLiquidator
+									→ 0x41c5...5a4F4 <span style={{ opacity: 0.4, fontSize: '0.7rem' }}>(Liquidator)</span>
 								</a>
 							</div>
 							<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -899,29 +906,33 @@ export default function App() {
 					</div>
 				</div>
 
-					{/* SYNAPTIC CORE — 3D Brain (Row 6) */}
+					{/* SWARM MEMORY NEXUS (Row 6) */}
 					<div className="shape-choochoo align-right" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
 					<article className="bento-card " role="region" style={{ flexGrow: 1, margin: 0 }}>
 						<div className="lusion-dot"></div>
 						<div className="lusion-top-meta">
-							<div>EXP 008</div>
-							<div>CORE</div>
+							<div>008</div>
+							<div>MEMORY DB</div>
 						</div>
-						<div className="bento-content" style={{ display: 'flex', flexDirection: 'column', gap: '1.5vw' }}>
-							{techCards.map((tc, idx) => (
-								<div key={tc.label} style={{
-									paddingBottom: idx === techCards.length - 1 ? '0' : '2.5vw',
-									fontFamily: 'var(--font-mono)'
+						<div className="bento-content" style={{ display: 'flex', flexDirection: 'column', gap: '1vw', overflowY: 'auto' }}>
+							{(telem as any).memoryStream?.map((m: any, idx: number) => (
+								<div key={idx} className="db-matrix-row" style={{
+									fontFamily: 'var(--font-mono)', fontSize: '0.75rem', padding: '0.5vw', borderLeft: `2px solid ${m.action === 'VECTOR_WRITE' ? '#00f5ff' : 'var(--accent)'}`
 								}}>
-									<div style={{ color: 'var(--accent-hover)', fontWeight: 700, marginBottom: '0.5vw', fontSize: '1rem' }}>{tc.label}</div>
-									<div style={{ color: 'var(--foreground)', opacity: 0.6, fontSize: '0.85rem' }}>{tc.desc}</div>
+									<div style={{ display: 'flex', justifyContent: 'space-between', opacity: 0.6, marginBottom: '0.2vw' }}>
+										<span style={{ color: m.action === 'VECTOR_WRITE' ? '#00f5ff' : 'inherit' }}>[{m.action}]</span>
+										<span>{m.id}</span>
+									</div>
+									<div style={{ color: 'var(--foreground)', opacity: 0.9 }}>{m.content}</div>
 								</div>
 							))}
+							{/* Pulse cursor at the end to simulate typing */}
+							<div style={{ animation: 'blink 1s infinite', color: '#00f5ff', opacity: 0.5, marginTop: '1vw' }}>_</div>
 						</div>
 						</article>
 					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
-						<div className="lusion-card-tags" style={{ fontSize: '0.8rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>MODULES • TECH • NEURAL</div>
-						<h2 className="lusion-card-title">Swarm Brain</h2>
+						<div className="lusion-card-tags" style={{ fontSize: '0.8rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>RAG • VECTORS • KNOWLEDGE</div>
+						<h2 className="lusion-card-title">Memory Nexus</h2>
 					</div>
 				</div>
 				</div>

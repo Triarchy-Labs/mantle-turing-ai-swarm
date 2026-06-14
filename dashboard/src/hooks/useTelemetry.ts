@@ -105,6 +105,19 @@ interface PositionEntry {
   unstuck_stage: string;
 }
 
+export interface DecisionEntry {
+  sym: string;
+  verdict: 'EXECUTED' | 'REJECTED' | 'HOLD';
+  reason: string;
+  time: string;
+}
+
+export interface MemoryEntry {
+  id: string;
+  action: 'RAG_SEARCH' | 'VECTOR_WRITE' | 'GRAPH_LINK';
+  content: string;
+}
+
 // ── Dashboard-facing types ──
 export interface MarketRow {
   sym: string;
@@ -142,6 +155,8 @@ export interface TelemetryData {
   riskState: RiskState | null;
   rampState: RampState | null;
   openPositions: PositionEntry[];
+  decisions: DecisionEntry[];
+  memoryStream: MemoryEntry[];
   totalTrades: number;
   balance: string;
   maxDrawdown: string;
@@ -195,6 +210,23 @@ const DEMO_LOG_POOL = [
   { tag: '[DEALLOW]', msg: 'Ban scanner: 0 tokens flagged. All tracked assets cleared.', type: 'success' },
 ];
 
+const DEMO_DECISIONS_POOL: DecisionEntry[] = [
+  { sym: 'MNT', verdict: 'EXECUTED', reason: 'Volume breakout + HMM Bullish', time: '' },
+  { sym: 'USDe', verdict: 'HOLD', reason: 'Yield variance within normal limits', time: '' },
+  { sym: 'ETH', verdict: 'REJECTED', reason: 'ATR too high for current risk budget', time: '' },
+  { sym: 'MNT', verdict: 'EXECUTED', reason: 'Whale accumulation detected', time: '' },
+  { sym: 'USDT', verdict: 'HOLD', reason: 'Stablecoin regime steady', time: '' },
+  { sym: 'WMNT', verdict: 'EXECUTED', reason: 'Arbitrage gap detected on Agni', time: '' },
+];
+
+const DEMO_MEMORY_POOL: MemoryEntry[] = [
+  { id: 'MEM_0921', action: 'RAG_SEARCH', content: 'Querying historical MNT volume spikes...' },
+  { id: 'VEC_0xA1', action: 'VECTOR_WRITE', content: 'Archiving recent 4h breakout pattern (Score: 89%).' },
+  { id: 'GRAPH_33', action: 'GRAPH_LINK', content: 'Linking ETH volatility to USDe yield spread.' },
+  { id: 'MEM_0922', action: 'RAG_SEARCH', content: 'Recalling correlation between Agni liquidity and MNT.' },
+  { id: 'VEC_0xA2', action: 'VECTOR_WRITE', content: 'Storing decision tensor for backtest.' },
+];
+
 const MOCK_LOGS = DEMO_LOG_POOL.slice(0, 10).map((l, i) => ({ ...l, off: i }));
 
 const MOCK_DATA: TelemetryData = {
@@ -224,6 +256,8 @@ const MOCK_DATA: TelemetryData = {
   riskState: { dynamic_leverage: 5.0, atr_estimate: 0.015, macro_penalty: 0.0, ewma_confidence: 0.72, risk_appetite: 0.85, pretrade_factor: 0.92, circuit_breaker: 'GREEN' },
   rampState: { current_phase: 1, phase_label: 'SEED', max_position_pct: 0.10, daily_loss_kill_pct: 3.0, total_promotions: 2, total_demotions: 0 },
   openPositions: [],
+  decisions: DEMO_DECISIONS_POOL.slice(0, 3).map(d => ({ ...d, time: '14:23:01' })),
+  memoryStream: DEMO_MEMORY_POOL.slice(0, 3),
   totalTrades: 23,
   balance: '$11,444.91',
   maxDrawdown: '3.4%',
@@ -255,6 +289,17 @@ function generateDemoTick(prev: TelemetryData, dexPrices: Partial<MarketRow>[]):
   const logOffset = Math.floor(elapsed / 5) % (DEMO_LOG_POOL.length - 9);
   const logs = DEMO_LOG_POOL.slice(logOffset, logOffset + 10).map((l, i) => ({ ...l, off: i }));
 
+  // Rotate decisions: show 3 decisions, shifting every 15 seconds
+  const decOffset = Math.floor(elapsed / 15) % (DEMO_DECISIONS_POOL.length - 2);
+  const decisions = DEMO_DECISIONS_POOL.slice(decOffset, decOffset + 3).map(d => ({
+    ...d,
+    time: new Date().toLocaleTimeString('en-US', { hour12: false }),
+  }));
+
+  // Rotate memory
+  const memOffset = Math.floor(elapsed / 8) % (DEMO_MEMORY_POOL.length - 2);
+  const memoryStream = DEMO_MEMORY_POOL.slice(memOffset, memOffset + 3);
+
   // Subtle price micro-jitter (±0.1% max) to simulate live feed
   const markets = prev.markets.map(m => {
     const dex = dexPrices.find(f => f.sym === m.sym);
@@ -285,6 +330,8 @@ function generateDemoTick(prev: TelemetryData, dexPrices: Partial<MarketRow>[]):
     markets: markets.map((m, i) => i === 0 ? { ...m, verdict: verdicts[verdictIdx], conf: Math.round((70 + Math.random() * 15) * 10) / 10 } : m),
     debates,
     logs,
+    decisions,
+    memoryStream,
     txHashes: cycle > 0 ? [`0x${Math.random().toString(16).slice(2, 10)}...${Math.random().toString(16).slice(2, 6)}`] : [],
     pnl: `$${basePnl.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
     winRate: `${(winRate * 100).toFixed(1)}%`,
@@ -377,6 +424,8 @@ function mapResponse(resp: TelemetryResponse): TelemetryData {
     markets: markets.length > 0 ? markets : MOCK_DATA.markets,
     debates,
     logs,
+    decisions: (resp as any).decisions ?? MOCK_DATA.decisions,
+    memoryStream: (resp as any).memory_stream ?? MOCK_DATA.memoryStream,
     txHashes: resp.tx_hashes ?? [],
     pnl: ps ? `$${ps.total_pnl.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : MOCK_DATA.pnl,
     winRate: ps ? `${(ps.win_rate * 100).toFixed(1)}%` : MOCK_DATA.winRate,
