@@ -905,8 +905,8 @@ html[data-theme="light"] .event-row {
 }
 
 .badge {
-	padding: 4px 10px;
-	border-radius: 6px;
+	padding: 4px 14px;
+	border-radius: 3rem;
 	font-size: 1.5rem;
 	font-weight: 700;
 	display: inline-block;
@@ -2203,8 +2203,8 @@ html[data-theme="light"] .log-terminal {
 	justify-content: center;
 	text-align: right;
 	background: rgba(0,0,0,0.5);
-	padding: 1.5rem;
-	border-radius: 8px;
+	padding: 1.5rem 3rem;
+	border-radius: 3rem;
 	border: 1px solid rgba(0,245,255,0.1);
 	backdrop-filter: blur(8px);
 	box-shadow: 0 0 30px rgba(0,0,0,0.8);

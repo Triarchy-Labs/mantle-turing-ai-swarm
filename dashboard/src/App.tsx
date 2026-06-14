@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Zap } from 'lucide-react';
 import './index.css';
 import LiquidGlassShader from './components/LiquidGlassShader';
 import CustomCursor from './components/CustomCursor';
@@ -410,7 +409,7 @@ export default function App() {
 											<div style={{ minWidth: '40%' }}>
 												<div style={{ display: 'flex', alignItems: 'center', gap: '0.7rem' }}>
 													<span style={{ fontSize: '2.4rem', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>{m.sym}</span>
-													{m.regime && <span style={{ fontSize: '1.4rem', padding: '0.2rem 0.6rem', borderRadius: '3px', background: 'rgba(0,212,255,0.08)', color: 'var(--accent)', fontFamily: 'var(--font-mono)', letterSpacing: '0.04em', fontWeight: 600 }}>{m.regime === 'TRENDING_UP' ? '↑ TREND' : m.regime === 'TRENDING_DOWN' ? '↓ TREND' : m.regime === 'VOLATILE' ? '⚡ VOL' : '~ RANGE'}{m.regimeConf ? ` ${m.regimeConf}%` : ''}</span>}
+													{m.regime && <span style={{ fontSize: '1.4rem', padding: '0.3rem 1rem', borderRadius: '3rem', background: 'rgba(0,212,255,0.08)', border: '1px solid rgba(0,212,255,0.15)', color: 'var(--accent)', fontFamily: 'var(--font-mono)', letterSpacing: '0.04em', fontWeight: 600 }}>{m.regime === 'TRENDING_UP' ? '↑ TREND' : m.regime === 'TRENDING_DOWN' ? '↓ TREND' : m.regime === 'VOLATILE' ? '• VOL' : '~ RANGE'}{m.regimeConf ? ` ${m.regimeConf}%` : ''}</span>}
 												</div>
 												<div style={{ fontSize: '1.4rem', color: 'var(--foreground)', opacity: 0.25, fontFamily: 'var(--font-mono)', marginTop: '0.3rem' }}>Vol {m.vol}{m.liq ? ` · Liq ${m.liq}` : ''}{m.buySell ? ` · B/S ${m.buySell}` : ''}</div>
 											</div>
@@ -468,7 +467,7 @@ export default function App() {
 								{/* Ramp Phase Badge */}
 								<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
 									<div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-										<span style={{ fontSize: '1.5rem', padding: '0.25rem 0.7rem', borderRadius: '4px', background: 'rgba(0,212,255,0.1)', border: '1px solid rgba(0,212,255,0.2)', color: 'var(--accent)', fontWeight: 700, letterSpacing: '0.08em' }}>
+										<span style={{ fontSize: '1.5rem', padding: '0.3rem 1.2rem', borderRadius: '3rem', background: 'rgba(0,212,255,0.1)', border: '1px solid rgba(0,212,255,0.2)', color: 'var(--accent)', fontWeight: 700, letterSpacing: '0.08em' }}>
 											{telem.rampState?.phase_label ?? 'SEED'}
 										</span>
 										<span style={{ fontSize: '2.4rem', opacity: 0.4 }}>Phase {telem.rampState?.current_phase ?? 1}/5</span>
@@ -556,7 +555,7 @@ export default function App() {
 								{/* Header row: title + verdict badge + stage counter */}
 								<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
 									<div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
-										<Zap size={18} style={{ color: 'var(--accent-hover)' }} />
+										<div className="lusion-dot" style={{ position: 'relative', top: 0, left: 0, right: 'auto', width: '8px', height: '8px', opacity: 0.8 }} />
 										<span style={{ fontSize: '2.4rem', letterSpacing: '0.08em', fontFamily: 'var(--font-mono)', opacity: 0.7 }}>SYNAPTIC DECISION PIPELINE</span>
 									</div>
 									<div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
@@ -568,7 +567,7 @@ export default function App() {
 											const vBg = v === 'BUY' ? 'var(--accent-glow)' : v === 'SELL' ? 'rgba(0,212,255,0.1)' : 'rgba(255,255,255,0.05)';
 											const vBorder = v === 'BUY' ? 'var(--accent-hover-glow)' : v === 'SELL' ? 'rgba(0,212,255,0.2)' : 'rgba(255,255,255,0.1)';
 											return (
-												<span style={{ fontSize: '2.4rem', padding: '0.2rem 0.6rem', borderRadius: '4px', background: vBg, border: `1px solid ${vBorder}`, color: vColor, fontWeight: 700, fontFamily: 'var(--font-mono)', letterSpacing: '0.1em' }}>
+												<span style={{ fontSize: '2.4rem', padding: '0.3rem 1.2rem', borderRadius: '3rem', background: vBg, border: `1px solid ${vBorder}`, color: vColor, fontWeight: 700, fontFamily: 'var(--font-mono)', letterSpacing: '0.1em' }}>
 													{v}
 												</span>
 											);
