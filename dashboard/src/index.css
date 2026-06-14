@@ -1274,7 +1274,7 @@ html[data-theme="light"] .lusion-btn-primary:hover {
 }
 
 .swarm-chat-msg-label {
-	font-size: 1.04rem;
+	font-size: 1.5rem;
 	font-weight: 700;
 	text-transform: uppercase;
 	letter-spacing: 0.1em;
@@ -1290,6 +1290,8 @@ html[data-theme="light"] .lusion-btn-primary:hover {
 	color: var(--foreground);
 	white-space: pre-wrap;
 	word-break: break-word;
+	font-size: 1.6rem;
+	line-height: 1.5;
 }
 
 /* Terminal typewriter line */
@@ -1297,7 +1299,7 @@ html[data-theme="light"] .lusion-btn-primary:hover {
 	font-family: var(--font-mono);
 	color: var(--accent);
 	opacity: 0.8;
-	font-size: 1.4rem;
+	font-size: 1.6rem;
 }
 
 .swarm-cursor {
@@ -1533,7 +1535,7 @@ html[data-theme="light"] .bento-card:hover {
 		top: 6vw;
 	}
 	
-	.lusion-top-meta { left: 6vw; font-size: 0.9rem; }
+	.lusion-top-meta { left: 6vw; font-size: 1.3rem; }
 	.lusion-dot { right: 6vw; width: 12px; height: 12px; }
 	.lusion-card-title { font-size: 6vw; }
 }
@@ -1544,7 +1546,7 @@ html[data-theme="light"] .bento-card:hover {
 	top: 2.5vw;
 	left: 2.5vw;
 	font-family: var(--font-mono);
-	font-size: 0.95rem;
+	font-size: 1.4rem;
 	opacity: 0.5;
 	text-transform: uppercase;
 	letter-spacing: 0.1em;
