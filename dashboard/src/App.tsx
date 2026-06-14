@@ -988,6 +988,9 @@ export default function App() {
 						minHeight: 0,
 						rowGap: 0
 					}}>
+						{/* Dummy div to force columns 1-5 to hold their width, matching Card 007 */}
+						<div style={{ gridColumn: 'span 5' }}></div>
+
 						{/* Buttons explicitly mapped to Card 008's grid coordinates */}
 						<div className="shape-choochoo align-right" style={{ 
 							display: 'flex', 
@@ -995,10 +998,10 @@ export default function App() {
 							alignItems: 'center',
 							aspectRatio: 'auto',
 						}}>
-							<button className="lusion-btn-primary" onClick={handleLaunch} aria-label="Launch Synaptic Analysis">
-								{analysisRunning ? '[ ◎ ANALYSIS RUNNING... ]' : '[ LAUNCH SYNAPTIC ANALYSIS ]'}
+							<button className="lusion-btn-primary" onClick={handleLaunch} aria-label="Launch Synaptic Analysis" style={{ padding: '1.5rem 2.5rem' }}>
+								{analysisRunning ? '[ ◎ RUNNING... ]' : '[ LAUNCH ANALYSIS ]'}
 							</button>
-							<button className="lusion-btn connect-btn-hover-fx" onClick={() => window.open(`https://explorer.mantle.xyz/address/0x1150f09ae885e6E7BcC0cb38feDd200d7f580008`, '_blank')} aria-label="View On-Chain Agent NFT"><span>[ VIEW AGENT NFT ]</span></button>
+							<button className="lusion-btn connect-btn-hover-fx" onClick={() => window.open(`https://explorer.mantle.xyz/address/0x1150f09ae885e6E7BcC0cb38feDd200d7f580008`, '_blank')} aria-label="View On-Chain Agent NFT" style={{ padding: '1.5rem 2.5rem' }}><span>[ VIEW AGENT NFT ]</span></button>
 						</div>
 					</div>
 					
