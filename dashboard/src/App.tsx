@@ -443,7 +443,7 @@ export default function App() {
 							<div>002</div>
 							<div>MULTI-LLM CONSENSUS</div>
 						</div>
-						<div className="bento-content" style={{ padding: '0 1vw' }}>
+						<div className="bento-content" style={{ padding: 0, margin: '1vw -1.5vw -1.5vw -1.5vw', flex: 1, display: 'flex' }}>
 							<SwarmChat telem={telem} orbState={orbState} />
 						</div>
 						</article>

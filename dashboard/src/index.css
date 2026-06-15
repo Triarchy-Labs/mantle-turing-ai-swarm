@@ -1229,7 +1229,7 @@ html[data-theme="light"] .lusion-btn-glass:hover {
    SWARM CHAT — AI Agent Chat Interface
    ============================================================ */
 .swarm-chat {
-	padding: 2.5rem;
+	padding: 0;
 	display: flex;
 	flex-direction: column;
 	flex: 1;
