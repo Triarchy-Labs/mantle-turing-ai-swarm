@@ -311,7 +311,7 @@ export default function SwarmChat({ telem, orbState }: SwarmChatProps) {
       {/* Terminal-style typewriter message */}
       <div ref={messagesContainerRef} className="swarm-chat-messages">
         <div className="swarm-chat-msg assistant">
-          <div className="swarm-chat-msg-label">◈ SWARM</div>
+          <div className="swarm-chat-msg-label">⬡ SWARM</div>
           <div className="swarm-chat-msg-content swarm-terminal-line">
             {terminalText}<span className="swarm-cursor">▌</span>
           </div>
@@ -319,7 +319,7 @@ export default function SwarmChat({ telem, orbState }: SwarmChatProps) {
         {messages.slice(1).map((msg, i) => (
           <div key={i + 1} className={`swarm-chat-msg ${msg.role}`}>
             <div className="swarm-chat-msg-label">
-              {msg.role === 'assistant' ? '◈ SWARM' : '▸ YOU'}
+              {msg.role === 'assistant' ? '⬡ SWARM' : '▸ YOU'}
             </div>
             <div className="swarm-chat-msg-content swarm-md">
               {msg.role === 'assistant' ? (
