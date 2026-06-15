@@ -2,11 +2,12 @@
 // Proxies chat requests to OpenRouter, hiding the API key from the client.
 // Supports streaming responses and automatic model fallback.
 
-const PRIMARY_MODEL = 'nvidia/nemotron-3-nano-30b-a3b:free';
+const PRIMARY_MODEL = 'nvidia/nemotron-3-ultra-550b-a55b:free';
 const FALLBACK_MODELS = [
+  'meta-llama/llama-3.3-70b-instruct:free',
   'qwen/qwen3-next-80b-a3b-instruct:free',
   'google/gemma-4-31b-it:free',
-  'moonshotai/kimi-k2.6'
+  'openai/gpt-oss-20b:free'
 ];
 
 const SYSTEM_PROMPT = `You are the Swarm Intelligence Agent — the onboard AI for the Mantle AI Swarm autonomous trading system. You live inside the dashboard and help users understand and interact with the swarm.
