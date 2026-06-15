@@ -519,7 +519,8 @@ html[data-theme="light"] .mdx-glow-core {
 	animation-delay: 0.2s;
 }
 html[data-theme="light"] .mdx-arch-line {
-	border-color: rgba(0, 245, 255, 0.3);
+	border-color: rgba(255, 255, 255, 0.9);
+	box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
 }
 
 .mdx-arch-glass {
@@ -544,8 +545,9 @@ html[data-theme="light"] .mdx-arch-line {
 	animation-delay: 0.2s;
 }
 html[data-theme="light"] .mdx-arch-glass {
-	border-color: rgba(0, 0, 0, 0.1);
-	background: linear-gradient(180deg, rgba(0, 0, 0, 0.02), transparent);
+	border-color: rgba(255, 255, 255, 0.6);
+	background: linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.05));
+	box-shadow: 0 4px 24px -4px rgba(0, 0, 0, 0.05);
 }
 
 .hero-content {
