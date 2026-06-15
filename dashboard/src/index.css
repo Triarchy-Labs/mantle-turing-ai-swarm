@@ -1288,6 +1288,7 @@ html[data-theme="light"] .lusion-btn-glass:hover {
 	overflow-y: auto;
 	display: flex;
 	flex-direction: column;
+	justify-content: flex-end;
 	gap: 1.2rem;
 	padding: 1.2rem 0;
 	margin: 0.8rem 0;
@@ -1314,13 +1315,13 @@ html[data-theme="light"] .lusion-btn-glass:hover {
 }
 
 .swarm-chat-msg.assistant {
-	border-left: 2px solid rgba(0,245,255,0.3);
-	padding-left: 1.5rem;
+	border-left: none;
+	padding-left: 0;
 }
 
 .swarm-chat-msg.user {
-	border-left: 2px solid rgba(255,255,255,0.15);
-	padding-left: 1.5rem;
+	border-left: none;
+	padding-left: 0;
 }
 
 .swarm-chat-msg-label {
