@@ -78,7 +78,7 @@ fn mock_market_data() -> Vec<SymbolData> {
             oi_change_pct: 0.8, timestamp: chrono::Utc::now().timestamp(),
         },
         SymbolData {
-            symbol: "USDC".into(), price: 1.0, price_24h_change: 0.01,
+            symbol: "USDT".into(), price: 1.0, price_24h_change: 0.01,
             volume_24h: 500_000_000.0, volume_ratio: 1.0,
             funding_rate: 0.0, open_interest: 0.0,
             oi_change_pct: 0.0, timestamp: chrono::Utc::now().timestamp(),
@@ -91,7 +91,7 @@ fn mock_market_data() -> Vec<SymbolData> {
 async fn live_market_data() -> Vec<SymbolData> {
     let mut data = Vec::new();
 
-    for sym in &["MNT", "WETH"] {
+    for sym in &["MNT", "WETH", "USDT"] {
         match mantle_chain::dex::fetch_rich_data(sym).await {
             Ok(d) => {
                 // Derive synthetic signals from DexScreener data
@@ -925,18 +925,26 @@ async fn main() {
             t.tx_hashes = tx_hashes.lock().unwrap().clone();
             t.symbols = state.consensus.iter().map(|entry| {
                 let r = entry.value();
+                let sym_data_opt = state.symbols.get(&r.symbol);
+                let (regime_str, regime_conf) = if let Some(ref d) = sym_data_opt {
+                    let (reg, conf) = detect_market_regime(d);
+                    (reg.as_str().to_uppercase(), conf)
+                } else {
+                    ("RANGING".to_string(), 0.0)
+                };
+
                 telemetry::SymbolTelemetry {
                     symbol: r.symbol.clone(),
-                    price: state.symbols.get(&r.symbol).map(|s| s.price).unwrap_or(0.0),
-                    price_change_24h: state.symbols.get(&r.symbol).map(|s| s.price_24h_change).unwrap_or(0.0),
-                    regime: "live".into(),
-                    regime_confidence: r.confidence,
+                    price: sym_data_opt.as_ref().map(|s| s.price).unwrap_or(0.0),
+                    price_change_24h: sym_data_opt.as_ref().map(|s| s.price_24h_change).unwrap_or(0.0),
+                    regime: regime_str,
+                    regime_confidence: regime_conf,
                     verdict: format!("{}", r.final_verdict),
                     score: r.judge_score,
                     confidence: r.confidence,
-                    volume_24h: state.symbols.get(&r.symbol).map(|s| s.volume_24h).unwrap_or(0.0),
+                    volume_24h: sym_data_opt.as_ref().map(|s| s.volume_24h).unwrap_or(0.0),
                     buy_sell_ratio: 0.0,
-                    liquidity_usd: state.symbols.get(&r.symbol).map(|s| s.open_interest).unwrap_or(0.0),
+                    liquidity_usd: sym_data_opt.as_ref().map(|s| s.open_interest).unwrap_or(0.0),
                     on_chain_logged: true,
                 }
             }).collect();
