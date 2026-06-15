@@ -701,9 +701,9 @@ export default function App() {
 									<div style={{ color: 'rgba(0,212,255,0.5)', marginBottom: '1.5vw', fontSize: '1.6rem', fontFamily: 'var(--font-mono)', letterSpacing: '0.1em' }}>LIVE ON-CHAIN BROADCAST LOG</div>
 									
 									<div style={{ display: 'flex', flexDirection: 'column', gap: '0.8vw' }}>
-										{telem.systemLogs.slice(-15).map((log, i) => (
-											<div key={`sys-${i}`} style={{ fontFamily: 'var(--font-mono)', fontSize: '1.4rem', color: log.level === 'success' ? '#00ffaa' : log.level === 'warn' ? '#ffaa00' : 'rgba(255,255,255,0.7)' }}>
-												<span style={{ opacity: 0.4 }}>[{new Date(log.timestamp * 1000).toISOString().split('T')[1].slice(0,-1)}]</span> <span style={{ fontWeight: 600, color: 'var(--accent)' }}>{log.tag}</span> {log.message}
+										{telem.logs.slice(-15).map((log, i) => (
+											<div key={`sys-${i}`} style={{ fontFamily: 'var(--font-mono)', fontSize: '1.4rem', color: log.type === 'success' ? '#00ffaa' : log.type === 'warn' ? '#ffaa00' : 'rgba(255,255,255,0.7)' }}>
+												<span style={{ opacity: 0.4 }}>[{new Date().toISOString().split('T')[1].slice(0,-1)}]</span> <span style={{ fontWeight: 600, color: 'var(--accent)' }}>{log.tag}</span> {log.msg}
 											</div>
 										))}
 										{telem.txHashes.slice(-10).map((hash, i) => (
@@ -711,7 +711,7 @@ export default function App() {
 												<span style={{ opacity: 0.6 }}>[{new Date().toISOString().split('T')[1].slice(0,-1)}]</span> ⛓️ [ON-CHAIN] TX CONFIRMED: {hash}
 											</div>
 										))}
-										{telem.txHashes.length === 0 && telem.systemLogs.length === 0 && (
+										{telem.txHashes.length === 0 && telem.logs.length === 0 && (
 											<div style={{ color: 'rgba(255,255,255,0.3)', fontStyle: 'italic', fontSize: '1.4rem' }}>Awaiting swarm telemetry...</div>
 										)}
 									</div>
