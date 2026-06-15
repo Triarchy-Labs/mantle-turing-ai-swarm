@@ -92,14 +92,14 @@ export default function CustomCursor() {
 				height: 20,
 				borderRadius: "50%",
 				// Lightweight glow — NO backdrop-filter (kills GPU on WebGL scenes)
-				background: "#fff",
-				mixBlendMode: "difference",
-				border: isHovering ? "1px solid rgba(0,245,255,0.8)" : "1px solid rgba(255,255,255,0.5)",
+				background: "var(--cursor-bg, #fff)",
+				mixBlendMode: "var(--cursor-blend, difference)" as any,
+				border: isHovering ? "var(--cursor-border-hover, 1px solid rgba(0,245,255,0.8))" : "var(--cursor-border, 1px solid rgba(255,255,255,0.5))",
 				pointerEvents: "none",
 				zIndex: 99999,
 				boxShadow: isHovering
-					? "0 0 15px rgba(0,245,255,0.4)"
-					: "0 0 10px rgba(255,255,255,0.2)",
+					? "var(--cursor-shadow-hover, 0 0 15px rgba(0,245,255,0.4))"
+					: "var(--cursor-shadow, 0 0 10px rgba(255,255,255,0.2))",
 				transition: "background 0.3s ease, border 0.3s ease, box-shadow 0.3s ease",
 				willChange: "transform",
 			}}

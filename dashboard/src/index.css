@@ -130,6 +130,14 @@ html[data-theme="light"] {
 	--accent-hover: #0a403c;
 	--accent-glow: rgba(15, 92, 86, 0.2);
 	--accent-hover-glow: rgba(10, 64, 60, 0.2);
+	
+	/* Custom Cursor Reversal */
+	--cursor-bg: #1a1a2e;
+	--cursor-blend: normal;
+	--cursor-border: 1px solid rgba(26, 26, 46, 0.5);
+	--cursor-border-hover: 1px solid rgba(15, 92, 86, 0.8);
+	--cursor-shadow: 0 0 10px rgba(26, 26, 46, 0.2);
+	--cursor-shadow-hover: 0 0 15px rgba(15, 92, 86, 0.4);
 }
 
 * {
