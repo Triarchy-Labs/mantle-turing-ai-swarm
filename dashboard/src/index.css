@@ -534,6 +534,17 @@ html[data-theme="light"] .mdx-arch-line {
 	}
 }
 
+@keyframes mdxFadeInUpDim {
+	0% {
+		opacity: 0;
+		transform: translateY(50px);
+	}
+	100% {
+		opacity: 0.3;
+		transform: translateY(0);
+	}
+}
+
 @keyframes mdxAmbientAppear {
 	0% {
 		opacity: 0;
@@ -574,10 +585,15 @@ html[data-theme="light"] .mdx-arch-line {
 /* Hero Section (Bottom to Top) */
 .hero-title,
 .mdx-two-tone-text,
-.metrics-pills,
-.tech-stats-bar {
+.metrics-pills {
 	opacity: 0;
 	animation: mdxFadeInUp 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+	will-change: transform, opacity;
+}
+
+.tech-stats-bar {
+	opacity: 0;
+	animation: mdxFadeInUpDim 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 	will-change: transform, opacity;
 }
 
