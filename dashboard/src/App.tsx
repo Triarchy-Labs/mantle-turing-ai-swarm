@@ -662,14 +662,14 @@ export default function App() {
 					<div className="shape-choochoo" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
 					<article className="bento-card " role="region" style={{ flexGrow: 1, margin: 0, padding: 0, overflow: 'hidden', position: 'relative' }}>
 						<div className="lusion-dot"></div>
-						<div className="lusion-top-meta" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', boxSizing: 'border-box' }}>
+						<div className="lusion-top-meta" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', right: '2.5vw', width: 'auto', boxSizing: 'border-box' }}>
 							<div style={{ display: 'flex', gap: '1rem' }}>
 								<div>006</div>
 								<div>POSITIONS & ON-CHAIN TX</div>
 							</div>
 							<button 
 								onClick={() => setShowTxLogs(!showTxLogs)}
-								style={{ background: 'rgba(0,212,255,0.1)', border: '1px solid rgba(0,212,255,0.3)', color: 'var(--accent)', padding: '0.4rem 1rem', borderRadius: '4px', cursor: 'pointer', fontFamily: 'var(--font-mono)', fontSize: '1.2rem', fontWeight: 700, pointerEvents: 'auto', zIndex: 20 }}
+								style={{ background: 'rgba(0,212,255,0.1)', border: '1px solid rgba(0,212,255,0.3)', color: 'var(--accent)', padding: '0.4rem 1rem', borderRadius: '4px', cursor: 'pointer', fontFamily: 'var(--font-mono)', fontSize: '1.2rem', fontWeight: 700, pointerEvents: 'auto', zIndex: 20, opacity: 1 }}
 							>
 								{showTxLogs ? 'MUTE LOGS' : 'VIEW LOGS'}
 							</button>
