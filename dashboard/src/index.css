@@ -120,7 +120,7 @@ html[data-theme="dark"] .global-bg-canvas {
 }
 
 html[data-theme="light"] {
-	--background: #f0f6f8;
+	--background: #e0edf2;
 	--foreground: #1a1a2e;
 	--border: rgba(0, 0, 0, 0.08);
 	--border-hover: rgba(15, 92, 86, 0.4);
