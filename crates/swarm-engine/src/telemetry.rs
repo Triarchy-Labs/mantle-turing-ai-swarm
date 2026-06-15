@@ -202,7 +202,7 @@ pub fn spawn_server(handle: TelemetryHandle) {
                     } else {
                         // Fallback to avoid timeout if lock is held
                         Json(serde_json::json!({
-                            "status": "ok",
+                            "status": "locked",
                             "version": "v5.0-triarchy",
                             "uptime_secs": 0,
                             "cycle": 0,
