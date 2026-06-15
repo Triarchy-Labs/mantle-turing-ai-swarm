@@ -509,6 +509,46 @@ html[data-theme="light"] .mdx-arch-line {
 	text-align: left;
 }
 
+/* ============================================================
+   MDX-STYLE ENTRY ANIMATIONS
+   ============================================================ */
+@keyframes mdxFadeInUp {
+	0% {
+		opacity: 0;
+		transform: translateY(80px);
+	}
+	100% {
+		opacity: var(--target-opacity, 1);
+		transform: translateY(0);
+	}
+}
+
+.hero-title,
+.mdx-two-tone-text,
+.metrics-pills,
+.tech-stats-bar {
+	opacity: 0;
+	animation: mdxFadeInUp 1.2s cubic-bezier(0.625, 0.05, 0, 1) forwards;
+	will-change: transform, opacity;
+}
+
+.hero-title {
+	animation-delay: 0.1s;
+}
+
+.mdx-two-tone-text {
+	animation-delay: 0.25s;
+}
+
+.metrics-pills {
+	animation-delay: 0.4s;
+}
+
+.tech-stats-bar {
+	--target-opacity: 0.4;
+	animation-delay: 0.55s;
+}
+
 .hero-title {
 	font-family: 'Fixel Display', var(--font-heading);
 	font-size: min(20rem, 20vh); /* Massive scale for MDX visual parity */
