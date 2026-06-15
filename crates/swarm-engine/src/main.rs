@@ -1079,10 +1079,24 @@ async fn main() {
                 if !r.bull_argument.is_empty() {
                     logs.push(telemetry::LogTelemetry {
                         timestamp: r.timestamp - 20,
-                        tag: "[DEBATE]".into(),
-                        message: format!("{}: Bull vs Bear debate complete.", r.symbol),
+                        tag: "[BULL]".into(),
+                        message: format!("{}: {}", r.symbol, r.bull_argument.replace("\n", " ")),
                         level: "info".into(),
                     });
+                    logs.push(telemetry::LogTelemetry {
+                        timestamp: r.timestamp - 19,
+                        tag: "[BEAR]".into(),
+                        message: format!("{}: {}", r.symbol, r.bear_argument.replace("\n", " ")),
+                        level: "info".into(),
+                    });
+                    if !r.macro_bias.is_empty() {
+                        logs.push(telemetry::LogTelemetry {
+                            timestamp: r.timestamp - 18,
+                            tag: "[MACRO]".into(),
+                            message: format!("{}: {}", r.symbol, r.macro_bias.replace("\n", " ")),
+                            level: "info".into(),
+                        });
+                    }
                 }
                 logs.push(telemetry::LogTelemetry {
                     timestamp: r.timestamp - 15,
