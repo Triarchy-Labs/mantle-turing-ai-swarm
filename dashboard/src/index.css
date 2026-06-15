@@ -1232,6 +1232,7 @@ html[data-theme="light"] .lusion-btn-glass:hover {
 	padding: 2.5rem;
 	display: flex;
 	flex-direction: column;
+	flex: 1;
 	min-height: 51.2rem;
 	margin: 0 auto;
 	width: 100%;
