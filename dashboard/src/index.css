@@ -454,6 +454,7 @@ html[data-theme="light"] .theme-letter.active {
 	-webkit-filter: hue-rotate(185deg);
 	opacity: 0.85;
 	z-index: 1;
+	animation: mdxAmbientAppear 3.0s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 html[data-theme="light"] .mdx-glow-core {
 	filter: hue-rotate(330deg) saturate(1.4) brightness(1.1);
@@ -475,6 +476,8 @@ html[data-theme="light"] .mdx-glow-core {
 	-webkit-mask-image: linear-gradient(to bottom, #fff 5%, transparent 18%);
 	mask-image: linear-gradient(to bottom, #fff 5%, transparent 18%);
 	z-index: 2;
+	animation: mdxAmbientAppear 2.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+	animation-delay: 0.2s;
 }
 html[data-theme="light"] .mdx-arch-line {
 	border-color: rgba(255, 100, 50, 0.3);
@@ -496,6 +499,8 @@ html[data-theme="light"] .mdx-arch-line {
 	-webkit-mask-image: linear-gradient(to bottom, #fff 5%, transparent 18%);
 	mask-image: linear-gradient(to bottom, #fff 5%, transparent 18%);
 	z-index: 3;
+	animation: mdxAmbientAppear 2.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+	animation-delay: 0.2s;
 }
 
 .hero-content {
@@ -515,12 +520,20 @@ html[data-theme="light"] .mdx-arch-line {
 @keyframes mdxFadeInUp {
 	0% {
 		opacity: 0;
-		transform: translateY(80px);
+		transform: translateY(40px); /* More subtle, like MDX */
 	}
 	100% {
 		opacity: 1;
 		transform: translateY(0);
 	}
+}
+
+@keyframes mdxAmbientAppear {
+	0% {
+		opacity: 0;
+		transform: translateX(-50%) translateY(30px) scale(0.97);
+	}
+	/* 100% defaults to the base CSS values of the element */
 }
 
 @keyframes mdxFadeInDown {
