@@ -450,6 +450,8 @@ html[data-theme="light"] .theme-letter.active {
 	height: min(100rem, 100vh);
 	object-fit: contain;
 	pointer-events: none;
+	filter: hue-rotate(185deg);
+	-webkit-filter: hue-rotate(185deg);
 	opacity: 0;
 	--ambient-opacity: 0.85;
 	z-index: 1;
@@ -526,6 +528,9 @@ html[data-theme="light"] .mdx-arch-line {
 		opacity: 0;
 		transform: translateY(50px); /* EXACT MDX VALUE */
 	}
+	100% {
+		opacity: 1;
+		transform: translateY(0);
 	}
 }
 

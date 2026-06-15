@@ -93,13 +93,13 @@ export default function CustomCursor() {
 				borderRadius: "50%",
 				// Lightweight glow — NO backdrop-filter (kills GPU on WebGL scenes)
 				background: isHovering
-					? "radial-gradient(circle, rgba(255,80,0,0.2) 0%, rgba(255,80,0,0.05) 60%, transparent 100%)"
+					? "radial-gradient(circle, rgba(138,43,226,0.15) 0%, rgba(75,0,130,0.05) 60%, transparent 100%)"
 					: "radial-gradient(circle, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.05) 60%, transparent 100%)",
-				border: isHovering ? "1px solid rgba(255,80,0,0.5)" : "1px solid rgba(255,255,255,0.35)",
+				border: isHovering ? "1px solid rgba(138,43,226,0.5)" : "1px solid rgba(255,255,255,0.35)",
 				pointerEvents: "none",
 				zIndex: 99999,
 				boxShadow: isHovering
-					? "0 0 12px rgba(255,80,0,0.3), inset 0 0 4px rgba(255,80,0,0.15)"
+					? "0 0 12px rgba(75,0,130,0.4), inset 0 0 4px rgba(138,43,226,0.2)"
 					: "0 0 6px rgba(255,255,255,0.1)",
 				transition: "background 0.3s ease, border 0.3s ease, box-shadow 0.3s ease",
 				willChange: "transform",
