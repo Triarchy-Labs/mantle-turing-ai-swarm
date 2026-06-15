@@ -23,12 +23,12 @@ COPY crates/titan-core/Cargo.toml crates/titan-core/Cargo.toml
 COPY crates/hive-intel/Cargo.toml crates/hive-intel/Cargo.toml
 COPY crates/mantle-chain/Cargo.toml crates/mantle-chain/Cargo.toml
 COPY crates/swarm-engine/Cargo.toml crates/swarm-engine/Cargo.toml
-COPY crates/x402-consensus/Cargo.toml crates/x402-consensus/Cargo.toml
-COPY crates/x402-risk/Cargo.toml crates/x402-risk/Cargo.toml
-COPY crates/x402-polymarket/Cargo.toml crates/x402-polymarket/Cargo.toml
-COPY crates/x402-memory/Cargo.toml crates/x402-memory/Cargo.toml
-COPY crates/x402-sniper/Cargo.toml crates/x402-sniper/Cargo.toml
-COPY crates/x402-liquidator/Cargo.toml crates/x402-liquidator/Cargo.toml
+COPY crates/turing-consensus/Cargo.toml crates/turing-consensus/Cargo.toml
+COPY crates/turing-risk/Cargo.toml crates/turing-risk/Cargo.toml
+COPY crates/turing-oracle/Cargo.toml crates/turing-oracle/Cargo.toml
+COPY crates/turing-memory/Cargo.toml crates/turing-memory/Cargo.toml
+COPY crates/turing-sniper/Cargo.toml crates/turing-sniper/Cargo.toml
+COPY crates/turing-liquidator/Cargo.toml crates/turing-liquidator/Cargo.toml
 COPY crates/core-ipc/Cargo.toml crates/core-ipc/Cargo.toml
 
 # Create dummy lib.rs for each crate so cargo fetch works
