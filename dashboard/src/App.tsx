@@ -220,6 +220,23 @@ export default function App() {
 	const [globalPillHover, setGlobalPillHover] = useState(false);
 	const logRef = useRef<HTMLDivElement>(null);
 
+	// Auto-trigger pipeline animation when a new cycle starts
+	const prevCycleRef = useRef(telem.cycle);
+	useEffect(() => {
+		if (telem.cycle > prevCycleRef.current) {
+			prevCycleRef.current = telem.cycle;
+			if (analysisRunning) return;
+			setAnalysisRunning(true);
+			setActiveStage(0);
+			const t = setInterval(() => {
+				setActiveStage(prev => {
+					if (prev >= 24) { clearInterval(t); setAnalysisRunning(false); return 24; }
+					return prev + 1;
+				});
+			}, 800); // ~19 seconds to complete animation
+		}
+	}, [telem.cycle, analysisRunning]);
+
 	// Lenis smooth scroll setup
 	useEffect(() => {
 		const lenis = new Lenis({
