@@ -539,7 +539,7 @@ export default function App() {
 						</article>
 					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
 						<div className="lusion-card-tags" style={{ fontSize: '2.4rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>SAFETY • LIMITS • GUARDS</div>
-						<h2 className="lusion-card-title">Risk Matrix</h2>
+						<h2 className="lusion-card-title"><TextReveal>Risk Matrix</TextReveal></h2>
 					</div>
 				</div>
 
@@ -653,7 +653,7 @@ export default function App() {
 						</article>
 					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
 						<div className="lusion-card-tags" style={{ fontSize: '2.4rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>STATE • DAG • PROCESS</div>
-						<h2 className="lusion-card-title">Execution State</h2>
+						<h2 className="lusion-card-title"><TextReveal>Execution State</TextReveal></h2>
 					</div>
 				</div>
 
@@ -826,7 +826,7 @@ export default function App() {
 					</article>
 					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
 						<div className="lusion-card-tags" style={{ fontSize: '2.4rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>CAPITAL • GROWTH</div>
-						<h2 className="lusion-card-title">Auto-Ramp</h2>
+						<h2 className="lusion-card-title"><TextReveal>Auto-Ramp</TextReveal></h2>
 					</div>
 				</div>
 
