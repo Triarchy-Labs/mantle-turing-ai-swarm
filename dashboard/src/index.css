@@ -518,7 +518,7 @@ html[data-theme="light"] .mdx-arch-line {
 		transform: translateY(80px);
 	}
 	100% {
-		opacity: var(--target-opacity, 1);
+		opacity: 1;
 		transform: translateY(0);
 	}
 }
@@ -528,25 +528,25 @@ html[data-theme="light"] .mdx-arch-line {
 .metrics-pills,
 .tech-stats-bar {
 	opacity: 0;
-	animation: mdxFadeInUp 1.2s cubic-bezier(0.625, 0.05, 0, 1) forwards;
+	/* Slower, more cinematic easing */
+	animation: mdxFadeInUp 2.0s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 	will-change: transform, opacity;
 }
 
 .hero-title {
-	animation-delay: 0.1s;
+	animation-delay: 0.3s;
 }
 
 .mdx-two-tone-text {
-	animation-delay: 0.25s;
+	animation-delay: 0.5s;
 }
 
 .metrics-pills {
-	animation-delay: 0.4s;
+	animation-delay: 0.7s;
 }
 
 .tech-stats-bar {
-	--target-opacity: 0.4;
-	animation-delay: 0.55s;
+	animation-delay: 0.9s;
 }
 
 .hero-title {
@@ -721,14 +721,14 @@ html[data-theme="light"] .toggle-group {
 
 .metric-pill-btn {
 	position: relative;
-	/* Optical centering: text renders high, so we need more top padding and less bottom padding */
-	padding: 2.5rem 3.7rem 1.5rem 3.7rem;
+	/* Optical centering: reduced by ~10% */
+	padding: 2.2rem 3.3rem 1.3rem 3.3rem;
 	border-radius: 4rem;
 	border: 1px solid rgba(255, 255, 255, 0.1);
 	background: transparent;
 	color: #fcfcfd;
 	font-family: 'Aventa', var(--font-ui), sans-serif;
-	font-size: 2rem;
+	font-size: 1.8rem;
 	font-weight: 300;
 	cursor: pointer;
 	outline: none;
@@ -1738,7 +1738,7 @@ html[data-theme="light"] .bento-card:hover {
 /* ═══ TECH STATS BAR (bottom of hero) ═══ */
 .tech-stats-bar {
 	position: absolute;
-	bottom: 3rem;
+	bottom: 1.5rem;
 	right: 6.9rem;
 	z-index: 5;
 	display: flex;
@@ -1747,10 +1747,16 @@ html[data-theme="light"] .bento-card:hover {
 	gap: 2rem;
 	font-family: var(--font-mono);
 	font-size: 1.12rem;
-	opacity: 0.4;
+	opacity: 0.3;
 	text-transform: uppercase;
 	letter-spacing: 0.15em;
 	color: var(--foreground);
+	transition: opacity 0.4s ease, color 0.4s ease, text-shadow 0.4s ease;
+}
+.tech-stats-bar:hover {
+	opacity: 1 !important;
+	color: #ffffff !important;
+	text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
 }
 .tech-dot {
 	opacity: 0.5;
