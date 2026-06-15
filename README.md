@@ -1,4 +1,5 @@
-# Mantle AI Swarm — Autonomous Trading Intelligence
+◢◤ MANTLE AI SWARM ◥◣
+/// Autonomous Trading Intelligence
 
 ![License](https://img.shields.io/badge/license-MIT-blue)
 ![Tests](https://img.shields.io/badge/tests-553%20pass-brightgreen)
@@ -12,7 +13,7 @@
 │ Live DexScreener data feeds. ERC-8004 reputation on Mantle Mainnet.
 │ Built for the [Mantle Turing Test Hackathon 2026](https://dorahacks.io/hackathon/2130/detail).
 
-**[🔴 Live Dashboard](https://mantle-ai-swarm.vercel.app)** · **[📜 ERC-8004 Registry](https://repo.sourcify.dev/5000/0xFA0b5036aF9770B370B33CeBBb42d1E626338383)** · **[⚡ Flash Liquidator](https://repo.sourcify.dev/5000/0x41c51a03FFE750F5df1F6ffc972DBA8265B5a4F4)**
+◆ [LIVE DASHBOARD](https://mantle-ai-swarm.vercel.app) ╱ [ERC-8004 REGISTRY](https://repo.sourcify.dev/5000/0xFA0b5036aF9770B370B33CeBBb42d1E626338383) ╱ [FLASH LIQUIDATOR](https://repo.sourcify.dev/5000/0x41c51a03FFE750F5df1F6ffc972DBA8265B5a4F4)
 
 ◢◤￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣◥◣
 
@@ -189,7 +190,7 @@ Live transparency endpoint on `http://localhost:3402`:
 |------|-------|--------|
 | Primary Debate | 30B+ Class Open Weights | OpenRouter |
 | Secondary Debate | 70B+ Class Open Weights | OpenRouter |
-| Fallback Debate | 400B+ Class Open Weights | OpenRouter |
+| Fallback Debate | 600B+ Class Open Weights | OpenRouter |
 | Macro Judge | 120B+ Class Custom | Dedicated Node |
 | Meta Judge | 70B+ Class Alignment Model | Dedicated Node |
 
@@ -215,32 +216,32 @@ cargo run --release -p swarm-engine
 
 ```
 mantle-ai-swarm/
-├── .cargo/config.toml        # SIMD AVX2 native CPU flags
-├── .env                      # API keys (gitignored)
-├── Cargo.toml                # Workspace root (12 members)
+├── .cargo/config.toml         // SIMD AVX2 native CPU flags
+├── .env                       // API keys (gitignored)
+├── Cargo.toml                 // Workspace root (12 members)
 ├── config/
-│   ├── models.toml            # LLM model pool configuration
-│   ├── prompts.toml           # Debate + judge prompt templates
-│   └── thresholds.toml        # 15-factor scoring calibration
+│   ├── models.toml            // LLM model pool configuration
+│   ├── prompts.toml           // Debate + judge prompt templates
+│   └── thresholds.toml        // 15-factor scoring calibration
 ├── contracts/
-│   ├── src/                   # ERC8004Registry + TuringFlashLiquidator
-│   ├── script/Deploy.s.sol    # Foundry deployment
-│   └── test/Turing.t.sol        # 5 contract tests
+│   ├── src/                   // ERC8004Registry + TuringFlashLiquidator
+│   ├── script/Deploy.s.sol    // Foundry deployment
+│   └── test/Turing.t.sol      // 5 contract tests
 ├── crates/
-│   ├── ouroboros-brain/       # LLM consensus engine
-│   ├── titan-core/            # Neural trading brain
-│   ├── hive-intel/            # Collective intelligence (40 modules)
-│   ├── mantle-chain/          # Alloy 2.0 on-chain adapter
-│   ├── swarm-engine/          # Main orchestrator
-│   ├── turing-consensus/        # PolicyGovernor voting
-│   ├── turing-risk/             # Kelly + KillSwitch
-│   ├── turing-oracle/       # Prediction market oracle
-│   ├── turing-memory/           # HyperEdge persistent memory
-│   ├── turing-sniper/           # DEX execution
-│   ├── turing-liquidator/       # Flash liquidation
-│   └── core-ipc/              # mmap IPC bridge
-├── dashboard/                 # React monitoring UI
-└── tools/                     # Test utilities
+│   ├── ouroboros-brain/       // LLM consensus engine
+│   ├── titan-core/            // Neural trading brain
+│   ├── hive-intel/            // Collective intelligence (40 modules)
+│   ├── mantle-chain/          // Alloy 2.0 on-chain adapter
+│   ├── swarm-engine/          // Main orchestrator
+│   ├── turing-consensus/      // PolicyGovernor voting
+│   ├── turing-risk/           // Kelly + KillSwitch
+│   ├── turing-oracle/         // Prediction market oracle
+│   ├── turing-memory/         // HyperEdge persistent memory
+│   ├── turing-sniper/         // DEX execution
+│   ├── turing-liquidator/     // Flash liquidation
+│   └── core-ipc/              // mmap IPC bridge
+├── dashboard/                 // React monitoring UI
+└── tools/                     // Test utilities
 ```
 
 ◢◤ ORIGIN ◥◣
