@@ -450,8 +450,6 @@ html[data-theme="light"] .theme-letter.active {
 	height: min(100rem, 100vh);
 	object-fit: contain;
 	pointer-events: none;
-	filter: hue-rotate(185deg);
-	-webkit-filter: hue-rotate(185deg);
 	opacity: 0;
 	--ambient-opacity: 0.85;
 	z-index: 1;
@@ -528,20 +526,6 @@ html[data-theme="light"] .mdx-arch-line {
 		opacity: 0;
 		transform: translateY(50px); /* EXACT MDX VALUE */
 	}
-	100% {
-		opacity: 1;
-		transform: translateY(0);
-	}
-}
-
-@keyframes mdxFadeInUpDim {
-	0% {
-		opacity: 0;
-		transform: translateY(50px);
-	}
-	100% {
-		opacity: 0.3;
-		transform: translateY(0);
 	}
 }
 
@@ -585,15 +569,10 @@ html[data-theme="light"] .mdx-arch-line {
 /* Hero Section (Bottom to Top) */
 .hero-title,
 .mdx-two-tone-text,
-.metrics-pills {
-	opacity: 0;
-	animation: mdxFadeInUp 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-	will-change: transform, opacity;
-}
-
+.metrics-pills,
 .tech-stats-bar {
 	opacity: 0;
-	animation: mdxFadeInUpDim 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+	animation: mdxFadeInUp 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 	will-change: transform, opacity;
 }
 
@@ -1812,16 +1791,21 @@ html[data-theme="light"] .bento-card:hover {
 	gap: 2rem;
 	font-family: var(--font-mono);
 	font-size: 1.12rem;
-	opacity: 0.3;
 	text-transform: uppercase;
 	letter-spacing: 0.15em;
-	color: var(--foreground);
-	transition: opacity 0.4s ease, color 0.4s ease, text-shadow 0.4s ease;
+	color: rgba(255, 255, 255, 0.25);
+	transition: color 0.6s cubic-bezier(0.22, 1, 0.36, 1), text-shadow 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+html[data-theme="light"] .tech-stats-bar {
+	color: rgba(0, 0, 0, 0.25);
 }
 .tech-stats-bar:hover {
-	opacity: 1 !important;
-	color: #ffffff !important;
-	text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+	color: rgba(255, 255, 255, 0.85) !important;
+	text-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
+}
+html[data-theme="light"] .tech-stats-bar:hover {
+	color: rgba(0, 0, 0, 0.85) !important;
+	text-shadow: none;
 }
 .tech-dot {
 	opacity: 0.5;
