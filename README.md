@@ -6,15 +6,19 @@
 ![Mantle](https://img.shields.io/badge/chain-Mantle%20Mainnet-purple)
 ![LOC](https://img.shields.io/badge/LOC-26%2C873-informational)
 
-> 12-crate Rust workspace. 26,873 LOC. Zero external databases.
-> 6 Intelligence Layers. 4-state regime detection. 5-filter pre-trade risk engine.
-> LLM consensus + neural brain + collective intelligence + **live on-chain execution**.
-> Live DexScreener data feeds. ERC-8004 reputation on Mantle Mainnet.
-> Built for the [Mantle Turing Test Hackathon 2026](https://dorahacks.io/hackathon/2130/detail).
+│ 12-crate Rust workspace. 26,873 LOC. Zero external databases.
+│ 6 Intelligence Layers. 4-state regime detection. 5-filter pre-trade risk engine.
+│ LLM consensus + neural brain + collective intelligence + **live on-chain execution**.
+│ Live DexScreener data feeds. ERC-8004 reputation on Mantle Mainnet.
+│ Built for the [Mantle Turing Test Hackathon 2026](https://dorahacks.io/hackathon/2130/detail).
 
 **[🔴 Live Dashboard](https://mantle-ai-swarm.vercel.app)** · **[📜 ERC-8004 Registry](https://repo.sourcify.dev/5000/0xFA0b5036aF9770B370B33CeBBb42d1E626338383)** · **[⚡ Flash Liquidator](https://repo.sourcify.dev/5000/0x41c51a03FFE750F5df1F6ffc972DBA8265B5a4F4)**
 
-## Architecture
+◢◤￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣◥◣
+
+  /// ARCHITECTURE
+
+◥◣＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿◢◤
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -41,7 +45,9 @@
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-## Crate Map
+── ╱╲ ──
+
+/// CRATE MAP
 
 | Crate | LOC | Role |
 |-------|-----|------|
@@ -58,7 +64,7 @@
 | **turing-liquidator** | 111 | On-chain flash liquidation via ILendingPool |
 | **core-ipc** | 75 | mmap-based zero-copy inter-agent communication |
 
-## The v5 Decision Pipeline (24 Stages, 6 Intelligence Layers)
+◢◤ THE V5 DECISION PIPELINE ◥◣
 
 ```
 Market Data
@@ -102,7 +108,7 @@ Market Data
 ╔═ IPC BRIDGE (mmap zero-copy → inter-agent state sync) ═╗
 ```
 
-## 15-Factor Judge (Ouroboros)
+/// 15-FACTOR JUDGE — Ouroboros
 
 | # | Factor | Source | Weight |
 |---|--------|--------|--------|
@@ -122,7 +128,7 @@ Market Data
 | 14 | HiveMind Memory | Pattern recall | ±3.0 |
 | 15 | Meta Judge | Independent LLM | ±1.0 |
 
-## Memory Stack (5 Layers)
+/// MEMORY STACK (5 Layers)
 
 | Layer | Technology | Purpose |
 |-------|-----------|--------|
@@ -132,7 +138,9 @@ Market Data
 | **L3** | IPC Bridge (mmap) + HyperEdge Graph (sled DB) | Inter-agent state sync + persistent on-chain memory |
 | **L4** | Paper Engine (SL/TP/circuit breaker) | Simulation with ATR-based risk |
 
-## Performance
+─── / ───
+
+/// PERFORMANCE
 
 | Feature | Metric |
 |---------|--------|
@@ -143,7 +151,7 @@ Market Data
 | Position sizing | 3-factor damped Kelly (regime × pretrade × appetite) |
 | Binary size (release) | LTO fat + strip + panic=abort |
 
-## On-Chain (Mantle Mainnet)
+◢◤ ON-CHAIN (Mantle Mainnet) ◥◣
 
 | Contract | Address | Purpose |
 |----------|---------|---------|
@@ -152,7 +160,7 @@ Market Data
 | Agent #1 NFT | Token ID 1 | Already minted — sovereign AI identity |
 | Deployment Wallet | `0xF023...c79` | Signed tx broadcast via Alloy |
 
-## Live Data Feeds
+/// LIVE DATA FEEDS
 
 | Source | Data | Update |
 |--------|------|--------|
@@ -160,7 +168,7 @@ Market Data
 | Mantle RPC | Wallet balance, ERC-20 balances, contract state | On-demand |
 | Derived Signals | Buy/sell ratio, volume acceleration, synthetic funding rate | Computed per cycle |
 
-## Telemetry API
+/// TELEMETRY API
 
 Live transparency endpoint on `http://localhost:3402`:
 
@@ -171,7 +179,11 @@ Live transparency endpoint on `http://localhost:3402`:
 | `GET /verdicts` | Latest AI trade verdicts per symbol |
 | `GET /regime` | Current market regime + confidence |
 
-## LLM Models (Zero Cost)
+◢◤￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣◥◣
+
+  /// LLM MODELS (Zero Cost)
+
+◥◣＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿◢◤
 
 | Role | Model | Vendor |
 |------|-------|--------|
@@ -183,7 +195,9 @@ Live transparency endpoint on `http://localhost:3402`:
 
 All models are free-tier via OpenRouter. Zero inference cost.
 
-## Quick Start
+── ╱╲ ──
+
+/// QUICK START
 
 ```bash
 # Build the swarm
@@ -197,7 +211,7 @@ cp .env.example .env
 cargo run --release -p swarm-engine
 ```
 
-## Project Structure
+/// PROJECT STRUCTURE
 
 ```
 mantle-ai-swarm/
@@ -229,7 +243,7 @@ mantle-ai-swarm/
 └── tools/                     # Test utilities
 ```
 
-## Origin
+◢◤ ORIGIN ◥◣
 
 Converged from three battle-tested trading engines — Ouroboros (LLM brain), Titan (execution), Hive Mind (intelligence) — and unified with Turing on-chain infrastructure for the Mantle Turing Test Hackathon 2026.
 
