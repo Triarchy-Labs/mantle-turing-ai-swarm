@@ -425,7 +425,22 @@ function mapResponse(resp: TelemetryResponse): TelemetryData {
     markets: markets.length > 0 ? markets : MOCK_DATA.markets,
     debates,
     logs,
-    decisions: (resp as any).decisions ?? MOCK_DATA.decisions,
+    decisions: (() => {
+      const derived = (resp.log_entries || []).filter(l => l.tag === '[JUDGE]').slice(-3).reverse().map(l => {
+        const parts = l.message.split(': ');
+        const sym = parts[0] || 'UNK';
+        const body = parts[1] || '';
+        const verdictStr = body.includes('BUY') || body.includes('SELL') ? 'EXECUTED' : 'HOLD';
+        const scoreStr = body.replace('Verdict=', '');
+        return {
+          sym,
+          verdict: verdictStr,
+          reason: scoreStr,
+          time: new Date((l.timestamp || 0) * 1000).toLocaleTimeString('en-US', { hour12: false })
+        };
+      });
+      return derived.length > 0 ? derived : MOCK_DATA.decisions;
+    })(),
     memoryStream: (resp as any).memory_stream ?? MOCK_DATA.memoryStream,
     txHashes: resp.tx_hashes ?? [],
     pnl: ps ? `$${ps.total_pnl.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '$0.00',

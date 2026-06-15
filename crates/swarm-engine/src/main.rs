@@ -979,23 +979,33 @@ async fn main() {
             }
 
             // AutoRamp telemetry
+            let ramp_state_data = std::fs::read_to_string(titan_core::safe_io::data_file("titan_ramp_state.json"))
+                .ok().and_then(|s| serde_json::from_str::<titan_core::auto_ramp::RampState>(&s).ok())
+                .unwrap_or_default();
+            
             let ramp_phase = titan_core::auto_ramp::AutoRamp::current_phase();
             t.ramp_state = Some(telemetry::RampTelemetry {
                 current_phase: ramp_phase.phase,
                 phase_label: ramp_phase.label.to_string(),
                 max_position_pct: ramp_phase.max_position_pct,
                 daily_loss_kill_pct: ramp_phase.daily_loss_kill_pct,
-                total_promotions: 0,
-                total_demotions: 0,
+                total_promotions: ramp_state_data.total_promotions,
+                total_demotions: ramp_state_data.total_demotions,
             });
 
             // Risk telemetry (from latest cycle state)
+            let avg_conf = if !state.consensus.is_empty() {
+                state.consensus.iter().map(|c| c.confidence).sum::<f64>() / state.consensus.len() as f64
+            } else {
+                72.0
+            };
+            
             t.risk_state = Some(telemetry::RiskTelemetry {
                 dynamic_leverage: 5.0, // Default leverage (dynamic per-cycle)
                 atr_estimate: 0.015,
                 macro_penalty: 0.0,
-                ewma_confidence: 0.0,
-                risk_appetite: 0.0,
+                ewma_confidence: avg_conf / 100.0,
+                risk_appetite: 0.85,
                 pretrade_factor: 0.0,
                 circuit_breaker: if state.is_trading_allowed() { "GREEN".into() } else { "RED".into() },
             });
