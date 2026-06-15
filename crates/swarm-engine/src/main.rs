@@ -433,6 +433,7 @@ async fn decision_cycle<P: alloy::providers::Provider>(
     }
 
     for data in &market_data {
+        tokio::task::yield_now().await;
         state.symbols.insert(data.symbol.clone(), data.clone());
 
         // REGIME DETECTION — 4-state classifier before anything else

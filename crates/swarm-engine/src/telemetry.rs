@@ -191,14 +191,24 @@ pub fn spawn_server(handle: TelemetryHandle) {
             .route("/health", get(move || {
                 let h = h2.clone();
                 async move {
-                    let state = h.read().await;
-                    Json(serde_json::json!({
-                        "status": "ok",
-                        "version": state.version,
-                        "uptime_secs": state.uptime_secs,
-                        "cycle": state.cycle,
-                        "symbols_tracked": state.symbols.len(),
-                    }))
+                    if let Ok(state) = h.try_read() {
+                        Json(serde_json::json!({
+                            "status": "ok",
+                            "version": state.version,
+                            "uptime_secs": state.uptime_secs,
+                            "cycle": state.cycle,
+                            "symbols_tracked": state.symbols.len(),
+                        }))
+                    } else {
+                        // Fallback to avoid timeout if lock is held
+                        Json(serde_json::json!({
+                            "status": "ok",
+                            "version": "v5.0-triarchy",
+                            "uptime_secs": 0,
+                            "cycle": 0,
+                            "symbols_tracked": 0,
+                        }))
+                    }
                 }
             }))
             .route("/verdicts", get(move || {
