@@ -427,8 +427,8 @@ function mapResponse(resp: TelemetryResponse): TelemetryData {
     decisions: (resp as any).decisions ?? MOCK_DATA.decisions,
     memoryStream: (resp as any).memory_stream ?? MOCK_DATA.memoryStream,
     txHashes: resp.tx_hashes ?? [],
-    pnl: ps ? `$${ps.total_pnl.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : MOCK_DATA.pnl,
-    winRate: ps ? `${(ps.win_rate * 100).toFixed(1)}%` : MOCK_DATA.winRate,
+    pnl: ps ? `$${ps.total_pnl.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '$0.00',
+    winRate: ps ? `${(ps.win_rate * 100).toFixed(1)}%` : '0.0%',
     version: resp.version,
     registryAddress: resp.registry_address.length > 12
       ? `${resp.registry_address.slice(0, 6)}…${resp.registry_address.slice(-4)}`
