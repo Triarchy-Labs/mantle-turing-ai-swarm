@@ -173,9 +173,16 @@ pub fn spawn_server(handle: TelemetryHandle) {
 
         // CORS middleware for cross-origin dashboard access
         async fn cors_middleware(req: Request<Body>, next: Next) -> Response {
+            if req.method() == axum::http::Method::OPTIONS {
+                let mut resp = axum::response::IntoResponse::into_response(());
+                resp.headers_mut().insert("access-control-allow-origin", "*".parse().unwrap());
+                resp.headers_mut().insert("access-control-allow-methods", "GET, OPTIONS".parse().unwrap());
+                resp.headers_mut().insert("access-control-allow-headers", "*".parse().unwrap());
+                return resp;
+            }
             let mut resp = next.run(req).await;
             resp.headers_mut().insert("access-control-allow-origin", "*".parse().unwrap());
-            resp.headers_mut().insert("access-control-allow-methods", "GET".parse().unwrap());
+            resp.headers_mut().insert("access-control-allow-methods", "GET, OPTIONS".parse().unwrap());
             resp
         }
 
