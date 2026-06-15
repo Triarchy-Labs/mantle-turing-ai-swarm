@@ -83,6 +83,12 @@ fn mock_market_data() -> Vec<SymbolData> {
             funding_rate: 0.0, open_interest: 0.0,
             oi_change_pct: 0.0, timestamp: chrono::Utc::now().timestamp(),
         },
+        SymbolData {
+            symbol: "mUSD".into(), price: 0.999, price_24h_change: 0.0,
+            volume_24h: 12_000_000.0, volume_ratio: 1.0,
+            funding_rate: 0.0, open_interest: 0.0,
+            oi_change_pct: 0.0, timestamp: chrono::Utc::now().timestamp(),
+        },
     ]
 }
 
@@ -91,7 +97,7 @@ fn mock_market_data() -> Vec<SymbolData> {
 async fn live_market_data() -> Vec<SymbolData> {
     let mut data = Vec::new();
 
-    for sym in &["MNT", "WETH", "USDT"] {
+    for sym in &["MNT", "WETH", "USDT", "mUSD"] {
         match mantle_chain::dex::fetch_rich_data(sym).await {
             Ok(d) => {
                 // Derive synthetic signals from DexScreener data
@@ -443,7 +449,7 @@ async fn decision_cycle<P: alloy::providers::Provider>(
             data.symbol, data.price, data.price_24h_change, data.funding_rate,
             data.oi_change_pct, regime, regime_conf * 100.0);
 
-        if data.price_24h_change.abs() < 0.05 && data.funding_rate.abs() < 0.00001 { continue; }
+        if data.symbol == "USDT" || data.symbol == "mUSD" || (data.price_24h_change.abs() < 0.05 && data.funding_rate.abs() < 0.00001) { continue; }
 
         // D1: Ouroboros — LLM Debate
         let debate = run_debate(client, debate_pool, prompts, models, data).await;
@@ -923,29 +929,27 @@ async fn main() {
             t.uptime_secs = start_time.elapsed().as_secs();
             t.live_mode = signed_provider.is_some();
             t.tx_hashes = tx_hashes.lock().unwrap().clone();
-            t.symbols = state.consensus.iter().map(|entry| {
-                let r = entry.value();
-                let sym_data_opt = state.symbols.get(&r.symbol);
-                let (regime_str, regime_conf) = if let Some(ref d) = sym_data_opt {
-                    let (reg, conf) = detect_market_regime(d);
+            t.symbols = state.symbols.iter().map(|entry| {
+                let sym_data = entry.value();
+                let r_opt = state.consensus.get(&sym_data.symbol);
+                let (regime_str, regime_conf) = {
+                    let (reg, conf) = detect_market_regime(sym_data);
                     (reg.as_str().to_uppercase(), conf)
-                } else {
-                    ("RANGING".to_string(), 0.0)
                 };
 
                 telemetry::SymbolTelemetry {
-                    symbol: r.symbol.clone(),
-                    price: sym_data_opt.as_ref().map(|s| s.price).unwrap_or(0.0),
-                    price_change_24h: sym_data_opt.as_ref().map(|s| s.price_24h_change).unwrap_or(0.0),
+                    symbol: sym_data.symbol.clone(),
+                    price: sym_data.price,
+                    price_change_24h: sym_data.price_24h_change,
                     regime: regime_str,
                     regime_confidence: regime_conf,
-                    verdict: format!("{}", r.final_verdict),
-                    score: r.judge_score,
-                    confidence: r.confidence,
-                    volume_24h: sym_data_opt.as_ref().map(|s| s.volume_24h).unwrap_or(0.0),
+                    verdict: r_opt.as_ref().map(|r| format!("{}", r.final_verdict)).unwrap_or_else(|| "HOLD".to_string()),
+                    score: r_opt.as_ref().map(|r| r.judge_score).unwrap_or(0.0),
+                    confidence: r_opt.as_ref().map(|r| r.confidence).unwrap_or(99.9),
+                    volume_24h: sym_data.volume_24h,
                     buy_sell_ratio: 0.0,
-                    liquidity_usd: sym_data_opt.as_ref().map(|s| s.open_interest).unwrap_or(0.0),
-                    on_chain_logged: true,
+                    liquidity_usd: sym_data.open_interest,
+                    on_chain_logged: r_opt.is_some(),
                 }
             }).collect();
 
