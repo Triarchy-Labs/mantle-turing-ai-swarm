@@ -4,7 +4,7 @@
 //!   Ouroboros (LLM Brain + PreTrade Risk + Decision Memory + IPC Telemetry)
 //!   Titan (8-Gate Entry)
 //!   Hive Mind (ML + Hybrid Recall + Regime Detection + DQS + Affective + Paper)
-//!   X402 (Consensus + Risk + Sniper + Liquidator + Polymarket + Memory)
+//!   Turing (Consensus + Risk + Sniper + Liquidator + Sentiment Oracle + Memory)
 //!
 //! Pipeline: Data → Regime → Debate → ML → Recall → Judge →
 //!           DQS → PreTradeRisk → Entry → Consensus → RiskGate →
@@ -39,9 +39,9 @@ use hive_intel::hybrid_recall::hybrid_blend;
 use hive_intel::regime::{classify_regime, MarketRegime as HiveRegime};
 use hive_intel::affective::{ewma_confidence, risk_appetite};
 use hive_intel::benchmark::{SmaCrossover, BenchmarkResult, BenchmarkStats};
-use x402_consensus::engine::{Action, AgentVote, PolicyGovernor};
-use x402_risk::engine::{AtrStops, MarketRegime, RiskGate};
-use x402_memory::engine::create_liquidation_edge;
+use turing_consensus::engine::{Action, AgentVote, PolicyGovernor};
+use turing_risk::engine::{AtrStops, MarketRegime, RiskGate};
+use turing_memory::engine::create_liquidation_edge;
 use mantle_chain::onchain::{encode_verdict_log, encode_add_reputation, AGENT_TOKEN_ID, DEPLOYMENT_WALLET};
 use mantle_chain::wallet::{broadcast_verdict, broadcast_reputation};
 
@@ -287,7 +287,7 @@ fn run_entry_gate(verdict: &JudgeVerdict, data: &SymbolData) -> bool {
 }
 
 // ═══════════════════════════════════════════════════════════
-// DIMENSION 4: X402 — Consensus + Risk + Stops
+// DIMENSION 4: Turing — Consensus + Risk + Stops
 // ═══════════════════════════════════════════════════════════
 
 fn run_consensus(verdict: &JudgeVerdict, ml_dir: i32, macro_bias: &str) -> (bool, Action) {
@@ -437,7 +437,7 @@ async fn decision_cycle<P: alloy::providers::Provider>(
 
         // REGIME DETECTION — 4-state classifier before anything else
         let (regime, regime_conf) = detect_market_regime(data);
-        let x402_regime = regime_to_risk(regime);
+        let turing_regime = regime_to_risk(regime);
         tracing::info!("📊 {} @ ${:.4} | 24h:{:.1}% | FR:{:.6} | OI:{:.1}% | Regime: {:?} ({:.0}%)",
             data.symbol, data.price, data.price_24h_change, data.funding_rate,
             data.oi_change_pct, regime, regime_conf * 100.0);
@@ -527,12 +527,12 @@ async fn decision_cycle<P: alloy::providers::Provider>(
             store_result(state, data, &verdict, &debate, false); continue;
         }
 
-        // D4: X402 — Consensus (3 voters)
+        // D4: Turing — Consensus (3 voters)
         let (consensus_ok, _) = run_consensus(&verdict, ml_dir, &debate.macro_bias);
         if !consensus_ok { store_result(state, data, &verdict, &debate, false); continue; }
 
-        // D4: X402 — Risk Gate (Kelly + KillSwitch + BucketCap) — REGIME-AWARE
-        let raw_size = match run_risk_gate(risk, &data.symbol, verdict.confidence, x402_regime) {
+        // D4: Turing — Risk Gate (Kelly + KillSwitch + BucketCap) — REGIME-AWARE
+        let raw_size = match run_risk_gate(risk, &data.symbol, verdict.confidence, turing_regime) {
             Some(s) => s, None => { store_result(state, data, &verdict, &debate, false); continue; }
         };
 
@@ -712,7 +712,7 @@ async fn decision_cycle<P: alloy::providers::Provider>(
             }
         }
 
-        // D4: X402 — Memory Edge
+        // D4: Turing — Memory Edge
         log_memory_edge(&data.symbol, verdict.decision, verdict.score);
 
         // L2: Decision Memory — store verdict for future reflection
@@ -849,9 +849,9 @@ async fn main() {
     let decision_mem = DecisionMemory::new(&data_dir);
     tracing::info!("📜 L2 Decision Memory: trade journal at {}/trading_memory.md", data_dir.display());
 
-    // D4: X402 Agents
+    // D4: Turing Agents
     let risk = RiskGate::new(1000.0);
-    tracing::info!("⚡ D4 X402: PolicyGovernor(3v) + RiskGate(Kelly/Kill/Bucket) + HyperEdge Memory");
+    tracing::info!("⚡ D4 Turing: PolicyGovernor(3v) + RiskGate(Kelly/Kill/Bucket) + HyperEdge Memory");
 
     // L3: Inter-Agent IPC Bridge (shared memory state)
     let ipc = Mutex::new(IpcBridge::new());

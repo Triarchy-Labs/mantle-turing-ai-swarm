@@ -18,7 +18,7 @@ use alloy::sol;
 /// ERC8004Registry contract address on Mantle Mainnet.
 pub const ERC8004_REGISTRY: &str = "0x1150f09ae885e6E7BcC0cb38feDd200d7f580008";
 
-/// X402 Flash Liquidator contract address on Mantle Mainnet.
+/// Turing Flash Liquidator contract address on Mantle Mainnet.
 pub const FLASH_LIQUIDATOR: &str = "0x30daC056a87D5844Fb5BE47Fb5412A6Bee83072d";
 
 /// Deployment wallet address.

@@ -22,11 +22,11 @@
 │              (swarm-engine — main loop)                         │
 ├────────────┬────────────┬─────────────┬────────────────────────┤
 │            │            │             │                        │
-│  OUROBOROS │   TITAN    │  HIVE MIND  │     X402 AGENTS        │
+│  OUROBOROS │   TITAN    │  HIVE MIND  │     Turing AGENTS        │
 │   BRAIN    │   CORE     │   INTEL     │  (6 autonomous nodes)  │
 │            │            │             │                        │
 │ LLM Debate │ Neural     │ 40-Module   │ Consensus · Risk       │
-│ 15-Factor  │ Brain      │ Memory      │ Polymarket · Memory    │
+│ 15-Factor  │ Brain      │ Memory      │ Sentiment Oracle · Memory    │
 │ Judge      │ 8-Gate     │ Castle      │ Sniper · Liquidator    │
 │ Memory     │ Entry      │ ML Local    │                        │
 │ Breaker    │ Pipeline   │ SIMD 4x     │ PolicyGovernor         │
@@ -34,7 +34,7 @@
 ├────────────┴────────────┴─────────────┴────────────────────────┤
 │                     MANTLE CHAIN ADAPTER                       │
 │        Alloy 2.0 · Chain 5000 · ERC-8004 Identity NFT         │
-│        X402FlashLiquidator · Agni Finance Router               │
+│        TuringFlashLiquidator · Agni Finance Router               │
 ├─────────────────────────────────────────────────────────────────┤
 │                     CORE IPC (L0)                              │
 │          mmap zero-copy · inter-agent state sync               │
@@ -50,12 +50,12 @@
 | **hive-intel** | 12,212 | Collective intelligence: 40+ cognitive modules, SIMD turbo, ML local (<1μs), regime detection (4-state HMM), affective memory (EWMA), hybrid recall (OWM+SIMD+anti-survivorship), paper engine, AI vs Human benchmark |
 | **mantle-chain** | 705 | Alloy 2.0 on-chain: ERC-8004 ABI (sol!), wallet signer + live tx broadcast, DexScreener 13-field live data, Merchant Moe/Agni router |
 | **swarm-engine** | 1,090 | Main orchestrator — v5.0 24-stage pipeline + telemetry HTTP server (:3402/7 endpoints) + live chain broadcast |
-| **x402-consensus** | 398 | PolicyGovernor — 4-voter consensus engine for trade decisions |
-| **x402-risk** | 555 | Regime-aware Kelly sizing, KillSwitch, ATR stops, BucketCap risk management |
-| **x402-polymarket** | 83 | Gamma API — live prediction market sentiment oracle |
-| **x402-memory** | 124 | HyperEdge graph + sled DB persistent memory |
-| **x402-sniper** | 524 | DEX execution + x402 bounty protocol client |
-| **x402-liquidator** | 111 | On-chain flash liquidation via ILendingPool |
+| **turing-consensus** | 398 | PolicyGovernor — 4-voter consensus engine for trade decisions |
+| **turing-risk** | 555 | Regime-aware Kelly sizing, KillSwitch, ATR stops, BucketCap risk management |
+| **turing-oracle** | 83 | Gamma API — live prediction market sentiment oracle |
+| **turing-memory** | 124 | HyperEdge graph + sled DB persistent memory |
+| **turing-sniper** | 524 | DEX execution + turing bounty protocol client |
+| **turing-liquidator** | 111 | On-chain flash liquidation via ILendingPool |
 | **core-ipc** | 75 | mmap-based zero-copy inter-agent communication |
 
 ## The v5 Decision Pipeline (24 Stages, 6 Intelligence Layers)
@@ -75,7 +75,7 @@ Market Data
     ↓
 ╔═ TITAN ENTRY (8-gate pipeline: daily loss, symbol streak, imbalance, margin) ═╗
     ↓
-╔═ X402 CONSENSUS (PolicyGovernor: signal + trend + macro = 3-voter majority) ═╗
+╔═ Turing CONSENSUS (PolicyGovernor: signal + trend + macro = 3-voter majority) ═╗
     ↓
 ╔═ RISK GATE (Regime-aware Kelly × PreTrade factor × Risk Appetite dampening) ═╗
     ↓
@@ -148,7 +148,7 @@ Market Data
 | Contract | Address | Purpose |
 |----------|---------|---------|
 | ERC8004Registry | `0xFA0b...8383` | Agent identity NFT + dynamic reputation |
-| X402FlashLiquidator | `0x41c5...4F4` | AI-scored flash liquidation |
+| TuringFlashLiquidator | `0x41c5...4F4` | AI-scored flash liquidation |
 | Agent #1 NFT | Token ID 1 | Already minted — sovereign AI identity |
 | Deployment Wallet | `0xF023...c79` | Signed tx broadcast via Alloy |
 
@@ -175,11 +175,11 @@ Live transparency endpoint on `http://localhost:3402`:
 
 | Role | Model | Vendor |
 |------|-------|--------|
-| Primary Debate | Gemma-4-31B | Google |
-| Secondary Debate | Qwen3-80B | Alibaba |
-| Fallback Debate | Hermes-405B | NousResearch |
-| Macro Judge | GPT-OSS-120B | OpenAI |
-| Meta Judge | Nemotron-120B | NVIDIA |
+| Primary Debate | 30B+ Class Open Weights | OpenRouter |
+| Secondary Debate | 70B+ Class Open Weights | OpenRouter |
+| Fallback Debate | 400B+ Class Open Weights | OpenRouter |
+| Macro Judge | 120B+ Class Custom | Dedicated Node |
+| Meta Judge | 70B+ Class Alignment Model | Dedicated Node |
 
 All models are free-tier via OpenRouter. Zero inference cost.
 
@@ -209,21 +209,21 @@ mantle-ai-swarm/
 │   ├── prompts.toml           # Debate + judge prompt templates
 │   └── thresholds.toml        # 15-factor scoring calibration
 ├── contracts/
-│   ├── src/                   # ERC8004Registry + X402FlashLiquidator
+│   ├── src/                   # ERC8004Registry + TuringFlashLiquidator
 │   ├── script/Deploy.s.sol    # Foundry deployment
-│   └── test/X402.t.sol        # 5 contract tests
+│   └── test/Turing.t.sol        # 5 contract tests
 ├── crates/
 │   ├── ouroboros-brain/       # LLM consensus engine
 │   ├── titan-core/            # Neural trading brain
 │   ├── hive-intel/            # Collective intelligence (40 modules)
 │   ├── mantle-chain/          # Alloy 2.0 on-chain adapter
 │   ├── swarm-engine/          # Main orchestrator
-│   ├── x402-consensus/        # PolicyGovernor voting
-│   ├── x402-risk/             # Kelly + KillSwitch
-│   ├── x402-polymarket/       # Prediction market oracle
-│   ├── x402-memory/           # HyperEdge persistent memory
-│   ├── x402-sniper/           # DEX execution
-│   ├── x402-liquidator/       # Flash liquidation
+│   ├── turing-consensus/        # PolicyGovernor voting
+│   ├── turing-risk/             # Kelly + KillSwitch
+│   ├── turing-oracle/       # Prediction market oracle
+│   ├── turing-memory/           # HyperEdge persistent memory
+│   ├── turing-sniper/           # DEX execution
+│   ├── turing-liquidator/       # Flash liquidation
 │   └── core-ipc/              # mmap IPC bridge
 ├── dashboard/                 # React monitoring UI
 └── tools/                     # Test utilities
@@ -231,7 +231,7 @@ mantle-ai-swarm/
 
 ## Origin
 
-Converged from three battle-tested trading engines — Ouroboros (LLM brain), Titan (execution), Hive Mind (intelligence) — and unified with X402 on-chain infrastructure for the Mantle Turing Test Hackathon 2026.
+Converged from three battle-tested trading engines — Ouroboros (LLM brain), Titan (execution), Hive Mind (intelligence) — and unified with Turing on-chain infrastructure for the Mantle Turing Test Hackathon 2026.
 
 26,873 lines of Rust. 12 crates. 6 intelligence layers. 18 pipeline stages. Live Mantle data. Zero compromises.
 

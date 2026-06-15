@@ -20,7 +20,7 @@ sol! {
     }
 
     #[sol(rpc)]
-    interface IX402FlashLiquidator {
+    interface ITuringFlashLiquidator {
         function executeAILiquidation(address target, uint256 aiSentimentScore, uint256 agentId) external;
 
         event LiquidationExecuted(
@@ -37,7 +37,7 @@ pub mod addresses {
     /// ERC-8004 Registry — agent identity NFTs.
     pub const ERC8004_REGISTRY: &str = "0x1150f09ae885e6E7BcC0cb38feDd200d7f580008";
 
-    /// X402 Flash Liquidator — AI execution engine.
+    /// Turing Flash Liquidator — AI execution engine.
     pub const FLASH_LIQUIDATOR: &str = "0x30daC056a87D5844Fb5BE47Fb5412A6Bee83072d";
 
     /// Deployment wallet.

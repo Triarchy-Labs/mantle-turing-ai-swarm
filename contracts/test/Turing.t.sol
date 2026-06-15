@@ -3,17 +3,17 @@ pragma solidity ^0.8.20;
 
 import {Test, console} from "forge-std/Test.sol";
 import {ERC8004Registry} from "../src/ERC8004Registry.sol";
-import {X402FlashLiquidator} from "../src/X402FlashLiquidator.sol";
+import {TuringFlashLiquidator} from "../src/TuringFlashLiquidator.sol";
 
-contract X402Test is Test {
+contract TuringTest is Test {
     ERC8004Registry registry;
-    X402FlashLiquidator liquidator;
+    TuringFlashLiquidator liquidator;
     address agent = address(0xA1);
     address victim = address(0xB2);
 
     function setUp() public {
         registry = new ERC8004Registry();
-        liquidator = new X402FlashLiquidator(address(registry));
+        liquidator = new TuringFlashLiquidator(address(registry));
     }
 
     function test_RegisterAgent() public {

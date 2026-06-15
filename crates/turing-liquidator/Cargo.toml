@@ -1,5 +1,5 @@
 [package]
-name = "x402-liquidator"
+name = "turing-liquidator"
 version = "0.1.0"
 edition = "2024"
 description = "On-chain flash liquidation daemon"

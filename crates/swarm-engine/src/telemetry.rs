@@ -16,7 +16,7 @@ use serde::Serialize;
 use std::sync::Arc;
 use tokio::sync::RwLock;
 
-/// Telemetry port — 3402 (x402 reference).
+/// Telemetry port — 3402 (turing reference).
 pub const TELEMETRY_PORT: u16 = 10000;
 
 /// Live swarm telemetry state — updated after each decision cycle.

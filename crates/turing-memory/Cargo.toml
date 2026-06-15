@@ -1,16 +1,16 @@
 [package]
-name = "x402-sniper"
+name = "turing-memory"
 version = "0.1.0"
 edition = "2024"
-description = "DEX execution + x402 bounty protocol client"
+description = "HyperEdge graph persistent memory node"
 
 [dependencies]
 serde = { workspace = true }
 serde_json = { workspace = true }
-alloy = { workspace = true }
-reqwest = { workspace = true }
-tokio = { workspace = true }
 tracing = { workspace = true }
 
-url = "2"
+notify = "7"
+bincode = "1"
 core-ipc = { path = "../core-ipc" }
+tokio = { workspace = true }
+sled = "0.34"

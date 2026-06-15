@@ -4424,12 +4424,12 @@ dependencies = [
  "tokio",
  "tracing",
  "tracing-subscriber",
- "x402-consensus",
- "x402-liquidator",
- "x402-memory",
- "x402-polymarket",
- "x402-risk",
- "x402-sniper",
+ "turing-consensus",
+ "turing-liquidator",
+ "turing-memory",
+ "turing-oracle",
+ "turing-risk",
+ "turing-sniper",
 ]
 
 [[package]]
@@ -4923,6 +4923,81 @@ dependencies = [
  "sha1",
  "thiserror",
  "utf-8",
+]
+
+[[package]]
+name = "turing-consensus"
+version = "0.1.0"
+dependencies = [
+ "core-ipc",
+ "serde",
+ "serde_json",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
+name = "turing-liquidator"
+version = "0.1.0"
+dependencies = [
+ "alloy",
+ "core-ipc",
+ "serde",
+ "serde_json",
+ "tokio",
+ "tracing",
+ "url",
+]
+
+[[package]]
+name = "turing-memory"
+version = "0.1.0"
+dependencies = [
+ "bincode",
+ "core-ipc",
+ "notify",
+ "serde",
+ "serde_json",
+ "sled",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
+name = "turing-oracle"
+version = "0.1.0"
+dependencies = [
+ "core-ipc",
+ "reqwest 0.12.28",
+ "serde",
+ "serde_json",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
+name = "turing-risk"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "serde",
+ "serde_json",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
+name = "turing-sniper"
+version = "0.1.0"
+dependencies = [
+ "alloy",
+ "core-ipc",
+ "reqwest 0.12.28",
+ "serde",
+ "serde_json",
+ "tokio",
+ "tracing",
+ "url",
 ]
 
 [[package]]
@@ -5631,81 +5706,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "05f360fc0b24296329c78fda852a1e9ae82de9cf7b27dae4b7f62f118f77b9ed"
 dependencies = [
  "tap",
-]
-
-[[package]]
-name = "x402-consensus"
-version = "0.1.0"
-dependencies = [
- "core-ipc",
- "serde",
- "serde_json",
- "tokio",
- "tracing",
-]
-
-[[package]]
-name = "x402-liquidator"
-version = "0.1.0"
-dependencies = [
- "alloy",
- "core-ipc",
- "serde",
- "serde_json",
- "tokio",
- "tracing",
- "url",
-]
-
-[[package]]
-name = "x402-memory"
-version = "0.1.0"
-dependencies = [
- "bincode",
- "core-ipc",
- "notify",
- "serde",
- "serde_json",
- "sled",
- "tokio",
- "tracing",
-]
-
-[[package]]
-name = "x402-polymarket"
-version = "0.1.0"
-dependencies = [
- "core-ipc",
- "reqwest 0.12.28",
- "serde",
- "serde_json",
- "tokio",
- "tracing",
-]
-
-[[package]]
-name = "x402-risk"
-version = "0.1.0"
-dependencies = [
- "chrono",
- "serde",
- "serde_json",
- "tokio",
- "tracing",
-]
-
-[[package]]
-name = "x402-sniper"
-version = "0.1.0"
-dependencies = [
- "alloy",
- "core-ipc",
- "reqwest 0.12.28",
- "serde",
- "serde_json",
- "tokio",
- "tracing",
- "url",
 ]
 
 [[package]]

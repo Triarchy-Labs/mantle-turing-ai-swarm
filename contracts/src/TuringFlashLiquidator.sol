@@ -4,10 +4,10 @@ pragma solidity ^0.8.20;
 import "./ERC8004Registry.sol";
 
 /**
- * @title X402 Flash Liquidator
- * @dev The core execution engine for the X402 Swarm. Receives AI inference data as calldata.
+ * @title Turing Flash Liquidator
+ * @dev The core execution engine for the Turing Swarm. Receives AI inference data as calldata.
  */
-contract X402FlashLiquidator {
+contract TuringFlashLiquidator {
     ERC8004Registry public registry;
 
     event LiquidationExecuted(

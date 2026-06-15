@@ -4,7 +4,7 @@ use std::fs::{File, OpenOptions};
 use std::path::Path;
 use fs2::FileExt;
 
-pub const IPC_FILE: &str = "/tmp/x402_ipc.mmap";
+pub const IPC_FILE: &str = "/tmp/turing_ipc.mmap";
 pub const IPC_SIZE: usize = 4096;
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]

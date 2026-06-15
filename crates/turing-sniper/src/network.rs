@@ -38,7 +38,7 @@ pub async fn run_sniper_loop() {
                     println!("[Sniper Agent] Consensus reached for Liquidating Target: {target}");
                     
                     let sentiment = state.global_sentiment_modifier;
-                    println!("[Sniper Agent] 🌐 Polymarket Global Sentiment Applied: {sentiment:.4}");
+                    println!("[Sniper Agent] 🌐 Sentiment Oracle Global Sentiment Applied: {sentiment:.4}");
                     
                     let leverage_multiplier = engine::calculate_leverage_multiplier(sentiment);
                     println!("[Sniper Agent] ⚙️ Akashic WebSocket Streaming Online (Latency < 1ms)");

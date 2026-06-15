@@ -18,7 +18,7 @@ contract ERC8004Registry is ERC721, Ownable {
 
     uint256 private _nextTokenId;
 
-    string public constant IMAGE_URI = "https://raw.githubusercontent.com/y4motion/x402-mantle-agent/master/contracts/assets/agent-nft.png";
+    string public constant IMAGE_URI = "https://raw.githubusercontent.com/y4motion/turing-mantle-agent/master/contracts/assets/agent-nft.png";
 
     // Mapping from agent token ID to the controlling EOA/Contract
     mapping(uint256 => address) public agentControllers;
@@ -67,7 +67,7 @@ contract ERC8004Registry is ERC721, Ownable {
 
         string memory json = string(
             abi.encodePacked(
-                '{"name":"X402 Agent #', tokenId.toString(),
+                '{"name":"Turing Agent #', tokenId.toString(),
                 '","description":"Sovereign ERC-8004 Trustless AI Agent Identity on Mantle. This NFT represents a verifiable on-chain identity for an autonomous AI agent capable of executing flash liquidations and DeFi operations.",',
                 '"image":"', IMAGE_URI, '",',
                 '"attributes":[',

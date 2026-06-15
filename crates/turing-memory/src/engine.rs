@@ -12,7 +12,7 @@ pub struct HyperEdge {
 
 pub fn create_liquidation_edge(target: String, sentiment: f64, timestamp: u64) -> HyperEdge {
     HyperEdge {
-        source: "SwarmX402".to_string(),
+        source: "SwarmTuring".to_string(),
         target,
         relation: "LIQUIDATED".to_string(),
         sentiment,

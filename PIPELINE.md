@@ -6,10 +6,10 @@
 
 ## Phase 0: Multiverse Collision ✅ DONE
 
-**Goal:** Merge 3 trading engines + X402 agents into unified workspace.
+**Goal:** Merge 3 trading engines + Turing agents into unified workspace.
 
 - [x] Clone roxy-hyperstack (Ouroboros, Titan, Hive Mind)
-- [x] Clone X402 crate inventory (consensus, risk, sniper, liquidator, polymarket, memory)
+- [x] Clone Turing crate inventory (consensus, risk, sniper, liquidator, oracle, memory)
 - [x] Unify into single Cargo workspace with 12 crates
 - [x] Alloy 0.14 → 2.0 migration (`on_http` → `connect_http`, Provider generics)
 - [x] Windows path decontamination (E:\ → env vars / data/ relative)
@@ -32,15 +32,15 @@
   - Initialize OpenRouter client (ouroboros-brain)
   - Initialize Mantle provider (mantle-chain)
   - Start Hive Mind API server (hive-intel api.rs, port 8889)
-  - Boot consensus engine (x402-consensus)
-  - Boot risk agent (x402-risk)
+  - Boot consensus engine (turing-consensus)
+  - Boot risk agent (turing-risk)
 
 - [x] **Signal pipeline**: Wire the decision flow
   - Market data ingestion (initially mock, then DEX oracle)
   - Ouroboros debate → Judge scoring → Verdict
   - Titan entry pipeline validation
   - Hive Mind memory recall + ML prediction
-  - X402 consensus vote
+  - Turing consensus vote
   - Risk gate (Kelly sizing)
 
 - [ ] **IPC bridge**: Connect core-ipc mmap to all agents (deferred — DashMap used instead)
@@ -58,7 +58,7 @@
   - Load private key from .env
   - Alloy ProviderBuilder with wallet signer
 
-- [ ] **ERC-8004 binding**: Wire x402-sniper to live contracts
+- [ ] **ERC-8004 binding**: Wire turing-sniper to live contracts
   - Read deployed Registry at 0xFA0b...8383
   - Register agent if not already registered
   - Execute AI liquidation with sentiment score
@@ -98,9 +98,9 @@
   - Connect brain_feeds.rs to Ouroboros verdicts (IPC)
   - Enable auto_ramp for progressive position sizing
 
-- [ ] **X402 consensus fine-tuning**:
+- [ ] **Turing consensus fine-tuning**:
   - Set VOTE_THRESHOLD appropriate for Mantle volatility
-  - Wire polymarket oracle for macro sentiment
+  - Wire oracle oracle for macro sentiment
   - Enable risk-agent KillSwitch thresholds
 
 **Deliverable:** AI makes consistently non-random trading decisions.

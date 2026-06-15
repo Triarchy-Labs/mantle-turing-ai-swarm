@@ -20,13 +20,13 @@ ouroboros-brain = { path = "../ouroboros-brain" }
 titan-core = { path = "../titan-core" }
 # D3: Hive Mind Intelligence
 hive-intel = { path = "../hive-intel" }
-# D4: X402 Agent Swarm
-x402-consensus = { path = "../x402-consensus" }
-x402-risk = { path = "../x402-risk" }
-x402-memory = { path = "../x402-memory" }
-x402-sniper = { path = "../x402-sniper" }
-x402-liquidator = { path = "../x402-liquidator" }
-x402-polymarket = { path = "../x402-polymarket" }
+# D4: Turing Agent Swarm
+turing-consensus = { path = "../turing-consensus" }
+turing-risk = { path = "../turing-risk" }
+turing-memory = { path = "../turing-memory" }
+turing-sniper = { path = "../turing-sniper" }
+turing-liquidator = { path = "../turing-liquidator" }
+turing-oracle = { path = "../turing-oracle" }
 # D5: Mantle Chain
 mantle-chain = { path = "../mantle-chain" }
 # L3: Inter-agent IPC

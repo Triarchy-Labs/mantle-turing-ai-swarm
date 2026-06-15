@@ -30,7 +30,7 @@ pub async fn run_memory_loop(db: sled::Db) -> Result<(), Box<dyn std::error::Err
                 let key_prefix = format!("edge:{target}");
                 
                 if engine::insert_edge(&db, &key_prefix, &edge).is_ok() {
-                    println!("[Memory Node] 🧠 Experience Crystallized in Sled HyperGraph: SwarmX402 -> LIQUIDATED -> {target}");
+                    println!("[Memory Node] 🧠 Experience Crystallized in Sled HyperGraph: SwarmTuring -> LIQUIDATED -> {target}");
                 }
             }
 

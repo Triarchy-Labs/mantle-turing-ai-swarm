@@ -16,7 +16,7 @@ sol! {
     }
 
     #[sol(rpc)]
-    contract X402FlashLiquidator {
+    contract TuringFlashLiquidator {
         function executeAILiquidation(address target, uint256 aiSentimentScore, uint256 agentId) external;
     }
 }
@@ -30,7 +30,7 @@ pub async fn execute_flash_loan_tx<P: Provider>(
     let registry_str = std::env::var("REGISTRY_ADDRESS")
         .expect("REGISTRY_ADDRESS env var must be set to deployed ERC8004Registry address");
     let liquidator_str = std::env::var("LIQUIDATOR_ADDRESS")
-        .expect("LIQUIDATOR_ADDRESS env var must be set to deployed X402FlashLiquidator address");
+        .expect("LIQUIDATOR_ADDRESS env var must be set to deployed TuringFlashLiquidator address");
     let registry_address = Address::from_str(&registry_str)?;
     let liquidator_address = Address::from_str(&liquidator_str)?;
     let target_addr = Address::from_str(target).unwrap_or(Address::ZERO);
@@ -42,8 +42,8 @@ pub async fn execute_flash_loan_tx<P: Provider>(
     // In production, we would call `registerAgent` if `agentControllers(1)` is empty.
     let agent_id = U256::from(1);
 
-    println!("[Sniper Agent] Constructing transaction to X402FlashLiquidator Contract...");
-    let liquidator = X402FlashLiquidator::new(liquidator_address, provider);
+    println!("[Sniper Agent] Constructing transaction to TuringFlashLiquidator Contract...");
+    let liquidator = TuringFlashLiquidator::new(liquidator_address, provider);
     
     // Convert float sentiment to a fixed point integer (e.g., 1.05 -> 105)
     let sentiment_score = U256::from((sentiment * 100.0) as u64);

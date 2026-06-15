@@ -13,7 +13,7 @@ pub async fn run_oracle_loop() {
             Ok(response) => {
                 if let Ok(markets) = response.json::<Vec<Value>>().await
                     && let Some(avg_sentiment) = engine::extract_macro_sentiment(markets) {
-                        println!("[Polymarket Oracle] Global Macro Sentiment Extracted: {avg_sentiment:.4}");
+                        println!("[Sentiment Oracle] Global Macro Sentiment Extracted: {avg_sentiment:.4}");
 
                         let mut state = ipc.read_state().unwrap_or_default();
                         state.global_sentiment_modifier = avg_sentiment;
@@ -23,11 +23,11 @@ pub async fn run_oracle_loop() {
                             .as_secs();
 
                         ipc.write_state(&state);
-                        println!("[Polymarket Oracle] L0 IPC Memmap Updated: Sniper Agent leverage modified.");
+                        println!("[Sentiment Oracle] L0 IPC Memmap Updated: Sniper Agent leverage modified.");
                     }
             }
             Err(e) => {
-                println!("[Polymarket Oracle] API Error: {e}");
+                println!("[Sentiment Oracle] API Error: {e}");
             }
         }
 

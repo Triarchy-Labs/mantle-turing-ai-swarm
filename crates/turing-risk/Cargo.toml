@@ -1,12 +1,12 @@
 [package]
-name = "x402-consensus"
+name = "turing-risk"
 version = "0.1.0"
 edition = "2024"
-description = "PolicyGovernor — multi-agent voting consensus engine"
+description = "Kelly sizing, KillSwitch, ATR stops, BucketCap risk management"
 
 [dependencies]
 serde = { workspace = true }
 serde_json = { workspace = true }
 tracing = { workspace = true }
-core-ipc = { path = "../core-ipc" }
+chrono = { workspace = true }
 tokio = { workspace = true }

@@ -6,13 +6,13 @@ members = [
     "crates/hive-intel",
     "crates/mantle-chain",
     "crates/swarm-engine",
-    # X402 Swarm Agents (from Stellar Hacks — transplanted)
-    "crates/x402-consensus",
-    "crates/x402-risk",
-    "crates/x402-polymarket",
-    "crates/x402-memory",
-    "crates/x402-sniper",
-    "crates/x402-liquidator",
+    # Turing Agents (Hackathon specific modules)
+    "crates/turing-consensus",
+    "crates/turing-risk",
+    "crates/turing-oracle",
+    "crates/turing-memory",
+    "crates/turing-sniper",
+    "crates/turing-liquidator",
     "crates/core-ipc",
 ]
 

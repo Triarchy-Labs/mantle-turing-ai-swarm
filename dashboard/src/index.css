@@ -1216,7 +1216,7 @@ html[data-theme="light"] .card-title {
 
 
 /* ============================================================
-   X402 GATEWAY BUTTON SYSTEM (1:1 from globals.css)
+   TURING GATEWAY BUTTON SYSTEM (1:1 from globals.css)
    ============================================================ */
 @keyframes border-strobe {
   0%, 100% { border-color: rgba(0, 212, 255, 0.5); box-shadow: 0 0 15px rgba(0, 212, 255, 0.15); }

@@ -1,16 +1,13 @@
 [package]
-name = "x402-memory"
+name = "turing-oracle"
 version = "0.1.0"
 edition = "2024"
-description = "HyperEdge graph persistent memory node"
+description = "Gamma API prediction market sentiment oracle"
 
 [dependencies]
 serde = { workspace = true }
 serde_json = { workspace = true }
-tracing = { workspace = true }
-
-notify = "7"
-bincode = "1"
-core-ipc = { path = "../core-ipc" }
+reqwest = { workspace = true }
 tokio = { workspace = true }
-sled = "0.34"
+tracing = { workspace = true }
+core-ipc = { path = "../core-ipc" }

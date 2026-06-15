@@ -1,9 +1,9 @@
-//! X402 Bounty Client — Two-Phase Commit Protocol Implementation
+//! Turing Bounty Client — Two-Phase Commit Protocol Implementation
 //!
 //! Absorbed from owocki-bot/ai-bounty-board (D2178).
-//! Implements the x402 payment flow: Discovery (402) → Retry with X-Payment header.
+//! Implements the turing payment flow: Discovery (402) → Retry with X-Payment header.
 //!
-//! Reference: skills/x402-agent-protocol/SKILL.md
+//! Reference: skills/turing-agent-protocol/SKILL.md
 
 use alloy::primitives::Address;
 use alloy::signers::local::PrivateKeySigner;
@@ -16,7 +16,7 @@ use serde::{Deserialize, Serialize};
 
 /// Payment requirements returned by server on 402 response
 #[derive(Debug, Deserialize)]
-pub struct X402PaymentRequirements {
+pub struct TuringPaymentRequirements {
     pub amount: String,
     pub recipient: String,
     pub token: Option<String>,
@@ -25,14 +25,14 @@ pub struct X402PaymentRequirements {
 
 /// The full 402 response envelope
 #[derive(Debug, Deserialize)]
-pub struct X402DiscoveryResponse {
+pub struct TuringDiscoveryResponse {
     pub error: Option<String>,
-    pub x402: Option<X402PaymentRequirements>,
+    pub turing: Option<TuringPaymentRequirements>,
 }
 
 /// Payment payload to be Base64-encoded and sent as X-Payment header
 #[derive(Debug, Serialize)]
-pub struct X402PaymentPayload {
+pub struct TuringPaymentPayload {
     pub amount: String,
     pub payer: String,
     pub recipient: String,
@@ -68,17 +68,17 @@ pub struct SubmitResponse {
 
 // ─── Client ─────────────────────────────────────────────────────────────────
 
-/// X402-compatible bounty client implementing the Two-Phase Commit pattern.
+/// Turing-compatible bounty client implementing the Two-Phase Commit pattern.
 ///
 /// # Architecture (from D2178)
 /// ```text
-/// PHASE 1: POST /bounties (no payment) → 402 → { x402: { amount, recipient } }
+/// PHASE 1: POST /bounties (no payment) → 402 → { turing: { amount, recipient } }
 /// PHASE 2: POST /bounties + X-Payment: base64(payload) → 201
 /// ```
 ///
 /// # Anti-Self-Dealing Guard
 /// Creator address ≠ Claimant address (enforced server-side and client-side).
-pub struct X402BountyClient {
+pub struct TuringBountyClient {
     http: reqwest::Client,
     base_url: String,
     signer: PrivateKeySigner,
@@ -86,8 +86,8 @@ pub struct X402BountyClient {
     nonce_counter: u64,
 }
 
-impl X402BountyClient {
-    /// Create a new bounty client connected to an x402-compatible API.
+impl TuringBountyClient {
+    /// Create a new bounty client connected to an turing-compatible API.
     pub fn new(base_url: &str, signer: PrivateKeySigner) -> Self {
         let agent_address = signer.address();
         Self {
@@ -208,7 +208,7 @@ impl X402BountyClient {
     /// # GOTCHA (D2178)
     /// - Amount MUST be in USDC subunits (1e6 = 1 USDC), NOT float
     /// - Nonce MUST be unique per transaction (server may not enforce — our guard)
-    /// - Signature uses EIP-191: `x402:{recipient}:{amount}:{nonce}`
+    /// - Signature uses EIP-191: `turing:{recipient}:{amount}:{nonce}`
     pub async fn create_bounty_with_payment(
         &mut self,
         title: &str,
@@ -239,30 +239,30 @@ impl X402BountyClient {
             return Err(BountyError::ServerReject(format!("Expected 402, got: {}", err)));
         }
 
-        let requirements: X402DiscoveryResponse = discovery_resp
+        let requirements: TuringDiscoveryResponse = discovery_resp
             .json()
             .await
             .map_err(BountyError::Parse)?;
 
-        let x402 = requirements.x402.ok_or_else(|| {
-            BountyError::Protocol("402 response missing x402 field".into())
+        let turing = requirements.turing.ok_or_else(|| {
+            BountyError::Protocol("402 response missing turing field".into())
         })?;
 
         // ── Phase 2: Sign and Retry ─────────────────────────────────────
         self.nonce_counter += 1;
         let nonce = self.nonce_counter;
 
-        // Construct EIP-191 message: x402:{recipient}:{amount}:{nonce}
-        let message = format!("x402:{}:{}:{}", x402.recipient, x402.amount, nonce);
+        // Construct EIP-191 message: turing:{recipient}:{amount}:{nonce}
+        let message = format!("turing:{}:{}:{}", turing.recipient, turing.amount, nonce);
         let signature = self.signer
             .sign_message(message.as_bytes())
             .await
             .map_err(|e| BountyError::Signing(e.to_string()))?;
 
-        let payload = X402PaymentPayload {
-            amount: x402.amount,
+        let payload = TuringPaymentPayload {
+            amount: turing.amount,
             payer: format!("{:?}", self.agent_address),
-            recipient: x402.recipient,
+            recipient: turing.recipient,
             nonce,
             signature: format!("0x{}", alloy::hex::encode(signature.as_bytes())),
         };
