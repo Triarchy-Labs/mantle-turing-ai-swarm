@@ -316,7 +316,7 @@ export default function App() {
 
 			{/* ═══ HEADER ═══ */}
 			<header className="header" role="banner" aria-label="Mantle AI Swarm Dashboard">
-				<a href="https://github.com/Triarchy-Labs" target="_blank" rel="noopener noreferrer" className="triarchy-logo-wrapper" title="Triarchy Labs GitHub">
+				<a href="/" className="triarchy-logo-wrapper" title="Triarchy Labs">
 					<span className="triarchy-logo-text">TRIARCHY</span>
 					<span className="triarchy-logo-divider">|</span>
 					<div className="triarchy-logo-btn">

@@ -633,13 +633,18 @@ function LiquidNebula({ particles, mode }: { particles: number; mode: number }) 
 
 		// Mouse intensity — Lusion exact (lines 212-215)
 		const pointer = state.pointer;
-		const dx = pointer.x - prevMousePos.current.x;
-		const dy = pointer.y - prevMousePos.current.y;
-		let mouseSpeed = Math.sqrt(dx * dx + dy * dy) * 32;
+		// Mouse intensity — calculated entirely in screen pixel space to avoid massive normalized jumps
+		// React Three Fiber's 'pointer' is normalized (-1 to 1). We need pixel deltas.
+		const pointerPixelX = (pointer.x * 0.5 + 0.5) * window.innerWidth;
+		const pointerPixelY = (-pointer.y * 0.5 + 0.5) * window.innerHeight;
+		
+		const dx = pointerPixelX - prevMousePos.current.x;
+		const dy = pointerPixelY - prevMousePos.current.y;
+		let mouseSpeed = Math.sqrt(dx * dx + dy * dy) * 0.15; // Tuned multiplier
 		mouseSpeed = Math.min(mouseSpeed, 2);
 		mouseMoveIntensity.current += (mouseSpeed - mouseMoveIntensity.current) * 0.072;
 		velVarRef.current.material.uniforms.u_mouseMoveIntensity.value = mouseMoveIntensity.current;
-		prevMousePos.current = { x: pointer.x, y: pointer.y };
+		prevMousePos.current = { x: pointerPixelX, y: pointerPixelY };
 
 		// Run GPGPU compute
 		gpuRef.current.compute();
