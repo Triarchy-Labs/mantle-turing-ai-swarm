@@ -32,15 +32,15 @@ pub struct EntryConfig {
 impl Default for EntryConfig {
     fn default() -> Self {
         Self {
-            max_positions_per_head: 3,
-            max_global_positions: 9,
-            max_loss_streak: 2,
-            total_exposure_cap_pct: 0.80,
-            btc_dead_zone: 0.5,
-            imbalance_reject_min: 0.1,
-            imbalance_reject_max: 10.0,
-            imbalance_long_min: 0.5,
-            imbalance_short_max: 2.0,
+            max_positions_per_head: 10,
+            max_global_positions: 30,
+            max_loss_streak: 10,
+            total_exposure_cap_pct: 0.95,
+            btc_dead_zone: 0.0,
+            imbalance_reject_min: 0.0,
+            imbalance_reject_max: 999.0,
+            imbalance_long_min: 0.0,
+            imbalance_short_max: 999.0,
         }
     }
 }

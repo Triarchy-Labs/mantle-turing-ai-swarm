@@ -75,8 +75,8 @@ impl DqsEngine {
     pub fn new() -> Self {
         Self {
             weights: [1.0, 1.0, 1.0, 1.0, 1.0], // equal weights
-            skip_threshold: 3.0,
-            caution_threshold: 5.0,
+            skip_threshold: 0.0,
+            caution_threshold: 0.5,
         }
     }
 
