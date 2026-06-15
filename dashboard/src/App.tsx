@@ -258,6 +258,7 @@ export default function App() {
 	const [manualPhaseOverride, setManualPhaseOverride] = useState<number | null>(null);
 	const [overrideFlash, setOverrideFlash] = useState<number | null>(null);
 	const [configValues, setConfigValues] = useState({ lossKill: 3.0, maxCap: 100 });
+	const [showTxLogs, setShowTxLogs] = useState(false);
 
 	// Orb state cycling
 	useEffect(() => {
@@ -657,18 +658,26 @@ export default function App() {
 					</div>
 				</div>
 
-					{/* OPEN POSITIONS (Row 3, Left) */}
+					{/* OPEN POSITIONS & TX LOGS (Row 3, Left) */}
 					<div className="shape-choochoo" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-					<article className="bento-card " role="region" style={{ flexGrow: 1, margin: 0, padding: 0, overflow: 'hidden' }}>
+					<article className="bento-card " role="region" style={{ flexGrow: 1, margin: 0, padding: 0, overflow: 'hidden', position: 'relative' }}>
 						<div className="lusion-dot"></div>
-						<div className="lusion-top-meta">
-							<div>006</div>
-							<div>NEURAL SENSOR</div>
+						<div className="lusion-top-meta" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', boxSizing: 'border-box' }}>
+							<div style={{ display: 'flex', gap: '1rem' }}>
+								<div>006</div>
+								<div>POSITIONS & ON-CHAIN TX</div>
+							</div>
+							<button 
+								onClick={() => setShowTxLogs(!showTxLogs)}
+								style={{ background: 'rgba(0,212,255,0.1)', border: '1px solid rgba(0,212,255,0.3)', color: 'var(--accent)', padding: '0.4rem 1rem', borderRadius: '4px', cursor: 'pointer', fontFamily: 'var(--font-mono)', fontSize: '1.2rem', fontWeight: 700, pointerEvents: 'auto', zIndex: 20 }}
+							>
+								{showTxLogs ? 'MUTE LOGS' : 'VIEW LOGS'}
+							</button>
 						</div>
-						<div className="bento-content" style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, overflow: 'hidden', padding: 0, margin: 0 }}>
+						<div className="bento-content" style={{ position: 'absolute', top: '3rem', left: 0, right: 0, bottom: 0, overflow: 'hidden', padding: 0, margin: 0 }}>
 							<NeuralLoom telem={telem} hasPositions={telem.openPositions.length > 0} />
 
-							{telem.openPositions.length > 0 && (
+							{telem.openPositions.length > 0 && !showTxLogs && (
 								<div className="glass-positions-layer" style={{ padding: '2.5vw', width: '100%', height: '100%', boxSizing: 'border-box' }}>
 									<div style={{ display: 'flex', flexDirection: 'column', gap: '1.5vw' }}>
 										{telem.openPositions.map((pos, i) => (
@@ -683,6 +692,28 @@ export default function App() {
 												</div>
 											</div>
 										))}
+									</div>
+								</div>
+							)}
+
+							{showTxLogs && (
+								<div style={{ position: 'absolute', inset: 0, background: 'rgba(4,4,6,0.95)', zIndex: 10, padding: '2.5vw', display: 'flex', flexDirection: 'column', overflowY: 'auto', borderTop: '1px solid rgba(0,212,255,0.1)' }}>
+									<div style={{ color: 'rgba(0,212,255,0.5)', marginBottom: '1.5vw', fontSize: '1.6rem', fontFamily: 'var(--font-mono)', letterSpacing: '0.1em' }}>LIVE ON-CHAIN BROADCAST LOG</div>
+									
+									<div style={{ display: 'flex', flexDirection: 'column', gap: '0.8vw' }}>
+										{telem.systemLogs.slice(-15).map((log, i) => (
+											<div key={`sys-${i}`} style={{ fontFamily: 'var(--font-mono)', fontSize: '1.4rem', color: log.level === 'success' ? '#00ffaa' : log.level === 'warn' ? '#ffaa00' : 'rgba(255,255,255,0.7)' }}>
+												<span style={{ opacity: 0.4 }}>[{new Date(log.timestamp * 1000).toISOString().split('T')[1].slice(0,-1)}]</span> <span style={{ fontWeight: 600, color: 'var(--accent)' }}>{log.tag}</span> {log.message}
+											</div>
+										))}
+										{telem.txHashes.slice(-10).map((hash, i) => (
+											<div key={`tx-${i}`} style={{ fontFamily: 'var(--font-mono)', fontSize: '1.5rem', color: '#ffb800', fontWeight: 700, padding: '0.5vw', background: 'rgba(255, 184, 0, 0.1)', borderLeft: '3px solid #ffb800', marginTop: '0.5vw' }}>
+												<span style={{ opacity: 0.6 }}>[{new Date().toISOString().split('T')[1].slice(0,-1)}]</span> ⛓️ [ON-CHAIN] TX CONFIRMED: {hash}
+											</div>
+										))}
+										{telem.txHashes.length === 0 && telem.systemLogs.length === 0 && (
+											<div style={{ color: 'rgba(255,255,255,0.3)', fontStyle: 'italic', fontSize: '1.4rem' }}>Awaiting swarm telemetry...</div>
+										)}
 									</div>
 								</div>
 							)}
