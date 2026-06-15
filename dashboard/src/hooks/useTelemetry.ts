@@ -251,7 +251,7 @@ const MOCK_DATA: TelemetryData = {
   registryAddress: '0x1150…0008',
   chainId: 5000,
   agentId: 1,
-  benchmark: { total_cycles: 47, agreements: 37, agreement_rate: 78.7, ai_avg_confidence: 0.824 },
+  benchmark: { total_cycles: 47, agreements: 37, agreement_rate: 0.787, ai_avg_confidence: 82.4 },
   paperStats: { total_trades: 23, win_rate: 0.757, total_pnl: 1444.91, max_drawdown: 0.034, balance: 11444.91 },
   riskState: { dynamic_leverage: 5.0, atr_estimate: 0.015, macro_penalty: 0.0, ewma_confidence: 0.72, risk_appetite: 0.85, pretrade_factor: 0.92, circuit_breaker: 'GREEN' },
   rampState: { current_phase: 1, phase_label: 'SEED', max_position_pct: 0.10, daily_loss_kill_pct: 3.0, total_promotions: 2, total_demotions: 0 },
