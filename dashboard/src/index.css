@@ -456,7 +456,7 @@ html[data-theme="light"] .theme-letter.active {
 	--ambient-opacity: 0.85;
 	z-index: 1;
 	animation: mdxAmbientAppear 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-	animation-delay: 2.2s;
+	animation-delay: 0.2s;
 }
 html[data-theme="light"] .mdx-glow-core {
 	filter: hue-rotate(330deg) saturate(1.4) brightness(1.1);
@@ -481,7 +481,7 @@ html[data-theme="light"] .mdx-glow-core {
 	opacity: 0;
 	--ambient-opacity: 1;
 	animation: mdxAmbientAppear 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-	animation-delay: 2.2s;
+	animation-delay: 0.2s;
 }
 html[data-theme="light"] .mdx-arch-line {
 	border-color: rgba(255, 100, 50, 0.3);
@@ -506,7 +506,7 @@ html[data-theme="light"] .mdx-arch-line {
 	opacity: 0;
 	--ambient-opacity: 1;
 	animation: mdxAmbientAppear 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-	animation-delay: 2.2s;
+	animation-delay: 0.2s;
 }
 
 .hero-content {
@@ -581,21 +581,21 @@ html[data-theme="light"] .mdx-arch-line {
 	will-change: transform, opacity;
 }
 
-/* Exact MDX Delays */
-.tech-stats-bar {
-	animation-delay: 1.0s;
-}
-
-.metrics-pills {
-	animation-delay: 1.3s;
+/* Staggered Quick Delays */
+.hero-title {
+	animation-delay: 0.1s;
 }
 
 .mdx-two-tone-text {
-	animation-delay: 1.6s;
+	animation-delay: 0.3s;
 }
 
-.hero-title {
-	animation-delay: 2.1s; /* EXACT MDX TIMING */
+.metrics-pills {
+	animation-delay: 0.4s;
+}
+
+.tech-stats-bar {
+	animation-delay: 0.5s;
 }
 
 .hero-title {
