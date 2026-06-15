@@ -703,12 +703,12 @@ export default function App() {
 									<div style={{ display: 'flex', flexDirection: 'column', gap: '0.8vw', WebkitMaskImage: 'linear-gradient(to bottom, black 70%, transparent 100%)', flex: 1 }}>
 										{telem.logs.slice(-25).map((log, i) => (
 											<div key={`sys-${i}`} style={{ fontFamily: 'var(--font-mono)', fontSize: '1.4rem', color: 'rgba(255,255,255,0.6)', lineHeight: '1.4' }}>
-												<span style={{ opacity: 0.3 }}>[{new Date().toISOString().split('T')[1].slice(0,-1)}]</span> <span style={{ fontWeight: 600, color: 'rgba(255,255,255,0.9)' }}>{log.tag}</span> {log.msg}
+												<span style={{ opacity: 0.3 }}>[{log.time || new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute:'2-digit', second:'2-digit' }) + '.000'}]</span> <span style={{ fontWeight: 600, color: 'rgba(255,255,255,0.9)' }}>{log.tag}</span> {log.msg}
 											</div>
 										))}
 										{telem.txHashes.slice(-5).map((hash, i) => (
 											<div key={`tx-${i}`} style={{ fontFamily: 'var(--font-mono)', fontSize: '1.5rem', color: 'rgba(255,255,255,0.9)', fontWeight: 600, marginTop: '0.5vw' }}>
-												<span style={{ opacity: 0.3 }}>[{new Date().toISOString().split('T')[1].slice(0,-1)}]</span> ⛓️ [ON-CHAIN] TX CONFIRMED: {hash}
+												<span style={{ opacity: 0.3 }}>[{new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute:'2-digit', second:'2-digit' })}.000]</span> ⛓️ [ON-CHAIN] TX CONFIRMED: {hash}
 											</div>
 										))}
 										{telem.txHashes.length === 0 && telem.logs.length === 0 && (

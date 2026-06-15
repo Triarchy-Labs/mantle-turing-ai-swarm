@@ -142,7 +142,7 @@ export interface TelemetryData {
   pipelineTotal: number;
   markets: MarketRow[];
   debates: { agent: string; color: string; msg: string; time: string }[];
-  logs: { tag: string; msg: string; type: string; off: number }[];
+  logs: { tag: string; msg: string; type: string; off: number; time?: string }[];
   txHashes: string[];
   pnl: string;
   winRate: string;
@@ -411,6 +411,7 @@ function mapResponse(resp: TelemetryResponse): TelemetryData {
         msg: l.message,
         type: l.level === 'success' ? 'success' : '',
         off: i,
+        time: l.timestamp ? new Date(l.timestamp * 1000).toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute:'2-digit', second:'2-digit', fractionalSecondDigits: 3 }) : undefined,
       }))
     : MOCK_LOGS;
 
