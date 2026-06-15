@@ -2,8 +2,12 @@
 // Proxies chat requests to OpenRouter, hiding the API key from the client.
 // Supports streaming responses and automatic model fallback.
 
-const PRIMARY_MODEL = 'nvidia/nemotron-3-ultra-550b-a55b:free';
-const FALLBACK_MODEL = 'moonshotai/kimi-k2.6';
+const PRIMARY_MODEL = 'nvidia/nemotron-3-nano-30b-a3b:free';
+const FALLBACK_MODELS = [
+  'qwen/qwen3-next-80b-a3b-instruct:free',
+  'google/gemma-4-31b-it:free',
+  'moonshotai/kimi-k2.6'
+];
 
 const SYSTEM_PROMPT = `You are the Swarm Intelligence Agent — the onboard AI for the Mantle AI Swarm autonomous trading system. You live inside the dashboard and help users understand and interact with the swarm.
 
@@ -62,9 +66,12 @@ export default async function handler(req, res) {
     ];
 
     // Try primary model, fallback on error
-    const model = await tryModel(apiKey, PRIMARY_MODEL, fullMessages, res);
-    if (!model) {
-      await tryModel(apiKey, FALLBACK_MODEL, fullMessages, res);
+    let success = await tryModel(apiKey, PRIMARY_MODEL, fullMessages, res);
+    if (!success) {
+      for (const fallback of FALLBACK_MODELS) {
+        success = await tryModel(apiKey, fallback, fullMessages, res);
+        if (success) break;
+      }
     }
   } catch (err) {
     console.error('Chat API error:', err);
