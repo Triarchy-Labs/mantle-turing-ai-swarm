@@ -523,21 +523,44 @@ html[data-theme="light"] .mdx-arch-line {
 	}
 }
 
+@keyframes mdxFadeInDown {
+	0% {
+		opacity: 0;
+		transform: translateY(-40px);
+	}
+	100% {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+/* Header (Top to Bottom) */
+.triarchy-logo-wrapper,
+.header-right-stats,
+.theme-toggle-dl,
+.header-menu-btn {
+	opacity: 0;
+	animation: mdxFadeInDown 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+	will-change: transform, opacity;
+}
+
+.triarchy-logo-wrapper { animation-delay: 0.1s; }
+.header-right-stats { animation-delay: 0.2s; }
+.theme-toggle-dl { animation-delay: 0.3s; }
+.header-menu-btn { animation-delay: 0.4s; }
+
+/* Hero Section (Bottom to Top) */
 .hero-title,
 .mdx-two-tone-text,
 .metrics-pills,
 .tech-stats-bar {
 	opacity: 0;
-	/* Slower, more cinematic easing */
 	animation: mdxFadeInUp 2.0s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 	will-change: transform, opacity;
 }
 
-.hero-title {
-	animation-delay: 0.3s;
-}
-
-.mdx-two-tone-text {
+/* Reverse order: Tech stats first, MANTLE last */
+.tech-stats-bar {
 	animation-delay: 0.5s;
 }
 
@@ -545,8 +568,12 @@ html[data-theme="light"] .mdx-arch-line {
 	animation-delay: 0.7s;
 }
 
-.tech-stats-bar {
+.mdx-two-tone-text {
 	animation-delay: 0.9s;
+}
+
+.hero-title {
+	animation-delay: 1.2s;
 }
 
 .hero-title {
