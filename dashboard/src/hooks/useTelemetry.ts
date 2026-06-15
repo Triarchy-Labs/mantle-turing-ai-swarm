@@ -430,7 +430,7 @@ function mapResponse(resp: TelemetryResponse): TelemetryData {
         const parts = l.message.split(': ');
         const sym = parts[0] || 'UNK';
         const body = parts[1] || '';
-        const verdictStr = body.includes('BUY') || body.includes('SELL') ? 'EXECUTED' : 'HOLD';
+        const verdictStr = (body.includes('BUY') || body.includes('SELL') ? 'EXECUTED' : 'HOLD') as 'EXECUTED' | 'REJECTED' | 'HOLD';
         const scoreStr = body.replace('Verdict=', '');
         return {
           sym,
