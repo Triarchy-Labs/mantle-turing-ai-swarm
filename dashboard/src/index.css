@@ -126,18 +126,18 @@ html[data-theme="light"] {
 	--border-hover: rgba(15, 92, 86, 0.4);
 	--glass-bg: #ffffff;
 	--glass-bg-hover: #f5f5f5;
-	--accent: #0f5c56;
-	--accent-hover: #0a403c;
-	--accent-glow: rgba(15, 92, 86, 0.2);
-	--accent-hover-glow: rgba(10, 64, 60, 0.2);
+	--accent: #558fae;
+	--accent-hover: #3d6f8a;
+	--accent-glow: rgba(85, 143, 174, 0.2);
+	--accent-hover-glow: rgba(61, 111, 138, 0.2);
 	
 	/* Custom Cursor Reversal */
 	--cursor-bg: #1a1a2e;
 	--cursor-blend: normal;
 	--cursor-border: 1px solid rgba(26, 26, 46, 0.5);
-	--cursor-border-hover: 1px solid rgba(15, 92, 86, 0.8);
+	--cursor-border-hover: 1px solid rgba(85, 143, 174, 0.8);
 	--cursor-shadow: 0 0 10px rgba(26, 26, 46, 0.2);
-	--cursor-shadow-hover: 0 0 15px rgba(15, 92, 86, 0.4);
+	--cursor-shadow-hover: 0 0 15px rgba(85, 143, 174, 0.4);
 }
 
 * {
@@ -842,6 +842,13 @@ html[data-theme="light"] .toggle-group {
 html[data-theme="light"] .metric-pill-btn {
 	color: #031819;
 	border-color: rgba(0, 0, 0, 0.15);
+}
+html[data-theme="light"] .metric-pill-btn.hovered,
+html[data-theme="light"] .metric-pill-btn.active {
+	color: #ffffff;
+}
+html[data-theme="light"] .metric-pill-btn .btn__circle {
+	background-color: #0c1218;
 }
 html[data-theme="light"] .metric-pill-btn:hover .btn__bg {
 	background: rgba(0, 0, 0, 0.05);
@@ -2760,9 +2767,9 @@ html[data-theme="dark"] .text-reveal-container.is-revealed .text-reveal-word:hov
 
 /* ── Light Theme Final Polish Overrides ── */
 html[data-theme="light"] {
-    --orb-eye-working: #00f5ff;
+    --orb-eye-working: #79adc9;
     --orb-eye-idle: #fff;
-    --orb-eye-shadow-working: 0 0 2rem #00f5ff, 0 0 4rem #00f5ff;
+    --orb-eye-shadow-working: 0 0 2rem #79adc9, 0 0 4rem #79adc9;
 }
 html[data-theme="light"] .swarm-chat-orb-inner {
     background: radial-gradient(circle at 35% 35%, #444 0%, #000 60%) !important;
