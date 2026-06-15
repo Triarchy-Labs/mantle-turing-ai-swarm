@@ -2370,9 +2370,24 @@ html[data-theme="light"] .log-terminal {
 	-webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 60%);
 }
 
+.loom-grid::after {
+	content: '';
+	position: absolute;
+	top: 0; left: 0; right: 0; bottom: 0;
+	background: linear-gradient(to bottom, transparent 0%, rgba(0, 245, 255, 0.02) 48%, rgba(0, 245, 255, 0.3) 50%, rgba(0, 245, 255, 0.02) 52%, transparent 100%);
+	background-size: 100% 200%;
+	animation: radar-scan 6s linear infinite;
+	pointer-events: none;
+}
+
 @keyframes grid-flow {
 	0% { background-position: 0 0; }
 	100% { background-position: 0 150px; }
+}
+
+@keyframes radar-scan {
+	0% { background-position: 0 -200%; }
+	100% { background-position: 0 200%; }
 }
 
 .loom-orbit {
@@ -2402,6 +2417,19 @@ html[data-theme="light"] .log-terminal {
 	z-index: 5;
 	cursor: crosshair;
 	transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.loom-anomaly::before {
+	content: '';
+	position: absolute;
+	top: 6px;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 1px;
+	height: 45px;
+	background: linear-gradient(to bottom, var(--accent) 0%, transparent 100%);
+	opacity: 0.6;
+	pointer-events: none;
 }
 
 .loom-anomaly:hover {
@@ -2785,9 +2813,12 @@ html[data-theme="light"] .swarm-chat-orb.thinking .swarm-chat-orb-inner {
     border-color: rgba(0, 0, 0, 0.6) !important;
 }
 html[data-theme="light"] .loom-grid {
-    background-image: 
-        linear-gradient(rgba(0, 0, 0, 0.08) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 0, 0, 0.08) 1px, transparent 1px);
+	background-image: 
+		linear-gradient(rgba(0, 0, 0, 0.08) 1px, transparent 1px),
+		linear-gradient(90deg, rgba(0, 0, 0, 0.08) 1px, transparent 1px);
+}
+html[data-theme="light"] .loom-grid::after {
+	background: linear-gradient(to bottom, transparent 0%, rgba(85, 143, 174, 0.02) 48%, rgba(85, 143, 174, 0.3) 50%, rgba(85, 143, 174, 0.02) 52%, transparent 100%);
 }
 html[data-theme="light"] .crt-overlay {
     background: linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.03) 50%);
