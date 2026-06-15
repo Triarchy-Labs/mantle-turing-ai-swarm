@@ -22,7 +22,7 @@
 │              (swarm-engine — main loop)                         │
 ├────────────┬────────────┬─────────────┬────────────────────────┤
 │            │            │             │                        │
-│  OUROBOROS │   TITAN    │  HIVE MIND  │     Turing AGENTS        │
+│  OUROBOROS │   TITAN    │  HIVE MIND  │     TURING AGENTS        │
 │   BRAIN    │   CORE     │   INTEL     │  (6 autonomous nodes)  │
 │            │            │             │                        │
 │ LLM Debate │ Neural     │ 40-Module   │ Consensus · Risk       │
@@ -52,9 +52,9 @@
 | **swarm-engine** | 1,090 | Main orchestrator — v5.0 24-stage pipeline + telemetry HTTP server (:3402/7 endpoints) + live chain broadcast |
 | **turing-consensus** | 398 | PolicyGovernor — 4-voter consensus engine for trade decisions |
 | **turing-risk** | 555 | Regime-aware Kelly sizing, KillSwitch, ATR stops, BucketCap risk management |
-| **turing-oracle** | 83 | Gamma API — live prediction market sentiment oracle |
+| **turing-oracle** | 83 | Sentiment Oracle — live prediction market sentiment tracker |
 | **turing-memory** | 124 | HyperEdge graph + sled DB persistent memory |
-| **turing-sniper** | 524 | DEX execution + turing bounty protocol client |
+| **turing-sniper** | 524 | DEX execution + autonomous reward protocol client |
 | **turing-liquidator** | 111 | On-chain flash liquidation via ILendingPool |
 | **core-ipc** | 75 | mmap-based zero-copy inter-agent communication |
 
@@ -75,7 +75,7 @@ Market Data
     ↓
 ╔═ TITAN ENTRY (8-gate pipeline: daily loss, symbol streak, imbalance, margin) ═╗
     ↓
-╔═ Turing CONSENSUS (PolicyGovernor: signal + trend + macro = 3-voter majority) ═╗
+╔═ TURING CONSENSUS (PolicyGovernor: signal + trend + macro = 3-voter majority) ═╗
     ↓
 ╔═ RISK GATE (Regime-aware Kelly × PreTrade factor × Risk Appetite dampening) ═╗
     ↓
