@@ -615,9 +615,9 @@ export default function App() {
 								{/* Benchmark stats row */}
 								<div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderTop: '1px solid rgba(255,255,255,0.04)', marginTop: '0.3rem' }}>
 									{[
-										{ label: 'Cycles', value: telem.benchmark?.total_cycles ?? 0 },
-										{ label: 'Agreement', value: `${(telem.benchmark?.agreement_rate ?? 0).toFixed(1)}%` },
-										{ label: 'AI Conf.', value: `${((telem.benchmark?.ai_avg_confidence ?? 0) * 100).toFixed(0)}%` },
+										{ label: 'Verdicts', value: telem.benchmark?.total_cycles ?? 0 },
+										{ label: 'Agreement', value: `${((telem.benchmark?.agreement_rate ?? 0) * 100).toFixed(1)}%` },
+										{ label: 'AI Conf.', value: `${(telem.benchmark?.ai_avg_confidence ?? 0).toFixed(1)}%` },
 										{ label: 'Consensus', value: `${telem.benchmark?.agreements ?? 0}/${telem.benchmark?.total_cycles ?? 0}` },
 									].map((stat, i) => (
 										<div key={i} style={{ textAlign: 'center' }}>
