@@ -285,10 +285,10 @@ export default function SwarmChat({ telem, orbState }: SwarmChatProps) {
   // Orb eyes config
   const eyeH = chatOrbState === 'working' ? '1.6rem' : chatOrbState === 'thinking' ? '4.7rem' : '5.7rem';
   const eyeR = chatOrbState === 'working' ? '0.7rem' : '1.8rem';
-  const eyeBg = chatOrbState === 'working' ? 'var(--accent-hover)' : '#fff';
+  const eyeBg = chatOrbState === 'working' ? 'var(--orb-eye-working, var(--accent-hover))' : 'var(--orb-eye-idle, #fff)';
   const eyeShadow = chatOrbState === 'working'
-    ? '0 0 2rem var(--accent-hover), 0 0 4rem var(--accent-hover)'
-    : '0 0 1.2rem rgba(255,255,255,0.8)';
+    ? 'var(--orb-eye-shadow-working, 0 0 2rem var(--accent-hover), 0 0 4rem var(--accent-hover))'
+    : 'var(--orb-eye-shadow-idle, 0 0 1.2rem rgba(255,255,255,0.8))';
 
   return (
     <div ref={containerRef} className="swarm-chat" id="swarm-chat-panel" style={{ height: '100%', border: 'none', background: 'transparent' }}>
