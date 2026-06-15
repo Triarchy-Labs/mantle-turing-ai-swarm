@@ -1233,8 +1233,6 @@ html[data-theme="light"] .lusion-btn-glass:hover {
 	display: flex;
 	flex-direction: column;
 	min-height: 51.2rem;
-	max-height: 72rem;
-	max-width: 80rem;
 	margin: 0 auto;
 	width: 100%;
 }
@@ -1394,6 +1392,11 @@ html[data-theme="light"] .lusion-btn-glass:hover {
 	font-size: 1.1em;
 	margin: 0.6rem 0 0.3rem;
 	font-weight: 700;
+}
+.swarm-md blockquote {
+	border-left: none;
+	margin: 0;
+	padding: 0;
 }
 
 /* ── Input ── */
