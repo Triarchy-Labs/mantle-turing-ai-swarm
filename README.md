@@ -46,7 +46,7 @@
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-── ╱╲ ──
+─── / ───
 
 /// CRATE MAP
 
@@ -196,7 +196,7 @@ Live transparency endpoint on `http://localhost:3402`:
 
 All models are free-tier via OpenRouter. Zero inference cost.
 
-── ╱╲ ──
+─── / ───
 
 /// QUICK START
 
