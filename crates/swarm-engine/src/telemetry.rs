@@ -187,7 +187,6 @@ pub fn spawn_server(handle: TelemetryHandle) {
         }
 
         let app = Router::new()
-            .layer(middleware::from_fn(cors_middleware))
             .route("/", get(move || {
                 let h = h1.clone();
                 async move {
@@ -276,7 +275,8 @@ pub fn spawn_server(handle: TelemetryHandle) {
                         "circuit_breaker": state.risk_state.as_ref().map(|r| r.circuit_breaker.clone()).unwrap_or("UNKNOWN".into()),
                     }))
                 }
-            }));
+            }))
+            .layer(middleware::from_fn(cors_middleware));
 
         let port = std::env::var("PORT")
             .ok().and_then(|p| p.parse::<u16>().ok())
