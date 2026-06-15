@@ -927,16 +927,18 @@ async fn main() {
                 }
             }).collect();
 
-            let pe = paper.lock().unwrap();
-            if !pe.pnl_history.is_empty() {
-                let s = pe.stats();
-                t.paper_stats = Some(telemetry::PaperStats {
-                    total_trades: s.total_trades,
-                    win_rate: s.win_rate,
-                    total_pnl: s.total_pnl,
-                    max_drawdown: s.max_drawdown,
-                    balance: pe.balance,
-                });
+            {
+                let pe = paper.lock().unwrap();
+                if !pe.pnl_history.is_empty() {
+                    let s = pe.stats();
+                    t.paper_stats = Some(telemetry::PaperStats {
+                        total_trades: s.total_trades,
+                        win_rate: s.win_rate,
+                        total_pnl: s.total_pnl,
+                        max_drawdown: s.max_drawdown,
+                        balance: pe.balance,
+                    });
+                }
             }
 
             // Benchmark stats

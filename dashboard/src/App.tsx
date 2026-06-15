@@ -700,14 +700,14 @@ export default function App() {
 								<div style={{ position: 'absolute', inset: 0, background: 'transparent', pointerEvents: 'none', zIndex: 10, padding: '2.5vw', display: 'flex', flexDirection: 'column', overflowY: 'hidden' }}>
 									<div style={{ color: 'rgba(255,255,255,0.3)', marginBottom: '1.5vw', fontSize: '1.4rem', fontFamily: 'var(--font-mono)', letterSpacing: '0.15em', textTransform: 'uppercase' }}>ON-CHAIN BROADCAST LOG</div>
 									
-									<div style={{ display: 'flex', flexDirection: 'column', gap: '0.6vw', WebkitMaskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)' }}>
-										{telem.logs.slice(-12).map((log, i) => (
-											<div key={`sys-${i}`} style={{ fontFamily: 'var(--font-mono)', fontSize: '1.2rem', color: 'rgba(255,255,255,0.6)' }}>
+									<div style={{ display: 'flex', flexDirection: 'column', gap: '0.8vw', WebkitMaskImage: 'linear-gradient(to bottom, black 70%, transparent 100%)', flex: 1 }}>
+										{telem.logs.slice(-25).map((log, i) => (
+											<div key={`sys-${i}`} style={{ fontFamily: 'var(--font-mono)', fontSize: '1.4rem', color: 'rgba(255,255,255,0.6)', lineHeight: '1.4' }}>
 												<span style={{ opacity: 0.3 }}>[{new Date().toISOString().split('T')[1].slice(0,-1)}]</span> <span style={{ fontWeight: 600, color: 'rgba(255,255,255,0.9)' }}>{log.tag}</span> {log.msg}
 											</div>
 										))}
 										{telem.txHashes.slice(-5).map((hash, i) => (
-											<div key={`tx-${i}`} style={{ fontFamily: 'var(--font-mono)', fontSize: '1.3rem', color: 'rgba(255,255,255,0.9)', fontWeight: 600, marginTop: '0.5vw' }}>
+											<div key={`tx-${i}`} style={{ fontFamily: 'var(--font-mono)', fontSize: '1.5rem', color: 'rgba(255,255,255,0.9)', fontWeight: 600, marginTop: '0.5vw' }}>
 												<span style={{ opacity: 0.3 }}>[{new Date().toISOString().split('T')[1].slice(0,-1)}]</span> ⛓️ [ON-CHAIN] TX CONFIRMED: {hash}
 											</div>
 										))}
