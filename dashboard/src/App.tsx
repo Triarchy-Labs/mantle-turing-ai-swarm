@@ -214,18 +214,28 @@ export default function App() {
 	const [theme, setTheme] = useState<'dark' | 'light'>('dark');
 	const [mounted, setMounted] = useState(false);
 	const [orbState, setOrbState] = useState<'idle' | 'thinking' | 'working'>('idle');
-	const [activeStage, setActiveStage] = useState(10);
-	const [analysisRunning, setAnalysisRunning] = useState(false);
+	const [activeStage, setActiveStage] = useState(0);
+	const [analysisRunning, setAnalysisRunning] = useState(true);
 	const [footerTime, setFooterTime] = useState(new Date().toLocaleTimeString('en-US', { hour12: false }));
 	const [globalPillHover, setGlobalPillHover] = useState(false);
 	const logRef = useRef<HTMLDivElement>(null);
+
+	// Trigger animation on page load
+	useEffect(() => {
+		const t = setInterval(() => {
+			setActiveStage(prev => {
+				if (prev >= 24) { clearInterval(t); setAnalysisRunning(false); return 24; }
+				return prev + 1;
+			});
+		}, 800);
+		return () => clearInterval(t);
+	}, []);
 
 	// Auto-trigger pipeline animation when a new cycle starts
 	const prevCycleRef = useRef(telem.cycle);
 	useEffect(() => {
 		if (telem.cycle > prevCycleRef.current) {
 			prevCycleRef.current = telem.cycle;
-			if (analysisRunning) return;
 			setAnalysisRunning(true);
 			setActiveStage(0);
 			const t = setInterval(() => {
@@ -234,8 +244,9 @@ export default function App() {
 					return prev + 1;
 				});
 			}, 800); // ~19 seconds to complete animation
+			return () => clearInterval(t);
 		}
-	}, [telem.cycle, analysisRunning]);
+	}, [telem.cycle]);
 
 	// Lenis smooth scroll setup
 	useEffect(() => {
