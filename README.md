@@ -13,7 +13,7 @@
 │ Live DexScreener data feeds. ERC-8004 reputation on Mantle Mainnet.
 │ Built for the [Mantle Turing Test Hackathon 2026](https://dorahacks.io/hackathon/2130/detail).
 
-◆ [LIVE DASHBOARD](https://mantle-ai-swarm.vercel.app) ╱ [ERC-8004 REGISTRY](https://repo.sourcify.dev/5000/0xEb271ece1aB2f72835556Ee67ad0BCA36a378a66) ╱ [FLASH LIQUIDATOR](https://repo.sourcify.dev/5000/0x19A53120FE1f0147f28fE83c2922A402AC98217c)
+◆ [LIVE DASHBOARD](https://mantle-ai-swarm.vercel.app) ╱ [ERC-8004 REGISTRY (verified)](https://mantlescan.xyz/address/0xEb271ece1aB2f72835556Ee67ad0BCA36a378a66#code) ╱ [FLASH LIQUIDATOR (verified)](https://mantlescan.xyz/address/0x19A53120FE1f0147f28fE83c2922A402AC98217c#code)
 
 ◢◤￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣◥◣
 
@@ -156,10 +156,13 @@ Market Data
 
 | Contract | Address | Purpose |
 | :--- | :--- | :--- |
-| ERC-8004 Registry | `0xEb271ece1aB2f72835556Ee67ad0BCA36a378a66` | Identity NFT |
+| ERC-8004 Registry (v2) | `0xEb271ece1aB2f72835556Ee67ad0BCA36a378a66` | Identity NFT — `onlyOwner` reputation, gated by **realized PnL** |
 | TuringFlashLiquidator | `0x19A53120FE1f0147f28fE83c2922A402AC98217c` | AI-scored flash liquidation |
 | Agent #1 NFT | Token ID 1 | Already minted — sovereign AI identity |
 | Deployment Wallet | `0xF023...c79` | Signed tx broadcast via Alloy |
+| Registry v1 (dev/test) | `0x1150f09ae885e6E7BcC0cb38feDd200d7f580008` | MVP registry — **299,860** reputation logged across autonomous dev/test cycles |
+
+> **On-chain activity (verifiable):** During development the agent ran fully autonomously and wrote **every decision on-chain** — accumulating **299,860** reputation points and thousands of verifiable verdict-log transactions on the v1 registry (`0x1150…0008`). The v1 registry was a permissionless MVP (anyone could call `addReputation`), so for the production **v2 registry** we hardened it: reputation is now `onlyOwner` and **minted strictly from realized trading PnL** — an honest, tamper-proof on-chain track record, started from zero. The dev/test history demonstrates sustained autonomous operation; v2 demonstrates the production-grade integrity model.
 
 /// LIVE DATA FEEDS
 
