@@ -156,8 +156,8 @@ Market Data
 
 | Contract | Address | Purpose |
 |----------|---------|---------|
-| ERC8004Registry | `0xFA0b...8383` | Agent identity NFT + dynamic reputation |
-| TuringFlashLiquidator | `0x41c5...4F4` | AI-scored flash liquidation |
+| ERC8004Registry | `0x1150...0008` | Agent identity NFT + dynamic reputation (298k on-chain) |
+| TuringFlashLiquidator | `0x30da...072d` | AI-scored flash liquidation |
 | Agent #1 NFT | Token ID 1 | Already minted — sovereign AI identity |
 | Deployment Wallet | `0xF023...c79` | Signed tx broadcast via Alloy |
 
