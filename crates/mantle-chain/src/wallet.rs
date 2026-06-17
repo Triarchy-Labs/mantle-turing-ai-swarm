@@ -134,7 +134,34 @@ pub async fn execute_moe_swap<P: Provider>(
         .unwrap_or(U256::ZERO);
     let deadline = U256::from(chrono::Utc::now().timestamp() as u64 + 600); // +10 mins
 
-    let call = IUniswapV2Router02::swapExactETHForTokensCall {
+    use crate::dex::IWMNT;
+    let wmnt_addr = WMNT.parse::<Address>().unwrap();
+
+    // 1. Wrap MNT -> WMNT
+    let call_deposit = IWMNT::depositCall {};
+    let tx_dep = alloy::rpc::types::TransactionRequest::default()
+        .to(wmnt_addr)
+        .input(call_deposit.abi_encode().into())
+        .value(value_wei);
+    
+    let pending_dep = provider.send_transaction(tx_dep)
+        .await
+        .map_err(|e| format!("deposit failed: {e}"))?;
+    pending_dep.get_receipt().await.map_err(|e| format!("deposit receipt err: {e}"))?;
+
+    // 2. Approve Router
+    let call_app = IWMNT::approveCall { spender: router_addr, amount: value_wei };
+    let tx_app = alloy::rpc::types::TransactionRequest::default()
+        .to(wmnt_addr)
+        .input(call_app.abi_encode().into());
+    let pending_app = provider.send_transaction(tx_app)
+        .await
+        .map_err(|e| format!("approve failed: {e}"))?;
+    pending_app.get_receipt().await.map_err(|e| format!("approve receipt err: {e}"))?;
+
+    // 3. Swap Exact Tokens For Tokens
+    let call = IUniswapV2Router02::swapExactTokensForTokensCall {
+        amountIn: value_wei,
         amountOutMin: amount_out_min,
         path,
         to: to_addr,
@@ -144,8 +171,7 @@ pub async fn execute_moe_swap<P: Provider>(
 
     let tx = alloy::rpc::types::TransactionRequest::default()
         .to(router_addr)
-        .input(calldata.into())
-        .value(value_wei);
+        .input(calldata.into());
 
     let pending = provider.send_transaction(tx)
         .await
