@@ -155,7 +155,7 @@ pub fn new_handle() -> TelemetryHandle {
         pipeline_total: 24,
         agent_id: 1,
         chain_id: 5000,
-        registry_address: "0x1150f09ae885e6E7BcC0cb38feDd200d7f580008",
+        registry_address: mantle_chain::onchain::ERC8004_REGISTRY,
         ..Default::default()
     }))
 }

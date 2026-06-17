@@ -4,7 +4,7 @@
 # ═══════════════════════════════════════════════════════════
 
 [verdict]
-threshold = 1.5       # |score| >= this → BUY/SELL, else HOLD
+threshold = 0.5       # |score| >= this → BUY/SELL, else HOLD
 score_clamp = 5.0     # max absolute score (prevents runaway)
 
 [confidence]

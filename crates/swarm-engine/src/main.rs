@@ -807,16 +807,24 @@ async fn decision_cycle<P: alloy::providers::Provider>(
                 Err(e) => tracing::warn!("⛓️  TX FAILED [{}]: {}", data.symbol, e),
             }
 
-            // Execute REAL micro-swap if LIVE_TRADING is enabled and signal is BUY
+            // Execute REAL micro-swap if LIVE_TRADING is enabled and signal is BUY.
+            // The swap path is WMNT→token_out (we pay native MNT). When the BUY
+            // target IS MNT/WMNT itself, token_out == WMNT, so the path would be
+            // [WMNT, WMNT] — which the router rejects (IDENTICAL_ADDRESSES). Skip
+            // those instead of firing a guaranteed-revert transaction.
             if std::env::var("LIVE_TRADING").map(|v| v == "1").unwrap_or(false) && verdict.decision == Verdict::Buy {
                 if let Some(token_out) = token_address(&data.symbol) {
-                    tracing::info!("🔥 LIVE TRADING ENABLED: Attempting real swap for {}...", data.symbol);
-                    match execute_moe_swap(provider, DEPLOYMENT_WALLET, token_out, 0.05).await {
-                        Ok(swap_hash) => {
-                            tracing::info!("🚀 REAL SWAP CONFIRMED [{}]: {}", data.symbol, swap_hash);
-                            tx_hashes.lock().unwrap().push(swap_hash);
+                    if token_out.eq_ignore_ascii_case(mantle_chain::dex::WMNT) {
+                        tracing::info!("🔥 LIVE TRADING [{}]: skipping swap — cannot swap WMNT→WMNT (BUY target is MNT itself)", data.symbol);
+                    } else {
+                        tracing::info!("🔥 LIVE TRADING ENABLED: Attempting real swap for {}...", data.symbol);
+                        match execute_moe_swap(provider, DEPLOYMENT_WALLET, token_out, 0.05).await {
+                            Ok(swap_hash) => {
+                                tracing::info!("🚀 REAL SWAP CONFIRMED [{}]: {}", data.symbol, swap_hash);
+                                tx_hashes.lock().unwrap().push(swap_hash);
+                            }
+                            Err(e) => tracing::warn!("❌ REAL SWAP FAILED [{}]: {}", data.symbol, e),
                         }
-                        Err(e) => tracing::warn!("❌ REAL SWAP FAILED [{}]: {}", data.symbol, e),
                     }
                 }
             }
@@ -1077,7 +1085,7 @@ async fn main() {
                 if !r.bull_argument.is_empty() {
                     debates.push(telemetry::DebateTelemetry {
                         symbol: r.symbol.clone(),
-                        agent: "Veldora (Synthesis)".into(),
+                        agent: "Synthesis Agent".into(),
                         message: r.bull_argument.chars().take(200).collect(),
                         role: "bull".into(),
                         timestamp: r.timestamp,
@@ -1086,7 +1094,7 @@ async fn main() {
                 if !r.bear_argument.is_empty() {
                     debates.push(telemetry::DebateTelemetry {
                         symbol: r.symbol.clone(),
-                        agent: "Zegion (Executor)".into(),
+                        agent: "Executor Agent".into(),
                         message: r.bear_argument.chars().take(200).collect(),
                         role: "bear".into(),
                         timestamp: r.timestamp,
@@ -1095,7 +1103,7 @@ async fn main() {
                 if r.macro_bias != "NEUTRAL" {
                     debates.push(telemetry::DebateTelemetry {
                         symbol: r.symbol.clone(),
-                        agent: "Diablo (Architect)".into(),
+                        agent: "Architect Agent".into(),
                         message: format!("Macro signal: {}. Score={:.2}", r.macro_bias, r.judge_score),
                         role: "macro".into(),
                         timestamp: r.timestamp,
