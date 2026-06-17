@@ -16,10 +16,10 @@ use alloy::sol;
 // ═══════════════════════════════════════════════════════════
 
 /// ERC8004Registry contract address on Mantle Mainnet.
-pub const ERC8004_REGISTRY: &str = "0x1150f09ae885e6E7BcC0cb38feDd200d7f580008";
+pub const ERC8004_REGISTRY: &str = "0xEb271ece1aB2f72835556Ee67ad0BCA36a378a66";
 
 /// Turing Flash Liquidator contract address on Mantle Mainnet.
-pub const FLASH_LIQUIDATOR: &str = "0x30daC056a87D5844Fb5BE47Fb5412A6Bee83072d";
+pub const FLASH_LIQUIDATOR: &str = "0x19A53120FE1f0147f28fE83c2922A402AC98217c";
 
 /// Deployment wallet address.
 pub const DEPLOYMENT_WALLET: &str = "0xF02332A7d92C86631Ea30d49D9778994B9277c79";
