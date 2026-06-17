@@ -154,8 +154,17 @@ impl DqsEngine {
             5.0
         }.clamp(0.0, 10.0);
 
+        // Hard-stop override (порт: dqs.py:220-258): when the risk state hits a
+        // hard stop (drawdown > 20% or > 4 consecutive losses), F4 collapses to
+        // 0.0 and the trade MUST be skipped regardless of the other factors —
+        // otherwise a strong score on F1/F3/F5 could dilute a danger state into
+        // a Go/Caution and let the engine keep trading into a drawdown.
+        let hard_stop = input.drawdown_pct > 20.0 || input.consecutive_losses > 4;
+
         // Tier (порт: dqs.py:370-381)
-        let (tier, multiplier) = if score >= self.caution_threshold {
+        let (tier, multiplier) = if hard_stop {
+            (DqsTier::Skip, 0.0)
+        } else if score >= self.caution_threshold {
             (DqsTier::Go, 1.0)
         } else if score >= self.skip_threshold {
             (DqsTier::Caution, 0.5)

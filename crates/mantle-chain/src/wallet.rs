@@ -99,6 +99,56 @@ pub async fn broadcast_verdict<P: Provider>(
     Ok(tx_hash)
 }
 
+/// Execute a real micro-swap on Merchant Moe Classic Router to generate real trading volume.
+/// Swaps a small amount of native MNT for the target ERC20 token.
+pub async fn execute_moe_swap<P: Provider>(
+    provider: &P,
+    wallet_addr: &str,
+    token_out_addr: &str,
+    amount_mnt_in: f64,
+) -> Result<String, String> {
+    use crate::dex::{MOE_CLASSIC_ROUTER, WMNT, IUniswapV2Router02};
+    use alloy::sol_types::SolCall;
+
+    let to_addr: Address = wallet_addr.parse().map_err(|e| format!("bad wallet addr: {e}"))?;
+    let router_addr: Address = MOE_CLASSIC_ROUTER.parse().map_err(|e| format!("bad router addr: {e}"))?;
+    
+    let path = vec![
+        WMNT.parse::<Address>().unwrap(),
+        token_out_addr.parse::<Address>().map_err(|e| format!("bad token out addr: {e}"))?
+    ];
+
+    // Minimal slippage protection for micro-trades (0 = accept any amount)
+    let amount_out_min = U256::ZERO; 
+    let deadline = U256::from(chrono::Utc::now().timestamp() as u64 + 600); // +10 mins
+
+    let call = IUniswapV2Router02::swapExactETHForTokensCall {
+        amountOutMin: amount_out_min,
+        path,
+        to: to_addr,
+        deadline,
+    };
+    let calldata = call.abi_encode();
+
+    // Convert MNT float to wei (18 decimals)
+    let value_wei = U256::from((amount_mnt_in * 1e18) as u128);
+
+    let tx = alloy::rpc::types::TransactionRequest::default()
+        .to(router_addr)
+        .input(calldata.into())
+        .value(value_wei);
+
+    let pending = provider.send_transaction(tx)
+        .await
+        .map_err(|e| format!("send_transaction failed: {e}"))?;
+
+    let tx_hash = format!("{:?}", pending.tx_hash());
+    tracing::info!("⛓️  REAL SWAP SENT: {:.4} MNT -> {} (Moe Classic) → {}",
+        amount_mnt_in, token_out_addr, tx_hash);
+
+    Ok(tx_hash)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

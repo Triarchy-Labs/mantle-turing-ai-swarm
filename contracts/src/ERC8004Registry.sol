@@ -36,7 +36,7 @@ contract ERC8004Registry is ERC721, Ownable {
      * @param controller The address that will sign transactions for this agent.
      * @return agentId The newly minted ERC-8004 token ID.
      */
-    function registerAgent(address controller) external returns (uint256 agentId) {
+    function registerAgent(address controller) external onlyOwner returns (uint256 agentId) {
         agentId = ++_nextTokenId;
         _mint(controller, agentId);
         agentControllers[agentId] = controller;
@@ -49,9 +49,7 @@ contract ERC8004Registry is ERC721, Ownable {
      * @param agentId The ID of the agent.
      * @param scoreDelta The amount of reputation to add.
      */
-    function addReputation(uint256 agentId, uint256 scoreDelta) external {
-        // In a production environment, this should be restricted to authorized protocols.
-        // For Hackathon MVP, we allow open reputation tracking to demonstrate on-chain metrics.
+    function addReputation(uint256 agentId, uint256 scoreDelta) external onlyOwner {
         require(_ownerOf(agentId) != address(0), "Agent does not exist");
         
         agentReputation[agentId] += scoreDelta;
@@ -85,5 +83,13 @@ contract ERC8004Registry is ERC721, Ownable {
                 Base64.encode(bytes(json))
             )
         );
+    }
+
+    /**
+     * @dev See {IERC165-supportsInterface}.
+     */
+    function supportsInterface(bytes4 interfaceId) public view virtual override returns (bool) {
+        // ERC-8004 interface ID (example: 0x80048004) - adjust if standard defines a specific one
+        return interfaceId == bytes4(0x80048004) || super.supportsInterface(interfaceId);
     }
 }

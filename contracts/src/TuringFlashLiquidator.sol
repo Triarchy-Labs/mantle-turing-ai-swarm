@@ -36,8 +36,10 @@ contract TuringFlashLiquidator {
         bool executionSuccess = true;
 
         if (executionSuccess) {
-            // Reward the agent's on-chain reputation for a successful inference & execution.
-            registry.addReputation(agentId, 100);
+            // NOTE: We no longer update reputation here!
+            // The L0 Swarm backend (Rust) strictly gates reputation on realized PnL
+            // and calls addReputation directly as the contract Owner.
+            // registry.addReputation(agentId, 100);
         }
 
         emit LiquidationExecuted(agentId, target, aiSentimentScore, executionSuccess);

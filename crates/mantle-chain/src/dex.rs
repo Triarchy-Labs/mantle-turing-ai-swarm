@@ -48,6 +48,16 @@ sol! {
         function decimals() external view returns (uint8);
         function symbol() external view returns (string);
     }
+
+    #[sol(rpc)]
+    interface IUniswapV2Router02 {
+        function swapExactETHForTokens(
+            uint amountOutMin,
+            address[] calldata path,
+            address to,
+            uint deadline
+        ) external payable returns (uint[] memory amounts);
+    }
 }
 
 // ═══════════════════════════════════════════════════════════

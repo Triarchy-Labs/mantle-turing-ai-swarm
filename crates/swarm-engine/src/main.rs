@@ -30,7 +30,7 @@ use titan_core::deallow::Deallow;
 use titan_core::patience::PatienceTracker;
 use core_ipc::IpcBridge;
 use hive_intel::ml_local::{FeatureVector, LocalModel};
-use hive_intel::paper_engine::{PaperEngine, Side as PaperSide};
+use hive_intel::paper_engine::{PaperEngine, Side as PaperSide, MarketTick};
 use hive_intel::recall::{
     AffectiveState, ContextVector, RawMemory,
     outcome_weighted_recall,
@@ -42,8 +42,9 @@ use hive_intel::benchmark::{SmaCrossover, BenchmarkResult, BenchmarkStats};
 use turing_consensus::engine::{Action, AgentVote, PolicyGovernor};
 use turing_risk::engine::{AtrStops, MarketRegime, RiskGate};
 use turing_memory::engine::create_liquidation_edge;
-use mantle_chain::onchain::{encode_verdict_log, encode_add_reputation, AGENT_TOKEN_ID, DEPLOYMENT_WALLET};
-use mantle_chain::wallet::{broadcast_verdict, broadcast_reputation};
+use mantle_chain::onchain::{encode_verdict_log, AGENT_TOKEN_ID, DEPLOYMENT_WALLET};
+use mantle_chain::wallet::{broadcast_verdict, broadcast_reputation, execute_moe_swap};
+use mantle_chain::dex::token_address;
 
 use std::path::PathBuf;
 use std::sync::Arc;
@@ -442,6 +443,47 @@ async fn decision_cycle<P: alloy::providers::Provider>(
         tokio::task::yield_now().await;
         state.symbols.insert(data.symbol.clone(), data.clone());
 
+        // ─── Mark-to-market: realize PnL on any open position whose SL/TP the
+        //     latest price has crossed. We have no intrabar high/low, so we mark
+        //     conservatively at the close price (high=low=price).
+        let realized_pnl = {
+            let mut pe = paper.lock().unwrap();
+            let before = pe.balance;
+            pe.on_tick(&MarketTick {
+                symbol: data.symbol.clone(),
+                price: data.price,
+                high: data.price,
+                low: data.price,
+                volume: data.volume_24h,
+                timestamp_ms: chrono::Utc::now().timestamp_millis(),
+            });
+            pe.balance - before
+        };
+        if realized_pnl.abs() > f64::EPSILON {
+            tracing::info!("📕 Paper close [{}]: realized PnL=${:.2}", data.symbol, realized_pnl);
+        }
+
+        // On-chain reputation is earned STRICTLY from realized positive PnL —
+        // never minted for merely producing a decision. This keeps the agent's
+        // on-chain reputation an honest record of profitable trades.
+        if realized_pnl > 0.0 {
+            let rep_delta = (realized_pnl * 10.0).round() as u64;
+            if rep_delta > 0 {
+                if let Some(provider) = signed_provider {
+                    match broadcast_reputation(provider, rep_delta).await {
+                        Ok(hash) => {
+                            tracing::info!("⛓️  TX CONFIRMED: reputation +{} (realized ${:.2}) → {}", rep_delta, realized_pnl, hash);
+                            tx_hashes.lock().unwrap().push(hash);
+                        }
+                        Err(e) => tracing::warn!("⛓️  REP TX FAILED: {}", e),
+                    }
+                } else {
+                    tracing::info!("⛓️  REPUTATION [{}]: +{} from realized ${:.2} (dry-run, set MANTLE_PRIVATE_KEY to broadcast)",
+                        data.symbol, rep_delta, realized_pnl);
+                }
+            }
+        }
+
         // REGIME DETECTION — 4-state classifier before anything else
         let (regime, regime_conf) = detect_market_regime(data);
         let turing_regime = regime_to_risk(regime);
@@ -735,7 +777,9 @@ async fn decision_cycle<P: alloy::providers::Provider>(
             &factors_summary,
         );
 
-        // D5: Mantle Chain — On-chain verdict logging + reputation
+        // D5: Mantle Chain — On-chain verdict logging (the decision itself).
+        // NOTE: reputation is NOT minted here — it is earned only from realized
+        // PnL at the top of the loop. This block records the *decision* on-chain.
         let verdict_calldata = encode_verdict_log(
             &data.symbol,
             &format!("{}", verdict.decision),
@@ -744,8 +788,6 @@ async fn decision_cycle<P: alloy::providers::Provider>(
             &format!("{:?}", regime),
             cycle,
         );
-        let rep_delta = (verdict.score.abs() * 100.0) as u64;
-        let _rep_calldata = encode_add_reputation(rep_delta);
 
         tracing::info!("🚀 EXECUTE [{}]: {} ${:.2} | score={:.2} conf={:.1}% | regime={:?}",
             data.symbol, verdict.decision, final_size, verdict.score, verdict.confidence, regime);
@@ -764,17 +806,24 @@ async fn decision_cycle<P: alloy::providers::Provider>(
                 }
                 Err(e) => tracing::warn!("⛓️  TX FAILED [{}]: {}", data.symbol, e),
             }
-            // Broadcast reputation increment
-            match broadcast_reputation(provider, rep_delta).await {
-                Ok(hash) => {
-                    tracing::info!("⛓️  TX CONFIRMED: reputation +{} → {}", rep_delta, hash);
-                    tx_hashes.lock().unwrap().push(hash);
+
+            // Execute REAL micro-swap if LIVE_TRADING is enabled and signal is BUY
+            if std::env::var("LIVE_TRADING").map(|v| v == "1").unwrap_or(false) && verdict.decision == Verdict::Buy {
+                if let Some(token_out) = token_address(&data.symbol) {
+                    tracing::info!("🔥 LIVE TRADING ENABLED: Attempting real swap for {}...", data.symbol);
+                    match execute_moe_swap(provider, DEPLOYMENT_WALLET, token_out, 0.05).await {
+                        Ok(swap_hash) => {
+                            tracing::info!("🚀 REAL SWAP CONFIRMED [{}]: {}", data.symbol, swap_hash);
+                            tx_hashes.lock().unwrap().push(swap_hash);
+                        }
+                        Err(e) => tracing::warn!("❌ REAL SWAP FAILED [{}]: {}", data.symbol, e),
+                    }
                 }
-                Err(e) => tracing::warn!("⛓️  REP TX FAILED: {}", e),
             }
+
         } else {
-            tracing::info!("⛓️  ON-CHAIN [{}]: verdict_log={}B rep_delta={} agent=#{} (dry-run, set MANTLE_PRIVATE_KEY to broadcast)",
-                data.symbol, verdict_calldata.len(), rep_delta, AGENT_TOKEN_ID);
+            tracing::info!("⛓️  ON-CHAIN [{}]: verdict_log={}B agent=#{} (dry-run, set MANTLE_PRIVATE_KEY to broadcast)",
+                data.symbol, verdict_calldata.len(), AGENT_TOKEN_ID);
         }
 
         store_result(state, data, &verdict, &debate, true);
@@ -841,11 +890,9 @@ async fn main() {
 
     // D3: Hive Mind
     let ml_model = LocalModel::new();
-    let mut pe = PaperEngine::new(1000.0);
-    pe.pnl_history = vec![24.6, 30.8, -10.4, 40.2, 16.8, 22.4, -6.8, 39.0, 44.2, -15.6, 28.4, 33.0, 19.6, -8.2, 36.6, 42.8, 26.4, -13.0, 35.2, 21.8, -16.4, 31.6, 38.2];
-    pe.balance = 1000.0 + pe.pnl_history.iter().sum::<f64>();
-    pe.equity = pe.balance;
-    pe.peak_equity = pe.balance;
+    // Start from a clean $1000 paper account. PnL history, balance, equity and
+    // peak are populated by real paper trades as cycles execute.
+    let pe = PaperEngine::new(1000.0);
     let paper = Mutex::new(pe);
     let trade_memories = Mutex::new(Vec::<RawMemory>::new()); // Grows via PaperEngine→OWM loop
     tracing::info!("🤖 D3 Hive Mind: ML(7-feature LR) + PaperEngine($1000) + Hybrid Recall");
@@ -898,20 +945,11 @@ async fn main() {
     tracing::info!("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
 
     let start_time = std::time::Instant::now();
-    let mut cycle_count: u64 = 23;
+    let mut cycle_count: u64 = 0;
 
-    // AI vs Human Benchmark
+    // AI vs Human Benchmark — accumulated from real cycles, starts empty.
     let sma_engines: Mutex<std::collections::HashMap<String, SmaCrossover>> = Mutex::new(std::collections::HashMap::new());
-    let mut bs = BenchmarkStats::default();
-    bs.total_cycles = 46;
-    bs.agreements = 36;
-    bs.ai_correct = 35;
-    bs.human_correct = 28;
-    bs.ai_avg_confidence = 68.4;
-    bs.ai_total_score = 92.5;
-    bs.human_total_score = 45.2;
-    bs.calculate_rates();
-    let bench_stats: Mutex<BenchmarkStats> = Mutex::new(bs);
+    let bench_stats: Mutex<BenchmarkStats> = Mutex::new(BenchmarkStats::default());
 
     // Tx hash tracking for telemetry
     let tx_hashes: Mutex<Vec<String>> = Mutex::new(Vec::new());

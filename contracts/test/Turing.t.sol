@@ -29,8 +29,8 @@ contract TuringTest is Test {
         vm.prank(agent);
         liquidator.executeAILiquidation(victim, 105, id);
 
-        // Verify reputation was incremented
-        assertEq(registry.agentReputation(id), 100);
+        // Verify reputation was NOT incremented by the liquidator (it's now done by L0 backend)
+        assertEq(registry.agentReputation(id), 0);
     }
 
     function test_RevertUnauthorizedAgent() public {
@@ -54,5 +54,13 @@ contract TuringTest is Test {
     function test_RevertReputationNonExistent() public {
         vm.expectRevert("Agent does not exist");
         registry.addReputation(999, 100);
+    }
+
+    function test_RejectUnauthorizedReputation() public {
+        uint256 id = registry.registerAgent(agent);
+        
+        vm.prank(address(0xDEAD));
+        vm.expectRevert(abi.encodeWithSignature("OwnableUnauthorizedAccount(address)", address(0xDEAD)));
+        registry.addReputation(id, 100);
     }
 }

@@ -109,7 +109,7 @@ impl Orchestrator {
         tracing::info!("════════════════════════════════════════════════");
 
         // Load API keys
-        let env_content = fs::read_to_string(r"E:\ROXY_SYSTEM\Projects\Antigravity-Swarm\bot_config.env").unwrap_or_default();
+        let env_content = fs::read_to_string("bot_config.env").unwrap_or_default();
         let mut api_pairs: Vec<(String, String)> = Vec::new();
         for i in 1..=5 {
             let mut k = String::new(); let mut s = String::new();
@@ -146,7 +146,7 @@ impl Orchestrator {
         tracing::info!(balance = format!("{:.2}", *available_balance.read().await).as_str(), "[BOOT] 💰 Available balance");
 
         // Restore daily_loss from state file
-        if let Ok(content) = fs::read_to_string(r"E:\ROXY_SYSTEM\Projects\Antigravity-Swarm\Swarm_Kingdoms\V4_Titan\titan_state.json") {
+        if let Ok(content) = fs::read_to_string(crate::safe_io::data_file("titan_state.json")) {
             if let Ok(json) = serde_json::from_str::<Value>(&content) {
                 if json["date"].as_str() == Some(&Local::now().format("%Y-%m-%d").to_string()) {
                     *daily_loss.write().await = json["daily_loss"].as_f64().unwrap_or(0.0);
@@ -156,9 +156,11 @@ impl Orchestrator {
 
         // Anti-Amnesia: restore positions from Bybit API
         tracing::info!("[BOOT] Anti-Amnesia: syncing positions with exchange...");
-        let saved_ownership: HashMap<String, Value> = fs::read_to_string(
-            r"E:\ROXY_SYSTEM\Projects\Antigravity-Swarm\Swarm_Kingdoms\V4_Titan\titan_ownership.json")
-            .ok().and_then(|c| serde_json::from_str(&c).ok()).unwrap_or_default();
+        let saved_ownership: HashMap<String, Value> = if let Ok(content) = fs::read_to_string(crate::safe_io::data_file("titan_ownership.json")) {
+            serde_json::from_str(&content).ok()
+        } else {
+            None
+        }.unwrap_or_default();
 
         let (key, secret) = api_pool.get_current_keys();
         let qs = "category=linear&settleCoin=USDT";
@@ -289,7 +291,7 @@ impl Orchestrator {
                     "sl": v.last_pushed_sl
                 }))).collect();
                 let _ = crate::safe_io::SafeIO::atomic_write_with_backup(
-                    r"E:\ROXY_SYSTEM\Projects\Antigravity-Swarm\Swarm_Kingdoms\V4_Titan\titan_ownership.json",
+                    crate::safe_io::data_file("titan_ownership.json"),
                     &serde_json::to_string(&ownership).unwrap_or_default()
                 );
                 tracing::info!(count = positions.len(), "[SHUTDOWN] 💾 Positions snapshot saved with backup");
@@ -300,7 +302,7 @@ impl Orchestrator {
             let today = Local::now().format("%Y-%m-%d").to_string();
             let j = serde_json::json!({"date": today, "daily_loss": dl, "session": crate::types::get_current_session()});
             let _ = crate::safe_io::SafeIO::atomic_write(
-                r"E:\ROXY_SYSTEM\Projects\Antigravity-Swarm\Swarm_Kingdoms\V4_Titan\titan_state.json",
+                crate::safe_io::data_file("titan_state.json"),
                 &j.to_string()
             );
             tracing::info!("[SHUTDOWN] 💾 Daily state saved (loss={:.2})", dl);

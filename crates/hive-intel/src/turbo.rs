@@ -15,11 +15,87 @@
 // SIMD-accelerated Vector Operations
 // ════════════════════════════════════════════════════════════════
 
-/// SIMD-ускоренный cosine similarity.
-/// Обрабатывает 4 элемента за раз через ручное unrolling.
-/// Для массивов длиной 128+ элементов = ~4x ускорение vs наивный loop.
+/// SIMD-accelerated cosine similarity.
+///
+/// On `x86_64` with AVX2+FMA this dispatches to a hand-written 256-bit
+/// vector kernel that processes 4 `f64` lanes per instruction (true 4×
+/// SIMD). On other targets / older CPUs it falls back to a 4-way
+/// loop-unrolled scalar path. Both paths are validated to agree to 1e-9.
 #[inline]
 pub fn cosine_similarity_fast(a: &[f64], b: &[f64]) -> f64 {
+    if a.len() != b.len() || a.is_empty() {
+        return 0.0;
+    }
+
+    #[cfg(target_arch = "x86_64")]
+    {
+        if is_x86_feature_detected!("avx2") && is_x86_feature_detected!("fma") {
+            // SAFETY: guarded by runtime AVX2+FMA feature detection.
+            return unsafe { cosine_similarity_avx2(a, b) };
+        }
+    }
+
+    cosine_similarity_scalar(a, b)
+}
+
+/// Hand-written AVX2+FMA cosine kernel — 4× `f64` lanes per instruction.
+#[cfg(target_arch = "x86_64")]
+#[target_feature(enable = "avx2,fma")]
+unsafe fn cosine_similarity_avx2(a: &[f64], b: &[f64]) -> f64 {
+    use std::arch::x86_64::*;
+
+    let n = a.len();
+    let chunks = n / 4;
+
+    let mut dot = _mm256_setzero_pd();
+    let mut na = _mm256_setzero_pd();
+    let mut nb = _mm256_setzero_pd();
+
+    let pa = a.as_ptr();
+    let pb = b.as_ptr();
+
+    for i in 0..chunks {
+        let base = i * 4;
+        // SAFETY: base + 3 < chunks * 4 <= n, and a.len() == b.len().
+        let va = _mm256_loadu_pd(pa.add(base));
+        let vb = _mm256_loadu_pd(pb.add(base));
+        dot = _mm256_fmadd_pd(va, vb, dot);
+        na = _mm256_fmadd_pd(va, va, na);
+        nb = _mm256_fmadd_pd(vb, vb, nb);
+    }
+
+    let mut dot_s = hsum256_pd(dot);
+    let mut na_sq = hsum256_pd(na);
+    let mut nb_sq = hsum256_pd(nb);
+
+    // Scalar remainder when len is not a multiple of 4.
+    for i in (chunks * 4)..n {
+        let ai = *a.get_unchecked(i);
+        let bi = *b.get_unchecked(i);
+        dot_s += ai * bi;
+        na_sq += ai * ai;
+        nb_sq += bi * bi;
+    }
+
+    let norm = na_sq.sqrt() * nb_sq.sqrt();
+    if norm == 0.0 { 0.0 } else { dot_s / norm }
+}
+
+/// Horizontal sum of a 256-bit vector of four `f64`.
+#[cfg(target_arch = "x86_64")]
+#[target_feature(enable = "avx2")]
+unsafe fn hsum256_pd(v: std::arch::x86_64::__m256d) -> f64 {
+    use std::arch::x86_64::*;
+    let lo = _mm256_castpd256_pd128(v);   // [a, b]
+    let hi = _mm256_extractf128_pd(v, 1); // [c, d]
+    let sum = _mm_add_pd(lo, hi);         // [a+c, b+d]
+    let hi64 = _mm_unpackhi_pd(sum, sum); // [b+d, b+d]
+    _mm_cvtsd_f64(_mm_add_sd(sum, hi64))  // a+c + b+d
+}
+
+/// Scalar fallback: 4-way loop-unrolled cosine similarity.
+#[inline]
+fn cosine_similarity_scalar(a: &[f64], b: &[f64]) -> f64 {
     if a.len() != b.len() || a.is_empty() {
         return 0.0;
     }
@@ -97,9 +173,58 @@ pub fn cosine_similarity_fast(a: &[f64], b: &[f64]) -> f64 {
     dot / (norm_a * norm_b)
 }
 
-/// Euclidean distance (L2) — ускоренная версия.
+/// Euclidean distance (L2) — SIMD-accelerated with scalar fallback.
 #[inline]
 pub fn euclidean_distance_fast(a: &[f64], b: &[f64]) -> f64 {
+    if a.len() != b.len() || a.is_empty() {
+        return 0.0;
+    }
+
+    #[cfg(target_arch = "x86_64")]
+    {
+        if is_x86_feature_detected!("avx2") && is_x86_feature_detected!("fma") {
+            // SAFETY: guarded by runtime AVX2+FMA feature detection.
+            return unsafe { euclidean_distance_avx2(a, b) };
+        }
+    }
+
+    euclidean_distance_scalar(a, b)
+}
+
+/// Hand-written AVX2+FMA L2-distance kernel — 4× `f64` lanes per instruction.
+#[cfg(target_arch = "x86_64")]
+#[target_feature(enable = "avx2,fma")]
+unsafe fn euclidean_distance_avx2(a: &[f64], b: &[f64]) -> f64 {
+    use std::arch::x86_64::*;
+
+    let n = a.len();
+    let chunks = n / 4;
+
+    let mut acc = _mm256_setzero_pd();
+    let pa = a.as_ptr();
+    let pb = b.as_ptr();
+
+    for i in 0..chunks {
+        let base = i * 4;
+        // SAFETY: base + 3 < chunks * 4 <= n, and a.len() == b.len().
+        let va = _mm256_loadu_pd(pa.add(base));
+        let vb = _mm256_loadu_pd(pb.add(base));
+        let d = _mm256_sub_pd(va, vb);
+        acc = _mm256_fmadd_pd(d, d, acc);
+    }
+
+    let mut total = hsum256_pd(acc);
+    for i in (chunks * 4)..n {
+        let d = *a.get_unchecked(i) - *b.get_unchecked(i);
+        total += d * d;
+    }
+
+    total.sqrt()
+}
+
+/// Scalar fallback: 4-way loop-unrolled Euclidean distance.
+#[inline]
+fn euclidean_distance_scalar(a: &[f64], b: &[f64]) -> f64 {
     if a.len() != b.len() || a.is_empty() {
         return 0.0;
     }
@@ -357,6 +482,24 @@ mod tests {
         let fast = cosine_similarity_fast(&a, &b);
         assert!((naive - fast).abs() < 1e-10,
             "Fast should match naive: {} vs {}", fast, naive);
+    }
+
+    #[cfg(target_arch = "x86_64")]
+    #[test]
+    fn test_cosine_avx2_matches_scalar() {
+        if !(is_x86_feature_detected!("avx2") && is_x86_feature_detected!("fma")) {
+            return; // CPU without AVX2/FMA — scalar path is the only path.
+        }
+        // 133 elements → exercises both the 4-wide body and the remainder tail.
+        let a: Vec<f64> = (0..133).map(|i| ((i * 7 % 13) as f64) - 6.0).collect();
+        let b: Vec<f64> = (0..133).map(|i| ((i * 3 % 11) as f64) - 5.0).collect();
+        let scalar = cosine_similarity_scalar(&a, &b);
+        let simd = unsafe { cosine_similarity_avx2(&a, &b) };
+        assert!((scalar - simd).abs() < 1e-9, "scalar {} vs simd {}", scalar, simd);
+
+        let de_scalar = euclidean_distance_scalar(&a, &b);
+        let de_simd = unsafe { euclidean_distance_avx2(&a, &b) };
+        assert!((de_scalar - de_simd).abs() < 1e-9, "scalar {} vs simd {}", de_scalar, de_simd);
     }
 
     #[test]
