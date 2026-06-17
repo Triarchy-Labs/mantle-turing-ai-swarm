@@ -812,20 +812,35 @@ async fn decision_cycle<P: alloy::providers::Provider>(
             // target IS MNT/WMNT itself, token_out == WMNT, so the path would be
             // [WMNT, WMNT] — which the router rejects (IDENTICAL_ADDRESSES). Skip
             // those instead of firing a guaranteed-revert transaction.
-            if std::env::var("LIVE_TRADING").map(|v| v == "1").unwrap_or(false) && verdict.decision == Verdict::Buy {
-                if let Some(token_out) = token_address(&data.symbol) {
-                    if token_out.eq_ignore_ascii_case(mantle_chain::dex::WMNT) {
-                        tracing::info!("🔥 LIVE TRADING [{}]: skipping swap — cannot swap WMNT→WMNT (BUY target is MNT itself)", data.symbol);
-                    } else {
-                        tracing::info!("🔥 LIVE TRADING ENABLED: Attempting real swap for {}...", data.symbol);
-                        match execute_moe_swap(provider, DEPLOYMENT_WALLET, token_out, 0.05).await {
-                            Ok(swap_hash) => {
-                                tracing::info!("🚀 REAL SWAP CONFIRMED [{}]: {}", data.symbol, swap_hash);
-                                tx_hashes.lock().unwrap().push(swap_hash);
-                            }
-                            Err(e) => tracing::warn!("❌ REAL SWAP FAILED [{}]: {}", data.symbol, e),
+            if std::env::var("LIVE_TRADING").map(|v| v == "1").unwrap_or(false) {
+                // We pay native MNT and receive `token_out`. The route to take
+                // depends on the verdict:
+                //   BUY  → acquire the target asset directly (WMNT→token).
+                //   SELL → de-risk: rotate treasury MNT into USDT (the stablecoin).
+                // On Mantle the ONLY liquid native pool on Moe Classic is
+                // WMNT→USDT, so a SELL/de-risk is the route that actually fills.
+                // execute_moe_swap quotes the route first and returns Err for
+                // any pool that doesn't exist, so illiquid BUYs (e.g. WETH) and
+                // the WMNT→WMNT self-swap are skipped without wasting gas.
+                let swap_target: Option<&str> = match verdict.decision {
+                    Verdict::Buy => token_address(&data.symbol)
+                        .filter(|t| !t.eq_ignore_ascii_case(mantle_chain::dex::WMNT)),
+                    Verdict::Sell => Some(mantle_chain::dex::USDT), // de-risk MNT→USDT
+                    Verdict::Hold => None,
+                };
+
+                if let Some(token_out) = swap_target {
+                    let action = if verdict.decision == Verdict::Sell { "de-risk MNT→USDT" } else { "accumulate" };
+                    tracing::info!("🔥 LIVE TRADING [{}]: {} via Moe Classic...", data.symbol, action);
+                    match execute_moe_swap(provider, DEPLOYMENT_WALLET, token_out, 0.05).await {
+                        Ok(swap_hash) => {
+                            tracing::info!("🚀 REAL SWAP CONFIRMED [{}] ({}): {}", data.symbol, action, swap_hash);
+                            tx_hashes.lock().unwrap().push(swap_hash);
                         }
+                        Err(e) => tracing::warn!("❌ REAL SWAP SKIPPED/FAILED [{}]: {}", data.symbol, e),
                     }
+                } else {
+                    tracing::info!("🔥 LIVE TRADING [{}]: no executable swap for {:?} (self/illiquid/hold)", data.symbol, verdict.decision);
                 }
             }
 

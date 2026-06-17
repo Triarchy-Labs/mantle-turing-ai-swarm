@@ -57,7 +57,44 @@ sol! {
             address to,
             uint deadline
         ) external payable returns (uint[] memory amounts);
+
+        function getAmountsOut(
+            uint amountIn,
+            address[] calldata path
+        ) external view returns (uint[] memory amounts);
     }
+}
+
+/// Quote the expected output amount for a swap path on the Moe Classic router.
+///
+/// Calls `getAmountsOut` on-chain. Returns the last element of the amounts
+/// array (the output token amount, in its native decimals). If the pool does
+/// not exist the router reverts, which surfaces here as an `Err` — callers can
+/// use this to skip illiquid routes before spending gas on a doomed swap.
+pub async fn quote_amounts_out<P: Provider>(
+    provider: &P,
+    amount_in_wei: U256,
+    path: &[Address],
+) -> Result<U256, String> {
+    use alloy::sol_types::SolCall;
+    let router: Address = MOE_CLASSIC_ROUTER.parse().map_err(|e| format!("bad router addr: {e}"))?;
+    let call = IUniswapV2Router02::getAmountsOutCall {
+        amountIn: amount_in_wei,
+        path: path.to_vec(),
+    };
+    let tx = alloy::rpc::types::TransactionRequest::default()
+        .to(router)
+        .input(call.abi_encode().into());
+
+    let result = provider.call(tx)
+        .await
+        .map_err(|e| format!("getAmountsOut reverted (no pool / illiquid route): {e}"))?;
+
+    let decoded = IUniswapV2Router02::getAmountsOutCall::abi_decode_returns(&result)
+        .map_err(|e| format!("getAmountsOut decode failed: {e}"))?;
+
+    decoded.last().copied()
+        .ok_or_else(|| "getAmountsOut returned empty amounts".to_string())
 }
 
 // ═══════════════════════════════════════════════════════════

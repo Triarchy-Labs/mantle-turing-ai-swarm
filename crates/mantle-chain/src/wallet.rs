@@ -107,19 +107,31 @@ pub async fn execute_moe_swap<P: Provider>(
     token_out_addr: &str,
     amount_mnt_in: f64,
 ) -> Result<String, String> {
-    use crate::dex::{MOE_CLASSIC_ROUTER, WMNT, IUniswapV2Router02};
+    use crate::dex::{MOE_CLASSIC_ROUTER, WMNT, IUniswapV2Router02, quote_amounts_out};
     use alloy::sol_types::SolCall;
 
     let to_addr: Address = wallet_addr.parse().map_err(|e| format!("bad wallet addr: {e}"))?;
     let router_addr: Address = MOE_CLASSIC_ROUTER.parse().map_err(|e| format!("bad router addr: {e}"))?;
-    
+
     let path = vec![
         WMNT.parse::<Address>().unwrap(),
         token_out_addr.parse::<Address>().map_err(|e| format!("bad token out addr: {e}"))?
     ];
 
-    // Minimal slippage protection for micro-trades (0 = accept any amount)
-    let amount_out_min = U256::ZERO; 
+    // Convert MNT float to wei (18 decimals)
+    let value_wei = U256::from((amount_mnt_in * 1e18) as u128);
+
+    // Quote the route first. If the pool doesn't exist the router reverts here,
+    // so we bail out BEFORE spending gas on a guaranteed-revert swap. This is
+    // what protects us from illiquid routes (e.g. WMNT→WETH has no Classic pool).
+    let expected_out = quote_amounts_out(provider, value_wei, &path).await?;
+
+    // Slippage protection: accept at minimum 97% of the quoted output (3% tol).
+    // amountOutMin = expected * 9700 / 10000.
+    let amount_out_min = expected_out
+        .checked_mul(U256::from(9700u64))
+        .map(|v| v / U256::from(10000u64))
+        .unwrap_or(U256::ZERO);
     let deadline = U256::from(chrono::Utc::now().timestamp() as u64 + 600); // +10 mins
 
     let call = IUniswapV2Router02::swapExactETHForTokensCall {
@@ -129,9 +141,6 @@ pub async fn execute_moe_swap<P: Provider>(
         deadline,
     };
     let calldata = call.abi_encode();
-
-    // Convert MNT float to wei (18 decimals)
-    let value_wei = U256::from((amount_mnt_in * 1e18) as u128);
 
     let tx = alloy::rpc::types::TransactionRequest::default()
         .to(router_addr)
@@ -143,8 +152,8 @@ pub async fn execute_moe_swap<P: Provider>(
         .map_err(|e| format!("send_transaction failed: {e}"))?;
 
     let tx_hash = format!("{:?}", pending.tx_hash());
-    tracing::info!("⛓️  REAL SWAP SENT: {:.4} MNT -> {} (Moe Classic) → {}",
-        amount_mnt_in, token_out_addr, tx_hash);
+    tracing::info!("⛓️  REAL SWAP SENT: {:.4} MNT -> {} (Moe Classic, quoted_out={}, min_out={}) → {}",
+        amount_mnt_in, token_out_addr, expected_out, amount_out_min, tx_hash);
 
     Ok(tx_hash)
 }
