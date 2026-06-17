@@ -18,7 +18,7 @@ contract ERC8004Registry is ERC721, Ownable {
 
     uint256 private _nextTokenId;
 
-    string public constant IMAGE_URI = "https://raw.githubusercontent.com/y4motion/turing-mantle-agent/master/contracts/assets/agent-nft.png";
+    string public constant IMAGE_URI = "https://raw.githubusercontent.com/Triarchy-Labs/mantle-turing-ai-swarm/main/contracts/assets/agent-nft.png";
 
     // Mapping from agent token ID to the controlling EOA/Contract
     mapping(uint256 => address) public agentControllers;

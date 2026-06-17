@@ -13,7 +13,7 @@
 │ Live DexScreener data feeds. ERC-8004 reputation on Mantle Mainnet.
 │ Built for the [Mantle Turing Test Hackathon 2026](https://dorahacks.io/hackathon/2130/detail).
 
-◆ [LIVE DASHBOARD](https://mantle-ai-swarm.vercel.app) ╱ [ERC-8004 REGISTRY](https://repo.sourcify.dev/5000/0xFA0b5036aF9770B370B33CeBBb42d1E626338383) ╱ [FLASH LIQUIDATOR](https://repo.sourcify.dev/5000/0x41c51a03FFE750F5df1F6ffc972DBA8265B5a4F4)
+◆ [LIVE DASHBOARD](https://mantle-ai-swarm.vercel.app) ╱ [ERC-8004 REGISTRY](https://repo.sourcify.dev/5000/0x1150f09ae885e6E7BcC0cb38feDd200d7f580008) ╱ [FLASH LIQUIDATOR](https://repo.sourcify.dev/5000/0x30daC056a87D5844Fb5BE47Fb5412A6Bee83072d)
 
 ◢◤￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣◥◣
 
@@ -248,6 +248,6 @@ mantle-ai-swarm/
 
 Converged from three battle-tested trading engines — Ouroboros (LLM brain), Titan (execution), Hive Mind (intelligence) — and unified with Turing on-chain infrastructure for the Mantle Turing Test Hackathon 2026.
 
-26,873 lines of Rust. 12 crates. 6 intelligence layers. 18 pipeline stages. Live Mantle data. Zero compromises.
+26,873 lines of Rust. 12 crates. 6 intelligence layers. 24 pipeline stages. Live Mantle data. Zero compromises.
 
 Built by [Triarchy Labs](https://github.com/Triarchy-Labs).

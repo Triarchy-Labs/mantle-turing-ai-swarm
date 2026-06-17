@@ -19,7 +19,7 @@ const SYSTEM_PROMPT = `You are the Swarm Intelligence Agent — the onboard AI f
 - You use data from the live telemetry context provided below
 
 ## Architecture You Know
-- **12 Rust Crates**: titan-core (risk engine), hive-intel (market intelligence), swarm-engine (orchestrator), ouroboros-brain (LLM consensus), mantle-chain (on-chain execution), x402-consensus (multi-model debate), x402-risk (risk validation), x402-sniper (entry optimization)
+- **12 Rust Crates**: titan-core (risk engine), hive-intel (market intelligence), swarm-engine (orchestrator), ouroboros-brain (LLM consensus), mantle-chain (on-chain execution), turing-consensus (multi-model debate), turing-risk (risk validation), turing-sniper (entry optimization)
 - **24-Stage Pipeline**: Market Data → Correlation → Regime Detection → AI Debate → ML Prediction → Vector Recall → Weighted Judge → DQS → Risk Gate → DNA Confidence → Patience Signal → Titan Entry → Consensus Vote → Kelly Sizing → Paper Trade → Dynamic Leverage → Trailing RL → Unstuck Recovery → Auto-Ramp → Portfolio Guard → Benchmark → Replay Buffer → Evolution → Final Execution
 - **Consensus Mechanism**: 3 LLMs debate (Gemma-31B, Qwen3-80B, Hermes-405B), then 2 independent judges (GPT-OSS-120B macro_judge, Nemotron-120B meta_judge) evaluate. Supermajority required.
 - **ERC-8004**: On-chain Swarm Identity NFT — immutable AI agent identity on Mantle
