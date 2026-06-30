@@ -414,10 +414,6 @@ export default function App() {
 						<span>24-STAGE PIPELINE</span>
 						<span className="tech-dot">·</span>
 						<span>8 TITAN MODULES</span>
-						<span className="tech-dot">·</span>
-						<span>PNL {telem.pnl}</span>
-						<span className="tech-dot">·</span>
-						<span>WIN RATE {telem.winRate}</span>
 					</div>
 				</section>
 
@@ -1096,6 +1092,7 @@ export default function App() {
 					letterSpacing: '0.05em'
 				}}>
 					<span>Build: v5.0-triarchy · 24-stage pipeline →</span>
+					<span>Paper validation · PnL {telem.pnl} · WR {telem.winRate}</span>
 					<span style={{ color: 'var(--accent)' }}>⬡ SYSTEM ACTIVE · MANTLE DOMAIN</span>
 					<span>Last Update: {footerTime}</span>
 				</div>
