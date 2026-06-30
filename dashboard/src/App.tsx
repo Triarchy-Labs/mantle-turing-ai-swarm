@@ -218,6 +218,7 @@ export default function App() {
 	const [analysisRunning, setAnalysisRunning] = useState(true);
 	const [footerTime, setFooterTime] = useState(new Date().toLocaleTimeString('en-US', { hour12: false }));
 	const [globalPillHover, setGlobalPillHover] = useState(false);
+	const [logoFormed, setLogoFormed] = useState(false);
 	const logRef = useRef<HTMLDivElement>(null);
 
 	// Trigger animation on page load
@@ -302,6 +303,20 @@ export default function App() {
 		return () => clearInterval(t);
 	}, []);
 
+	// Particle logo: assemble for 30s, then disperse for 90s — on a loop.
+	useEffect(() => {
+		const SHOW_MS = 30000, HIDE_MS = 90000;
+		let formed = false;
+		let id: ReturnType<typeof setTimeout>;
+		const loop = () => {
+			formed = !formed;
+			setLogoFormed(formed);
+			id = setTimeout(loop, formed ? SHOW_MS : HIDE_MS);
+		};
+		id = setTimeout(loop, HIDE_MS); // start dispersed; first appearance after 90s
+		return () => clearTimeout(id);
+	}, []);
+
 	const fmtUptime = `${Math.floor(uptime / 3600)}h ${Math.floor((uptime % 3600) / 60)}m ${uptime % 60}s`;
 	const nowDate = new Date();
 	const logTime = (off: number) => {
@@ -335,7 +350,7 @@ export default function App() {
 		<>
 			{/* GPGPU Particle Background */}
 			<WebGLErrorBoundary fallback={null}>
-				<LiquidGlassShader theme={theme} mode={analysisRunning ? 2 : (orbState === 'working' ? 1 : 0)} />
+				<LiquidGlassShader theme={theme} mode={logoFormed ? 1 : 0} />
 			</WebGLErrorBoundary>
 			<CustomCursor />
 			<NoiseOverlay />
