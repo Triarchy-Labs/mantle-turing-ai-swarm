@@ -335,7 +335,7 @@ export default function App() {
 		<>
 			{/* GPGPU Particle Background */}
 			<WebGLErrorBoundary fallback={null}>
-				<LiquidGlassShader theme={theme} mode={analysisRunning ? 2 : ((telem.connected && telem.pipelineStage >= 22) || orbState === 'working' ? 1 : 0)} />
+				<LiquidGlassShader theme={theme} mode={analysisRunning ? 2 : (orbState === 'working' ? 1 : 0)} />
 			</WebGLErrorBoundary>
 			<CustomCursor />
 			<NoiseOverlay />
@@ -355,8 +355,8 @@ export default function App() {
 
 				<div className="header-right-container" style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
 					<div className="header-right-stats">
-						<span className="stats-label">{telem.connected ? (telem.liveMode ? 'LIVE TX' : 'CONNECTED') : ''}</span>
-						{telem.connected && <span className="stats-divider">|</span>}
+						<span className="stats-label">{telem.connected ? (telem.liveMode ? 'LIVE TX' : 'CONNECTED') : 'RECONNECTING'}</span>
+						<span className="stats-divider">|</span>
 						<span className="stats-cycle">CYCLE {cycle}</span>
 					</div>
 					<button
@@ -398,11 +398,11 @@ export default function App() {
 									className="metrics-pills" 
 									aria-label="Key Performance Metrics" 
 								>
-									<MetricPill label="PNL" value={telem.pnl} isActive={!globalPillHover} onHoverChange={setGlobalPillHover} />
-									<MetricPill label="WIN RATE" value={telem.winRate} onHoverChange={setGlobalPillHover} />
-									<MetricPill label="UPTIME" value={fmtUptime} onHoverChange={setGlobalPillHover} />
+									<MetricPill label="UPTIME" value={fmtUptime} isActive={!globalPillHover} onHoverChange={setGlobalPillHover} />
+									<MetricPill label="CYCLES" value={cycle.toLocaleString()} onHoverChange={setGlobalPillHover} />
 									<MetricPill label="TRADES" value={telem.totalTrades.toString()} onHoverChange={setGlobalPillHover} />
 									<MetricPill label="CIRCUIT" value={telem.riskState?.circuit_breaker ?? 'N/A'} onHoverChange={setGlobalPillHover} />
+									<MetricPill label="PNL" value={telem.pnl} onHoverChange={setGlobalPillHover} />
 								</div>
 							</div>
 							<div className="hero-bottom-right">
@@ -412,7 +412,7 @@ export default function App() {
 					<div className="tech-stats-bar">
 						<span>12 CRATES</span>
 						<span className="tech-dot">·</span>
-						<span>26,873 LOC</span>
+						<span>25,365 LOC</span>
 						<span className="tech-dot">·</span>
 						<span>24-STAGE PIPELINE</span>
 						<span className="tech-dot">·</span>
@@ -966,11 +966,11 @@ export default function App() {
 						<div className="bento-content" style={{ fontFamily: 'var(--font-mono)', fontSize: '1.4rem', display: 'flex', flexDirection: 'column', gap: '2vw' }}>
 							<div style={{ paddingBottom: '1.5vw' }}>
 								<div style={{ fontSize: '2.4rem', opacity: 0.5, marginBottom: '1vw', textTransform: 'uppercase', letterSpacing: '0.1em' }}>✓ Sourcify Verified</div>
-								<a href="https://explorer.mantle.xyz/address/0xFA0b5036aF9770B370B33CeBBb42d1E626338383" target="_blank" rel="noopener noreferrer" className="onchain-link" style={{ display: 'block', marginBottom: '0.5vw' }}>
-									→ 0xFA0b...38383 <span style={{ opacity: 0.4, fontSize: '1.4rem' }}>(Registry)</span>
+								<a href="https://mantlescan.xyz/address/0xEb271ece1aB2f72835556Ee67ad0BCA36a378a66#code" target="_blank" rel="noopener noreferrer" className="onchain-link" style={{ display: 'block', marginBottom: '0.5vw' }}>
+									→ 0xEb27...8a66 <span style={{ opacity: 0.4, fontSize: '1.4rem' }}>(Registry)</span>
 								</a>
-								<a href="https://explorer.mantle.xyz/address/0x41c51a03FFE750F5df1F6ffc972DBA8265B5a4F4" target="_blank" rel="noopener noreferrer" className="onchain-link" style={{ display: 'block' }}>
-									→ 0x41c5...5a4F4 <span style={{ opacity: 0.4, fontSize: '1.4rem' }}>(Liquidator)</span>
+								<a href="https://mantlescan.xyz/address/0x19A53120FE1f0147f28fE83c2922A402AC98217c#code" target="_blank" rel="noopener noreferrer" className="onchain-link" style={{ display: 'block' }}>
+									→ 0x19A5...217c <span style={{ opacity: 0.4, fontSize: '1.4rem' }}>(Liquidator)</span>
 								</a>
 							</div>
 							<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -991,7 +991,7 @@ export default function App() {
 								<div style={{ paddingTop: '2vw', marginTop: 'auto' }}>
 									<div style={{ marginBottom: '1vw', opacity: 0.5, fontSize: '2.4rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Recent TXs</div>
 									{telem.txHashes.slice(-3).map((hash, i) => (
-										<a key={i} href={`https://explorer.mantle.xyz/tx/${hash}`} target="_blank" rel="noopener noreferrer" className="onchain-link" style={{ display: 'block', marginBottom: '0.5vw' }}>
+										<a key={i} href={`https://mantlescan.xyz/tx/${hash}`} target="_blank" rel="noopener noreferrer" className="onchain-link" style={{ display: 'block', marginBottom: '0.5vw' }}>
 											→ {hash.slice(0, 10)}…{hash.slice(-8)}
 										</a>
 									))}
@@ -1004,7 +1004,7 @@ export default function App() {
 							<div className="lusion-card-tags" style={{ fontSize: '2.4rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>MANTLE L2 • TX • VERIFIED</div>
 							<h2 className="lusion-card-title"><TextReveal>On-Chain Activity</TextReveal></h2>
 						</div>
-						<button className="lusion-btn-glass" onClick={() => window.open(`https://explorer.mantle.xyz/address/0x1150f09ae885e6E7BcC0cb38feDd200d7f580008`, '_blank')} aria-label="View On-Chain Agent NFT">
+						<button className="lusion-btn-glass" onClick={() => window.open(`https://mantlescan.xyz/address/0xEb271ece1aB2f72835556Ee67ad0BCA36a378a66`, '_blank')} aria-label="View On-Chain Agent NFT">
 							[ VIEW AGENT NFT ]
 						</button>
 					</div>

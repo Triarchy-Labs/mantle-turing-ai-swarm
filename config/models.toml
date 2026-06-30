@@ -1,11 +1,11 @@
 # ═══════════════════════════════════════════════════════════
 # OUROBOROS V2 — MODEL POOL CONFIGURATION
-# 3 debate models + 2 judges (macro_judge + meta_judge).
+# 6 debate models (rotating pool) + 2 judges (macro_judge + meta_judge).
 # ═══════════════════════════════════════════════════════════
 
 [defaults]
 api_base = "https://openrouter.ai/api/v1/chat/completions"
-referer = "https://github.com/Antigravity-Swarm"
+referer = "https://github.com/Triarchy-Labs/mantle-turing-ai-swarm"
 app_title = "Ouroboros-V2"
 max_failures_before_rotate = 2
 

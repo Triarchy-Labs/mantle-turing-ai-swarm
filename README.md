@@ -5,15 +5,20 @@
 ![Tests](https://img.shields.io/badge/tests-553%20pass-brightgreen)
 ![Rust](https://img.shields.io/badge/rust-1.95-orange)
 ![Mantle](https://img.shields.io/badge/chain-Mantle%20Mainnet-purple)
-![LOC](https://img.shields.io/badge/LOC-26%2C873-informational)
+![LOC](https://img.shields.io/badge/LOC-25%2C365-informational)
 
-│ 12-crate Rust workspace. 26,873 LOC. Zero external databases.
+│ 12-crate Rust workspace. 25,365 LOC. Zero external databases.
 │ 6 Intelligence Layers. 4-state regime detection. 5-filter pre-trade risk engine.
 │ LLM consensus + neural brain + collective intelligence + **live on-chain execution**.
 │ Live DexScreener data feeds. ERC-8004 reputation on Mantle Mainnet.
 │ Built for the [Mantle Turing Test Hackathon 2026](https://dorahacks.io/hackathon/2130/detail).
 
 ◆ [LIVE DASHBOARD](https://mantle-ai-swarm.vercel.app) ╱ [ERC-8004 REGISTRY (verified)](https://mantlescan.xyz/address/0xEb271ece1aB2f72835556Ee67ad0BCA36a378a66#code) ╱ [FLASH LIQUIDATOR (verified)](https://mantlescan.xyz/address/0x19A53120FE1f0147f28fE83c2922A402AC98217c#code)
+
+│ ◆ LIVE NOW (verifiable telemetry):
+│   10,000+ autonomous decision cycles · 300+ hours continuous uptime.
+│   17,800+ AI verdicts evaluated · 78.9% swarm agreement · only **17 trades executed** — consensus-gated, by design.
+│   4,500+ signed transactions on Mantle Mainnet (agent wallet `0xF023…c79`).
 
 ◢◤￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣◥◣
 
@@ -52,13 +57,13 @@
 
 | Crate | LOC | Role |
 |-------|-----|------|
-| **ouroboros-brain** | 3,987 | LLM consensus: multi-model debate, 15-factor judge, decision memory, circuit breaker, pre-trade risk engine (5 institutional filters) |
-| **titan-core** | 4,465 | Neural brain: 8-gate entry, trailing SL (ATR+BE+adverse), 3-stage unstuck, RiskMatrix, ConfidenceEngine (DNA scoring), AutoRamp (5-phase capital), Deallow (ban scanner), PatienceTracker (15m lock) |
-| **hive-intel** | 12,212 | Collective intelligence: 40+ cognitive modules, SIMD turbo, ML local (<1μs), regime detection (4-state HMM), affective memory (EWMA), hybrid recall (OWM+SIMD+anti-survivorship), paper engine, AI vs Human benchmark |
-| **mantle-chain** | 705 | Alloy 2.0 on-chain: ERC-8004 ABI (sol!), wallet signer + live tx broadcast, DexScreener 13-field live data, Merchant Moe/Agni router |
-| **swarm-engine** | 1,090 | Main orchestrator — v5.0 24-stage pipeline + telemetry HTTP server (:3402/7 endpoints) + live chain broadcast |
-| **turing-consensus** | 398 | PolicyGovernor — 4-voter consensus engine for trade decisions |
-| **turing-risk** | 555 | Regime-aware Kelly sizing, KillSwitch, ATR stops, BucketCap risk management |
+| **ouroboros-brain** | 3,975 | LLM consensus: multi-model debate, 15-factor judge, decision memory, circuit breaker, pre-trade risk engine (5 institutional filters) |
+| **titan-core** | 4,532 | Neural brain: 8-gate entry, trailing SL (ATR+BE+adverse), 3-stage unstuck, RiskMatrix, ConfidenceEngine (DNA scoring), AutoRamp (5-phase capital), Deallow (ban scanner), PatienceTracker (15m lock) |
+| **hive-intel** | 12,634 | Collective intelligence: 40+ cognitive modules, SIMD turbo, ML local (<1μs), regime detection (4-state HMM), affective memory (EWMA), hybrid recall (OWM+SIMD+anti-survivorship), paper engine, AI vs Human benchmark |
+| **mantle-chain** | 851 | Alloy 2.0 on-chain: ERC-8004 ABI (sol!), wallet signer + live tx broadcast, DexScreener 13-field live data, Merchant Moe/Agni router |
+| **swarm-engine** | 1,499 | Main orchestrator — v5.0 24-stage pipeline + telemetry HTTP server (:3402/7 endpoints) + live chain broadcast |
+| **turing-consensus** | 397 | PolicyGovernor — 4-voter consensus engine for trade decisions |
+| **turing-risk** | 560 | Regime-aware Kelly sizing, KillSwitch, ATR stops, BucketCap risk management |
 | **turing-oracle** | 83 | Sentiment Oracle — live prediction market sentiment tracker |
 | **turing-memory** | 124 | HyperEdge graph + sled DB persistent memory |
 | **turing-sniper** | 524 | DEX execution + autonomous reward protocol client |
@@ -72,7 +77,7 @@ Market Data
     ↓
 ╔═ REGIME DETECTION (4-state HMM: TrendingUp/Down/Ranging/Volatile) ═╗
     ↓
-╔═ OUROBOROS LLM DEBATE (Bull vs Bear, 3 models, 5 vendors) ═╗
+╔═ OUROBOROS LLM DEBATE (Bull vs Bear, rotating 6-model pool, 7 vendors) ═╗
     ↓
 ╔═ HIVE MIND ML (7-feature LogReg <1μs + Hybrid Recall + EWMA Affective) ═╗
     ↓
@@ -189,15 +194,13 @@ Live transparency endpoint on `http://localhost:3402`:
 
 ◥◣＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿◢◤
 
-| Role | Model | Vendor |
-|------|-------|--------|
-| Primary Debate | 30B+ Class Open Weights | OpenRouter |
-| Secondary Debate | 70B+ Class Open Weights | OpenRouter |
-| Fallback Debate | 600B+ Class Open Weights | OpenRouter |
-| Macro Judge | 120B+ Class Custom | Dedicated Node |
-| Meta Judge | 70B+ Class Alignment Model | Dedicated Node |
+| Role | Models | Vendors |
+|------|--------|---------|
+| Debate Pool (rotating, 6 models) | Gemma-4-31B · Nex-N2-Pro · Qwen3-80B · Laguna-M.1 · Llama-3.3-70B · GPT-OSS-20B | Google · NexAGI · Alibaba · Poolside · Meta · OpenAI |
+| Macro Judge (independent) | GPT-OSS-120B | OpenAI |
+| Meta Judge (independent) | Nemotron-Ultra-550B | NVIDIA |
 
-All models are free-tier via OpenRouter. Zero inference cost.
+**8 models · 7 vendors** — a rotating 6-model debate pool (re-routes on failure) + 2 independent judges, architecturally separated from the pool to avoid weight-bias. All free-tier via OpenRouter — zero inference cost.
 
 ─── / ───
 
@@ -251,6 +254,6 @@ mantle-ai-swarm/
 
 Converged from three battle-tested trading engines — Ouroboros (LLM brain), Titan (execution), Hive Mind (intelligence) — and unified with Turing on-chain infrastructure for the Mantle Turing Test Hackathon 2026.
 
-26,873 lines of Rust. 12 crates. 6 intelligence layers. 24 pipeline stages. Live Mantle data. Zero compromises.
+25,365 lines of Rust. 12 crates. 6 intelligence layers. 24 pipeline stages. Live Mantle data. Zero compromises.
 
 Built by [Triarchy Labs](https://github.com/Triarchy-Labs).
