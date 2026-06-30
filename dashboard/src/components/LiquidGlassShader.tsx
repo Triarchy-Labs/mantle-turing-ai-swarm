@@ -253,8 +253,8 @@ void main() {
     velInfo.w = (modeCut * h.y * 2.0 + 1.0) * u_mode;
   }
 
-  // Damping 0.975 — Lusion exact
-  velInfo.xyz *= 0.975;
+  // Damping 0.975 — Lusion exact (FPS-independent)
+  velInfo.xyz *= pow(0.975, u_deltaTime * 60.0);
 
   // Wind force — Lusion exact
   vec3 windVel = u_windForce * u_deltaTime * u_windStrMul;
