@@ -356,8 +356,6 @@ export default function App() {
 				<div className="header-right-container" style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
 					<div className="header-right-stats">
 						<span className="stats-label">{telem.connected ? (telem.liveMode ? 'LIVE TX' : 'CONNECTED') : 'RECONNECTING'}</span>
-						<span className="stats-divider">|</span>
-						<span className="stats-cycle">CYCLE {cycle}</span>
 					</div>
 					<button
 						className="theme-toggle-dl"
@@ -402,7 +400,6 @@ export default function App() {
 									<MetricPill label="CYCLES" value={cycle.toLocaleString()} onHoverChange={setGlobalPillHover} />
 									<MetricPill label="TRADES" value={telem.totalTrades.toString()} onHoverChange={setGlobalPillHover} />
 									<MetricPill label="CIRCUIT" value={telem.riskState?.circuit_breaker ?? 'N/A'} onHoverChange={setGlobalPillHover} />
-									<MetricPill label="PNL" value={telem.pnl} onHoverChange={setGlobalPillHover} />
 								</div>
 							</div>
 							<div className="hero-bottom-right">
@@ -417,6 +414,10 @@ export default function App() {
 						<span>24-STAGE PIPELINE</span>
 						<span className="tech-dot">·</span>
 						<span>8 TITAN MODULES</span>
+						<span className="tech-dot">·</span>
+						<span>PNL {telem.pnl}</span>
+						<span className="tech-dot">·</span>
+						<span>WIN RATE {telem.winRate}</span>
 					</div>
 				</section>
 
