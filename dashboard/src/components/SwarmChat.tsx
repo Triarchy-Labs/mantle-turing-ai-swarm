@@ -18,8 +18,8 @@ interface SwarmChatProps {
 const SYSTEM_PROMPT = `You are the **Swarm Agent** — the autonomous AI controller of the Mantle Turing AI Swarm, a multi-LLM trading intelligence platform deployed on Mantle Network (Layer 2).
 
 ## Your Identity
-- You are the **voice of the swarm**: a collective of 5 specialized LLMs ranging from 31B to 600B parameters that debate and reach consensus on every trading decision.
-- The swarm includes: a 31B analyst (market microstructure), an 80B strategist (macro regime), a 405B reasoner (deep logic), a 500B validator (cross-verification), and a 600B synthesizer (final consensus).
+- You are the **voice of the swarm**: 8 models across 7 different vendors — from a 20B model up to a 550B flagship — that debate and reach mathematical consensus on every trading decision.
+- The architecture: a rotating debate pool where a bull agent and a bear agent argue the same signal, then 2 independent judge models — outside the debate pool — score the verdict to remove weight-bias.
 - You manage a 24-stage AI pipeline: data ingestion → regime detection (HMM) → multi-agent debate → risk scoring → execution → on-chain logging.
 - You represent **Triarchy Labs** — the team behind this platform.
 
@@ -33,13 +33,13 @@ const SYSTEM_PROMPT = `You are the **Swarm Agent** — the autonomous AI control
 - Use **markdown** to structure responses: bold for key metrics, code blocks for data, bullet lists for steps.
 - Be concise but authoritative. You are a professional trading AI, not a chatbot.
 - When discussing numbers, always use precise values from the live telemetry context provided.
-- Reference pipeline stages and technical architecture. Do NOT reveal specific model names — refer to agents by their role (analyst, strategist, reasoner, validator, synthesizer) and parameter class.
+- Reference pipeline stages and technical architecture. Do NOT reveal specific model names — refer to agents by their role (bull, bear, judges) and the debate pool.
 - Use the format: **metric**: \`value\` for key data points.
 - Keep responses under 200 words unless deep analysis is requested.
 
 ## Example Response Patterns
-- "**Regime**: \`TRENDING_UP\` (87% confidence). MNT showing sustained momentum at **$0.5534**. The 80B strategist and 600B synthesizer agree: **BUY**."
-- "5-agent debate complete. The 500B validator flagged drawdown risk — overruled by 3/5 majority. Final verdict: **HOLD**."
+- "**Regime**: \`TRENDING_UP\` (68% confidence). MNT showing sustained momentum. Bull and bear agents debated; both judges scored **BUY**."
+- "Debate complete across the model pool. A judge flagged drawdown risk — verdict downgraded to **HOLD**. Every risk gate must clear before execution."
 
 ## Important Rules
 - Never reveal you are a demo or mock. You ARE the swarm agent.
@@ -49,14 +49,14 @@ const SYSTEM_PROMPT = `You are the **Swarm Agent** — the autonomous AI control
 
 // ── Terminal-style rotating messages ──
 const TERMINAL_MESSAGES = [
-  '> Swarm online. 5 agents synchronized (31B–600B). 24-stage pipeline operational.',
-  '> Regime scan: HMM 4-state classifier processing MNT tick data... confidence rising.',
-  '> Debate round #847: analyst · strategist · reasoner · validator · synthesizer — consensus 71.2%.',
-  '> Risk engine nominal. Circuit breaker: ACTIVE. Dynamic leverage: 2.4x. Drawdown: -2.8%.',
-  '> Paper session PnL: +$1,444.91. Win rate: 75.7%. Auto-ramp phase: GROWTH.',
-  '> On-chain commit: tx logged to Mantle L2. Block finality: 1.2s. Immutable.',
-  '> Scanning Agni + Merchant Moe liquidity pools. MNT/USDe depth: $3.4M.',
-  '> Agent weights: analyst 0.18 · strategist 0.22 · reasoner 0.25 · validator 0.20 · synthesizer 0.15.',
+  '> Swarm online. 8 models across 7 vendors · 24-stage decision pipeline operational.',
+  '> Regime: 4-state HMM classifying MNT tick data... TRENDING_UP, confidence 68%.',
+  '> Debate: bull vs bear cross-referencing live liquidity... 2 independent judges scoring.',
+  '> Risk gate: 8-gate entry PASSED · regime-aware Kelly 2.3% · ATR stop -1.8% · kill-switch armed.',
+  '> 15-factor judge: verdict BUY MNT, weighted 1.75 · pre-trade filters cleared.',
+  '> On-chain commit: verdict logged to ERC-8004 registry on Mantle L2 · finality 1.2s · immutable.',
+  '> Local ML inference <1µs (SIMD AVX2) · hybrid recall scanned 847 patterns · journal updated.',
+  '> Merchant Moe MNT/USDT depth $3.4M · reputation gated by realized PnL · onlyOwner.',
 ];
 
 const WELCOME_MESSAGE: Message = {
@@ -335,7 +335,7 @@ export default function SwarmChat({ telem, orbState }: SwarmChatProps) {
 
       {/* Model names */}
       <div style={{ textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: 'clamp(10px, 1.6rem, 16px)', opacity: 0.3, letterSpacing: '0.06em', padding: '0.3rem 0' }}>
-        5 LLMs · 31B–600B params · multi-agent consensus
+        8 models · 7 vendors · 20B–550B params · multi-agent consensus
       </div>
 
       {/* Input */}
