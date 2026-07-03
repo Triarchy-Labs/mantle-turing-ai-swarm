@@ -4,11 +4,20 @@ import { useEffect, useState } from 'react';
 export default function BootScreen() {
   const [gone, setGone] = useState(false);
   const [mounted, setMounted] = useState(true);
+  const [pct, setPct] = useState(0);
 
   useEffect(() => {
     const t1 = setTimeout(() => setGone(true), 2100);
     const t2 = setTimeout(() => setMounted(false), 2750);
-    return () => { clearTimeout(t1); clearTimeout(t2); };
+    const dur = 2000, start = performance.now();
+    let raf = 0;
+    const tick = (now: number) => {
+      const t = Math.min((now - start) / dur, 1);
+      setPct(Math.round((1 - Math.pow(1 - t, 1.8)) * 100));
+      if (t < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => { clearTimeout(t1); clearTimeout(t2); cancelAnimationFrame(raf); };
   }, []);
 
   if (!mounted) return null;
@@ -23,6 +32,7 @@ export default function BootScreen() {
       </div>
       <div className="boot-word">MANTLE AI SWARM</div>
       <div className="boot-sub">INITIALIZING SWARM</div>
+      <div className="boot-pct">{pct}<span>%</span></div>
       <div className="boot-progress"><span /></div>
     </div>
   );
