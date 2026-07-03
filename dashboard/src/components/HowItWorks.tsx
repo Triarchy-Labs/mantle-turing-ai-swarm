@@ -55,8 +55,9 @@ export default function HowItWorks({ open, onClose }: { open: boolean; onClose: 
     if (!open) return;
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
     document.addEventListener('keydown', onKey);
-    const prev = document.body.style.overflow; document.body.style.overflow = 'hidden';
-    return () => { document.removeEventListener('keydown', onKey); document.body.style.overflow = prev; };
+    const pb = document.body.style.overflow, ph = document.documentElement.style.overflow;
+    document.body.style.overflow = 'hidden'; document.documentElement.style.overflow = 'hidden';
+    return () => { document.removeEventListener('keydown', onKey); document.body.style.overflow = pb; document.documentElement.style.overflow = ph; };
   }, [open, onClose]);
 
   return (

@@ -483,3 +483,14 @@ html[data-theme="light"] .menu-foot > span:not(.menu-foot-links) {
 html[data-theme="light"] .hiw-mod-desc { color: rgba(5,22,26,0.66); }
 .hiw-h2 { font-size: clamp(26px,3vw,46px); margin-bottom: 2rem; letter-spacing: -0.02em; }
 @media (max-width: 900px) { .hiw-grid { grid-template-columns: 1fr; } .hiw-mod-body { margin-top: 3rem; } }
+
+/* ── HowItWorks: bigger top (diagram + title) + scroll containment ── */
+.hiw-scroll { overscroll-behavior: contain; }
+.hiw-stage { max-width: 1720px; }
+.hiw-head { max-width: 1000px; }
+.hiw-title { font-size: clamp(40px, 5vw, 78px); }
+.hiw-sub { font-size: clamp(17px, 1.9vw, 24px); }
+.hiw-legend { font-size: 15px; gap: 1.2rem 2.6rem; }
+.hiw-chip { font-size: 16px; }
+.hiw-chip em { font-size: 13px; }
+.hiw-roster-h { font-size: 13px; }
