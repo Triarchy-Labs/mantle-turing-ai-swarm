@@ -400,3 +400,16 @@ html[data-theme="light"] .menu-take { color: rgba(5,22,26,0.55); }
 .header-menu-btn.open .bar { height: 2px !important; background: var(--accent) !important; opacity: 1 !important; box-shadow: 0 0 10px var(--accent-glow); }
 .header-menu-btn.open .bar:first-child { transform: translateY(12px) rotate(45deg); width: 100%; }
 .header-menu-btn.open .bar:last-child { transform: translateY(-12px) rotate(-45deg); width: 100%; }
+
+/* ── traveling cyan aura along the footer row ── */
+.menu-foot { position: relative; overflow: hidden; }
+.menu-foot::before {
+  content: ''; position: absolute; top: 0; bottom: 0; left: -30%;
+  width: 32%;
+  background: radial-gradient(closest-side, rgba(0,229,255,0.30), transparent 72%);
+  filter: blur(12px); pointer-events: none; z-index: 0;
+  animation: footAura 7s linear infinite;
+}
+.menu-foot > * { position: relative; z-index: 1; }
+@keyframes footAura { 0% { left: -32%; } 100% { left: 100%; } }
+@media (prefers-reduced-motion: reduce) { .menu-foot::before { animation: none; opacity: .2; left: 40%; } }
