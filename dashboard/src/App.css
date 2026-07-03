@@ -293,3 +293,29 @@ html[data-theme="light"] .hiw-chip { color: rgba(5,22,26,0.82); }
 .hiw-note { max-width: 760px; margin: 1.8rem auto 0; padding: 16px 22px; border: 1px solid rgba(0,229,255,0.2); border-left: 3px solid #00e5ff; border-radius: 12px; background: rgba(0,229,255,0.05); color: rgba(234,243,246,0.82); font: 400 14.5px/1.55 var(--font-body); text-align: center; }
 .hiw-note b { color: #00e5ff; }
 html[data-theme="light"] .hiw-note { color: rgba(5,22,26,0.82); }
+
+/* ── menu refinement: bigger text, more air, hamburger->X in a notch ── */
+.menu-panel {
+  padding: clamp(46px,5.5vw,88px) clamp(30px,4.5vw,66px);
+  -webkit-mask: radial-gradient(circle 38px at calc(100% - 30px) 18px, transparent 37px, #000 38px);
+          mask: radial-gradient(circle 38px at calc(100% - 30px) 18px, transparent 37px, #000 38px);
+}
+.menu-grid { align-content: center; gap: clamp(24px,4vw,66px); }
+.menu-accent { font-size: clamp(12px,1.3vw,15px); margin-bottom: 1.6rem; }
+.menu-headline { font-size: clamp(34px,4.2vw,60px); margin-bottom: 1.8rem; }
+.menu-contact { font-size: clamp(13px,1.3vw,16px); margin-bottom: 2.1rem; }
+.menu-link { font-size: clamp(26px,3vw,44px); padding: .26rem 0; }
+.menu-link.menu-link-sm { font-size: clamp(18px,1.9vw,27px); }
+.menu-col-title { margin-bottom: 1.3rem; }
+
+/* the panel's own X is gone; the hamburger itself becomes the X, floating in the notch */
+.menu-close { display: none; }
+.header-menu-btn.open { position: fixed; top: 30px; right: 44px; z-index: 10002; width: 30px; height: 22px; }
+.header-menu-btn.open .bar { height: 1.5px; background: var(--accent); }
+.header-menu-btn.open .bar:first-child { transform: translateY(10px) rotate(45deg); width: 100%; }
+.header-menu-btn.open .bar:last-child { transform: translateY(-10px) rotate(-45deg); width: 100%; }
+
+@media (max-width: 860px) {
+  .menu-panel { -webkit-mask: none; mask: none; }
+  .menu-link { font-size: 30px; }
+}
