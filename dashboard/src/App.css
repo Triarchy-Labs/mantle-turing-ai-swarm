@@ -662,3 +662,40 @@ html[data-theme="light"] .hiw-cap-num { fill: #1f6d88; }
 
 /* "On the roadmap" badge on section cards */
 .hiw-soon-tag { position: absolute; top: 2.2vw; right: 3.6vw; z-index: 2; color: rgba(0,229,255,0.72); border-color: rgba(0,229,255,0.32); }
+
+/* ═══════════ ROADMAP TIMELINE — one molten cyan wave, 2026→2027 ═══════════ */
+.tl-wrap { max-width: none; margin: clamp(56px,8vw,120px) auto clamp(20px,3vw,40px); padding: 0 clamp(6px,1.5vw,24px); }
+.tl-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: .4rem; padding: 0 clamp(10px,2vw,30px); }
+.tl-head .tl-year { font: 700 clamp(14px,1.5vw,20px) var(--font-mono); color: rgba(0,229,255,0.6); letter-spacing: .12em; text-shadow: 0 0 14px rgba(0,229,255,0.4); }
+.tl-head .tl-title { font: 600 clamp(10px,1vw,13px) var(--font-ui); letter-spacing: .22em; text-transform: uppercase; color: rgba(234,243,246,0.38); }
+
+.tl-svg { width: 100%; height: auto; display: block; overflow: visible; }
+.tl-line { }
+/* single bright pulse gliding along the whole length */
+.tl-flow { stroke-dasharray: 16 1184; animation: tlFlow 6.5s linear infinite; filter: drop-shadow(0 0 7px rgba(140,240,255,0.9)); }
+@keyframes tlFlow { from { stroke-dashoffset: 1200; } to { stroke-dashoffset: 0; } }
+
+.tl-node { cursor: pointer; }
+.tl-tick { stroke: rgba(255,255,255,0.12); stroke-width: 1; stroke-dasharray: 2 4; }
+.tl-dot { fill: #04121a; stroke: #00e5ff; stroke-width: 2; filter: drop-shadow(0 0 7px rgba(0,229,255,0.75)); transition: r .28s cubic-bezier(.16,1,.3,1); }
+.tl-node.on .tl-dot { fill: #00e5ff; }
+.tl-node.now .tl-dot { stroke: #7fffd4; filter: drop-shadow(0 0 9px rgba(127,255,212,0.9)); }
+.tl-when { fill: rgba(234,243,246,0.5); font: 600 12px var(--font-mono); letter-spacing: .05em; transition: fill .25s; }
+.tl-node.on .tl-when { fill: #7fefff; }
+.tl-node.now .tl-when { fill: #7fffd4; }
+
+.tl-pulse { fill: none; stroke: #7fffd4; stroke-width: 2; animation: tlPulse 2.6s ease-out infinite; }
+@keyframes tlPulse { 0% { r: 6; opacity: .7; } 100% { r: 24; opacity: 0; } }
+
+.tl-card { pointer-events: none; background: rgba(3,10,14,0.94); border: 1px solid rgba(0,229,255,0.32); border-radius: 13px; padding: 12px 15px; box-shadow: 0 18px 46px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.05); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+.tl-card-tag { color: #00e5ff; font: 700 10px var(--font-mono); letter-spacing: .14em; text-transform: uppercase; margin-bottom: 5px; }
+.tl-card-title { color: #eaf3f6; font: 500 17px/1.1 var(--font-heading); letter-spacing: -0.01em; margin-bottom: 6px; }
+.tl-card-desc { color: rgba(234,243,246,0.74); font: 400 12.5px/1.5 var(--font-body); }
+
+html[data-theme="light"] .tl-card { background: rgba(255,255,255,0.95); border-color: rgba(45,111,138,0.4); }
+html[data-theme="light"] .tl-card-title { color: #05161a; }
+html[data-theme="light"] .tl-card-desc { color: rgba(5,22,26,0.74); }
+html[data-theme="light"] .tl-dot { fill: #eaf3f6; }
+html[data-theme="light"] .tl-when { fill: rgba(5,22,26,0.5); }
+
+@media (prefers-reduced-motion: reduce) { .tl-flow, .tl-pulse { animation: none; } }

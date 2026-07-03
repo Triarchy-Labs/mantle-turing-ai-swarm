@@ -4,7 +4,7 @@ import { createPortal } from 'react-dom';
 export type SectionItem = { num: string; tag: string; size: string; title: string; body: string; soon?: boolean };
 
 /* Reusable full-screen overlay page — same shell as How it works (portal, scroll, close, shader bg). */
-export default function SectionPage({ open, onClose, kicker, title, sub, heading, items, note, footer }: {
+export default function SectionPage({ open, onClose, kicker, title, sub, heading, items, note, extra, footer }: {
   open: boolean;
   onClose: () => void;
   kicker: string;
@@ -13,6 +13,7 @@ export default function SectionPage({ open, onClose, kicker, title, sub, heading
   heading: string;
   items: SectionItem[];
   note?: ReactNode;
+  extra?: ReactNode;
   footer?: string;
 }) {
   useEffect(() => {
@@ -54,6 +55,7 @@ export default function SectionPage({ open, onClose, kicker, title, sub, heading
         </section>
 
         {note && <div className="hiw-note">{note}</div>}
+        {extra}
         {footer && <footer className="hiw-foot">{footer}</footer>}
       </div>
     </div>,
