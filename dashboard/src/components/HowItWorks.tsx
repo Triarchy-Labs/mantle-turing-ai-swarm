@@ -102,17 +102,17 @@ export default function HowItWorks({ open, onClose }: { open: boolean; onClose: 
 
             {/* pool orbs */}
             <Orb x={500} y={150} r={26} delay={0} variant={1} />
-            <Orb x={410} y={230} r={22} delay={31} variant={2} />
-            <Orb x={590} y={230} r={22} delay={62} variant={3} />
-            <Orb x={410} y={390} r={22} delay={19} variant={2} />
-            <Orb x={590} y={390} r={22} delay={88} variant={1} />
-            <Orb x={500} y={470} r={26} delay={47} variant={3} />
+            <Orb x={410} y={230} r={22} delay={14} variant={2} />
+            <Orb x={590} y={230} r={22} delay={28} variant={3} />
+            <Orb x={410} y={390} r={22} delay={42} variant={2} />
+            <Orb x={590} y={390} r={22} delay={7} variant={1} />
+            <Orb x={500} y={470} r={26} delay={35} variant={3} />
             {/* bull / bear */}
-            <Orb x={200} y={310} r={40} tone="bull" delay={12} variant={1} />
-            <Orb x={800} y={310} r={40} tone="bear" delay={73} variant={2} />
+            <Orb x={200} y={310} r={40} tone="bull" delay={21} variant={1} />
+            <Orb x={800} y={310} r={40} tone="bear" delay={49} variant={2} />
             {/* judges */}
-            <Orb x={500} y={64} r={30} tone="judge" delay={38} variant={3} />
-            <Orb x={500} y={556} r={30} tone="judge" delay={101} variant={1} />
+            <Orb x={500} y={64} r={30} tone="judge" delay={30} variant={3} />
+            <Orb x={500} y={556} r={30} tone="judge" delay={12} variant={1} />
 
             {/* labels */}
             <text x={200} y={372} className="hiw-l hiw-l-big" textAnchor="middle">BULL</text>

@@ -494,3 +494,18 @@ html[data-theme="light"] .hiw-mod-desc { color: rgba(5,22,26,0.66); }
 .hiw-chip { font-size: 16px; }
 .hiw-chip em { font-size: 13px; }
 .hiw-roster-h { font-size: 13px; }
+
+/* two capsules -> glass card style */
+.hiw-note { background: rgba(0,0,0,0.22); border: 1px solid rgba(255,255,255,0.06); border-left: 3px solid #00e5ff; -webkit-backdrop-filter: blur(22px); backdrop-filter: blur(22px); border-radius: 16px; }
+html[data-theme="light"] .hiw-note { background: rgba(255,255,255,0.3); border-color: rgba(0,0,0,0.06); border-left-color: #558fae; }
+.hiw-flow { background: rgba(0,0,0,0.22); border: 1px solid rgba(255,255,255,0.06); -webkit-backdrop-filter: blur(22px); backdrop-filter: blur(22px); }
+html[data-theme="light"] .hiw-flow { background: rgba(255,255,255,0.3); border-color: rgba(0,0,0,0.06); }
+/* reject phrase: blue-neon, on-brand (was orange) */
+.hiw-reject { color: rgba(234,243,246,0.62); }
+.hiw-reject b { color: #3a7bff; }
+html[data-theme="light"] .hiw-reject { color: rgba(5,22,26,0.62); }
+html[data-theme="light"] .hiw-reject b { color: #2456d8; }
+/* eyes blink ~once per minute */
+.orb-eyes.ov1 { animation-duration: 58s; }
+.orb-eyes.ov2 { animation-duration: 64s; }
+.orb-eyes.ov3 { animation-duration: 52s; }
