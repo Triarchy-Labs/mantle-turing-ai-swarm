@@ -509,3 +509,17 @@ html[data-theme="light"] .hiw-reject b { color: #2456d8; }
 .orb-eyes.ov1 { animation-duration: 58s; }
 .orb-eyes.ov2 { animation-duration: 64s; }
 .orb-eyes.ov3 { animation-duration: 52s; }
+
+/* scroll lock that the menu cannot clobber */
+html.hiw-open, html.hiw-open body { overflow: hidden !important; }
+
+/* capsules -> EXACT bento-card look (radius 1.5vw, same bg/border/blur) */
+.hiw-flow, .hiw-note {
+  background: rgba(0,0,0,0.2) !important;
+  border: 1px solid rgba(255,255,255,0.05) !important;
+  border-radius: 1.5vw !important;
+  -webkit-backdrop-filter: blur(22px) !important; backdrop-filter: blur(22px) !important;
+}
+html[data-theme="light"] .hiw-flow, html[data-theme="light"] .hiw-note {
+  background: rgba(255,255,255,0.25) !important; border-color: rgba(0,0,0,0.06) !important;
+}
