@@ -21,7 +21,7 @@ const PROOF = [
   { label: 'Mantlescan', href: WALLET },
 ];
 
-export default function MenuOverlay({ open, onClose, onOpenHowItWorks, onOpenMission, onOpenRetail, onOpenInstitutions }: { open: boolean; onClose: () => void; onOpenHowItWorks?: () => void; onOpenMission?: () => void; onOpenRetail?: () => void; onOpenInstitutions?: () => void }) {
+export default function MenuOverlay({ open, onClose, onOpenHowItWorks, onOpenMission, onOpenRetail, onOpenInstitutions, onOpenDocs, onOpenRoadmap }: { open: boolean; onClose: () => void; onOpenHowItWorks?: () => void; onOpenMission?: () => void; onOpenRetail?: () => void; onOpenInstitutions?: () => void; onOpenDocs?: () => void; onOpenRoadmap?: () => void }) {
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
@@ -60,6 +60,8 @@ export default function MenuOverlay({ open, onClose, onOpenHowItWorks, onOpenMis
                    if (i.label === 'Mission' && onOpenMission) { e.preventDefault(); onOpenMission(); }
                    if (i.label === 'For Retail' && onOpenRetail) { e.preventDefault(); onOpenRetail(); }
                    if (i.label === 'For Institutions' && onOpenInstitutions) { e.preventDefault(); onOpenInstitutions(); }
+                   if (i.label === 'Docs / How to use' && onOpenDocs) { e.preventDefault(); onOpenDocs(); }
+                   if (i.label === 'Roadmap' && onOpenRoadmap) { e.preventDefault(); onOpenRoadmap(); }
                    onClose();
                  }}>{i.label}</a>
             ))}

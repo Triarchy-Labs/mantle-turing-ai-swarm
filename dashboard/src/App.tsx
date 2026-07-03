@@ -4,6 +4,8 @@ import HowItWorks from './components/HowItWorks';
 import MissionPage from './components/MissionPage';
 import RetailPage from './components/RetailPage';
 import InstitutionsPage from './components/InstitutionsPage';
+import DocsPage from './components/DocsPage';
+import RoadmapPage from './components/RoadmapPage';
 import './index.css';
 import './App.css';
 import LiquidGlassShader from './components/LiquidGlassShader';
@@ -299,6 +301,8 @@ export default function App() {
 	const [missionOpen, setMissionOpen] = useState(false);
 	const [retailOpen, setRetailOpen] = useState(false);
 	const [instOpen, setInstOpen] = useState(false);
+	const [docsOpen, setDocsOpen] = useState(false);
+	const [roadmapOpen, setRoadmapOpen] = useState(false);
 
 	// Orb state cycling
 	useEffect(() => {
@@ -370,11 +374,13 @@ export default function App() {
 			<div className="vignette-overlay" style={{ position: 'fixed', inset: 0, background: 'radial-gradient(circle at center, transparent 30%, rgba(4,4,6,0.8) 100%)', zIndex: -98, pointerEvents: 'none' }} />
 
 			{/* ═══ HEADER ═══ */}
-			<MenuOverlay open={menuOpen} onClose={() => setMenuOpen(false)} onOpenHowItWorks={() => setHowOpen(true)} onOpenMission={() => setMissionOpen(true)} onOpenRetail={() => setRetailOpen(true)} onOpenInstitutions={() => setInstOpen(true)} />
+			<MenuOverlay open={menuOpen} onClose={() => setMenuOpen(false)} onOpenHowItWorks={() => setHowOpen(true)} onOpenMission={() => setMissionOpen(true)} onOpenRetail={() => setRetailOpen(true)} onOpenInstitutions={() => setInstOpen(true)} onOpenDocs={() => setDocsOpen(true)} onOpenRoadmap={() => setRoadmapOpen(true)} />
 			<HowItWorks open={howOpen} onClose={() => setHowOpen(false)} />
 			<MissionPage open={missionOpen} onClose={() => setMissionOpen(false)} />
 			<RetailPage open={retailOpen} onClose={() => setRetailOpen(false)} />
 			<InstitutionsPage open={instOpen} onClose={() => setInstOpen(false)} />
+			<DocsPage open={docsOpen} onClose={() => setDocsOpen(false)} />
+			<RoadmapPage open={roadmapOpen} onClose={() => setRoadmapOpen(false)} />
 			<header className="header" role="banner" aria-label="Mantle AI Swarm Dashboard">
 				<a href="/" className="triarchy-logo-wrapper" title="Triarchy Labs">
 					<span className="triarchy-logo-text">TRIARCHY</span>
