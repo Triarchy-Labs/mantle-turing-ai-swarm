@@ -36,7 +36,7 @@ export default function MenuOverlay({ open, onClose, onOpenHowItWorks }: { open:
   return (
     <div className={`menu-overlay ${open ? 'open' : ''}`} aria-hidden={!open}>
       <div className="menu-backdrop" onClick={onClose} />
-      <div className="menu-panel" role="dialog" aria-modal="true" aria-label="Site menu">
+      <div className="menu-panel" role="dialog" aria-modal="true" aria-label="Site menu" data-lenis-prevent>
         <button className="menu-close" onClick={onClose} aria-label="Close menu">&times;</button>
 
         <div className="menu-grid">

@@ -64,11 +64,11 @@ export default function HowItWorks({ open, onClose }: { open: boolean; onClose: 
     <div className={`hiw ${open ? 'open' : ''}`} aria-hidden={!open}>
       <button className="hiw-close" onClick={onClose} aria-label="Close">&times;</button>
 
-      <div className="hiw-scroll">
+      <div className="hiw-scroll" data-lenis-prevent>
         <header className="hiw-head">
           <div className="hiw-kicker">&#9670; UNDER THE HOOD</div>
           <h1 className="hiw-title">How the swarm actually decides</h1>
-          <p className="hiw-sub">A bull and a bear debate every signal across a rotating pool of models. Two independent judges score it. No consensus means no trade. That is why <b>17,000+ verdicts became only 17 trades.</b></p>
+          <p className="hiw-sub">A bull and a bear debate every signal across a rotating pool of models. Two independent judges score it. No consensus means no trade &mdash; so out of thousands of verdicts, only a rare few ever become trades. <b>The swarm is built to refuse, not to gamble.</b></p>
         </header>
 
         {/* ── DEBATE DIAGRAM ── */}
