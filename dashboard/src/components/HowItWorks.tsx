@@ -35,15 +35,17 @@ const ROADMAP = [
 ];
 
 /* ── orb with glowing eyes (brand mark) ─────────────── */
-function Orb({ x, y, r, tone = 'cyan', dim = false }: { x: number; y: number; r: number; tone?: 'cyan' | 'bull' | 'bear' | 'judge'; dim?: boolean }) {
+function Orb({ x, y, r, tone = 'cyan', delay = 0, variant = 1 }: { x: number; y: number; r: number; tone?: 'cyan' | 'bull' | 'bear' | 'judge'; delay?: number; variant?: 1 | 2 | 3 }) {
   const col = tone === 'bear' ? '#ff9a52' : tone === 'judge' ? '#b98bff' : '#00e5ff';
   const eyeW = r * 0.42, eyeH = r * 0.16, gap = r * 0.14;
   return (
-    <g opacity={dim ? 0.5 : 1}>
+    <g>
       <circle cx={x} cy={y} r={r} fill={`url(#orbGrad-${tone})`} stroke={col} strokeOpacity={0.5} strokeWidth={1} />
       <circle cx={x} cy={y} r={r} fill="none" stroke={col} strokeOpacity={0.12} strokeWidth={r * 0.5} filter="url(#soft)" />
-      <rect x={x - gap - eyeW} y={y - eyeH / 2} width={eyeW} height={eyeH} rx={eyeH / 2} fill={col} filter="url(#soft)" />
-      <rect x={x + gap} y={y - eyeH / 2} width={eyeW} height={eyeH} rx={eyeH / 2} fill={col} filter="url(#soft)" />
+      <g className={`orb-eyes ov${variant}`} style={{ animationDelay: `${delay}s` }}>
+        <rect x={x - gap - eyeW} y={y - eyeH / 2} width={eyeW} height={eyeH} rx={eyeH / 2} fill={col} filter="url(#soft)" />
+        <rect x={x + gap} y={y - eyeH / 2} width={eyeW} height={eyeH} rx={eyeH / 2} fill={col} filter="url(#soft)" />
+      </g>
     </g>
   );
 }
@@ -82,7 +84,7 @@ export default function HowItWorks({ open, onClose }: { open: boolean; onClose: 
             </defs>
 
             {/* winding connectors */}
-            <g fill="none" stroke="url(#wire)" strokeWidth="1.4">
+            <g className="hiw-wire" fill="none" stroke="url(#wire)" strokeWidth="1.4">
               {/* bull <-> pool */}
               <path d="M 200,310 C 320,180 420,240 500,150" />
               <path d="M 200,310 C 300,340 400,360 480,300" />
@@ -99,18 +101,18 @@ export default function HowItWorks({ open, onClose }: { open: boolean; onClose: 
             </g>
 
             {/* pool orbs */}
-            <Orb x={500} y={150} r={26} />
-            <Orb x={410} y={230} r={22} />
-            <Orb x={590} y={230} r={22} />
-            <Orb x={410} y={390} r={22} />
-            <Orb x={590} y={390} r={22} />
-            <Orb x={500} y={470} r={26} />
+            <Orb x={500} y={150} r={26} delay={0} variant={1} />
+            <Orb x={410} y={230} r={22} delay={31} variant={2} />
+            <Orb x={590} y={230} r={22} delay={62} variant={3} />
+            <Orb x={410} y={390} r={22} delay={19} variant={2} />
+            <Orb x={590} y={390} r={22} delay={88} variant={1} />
+            <Orb x={500} y={470} r={26} delay={47} variant={3} />
             {/* bull / bear */}
-            <Orb x={200} y={310} r={40} tone="bull" />
-            <Orb x={800} y={310} r={40} tone="bear" />
+            <Orb x={200} y={310} r={40} tone="bull" delay={12} variant={1} />
+            <Orb x={800} y={310} r={40} tone="bear" delay={73} variant={2} />
             {/* judges */}
-            <Orb x={500} y={64} r={30} tone="judge" />
-            <Orb x={500} y={556} r={30} tone="judge" />
+            <Orb x={500} y={64} r={30} tone="judge" delay={38} variant={3} />
+            <Orb x={500} y={556} r={30} tone="judge" delay={101} variant={1} />
 
             {/* labels */}
             <text x={200} y={372} className="hiw-l hiw-l-big" textAnchor="middle">BULL</text>

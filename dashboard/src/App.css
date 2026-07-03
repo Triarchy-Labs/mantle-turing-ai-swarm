@@ -439,3 +439,36 @@ html[data-theme="light"] .menu-take { color: rgba(5,22,26,0.55); }
 html[data-theme="light"] .hiw-card { background: rgba(255,255,255,0.28); border-color: rgba(0,0,0,0.06); }
 html[data-theme="light"] .hiw-card:hover { background: rgba(233,239,242,0.72); border-color: rgba(85,143,174,0.45); }
 html[data-theme="light"] .hiw-card:hover .hiw-crate { color: #2d6f8a; }
+
+/* ── orb eyes: rare async blink, per-orb character ── */
+.orb-eyes { transform-box: fill-box; transform-origin: center; }
+.orb-eyes.ov1 { animation: eyeBlinkA 118s linear infinite; }
+.orb-eyes.ov2 { animation: eyeBlinkB 133s linear infinite; }
+.orb-eyes.ov3 { animation: eyeGlow 107s linear infinite; }
+@keyframes eyeBlinkA { 0%,1.5%,2.2%,100% { transform: scaleY(1); } 1.85% { transform: scaleY(0.08); } }
+@keyframes eyeBlinkB { 0%,1%,100% { transform: scaleY(1); } 1.3% { transform: scaleY(0.08); } 1.6% { transform: scaleY(1); } 1.9% { transform: scaleY(0.08); } 2.2% { transform: scaleY(1); } }
+@keyframes eyeGlow { 0%,2.5%,100% { opacity: 1; } 3.8% { opacity: 0.35; } 5% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .orb-eyes { animation: none !important; } }
+
+/* ── flowing signal along debate wires + bigger diagram ── */
+.hiw-wire path { stroke-dasharray: 5 11; animation: wireFlow 2.4s linear infinite; }
+@keyframes wireFlow { to { stroke-dashoffset: -32; } }
+.hiw-stage { max-width: 1300px; }
+
+/* ── footer: neon flows THROUGH the words (dark cyan -> blue) ── */
+.menu-foot::before { display: none; }
+.menu-foot > span:not(.menu-foot-links) {
+  background: linear-gradient(100deg,
+    rgba(234,243,246,0.38) 0%, rgba(234,243,246,0.38) 43%,
+    #12b8ff 48%, #2f57ff 50%, #12b8ff 52%,
+    rgba(234,243,246,0.38) 57%, rgba(234,243,246,0.38) 100%);
+  background-size: 240% 100%;
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent; -webkit-text-fill-color: transparent;
+  animation: footShimmer 7s linear infinite;
+}
+@keyframes footShimmer { from { background-position: 190% 0; } to { background-position: -40% 0; } }
+html[data-theme="light"] .menu-foot > span:not(.menu-foot-links) {
+  background: linear-gradient(100deg, rgba(5,22,26,0.5) 0%, rgba(5,22,26,0.5) 43%, #0d8fd0 48%, #2340c0 50%, #0d8fd0 52%, rgba(5,22,26,0.5) 57%, rgba(5,22,26,0.5) 100%);
+  background-size: 240% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
+}
