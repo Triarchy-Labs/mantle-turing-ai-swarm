@@ -770,6 +770,5 @@ html[data-theme="light"] .orient-paths button:first-child { color: #eefbff; }
 @media (prefers-reduced-motion: reduce) { .boot-glow, .boot-eye { animation: none; } }
 
 /* big loader counter — Aventa ExtraBold, bottom-right, anchored so it grows left (no jitter) */
-.boot-pct { position: absolute; right: clamp(22px,4vw,60px); bottom: clamp(26px,4.5vw,58px); font-family: 'Aventa', var(--font-heading); font-weight: 800; font-size: clamp(58px,11vw,150px); line-height: .82; letter-spacing: -0.04em; color: rgba(234,243,246,0.94); font-variant-numeric: tabular-nums; text-shadow: 0 0 34px rgba(0,229,255,0.22); animation: bootUp 1s .35s ease both; }
-.boot-pct span { font-family: var(--font-ui); font-weight: 700; font-size: 0.34em; letter-spacing: 0; color: var(--accent); vertical-align: super; margin-left: .1em; }
+.boot-pct { position: absolute; right: clamp(20px,4vw,58px); bottom: clamp(22px,4vw,50px); font-family: 'Aventa', var(--font-heading); font-weight: 800; font-size: clamp(76px,14vw,190px); line-height: .8; letter-spacing: -0.045em; color: rgba(234,243,246,0.2); font-variant-numeric: tabular-nums; animation: bootUp 1s .35s ease both; }
 @media (max-width: 640px) { .boot-pct { right: 18px; bottom: 20px; } }

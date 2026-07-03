@@ -13,7 +13,7 @@ export default function BootScreen() {
     let raf = 0;
     const tick = (now: number) => {
       const t = Math.min((now - start) / dur, 1);
-      setPct(Math.round((1 - Math.pow(1 - t, 1.8)) * 100));
+      setPct(Math.round((1 - Math.pow(1 - t, 1.8)) * 20) * 5); // snap to whole 5s so it doesn't flicker
       if (t < 1) raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
@@ -32,7 +32,7 @@ export default function BootScreen() {
       </div>
       <div className="boot-word">MANTLE AI SWARM</div>
       <div className="boot-sub">INITIALIZING SWARM</div>
-      <div className="boot-pct">{pct}<span>%</span></div>
+      <div className="boot-pct">{pct}</div>
       <div className="boot-progress"><span /></div>
     </div>
   );
