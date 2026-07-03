@@ -45,8 +45,10 @@ export default function MenuOverlay({ open, onClose, onOpenHowItWorks }: { open:
             <h2 className="menu-headline">Autonomous intelligence<br />you can audit.</h2>
             <div className="menu-rule" />
             <a className="menu-contact" href="mailto:y4motion@gmail.com">y4motion@gmail.com</a>
-            <a className="menu-cta" href="/">Open live dashboard <span>&#8599;</span></a>
-            <div className="menu-take">Transparent <span>//</span> Simple <span>//</span> Precise</div>
+            <a className="menu-cta" href="#ai-console"
+               onClick={(e) => { e.preventDefault(); onClose(); setTimeout(() => document.getElementById('ai-console')?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 140); }}>
+               One AI console for everything <span>&#8599;</span></a>
+            <div className="menu-take">Transparent <span>//</span> Verifiable <span>//</span> Precise</div>
           </div>
 
           <nav className="menu-col" aria-label="Navigation">

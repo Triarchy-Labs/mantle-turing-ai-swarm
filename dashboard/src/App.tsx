@@ -485,7 +485,7 @@ export default function App() {
 
 					{/* SWARM AGENT CHAT CARD (Row 2, Left) */}
 					<div className="shape-choochoo" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-					<article className="bento-card " role="region" aria-label="Swarm Agent Chat" style={{ flexGrow: 1, margin: 0 }}>
+					<article id="ai-console" className="bento-card " role="region" aria-label="Swarm Agent Chat" style={{ flexGrow: 1, margin: 0 }}>
 						<div className="lusion-dot"></div>
 						<div className="lusion-top-meta">
 							<div>002</div>
