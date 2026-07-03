@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/header.jpg" alt="Mantle AI Swarm — Ouroboros" width="100%">
+</p>
+
 ◢◤ MANTLE AI SWARM ◥◣
 /// Autonomous Trading Intelligence
 
@@ -257,3 +261,9 @@ Converged from three battle-tested trading engines — Ouroboros (LLM brain), Ti
 25,365 lines of Rust. 12 crates. 6 intelligence layers. 24 pipeline stages. Live Mantle data. Zero compromises.
 
 Built by [Triarchy Labs](https://github.com/Triarchy-Labs).
+
+<p align="center">
+  <img src="assets/footer.jpg" alt="Ouroboros" width="340">
+</p>
+
+<p align="center"><sub>◢◤ MANTLE AI SWARM ◥◣ · triarchy labs · mantle l2 · chain 5000 · erc-8004</sub></p>
