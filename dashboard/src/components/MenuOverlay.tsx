@@ -77,7 +77,7 @@ export default function MenuOverlay({ open, onClose, onOpenHowItWorks }: { open:
           <span>&copy; Triarchy Labs. All rights reserved.</span>
           <span className="menu-foot-mid">The Turing Test Hackathon 2026</span>
           <span className="menu-foot-links">
-            <a href="https://x.com/mod_minimal" target="_blank" rel="noreferrer">X</a>
+            <a href="https://x.com/mod_minimal" target="_blank" rel="noreferrer">@mod_minimal</a>
           </span>
         </div>
       </div>

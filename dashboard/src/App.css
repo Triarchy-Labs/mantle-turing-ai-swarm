@@ -391,3 +391,12 @@ html[data-theme="light"] .menu-panel {
 .menu-take { margin-top: 2.4rem; color: rgba(234,243,246,0.5); font: 500 clamp(13px,1.3vw,16px) var(--font-mono); letter-spacing: .05em; }
 .menu-take span { color: var(--accent); margin: 0 .35rem; opacity: .65; }
 html[data-theme="light"] .menu-take { color: rgba(5,22,26,0.55); }
+
+/* CTA bigger & chunkier */
+.menu-cta { padding: 1.35rem 2.7rem; font-size: clamp(15px,1.6vw,19px); font-weight: 700; letter-spacing: .02em; }
+.menu-cta span { font-size: 1.15em; }
+/* open close-X: clearly cyan, thicker, glowing */
+.header-menu-btn.open { width: 34px; height: 26px; top: 44px; right: 58px; }
+.header-menu-btn.open .bar { height: 2px !important; background: var(--accent) !important; opacity: 1 !important; box-shadow: 0 0 10px var(--accent-glow); }
+.header-menu-btn.open .bar:first-child { transform: translateY(12px) rotate(45deg); width: 100%; }
+.header-menu-btn.open .bar:last-child { transform: translateY(-12px) rotate(-45deg); width: 100%; }
