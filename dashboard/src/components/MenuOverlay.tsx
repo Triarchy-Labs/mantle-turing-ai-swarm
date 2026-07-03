@@ -21,7 +21,7 @@ const PROOF = [
   { label: 'Mantlescan', href: WALLET },
 ];
 
-export default function MenuOverlay({ open, onClose, onOpenHowItWorks }: { open: boolean; onClose: () => void; onOpenHowItWorks?: () => void }) {
+export default function MenuOverlay({ open, onClose, onOpenHowItWorks, onOpenMission }: { open: boolean; onClose: () => void; onOpenHowItWorks?: () => void; onOpenMission?: () => void }) {
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
@@ -57,6 +57,7 @@ export default function MenuOverlay({ open, onClose, onOpenHowItWorks }: { open:
               <a key={i.label} className={`menu-link ${idx === 0 ? 'active' : ''}`} href={i.href}
                  onClick={(e) => {
                    if (i.label === 'How it works' && onOpenHowItWorks) { e.preventDefault(); onOpenHowItWorks(); }
+                   if (i.label === 'Mission' && onOpenMission) { e.preventDefault(); onOpenMission(); }
                    onClose();
                  }}>{i.label}</a>
             ))}
