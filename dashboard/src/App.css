@@ -290,3 +290,6 @@ html[data-theme="light"] .hiw-l { fill: #05161a; }
 .hiw-chip .dot.c { background: #00e5ff; } .hiw-chip .dot.j { background: #b98bff; }
 html[data-theme="light"] .hiw-chip { color: rgba(5,22,26,0.82); }
 @media (max-width: 640px) { .hiw-roster { grid-template-columns: 1fr; } }
+.hiw-note { max-width: 760px; margin: 1.8rem auto 0; padding: 16px 22px; border: 1px solid rgba(0,229,255,0.2); border-left: 3px solid #00e5ff; border-radius: 12px; background: rgba(0,229,255,0.05); color: rgba(234,243,246,0.82); font: 400 14.5px/1.55 var(--font-body); text-align: center; }
+.hiw-note b { color: #00e5ff; }
+html[data-theme="light"] .hiw-note { color: rgba(5,22,26,0.82); }

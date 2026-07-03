@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import MenuOverlay from './components/MenuOverlay';
 import HowItWorks from './components/HowItWorks';
 import './index.css';
+import './App.css';
 import LiquidGlassShader from './components/LiquidGlassShader';
 import CustomCursor from './components/CustomCursor';
 import { WebGLErrorBoundary } from './components/WebGLErrorBoundary';

@@ -138,6 +138,10 @@ export default function HowItWorks({ open, onClose }: { open: boolean; onClose: 
               {JUDGES.map(m => (<span key={m.name} className="hiw-chip"><i className="dot j" />{m.name} <em>{m.vendor} &middot; {m.role}</em></span>))}
             </div>
           </div>
+
+          <div className="hiw-note">
+            <b>Full transparency, and independence.</b> Every model is swappable. Soon you will be able to plug in your own local agents, so the swarm never fully depends on third-party gateways like OpenRouter.
+          </div>
         </section>
 
         {/* ── FLOW STRIP ── */}
