@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 
 /* ── data (from README) ─────────────────────────────── */
 const POOL = [
@@ -59,7 +60,7 @@ export default function HowItWorks({ open, onClose }: { open: boolean; onClose: 
     return () => { document.removeEventListener('keydown', onKey); document.documentElement.classList.remove('hiw-open'); };
   }, [open, onClose]);
 
-  return (
+  return createPortal(
     <div className={`hiw ${open ? 'open' : ''}`} aria-hidden={!open}>
       <button className="hiw-close" onClick={onClose} aria-label="Close">&times;</button>
 
@@ -186,6 +187,7 @@ export default function HowItWorks({ open, onClose }: { open: boolean; onClose: 
 
         <footer className="hiw-foot">◢◤ MANTLE AI SWARM ◥◣ &middot; built by Triarchy Labs &middot; every decision verifiable on-chain</footer>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
