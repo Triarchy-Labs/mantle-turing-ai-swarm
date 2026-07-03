@@ -6,8 +6,8 @@ export default function BootScreen() {
   const [mounted, setMounted] = useState(true);
 
   useEffect(() => {
-    const t1 = setTimeout(() => setGone(true), 1750);
-    const t2 = setTimeout(() => setMounted(false), 2450);
+    const t1 = setTimeout(() => setGone(true), 2100);
+    const t2 = setTimeout(() => setMounted(false), 2750);
     return () => { clearTimeout(t1); clearTimeout(t2); };
   }, []);
 
@@ -23,7 +23,7 @@ export default function BootScreen() {
       </div>
       <div className="boot-word">MANTLE AI SWARM</div>
       <div className="boot-sub">INITIALIZING SWARM</div>
-      <div className="boot-bar"><i /></div>
+      <div className="boot-progress"><span /></div>
     </div>
   );
 }
