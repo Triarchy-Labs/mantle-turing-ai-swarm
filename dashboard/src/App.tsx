@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import MenuOverlay from './components/MenuOverlay';
+import HowItWorks from './components/HowItWorks';
 import './index.css';
 import LiquidGlassShader from './components/LiquidGlassShader';
 import CustomCursor from './components/CustomCursor';
@@ -290,6 +291,7 @@ export default function App() {
 	const [configValues, setConfigValues] = useState({ lossKill: 3.0, maxCap: 100 });
 	const [showTxLogs, setShowTxLogs] = useState(true);
 	const [menuOpen, setMenuOpen] = useState(false);
+	const [howOpen, setHowOpen] = useState(false);
 
 	// Orb state cycling
 	useEffect(() => {
@@ -361,7 +363,8 @@ export default function App() {
 			<div className="vignette-overlay" style={{ position: 'fixed', inset: 0, background: 'radial-gradient(circle at center, transparent 30%, rgba(4,4,6,0.8) 100%)', zIndex: -98, pointerEvents: 'none' }} />
 
 			{/* ═══ HEADER ═══ */}
-			<MenuOverlay open={menuOpen} onClose={() => setMenuOpen(false)} />
+			<MenuOverlay open={menuOpen} onClose={() => setMenuOpen(false)} onOpenHowItWorks={() => setHowOpen(true)} />
+			<HowItWorks open={howOpen} onClose={() => setHowOpen(false)} />
 			<header className="header" role="banner" aria-label="Mantle AI Swarm Dashboard">
 				<a href="/" className="triarchy-logo-wrapper" title="Triarchy Labs">
 					<span className="triarchy-logo-text">TRIARCHY</span>

@@ -21,7 +21,7 @@ const PROOF = [
   { label: 'Mantlescan', href: WALLET },
 ];
 
-export default function MenuOverlay({ open, onClose }: { open: boolean; onClose: () => void }) {
+export default function MenuOverlay({ open, onClose, onOpenHowItWorks }: { open: boolean; onClose: () => void; onOpenHowItWorks?: () => void }) {
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
@@ -51,7 +51,11 @@ export default function MenuOverlay({ open, onClose }: { open: boolean; onClose:
           <nav className="menu-col" aria-label="Navigation">
             <div className="menu-col-title">NAVIGATION</div>
             {NAV.map((i, idx) => (
-              <a key={i.label} className={`menu-link ${idx === 0 ? 'active' : ''}`} href={i.href} onClick={onClose}>{i.label}</a>
+              <a key={i.label} className={`menu-link ${idx === 0 ? 'active' : ''}`} href={i.href}
+                 onClick={(e) => {
+                   if (i.label === 'How it works' && onOpenHowItWorks) { e.preventDefault(); onOpenHowItWorks(); }
+                   onClose();
+                 }}>{i.label}</a>
             ))}
           </nav>
 
