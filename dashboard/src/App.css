@@ -473,16 +473,33 @@ html[data-theme="light"] .menu-foot > span:not(.menu-foot-links) {
   background-size: 240% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
 }
 
-/* ── HowItWorks cards = real dashboard bento style ── */
-.hiw-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 1vw; }
-.hiw-mod { min-height: clamp(260px, 20vw, 340px); }
+/* ── HowItWorks cards = real dashboard bento (12-col, staggered) ── */
+.hiw-grid { display: grid; grid-template-columns: repeat(12, 1fr); column-gap: 1.6vw; row-gap: 1.6vw; }
+.hiw-mod { min-height: clamp(240px, 18vw, 320px); }
+/* span rhythm — mirrors the landing bento (7/5 · 5/7 · 4/4/4 · 12) */
+.hs-wide { grid-column: span 7; }
+.hs-med  { grid-column: span 5; }
+.hs-tri  { grid-column: span 4; min-height: clamp(300px, 23vw, 400px); }
+.hs-half { grid-column: span 6; }
+.hs-full { grid-column: span 12; min-height: clamp(180px, 13vw, 230px); }
+.hs-full .hiw-mod-body { margin-top: 2.2rem; max-width: 62%; }
 .hiw-mod-body { margin-top: 4rem; flex: 1; display: flex; align-items: flex-start; }
 .hiw-mod-desc { color: rgba(234,243,246,0.6); font: 400 clamp(14px,1vw,17px)/1.55 var(--font-body); margin: 0; }
 .hiw-mod .lusion-card-tags { margin-bottom: .7rem; }
 .hiw-plan { border-style: dashed !important; }
 html[data-theme="light"] .hiw-mod-desc { color: rgba(5,22,26,0.66); }
 .hiw-h2 { font-size: clamp(26px,3vw,46px); margin-bottom: 2rem; letter-spacing: -0.02em; }
-@media (max-width: 900px) { .hiw-grid { grid-template-columns: 1fr; } .hiw-mod-body { margin-top: 3rem; } }
+@media (max-width: 1100px) {
+  .hs-wide, .hs-med, .hs-tri, .hs-half { grid-column: span 6; }
+  .hs-full { grid-column: span 12; }
+  .hs-full .hiw-mod-body { max-width: 100%; }
+  .hs-tri { min-height: clamp(240px, 26vw, 320px); }
+}
+@media (max-width: 680px) {
+  .hiw-grid { grid-template-columns: 1fr; }
+  .hs-wide, .hs-med, .hs-tri, .hs-half, .hs-full { grid-column: 1 / -1; }
+  .hiw-mod-body { margin-top: 3rem; }
+}
 
 /* ── HowItWorks: bigger top (diagram + title) + scroll containment ── */
 .hiw-scroll { overscroll-behavior: contain; }
@@ -548,3 +565,35 @@ html[data-theme="light"] .hiw-flow, html[data-theme="light"] .hiw-note {
   overflow-x: hidden !important;
   overscroll-behavior: contain;
 }
+
+/* ═══════════ top layout: breathe + proper hierarchy ═══════════ */
+.hiw-svg { max-width: 1080px; margin: clamp(6px,1.5vw,24px) auto clamp(22px,3vw,44px); }
+.hiw-stage { margin-bottom: clamp(56px, 7vw, 110px); }
+.hiw-legend { margin-top: clamp(18px,2.5vw,36px); gap: 1rem 3rem; opacity: .92; }
+
+/* model roster = its own glass panel (matches bento) */
+.hiw-roster {
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(22px,4vw,60px);
+  max-width: 960px;
+  margin: clamp(28px,4vw,52px) auto 0;
+  padding: clamp(26px,3vw,42px) clamp(30px,4vw,52px);
+  background: rgba(0,0,0,0.2);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 1.5vw;
+  -webkit-backdrop-filter: blur(22px); backdrop-filter: blur(22px);
+}
+html[data-theme="light"] .hiw-roster { background: rgba(255,255,255,0.25); border-color: rgba(0,0,0,0.06); }
+.hiw-roster-col { gap: .8rem; }
+.hiw-roster-h { font-size: 12.5px; letter-spacing: .14em; margin-bottom: .8rem; }
+.hiw-chip { font-size: 16.5px; padding: .06rem 0; }
+.hiw-chip em { font-size: 13px; }
+
+/* note + flow: separation from neighbours */
+.hiw-note { margin-top: clamp(26px,3.5vw,48px); padding: clamp(18px,2vw,26px) clamp(26px,3vw,40px); font-size: clamp(15px,1.3vw,18px); }
+.hiw-flow { margin-top: clamp(40px,5vw,72px); margin-bottom: clamp(40px,5vw,72px); padding: clamp(18px,2vw,28px) clamp(22px,2.5vw,36px); }
+.hiw-step { font-size: clamp(12px,1.15vw,15px); }
+
+/* section blocks: real air above each, roomier heading */
+.hiw-block { margin-top: clamp(64px,8vw,120px); max-width: 1720px; }
+.hiw-h2 { margin-bottom: clamp(26px,3vw,46px); }

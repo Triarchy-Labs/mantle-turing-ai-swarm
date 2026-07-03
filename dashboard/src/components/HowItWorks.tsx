@@ -16,23 +16,23 @@ const JUDGES = [
 ];
 
 const MODULES = [
-  { num: '001', crate: 'ouroboros-brain', title: 'LLM Consensus', tags: 'DEBATE • JUDGE • RISK', loc: '3,975', desc: 'Multi-model debate, 15-factor judge, decision memory, circuit breaker, 5 pre-trade filters.' },
-  { num: '002', crate: 'titan-core', title: 'Neural Execution', tags: 'GATES • STOPS • RAMP', loc: '4,532', desc: '8-gate entry, trailing SL, RiskMatrix, ConfidenceEngine, 5-phase Auto-Ramp.' },
-  { num: '003', crate: 'hive-intel', title: 'Collective Intel', tags: 'ML • MEMORY • REGIME', loc: '12,634', desc: '40+ cognitive modules, local ML under 1µs, 4-state HMM regime, hybrid recall, affective memory.' },
-  { num: '004', crate: 'mantle-chain', title: 'On-Chain Adapter', tags: 'ALLOY • ERC-8004 • DEX', loc: '851', desc: 'Alloy 2.0: ERC-8004 registry, wallet signer + live tx broadcast, DexScreener, Merchant Moe / Agni.' },
-  { num: '005', crate: 'swarm-engine', title: 'Orchestrator', tags: 'PIPELINE • TELEMETRY', loc: '1,499', desc: '24-stage decision pipeline + telemetry HTTP server + live chain broadcast.' },
-  { num: '006', crate: 'turing-consensus', title: 'PolicyGovernor', tags: 'VOTING • CONSENSUS', loc: '397', desc: 'Multi-voter consensus engine for trade decisions.' },
-  { num: '007', crate: 'turing-risk', title: 'Risk Engine', tags: 'KELLY • KILL-SWITCH • ATR', loc: '560', desc: 'Regime-aware Kelly sizing, KillSwitch, ATR stops, bucket-cap risk management.' },
-  { num: '008', crate: 'turing-memory', title: 'Persistent Memory', tags: 'GRAPH • SLED • ON-CHAIN', loc: '124', desc: 'HyperEdge graph + sled DB persistent on-chain memory.' },
+  { num: '001', crate: 'ouroboros-brain', title: 'LLM Consensus', tags: 'DEBATE • JUDGE • RISK', loc: '3,975', size: 'hs-wide', desc: 'Multi-model debate, 15-factor judge, decision memory, circuit breaker, 5 pre-trade filters.' },
+  { num: '002', crate: 'titan-core', title: 'Neural Execution', tags: 'GATES • STOPS • RAMP', loc: '4,532', size: 'hs-med', desc: '8-gate entry, trailing SL, RiskMatrix, ConfidenceEngine, 5-phase Auto-Ramp.' },
+  { num: '003', crate: 'hive-intel', title: 'Collective Intel', tags: 'ML • MEMORY • REGIME', loc: '12,634', size: 'hs-med', desc: '40+ cognitive modules, local ML under 1µs, 4-state HMM regime, hybrid recall, affective memory.' },
+  { num: '004', crate: 'mantle-chain', title: 'On-Chain Adapter', tags: 'ALLOY • ERC-8004 • DEX', loc: '851', size: 'hs-wide', desc: 'Alloy 2.0: ERC-8004 registry, wallet signer + live tx broadcast, DexScreener, Merchant Moe / Agni.' },
+  { num: '005', crate: 'swarm-engine', title: 'Orchestrator', tags: 'PIPELINE • TELEMETRY', loc: '1,499', size: 'hs-tri', desc: '24-stage decision pipeline + telemetry HTTP server + live chain broadcast.' },
+  { num: '006', crate: 'turing-consensus', title: 'PolicyGovernor', tags: 'VOTING • CONSENSUS', loc: '397', size: 'hs-tri', desc: 'Multi-voter consensus engine for trade decisions.' },
+  { num: '007', crate: 'turing-risk', title: 'Risk Engine', tags: 'KELLY • KILL-SWITCH • ATR', loc: '560', size: 'hs-tri', desc: 'Regime-aware Kelly sizing, KillSwitch, ATR stops, bucket-cap risk management.' },
+  { num: '008', crate: 'turing-memory', title: 'Persistent Memory', tags: 'GRAPH • SLED • ON-CHAIN', loc: '124', size: 'hs-full', desc: 'HyperEdge graph + sled DB persistent on-chain memory — every decision the swarm makes is remembered and provable.' },
 ];
 
 const ROADMAP = [
-  { num: 'R1', title: 'Connect any wallet', tags: 'NON-CUSTODIAL', desc: 'Plug in any crypto wallet. The agent signs, you stay in control.' },
-  { num: 'R2', title: 'Connect exchanges', tags: 'CEX • DEX', desc: 'Route through your CEX / DEX accounts, not just Merchant Moe.' },
-  { num: 'R3', title: 'Auto portfolio', tags: 'REBALANCE', desc: 'Auto-build and rebalance a portfolio, sized by the same risk engine.' },
-  { num: 'R4', title: 'Live risk tracking', tags: '24/7 AGENTS', desc: 'Your positions watched live by our modules and agents.' },
-  { num: 'R5', title: 'Human jurors', tags: 'HYBRID', desc: 'Plug a human approver into the consensus loop when a use-case needs it.' },
-  { num: 'R6', title: 'Local-only mode', tags: 'PRIVATE', desc: 'Run the full consensus on local models, zero external API, fully private.' },
+  { num: 'R1', title: 'Connect any wallet', tags: 'NON-CUSTODIAL', size: 'hs-wide', desc: 'Plug in any crypto wallet. The agent signs, you stay in control.' },
+  { num: 'R2', title: 'Connect exchanges', tags: 'CEX • DEX', size: 'hs-med', desc: 'Route through your CEX / DEX accounts, not just Merchant Moe.' },
+  { num: 'R3', title: 'Auto portfolio', tags: 'REBALANCE', size: 'hs-med', desc: 'Auto-build and rebalance a portfolio, sized by the same risk engine.' },
+  { num: 'R4', title: 'Live risk tracking', tags: '24/7 AGENTS', size: 'hs-wide', desc: 'Your positions watched live by our modules and agents.' },
+  { num: 'R5', title: 'Human jurors', tags: 'HYBRID', size: 'hs-half', desc: 'Plug a human approver into the consensus loop when a use-case needs it.' },
+  { num: 'R6', title: 'Local-only mode', tags: 'PRIVATE', size: 'hs-half', desc: 'Run the full consensus on local models, zero external API, fully private.' },
 ];
 
 /* ── orb with glowing eyes (brand mark) ─────────────── */
@@ -158,7 +158,7 @@ export default function HowItWorks({ open, onClose }: { open: boolean; onClose: 
           <h2 className="hiw-h2">The engine &mdash; 12 Rust crates, 25,365 lines</h2>
           <div className="hiw-grid">
             {MODULES.map(m => (
-              <article key={m.crate} className="bento-card hiw-mod">
+              <article key={m.crate} className={`bento-card hiw-mod ${m.size}`}>
                 <div className="lusion-dot"></div>
                 <div className="lusion-top-meta"><div>{m.num}</div><div>{m.crate}</div></div>
                 <div className="hiw-mod-body"><p className="hiw-mod-desc">{m.desc}</p></div>
@@ -174,7 +174,7 @@ export default function HowItWorks({ open, onClose }: { open: boolean; onClose: 
           <h2 className="hiw-h2">On the roadmap</h2>
           <div className="hiw-grid">
             {ROADMAP.map(r => (
-              <article key={r.num} className="bento-card hiw-mod hiw-plan">
+              <article key={r.num} className={`bento-card hiw-mod hiw-plan ${r.size}`}>
                 <div className="lusion-dot"></div>
                 <div className="lusion-top-meta"><div>{r.num}</div><div>PLANNED</div></div>
                 <div className="hiw-mod-body"><p className="hiw-mod-desc">{r.desc}</p></div>
