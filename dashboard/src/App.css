@@ -659,3 +659,6 @@ html[data-theme="light"] .hiw-cap-box { fill: rgba(255,255,255,0.9); stroke: rgb
 html[data-theme="light"] .hiw-cap-txt { fill: rgba(5,22,26,0.9); }
 html[data-theme="light"] .hiw-cap-num { fill: #1f6d88; }
 @media (max-width: 640px) { .hiw-caps { display: none; } }
+
+/* "On the roadmap" badge on section cards */
+.hiw-soon-tag { position: absolute; top: 2.2vw; right: 3.6vw; z-index: 2; color: rgba(0,229,255,0.72); border-color: rgba(0,229,255,0.32); }
