@@ -78,6 +78,7 @@ export default function MenuOverlay({ open, onClose, onOpenHowItWorks }: { open:
           <span className="menu-foot-mid">The Turing Test Hackathon 2026</span>
           <span className="menu-foot-links">
             <a href="https://x.com/mod_minimal" target="_blank" rel="noreferrer">@mod_minimal</a>
+            <a href="https://x.com/Mantle_Official" target="_blank" rel="noreferrer">Mantle &#8599;</a>
           </span>
         </div>
       </div>
