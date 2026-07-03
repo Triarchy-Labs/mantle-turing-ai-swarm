@@ -536,3 +536,15 @@ html[data-theme="light"] .hiw-flow, html[data-theme="light"] .hiw-note {
 /* make the overlay ITSELF the scroll container (bulletproof) */
 .hiw { overflow-y: auto !important; overflow-x: hidden !important; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
 .hiw-scroll { position: static !important; inset: auto !important; height: auto !important; min-height: 100vh; }
+
+/* ═══════════ FINAL authoritative scroll (overrides all the flip-flop above) ═══════════ */
+.hiw { overflow: hidden !important; }
+.hiw-scroll {
+  position: absolute !important;
+  inset: 0 !important;
+  height: auto !important;
+  min-height: 0 !important;
+  overflow-y: scroll !important;
+  overflow-x: hidden !important;
+  overscroll-behavior: contain;
+}
