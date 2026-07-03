@@ -44,8 +44,9 @@ export default function MenuOverlay({ open, onClose, onOpenHowItWorks }: { open:
             <div className="menu-accent">&#9670; Explore the system</div>
             <h2 className="menu-headline">Autonomous intelligence<br />you can audit.</h2>
             <div className="menu-rule" />
-            <a className="menu-contact" href="https://github.com/Triarchy-Labs" target="_blank" rel="noreferrer">github.com/Triarchy-Labs</a>
+            <a className="menu-contact" href="mailto:y4motion@gmail.com">y4motion@gmail.com</a>
             <a className="menu-cta" href="/">Open live dashboard <span>&#8599;</span></a>
+            <div className="menu-take">Transparent <span>//</span> Simple <span>//</span> Precise</div>
           </div>
 
           <nav className="menu-col" aria-label="Navigation">
@@ -75,7 +76,6 @@ export default function MenuOverlay({ open, onClose, onOpenHowItWorks }: { open:
           <span className="menu-foot-mid">The Turing Test Hackathon 2026</span>
           <span className="menu-foot-links">
             <a href="https://x.com/mod_minimal" target="_blank" rel="noreferrer">X</a>
-            <a href="https://github.com/Triarchy-Labs" target="_blank" rel="noreferrer">GitHub</a>
           </span>
         </div>
       </div>
