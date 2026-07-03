@@ -100,48 +100,49 @@ export default function HowItWorks({ open, onClose }: { open: boolean; onClose: 
               <linearGradient id="wire" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#00e5ff" stopOpacity="0.1" /><stop offset="0.5" stopColor="#00e5ff" stopOpacity="0.7" /><stop offset="1" stopColor="#00e5ff" stopOpacity="0.1" /></linearGradient>
             </defs>
 
-            {/* ── pool mesh: every model wired to every other (complex network) ── */}
-            <g className="hiw-mesh" fill="none">
-              <path d="M500,180 L608,242" /><path d="M500,180 L608,368" /><path d="M500,180 L500,430" /><path d="M500,180 L392,368" /><path d="M500,180 L392,242" />
-              <path d="M608,242 L608,368" /><path d="M608,242 L500,430" /><path d="M608,242 L392,368" /><path d="M608,242 L392,242" />
-              <path d="M608,368 L500,430" /><path d="M608,368 L392,368" /><path d="M608,368 L392,242" />
-              <path d="M500,430 L392,368" /><path d="M500,430 L392,242" />
-              <path d="M392,368 L392,242" />
+            {/* ── closed outer contour: macro → bear → meta → bull → macro ── */}
+            <g className="hiw-frame" fill="none" stroke="url(#wire)" strokeWidth="1.5">
+              <path d="M500,64 Q707.9,161.8 850,305" />
+              <path d="M850,305 Q707.9,448.2 500,546" />
+              <path d="M500,546 Q292.1,448.2 150,305" />
+              <path d="M150,305 Q292.1,161.8 500,64" />
             </g>
-            {/* bull / bear feed the pool */}
-            <g className="hiw-wire" fill="none" stroke="url(#wire)" strokeWidth="1.4">
-              <path d="M 170,305 C 280,250 330,244 392,242" />
-              <path d="M 170,305 C 280,360 330,366 392,368" />
-              <path d="M 830,305 C 720,250 670,244 608,242" />
-              <path d="M 830,305 C 720,360 670,366 608,368" />
+            {/* rotating 6-model pool — one clean ring, equal-radius arcs */}
+            <g className="hiw-ring" fill="none" stroke="#00e5ff" strokeWidth="1.3">
+              <path d="M500,170 A135,135 0 0,1 617,237" />
+              <path d="M617,237 A135,135 0 0,1 617,373" />
+              <path d="M617,373 A135,135 0 0,1 500,440" />
+              <path d="M500,440 A135,135 0 0,1 383,373" />
+              <path d="M383,373 A135,135 0 0,1 383,237" />
+              <path d="M383,237 A135,135 0 0,1 500,170" />
             </g>
-            {/* pool <-> judges */}
+            {/* judges tie into the ring */}
             <g fill="none" stroke="#b98bff" strokeOpacity="0.5" strokeWidth="1.2" strokeDasharray="3 4">
-              <path d="M 500,100 L 500,180" />
-              <path d="M 500,510 L 500,430" />
+              <path d="M500,94 L500,144" />
+              <path d="M500,516 L500,466" />
             </g>
 
-            {/* pool orbs — even hexagon */}
-            <Orb x={500} y={180} r={25} delay={0} variant={1} />
-            <Orb x={608} y={242} r={25} delay={28} variant={3} />
-            <Orb x={608} y={368} r={25} delay={7} variant={2} />
-            <Orb x={500} y={430} r={25} delay={35} variant={1} />
-            <Orb x={392} y={368} r={25} delay={42} variant={2} />
-            <Orb x={392} y={242} r={25} delay={14} variant={3} />
+            {/* pool orbs — even ring */}
+            <Orb x={500} y={170} r={26} delay={0} variant={1} />
+            <Orb x={617} y={237} r={26} delay={28} variant={3} />
+            <Orb x={617} y={373} r={26} delay={7} variant={2} />
+            <Orb x={500} y={440} r={26} delay={35} variant={1} />
+            <Orb x={383} y={373} r={26} delay={42} variant={2} />
+            <Orb x={383} y={237} r={26} delay={14} variant={3} />
             {/* bull / bear */}
-            <Orb x={170} y={305} r={42} tone="bull" delay={21} variant={1} />
-            <Orb x={830} y={305} r={42} tone="bear" delay={49} variant={2} />
+            <Orb x={150} y={305} r={44} tone="bull" delay={21} variant={1} />
+            <Orb x={850} y={305} r={44} tone="bear" delay={49} variant={2} />
             {/* judges */}
-            <Orb x={500} y={70} r={30} tone="judge" delay={30} variant={3} />
-            <Orb x={500} y={540} r={30} tone="judge" delay={12} variant={1} />
+            <Orb x={500} y={64} r={30} tone="judge" delay={30} variant={3} />
+            <Orb x={500} y={546} r={30} tone="judge" delay={12} variant={1} />
 
             {/* labels */}
-            <text x={170} y={368} className="hiw-l hiw-l-big" textAnchor="middle">BULL</text>
-            <text x={170} y={386} className="hiw-l hiw-l-sm" textAnchor="middle">argues BUY &middot; own prompt</text>
-            <text x={830} y={368} className="hiw-l hiw-l-big" textAnchor="middle">BEAR</text>
-            <text x={830} y={386} className="hiw-l hiw-l-sm" textAnchor="middle">argues SELL &middot; own prompt</text>
-            <text x={500} y={28} className="hiw-l hiw-l-mid" textAnchor="middle" fill="#b98bff">MACRO JUDGE &middot; outside the pool</text>
-            <text x={500} y={600} className="hiw-l hiw-l-mid" textAnchor="middle" fill="#b98bff">META JUDGE &middot; outside the pool</text>
+            <text x={150} y={370} className="hiw-l hiw-l-big" textAnchor="middle">BULL</text>
+            <text x={150} y={388} className="hiw-l hiw-l-sm" textAnchor="middle">argues BUY &middot; own prompt</text>
+            <text x={850} y={370} className="hiw-l hiw-l-big" textAnchor="middle">BEAR</text>
+            <text x={850} y={388} className="hiw-l hiw-l-sm" textAnchor="middle">argues SELL &middot; own prompt</text>
+            <text x={500} y={20} className="hiw-l hiw-l-mid" textAnchor="middle" fill="#b98bff">MACRO JUDGE &middot; outside the pool</text>
+            <text x={500} y={606} className="hiw-l hiw-l-mid" textAnchor="middle" fill="#b98bff">META JUDGE &middot; outside the pool</text>
           </svg>
 
           <div className="hiw-legend">

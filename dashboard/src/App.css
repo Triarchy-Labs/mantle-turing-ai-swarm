@@ -622,13 +622,17 @@ html[data-theme="light"] .hiw-roster { background: rgba(255,255,255,0.25); borde
 .hiw-block { margin-top: clamp(64px,8vw,120px); max-width: 1720px; }
 .hiw-h2 { margin-bottom: clamp(26px,3vw,46px); }
 
-/* ═══════════ pool mesh (every model ↔ every model) ═══════════ */
-.hiw-mesh path { stroke: #00e5ff; stroke-width: 1; stroke-dasharray: 2 6; stroke-opacity: .15; animation: meshPulse 6.5s ease-in-out infinite; }
-.hiw-mesh path:nth-child(2n) { animation-delay: -2.2s; }
-.hiw-mesh path:nth-child(3n) { animation-delay: -4.1s; }
-@keyframes meshPulse { 0%,100% { stroke-opacity: .09; } 50% { stroke-opacity: .25; } }
-html[data-theme="light"] .hiw-mesh path { stroke: #2d6f8a; stroke-opacity: .22; }
-@media (prefers-reduced-motion: reduce) { .hiw-mesh path { animation: none; stroke-opacity: .15; } }
+/* ═══════════ closed contour + rotating ring (no more star-of-david) ═══════════ */
+/* outer frame: signal circulates the closed loop */
+.hiw-frame path { stroke-dasharray: 7 11; opacity: .6; animation: wireFlow 3.4s linear infinite; }
+/* pool ring: equal-radius arcs, gentle rotating flow */
+.hiw-ring path { stroke-dasharray: 4 9; stroke-opacity: .6; animation: wireFlow 2.8s linear infinite; }
+html[data-theme="light"] .hiw-ring path { stroke: #2d6f8a; }
+@media (prefers-reduced-motion: reduce) { .hiw-frame path, .hiw-ring path { animation: none; } }
+
+/* ═══════════ bigger stage — the heads scene fills ~2/3 of the screen ═══════════ */
+.hiw-svg { width: auto; max-width: 96vw; height: clamp(420px, 64vh, 880px); margin: clamp(8px,1.5vw,24px) auto clamp(26px,3.5vw,50px); }
+@media (max-width: 900px) { .hiw-svg { width: 100%; height: auto; } }
 
 /* ═══════════ live shader background shows through the overlay ═══════════ */
 /* hide the dashboard (its cards were bleeding); the WebGL shader lives in a
