@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import MenuOverlay from './components/MenuOverlay';
 import './index.css';
 import LiquidGlassShader from './components/LiquidGlassShader';
 import CustomCursor from './components/CustomCursor';
@@ -288,6 +289,7 @@ export default function App() {
 	const [overrideFlash, setOverrideFlash] = useState<number | null>(null);
 	const [configValues, setConfigValues] = useState({ lossKill: 3.0, maxCap: 100 });
 	const [showTxLogs, setShowTxLogs] = useState(true);
+	const [menuOpen, setMenuOpen] = useState(false);
 
 	// Orb state cycling
 	useEffect(() => {
@@ -359,6 +361,7 @@ export default function App() {
 			<div className="vignette-overlay" style={{ position: 'fixed', inset: 0, background: 'radial-gradient(circle at center, transparent 30%, rgba(4,4,6,0.8) 100%)', zIndex: -98, pointerEvents: 'none' }} />
 
 			{/* ═══ HEADER ═══ */}
+			<MenuOverlay open={menuOpen} onClose={() => setMenuOpen(false)} />
 			<header className="header" role="banner" aria-label="Mantle AI Swarm Dashboard">
 				<a href="/" className="triarchy-logo-wrapper" title="Triarchy Labs">
 					<span className="triarchy-logo-text">TRIARCHY</span>
@@ -380,7 +383,7 @@ export default function App() {
 						<span className={`theme-letter ${theme === 'dark' ? 'active' : ''}`}>D</span>
 						<span className={`theme-letter ${theme === 'light' ? 'active' : ''}`}>L</span>
 					</button>
-					<div className="header-menu-btn" aria-label="Menu">
+					<div className={`header-menu-btn ${menuOpen ? 'open' : ''}`} role="button" tabIndex={0} aria-label="Menu" aria-expanded={menuOpen} onClick={() => setMenuOpen(o => !o)}>
 						<span className="bar"></span>
 						<span className="bar"></span>
 					</div>
