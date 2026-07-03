@@ -526,3 +526,9 @@ html[data-theme="light"] .hiw-flow, html[data-theme="light"] .hiw-note {
 
 /* opaque overlay bg (no bleed-through) + own scroll only */
 .hiw { overflow: hidden; background: radial-gradient(1500px 1000px at 50% -8%, #0a2029, #04090d 55%) !important; }
+
+/* portaled overlay: re-enable native cursor (custom cursor lives behind it) */
+.hiw, .hiw *, .menu-overlay, .menu-overlay * { cursor: auto !important; }
+.hiw a, .hiw button, .hiw [role="button"], .menu-overlay a, .menu-overlay button, .menu-overlay [role="button"], .header-menu-btn { cursor: pointer !important; }
+/* bulletproof internal scroll */
+.hiw-scroll { -webkit-overflow-scrolling: touch; height: 100%; }
