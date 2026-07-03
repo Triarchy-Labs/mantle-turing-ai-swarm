@@ -623,10 +623,13 @@ html[data-theme="light"] .hiw-roster { background: rgba(255,255,255,0.25); borde
 .hiw-h2 { margin-bottom: clamp(26px,3vw,46px); }
 
 /* ═══════════ closed contour + rotating ring (no more star-of-david) ═══════════ */
-/* outer frame: signal circulates the closed loop */
-.hiw-frame path { stroke-dasharray: 7 11; opacity: .6; animation: wireFlow 3.4s linear infinite; }
-/* pool ring: equal-radius arcs, gentle rotating flow */
-.hiw-ring path { stroke-dasharray: 4 9; stroke-opacity: .6; animation: wireFlow 2.8s linear infinite; }
+/* outer frame: signal circulates the closed loop.
+   offset MUST be a whole multiple of the dash period (7+11=18) → seamless loop, no jump */
+.hiw-frame path { stroke-dasharray: 7 11; opacity: .6; animation: flowFrame 6s linear infinite; will-change: stroke-dashoffset; }
+@keyframes flowFrame { to { stroke-dashoffset: -36; } }
+/* pool ring: equal-radius arcs (period 4+9=13) */
+.hiw-ring path { stroke-dasharray: 4 9; stroke-opacity: .6; animation: flowRing 5.4s linear infinite; will-change: stroke-dashoffset; }
+@keyframes flowRing { to { stroke-dashoffset: -39; } }
 html[data-theme="light"] .hiw-ring path { stroke: #2d6f8a; }
 @media (prefers-reduced-motion: reduce) { .hiw-frame path, .hiw-ring path { animation: none; } }
 
