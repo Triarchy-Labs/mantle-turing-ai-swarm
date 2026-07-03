@@ -15,9 +15,25 @@ const JUDGES = [
   { name: 'Nemotron-Ultra-550B', vendor: 'NVIDIA', role: 'Meta Judge' },
 ];
 
+/* factors the judge reads on each side (numbers = judge.rs factor #) */
+const BULL_CAPS = [
+  { n: '01', t: 'Oversold +2.0' },
+  { n: '02', t: 'Funding squeeze' },
+  { n: '06', t: 'Alpha squeeze' },
+  { n: '08', t: 'Macro bullish' },
+  { n: '09', t: '4H uptrend' },
+];
+const BEAR_CAPS = [
+  { n: '01', t: 'Overbought −2.0' },
+  { n: '02', t: 'Funding overheat' },
+  { n: '08', t: 'Macro bearish' },
+  { n: '15', t: 'Event lock −2.0' },
+  { n: '07', t: 'ML down' },
+];
+
 const MODULES = [
   { num: '001', crate: 'ouroboros-brain', title: 'LLM Consensus', tags: 'DEBATE • JUDGE • RISK', loc: '3,975', size: 'hs-wide', desc: 'Multi-model debate, 15-factor judge, decision memory, circuit breaker, 5 pre-trade filters.',
-    full: 'This is the swarm’s decision core. For every signal a bull model and a bear model argue the opposite case, then a separate judge scores the debate across 15 factors. A trade is only allowed if the models genuinely agree — five pre-trade filters and a circuit breaker can veto anything that looks unsafe. Nothing ever reaches your capital on a single model’s opinion.' },
+    full: 'The swarm’s decision core. A bull model and a bear model argue opposite cases — but that debate is only one input. A separate judge folds 15 signals into a single score: price trend (contrarian, it fades the crowd at extremes), funding rate, open interest, volume surges, an ML prediction, macro bias, the 4-hour trend, liquidations and whale activity, memory of past decisions, and a penalty for high-impact events like FOMC / CPI. A trade is allowed only if that combined score clears a threshold — otherwise it holds. Decision memory, a circuit breaker and five pre-trade filters can still veto it. Nothing reaches your capital on a single model’s opinion.' },
   { num: '002', crate: 'titan-core', title: 'Neural Execution', tags: 'GATES • STOPS • RAMP', loc: '4,532', size: 'hs-med', desc: '8-gate entry, trailing SL, RiskMatrix, ConfidenceEngine, 5-phase Auto-Ramp.',
     full: 'Once a trade is approved, this decides how it is actually placed. Eight independent gates must all agree before entry, the position is built up in five careful phases instead of going all-in at once, and a trailing stop-loss locks in gains as the price moves in your favour. It is the difference between “buy now” and entering with discipline.' },
   { num: '003', crate: 'hive-intel', title: 'Collective Intel', tags: 'ML • MEMORY • REGIME', loc: '12,634', size: 'hs-med', desc: '40+ cognitive modules, local ML under 1µs, 4-state HMM regime, hybrid recall, affective memory.',
@@ -68,6 +84,7 @@ function Orb({ x, y, r, tone = 'cyan', delay = 0, variant = 1 }: { x: number; y:
 export default function HowItWorks({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [openCards, setOpenCards] = useState<Record<string, boolean>>({});
   const toggle = (k: string) => setOpenCards(o => ({ ...o, [k]: !o[k] }));
+  const [side, setSide] = useState<'bull' | 'bear' | null>(null);
 
   useEffect(() => {
     if (!open) return;
@@ -129,9 +146,15 @@ export default function HowItWorks({ open, onClose }: { open: boolean; onClose: 
             <Orb x={500} y={440} r={26} delay={35} variant={1} />
             <Orb x={383} y={373} r={26} delay={42} variant={2} />
             <Orb x={383} y={237} r={26} delay={14} variant={3} />
-            {/* bull / bear */}
-            <Orb x={150} y={305} r={44} tone="bull" delay={21} variant={1} />
-            <Orb x={850} y={305} r={44} tone="bear" delay={49} variant={2} />
+            {/* bull / bear — hover reveals the factors each side brings */}
+            <g className="hiw-node" onMouseEnter={() => setSide('bull')} onMouseLeave={() => setSide(null)}>
+              <circle cx={150} cy={305} r={66} fill="transparent" />
+              <Orb x={150} y={305} r={44} tone="bull" delay={21} variant={1} />
+            </g>
+            <g className="hiw-node" onMouseEnter={() => setSide('bear')} onMouseLeave={() => setSide(null)}>
+              <circle cx={850} cy={305} r={66} fill="transparent" />
+              <Orb x={850} y={305} r={44} tone="bear" delay={49} variant={2} />
+            </g>
             {/* judges */}
             <Orb x={500} y={64} r={30} tone="judge" delay={30} variant={3} />
             <Orb x={500} y={546} r={30} tone="judge" delay={12} variant={1} />
@@ -143,6 +166,28 @@ export default function HowItWorks({ open, onClose }: { open: boolean; onClose: 
             <text x={850} y={388} className="hiw-l hiw-l-sm" textAnchor="middle">argues SELL &middot; own prompt</text>
             <text x={500} y={20} className="hiw-l hiw-l-mid" textAnchor="middle" fill="#b98bff">MACRO JUDGE &middot; outside the pool</text>
             <text x={500} y={606} className="hiw-l hiw-l-mid" textAnchor="middle" fill="#b98bff">META JUDGE &middot; outside the pool</text>
+
+            {/* hover capsules — the judge factors each side brings (numbers = judge.rs factor #) */}
+            <g className={`hiw-caps bull ${side === 'bull' ? 'on' : ''}`}>
+              {BULL_CAPS.map((c, i) => (
+                <g key={c.n} transform={`translate(272,${172 + i * 72})`}>
+                  <rect x={-84} y={-17} width={168} height={34} rx={17} className="hiw-cap-box" />
+                  <circle cx={-63} cy={0} r={11.5} className="hiw-cap-num-bg" />
+                  <text x={-63} y={4} textAnchor="middle" className="hiw-cap-num">{c.n}</text>
+                  <text x={-45} y={4.5} className="hiw-cap-txt">{c.t}</text>
+                </g>
+              ))}
+            </g>
+            <g className={`hiw-caps bear ${side === 'bear' ? 'on' : ''}`}>
+              {BEAR_CAPS.map((c, i) => (
+                <g key={c.n} transform={`translate(728,${172 + i * 72})`}>
+                  <rect x={-84} y={-17} width={168} height={34} rx={17} className="hiw-cap-box" />
+                  <circle cx={63} cy={0} r={11.5} className="hiw-cap-num-bg" />
+                  <text x={63} y={4} textAnchor="middle" className="hiw-cap-num">{c.n}</text>
+                  <text x={45} y={4.5} textAnchor="end" className="hiw-cap-txt">{c.t}</text>
+                </g>
+              ))}
+            </g>
           </svg>
 
           <div className="hiw-legend">
