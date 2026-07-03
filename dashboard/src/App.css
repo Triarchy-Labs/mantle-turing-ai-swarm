@@ -597,3 +597,18 @@ html[data-theme="light"] .hiw-roster { background: rgba(255,255,255,0.25); borde
 /* section blocks: real air above each, roomier heading */
 .hiw-block { margin-top: clamp(64px,8vw,120px); max-width: 1720px; }
 .hiw-h2 { margin-bottom: clamp(26px,3vw,46px); }
+
+/* ═══════════ pool mesh (every model ↔ every model) ═══════════ */
+.hiw-mesh path { stroke: #00e5ff; stroke-width: 1; stroke-dasharray: 2 6; stroke-opacity: .15; animation: meshPulse 6.5s ease-in-out infinite; }
+.hiw-mesh path:nth-child(2n) { animation-delay: -2.2s; }
+.hiw-mesh path:nth-child(3n) { animation-delay: -4.1s; }
+@keyframes meshPulse { 0%,100% { stroke-opacity: .09; } 50% { stroke-opacity: .25; } }
+html[data-theme="light"] .hiw-mesh path { stroke: #2d6f8a; stroke-opacity: .22; }
+@media (prefers-reduced-motion: reduce) { .hiw-mesh path { animation: none; stroke-opacity: .15; } }
+
+/* ═══════════ live shader background shows through the overlay ═══════════ */
+/* hide the dashboard (its cards were bleeding); the WebGL shader lives in a
+   separate body-portal at z-index:-1, so it stays visible behind a translucent veil */
+html.hiw-open #root { opacity: 0 !important; pointer-events: none !important; transition: opacity .35s ease; }
+.hiw { background: radial-gradient(1400px 920px at 50% -6%, rgba(8,28,37,0.50), rgba(3,8,12,0.74) 62%) !important; }
+html[data-theme="light"] .hiw { background: radial-gradient(1400px 920px at 50% -6%, rgba(150,200,220,0.34), rgba(225,236,240,0.76) 62%) !important; }

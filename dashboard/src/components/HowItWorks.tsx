@@ -83,45 +83,48 @@ export default function HowItWorks({ open, onClose }: { open: boolean; onClose: 
               <linearGradient id="wire" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#00e5ff" stopOpacity="0.1" /><stop offset="0.5" stopColor="#00e5ff" stopOpacity="0.7" /><stop offset="1" stopColor="#00e5ff" stopOpacity="0.1" /></linearGradient>
             </defs>
 
-            {/* winding connectors */}
-            <g className="hiw-wire" fill="none" stroke="url(#wire)" strokeWidth="1.4">
-              {/* bull <-> pool */}
-              <path d="M 200,310 C 320,180 420,240 500,150" />
-              <path d="M 200,310 C 300,340 400,360 480,300" />
-              <path d="M 200,310 C 320,470 420,400 500,470" />
-              {/* bear <-> pool */}
-              <path d="M 800,310 C 680,180 580,240 500,150" />
-              <path d="M 800,310 C 700,340 600,360 520,300" />
-              <path d="M 800,310 C 680,470 580,400 500,470" />
+            {/* ── pool mesh: every model wired to every other (complex network) ── */}
+            <g className="hiw-mesh" fill="none">
+              <path d="M500,180 L608,242" /><path d="M500,180 L608,368" /><path d="M500,180 L500,430" /><path d="M500,180 L392,368" /><path d="M500,180 L392,242" />
+              <path d="M608,242 L608,368" /><path d="M608,242 L500,430" /><path d="M608,242 L392,368" /><path d="M608,242 L392,242" />
+              <path d="M608,368 L500,430" /><path d="M608,368 L392,368" /><path d="M608,368 L392,242" />
+              <path d="M500,430 L392,368" /><path d="M500,430 L392,242" />
+              <path d="M392,368 L392,242" />
             </g>
-            {/* pool -> judges */}
-            <g fill="none" stroke="#b98bff" strokeOpacity="0.55" strokeWidth="1.2" strokeDasharray="3 4">
-              <path d="M 500,150 C 500,100 500,90 500,64" />
-              <path d="M 500,470 C 500,520 500,530 500,556" />
+            {/* bull / bear feed the pool */}
+            <g className="hiw-wire" fill="none" stroke="url(#wire)" strokeWidth="1.4">
+              <path d="M 170,305 C 280,250 330,244 392,242" />
+              <path d="M 170,305 C 280,360 330,366 392,368" />
+              <path d="M 830,305 C 720,250 670,244 608,242" />
+              <path d="M 830,305 C 720,360 670,366 608,368" />
+            </g>
+            {/* pool <-> judges */}
+            <g fill="none" stroke="#b98bff" strokeOpacity="0.5" strokeWidth="1.2" strokeDasharray="3 4">
+              <path d="M 500,100 L 500,180" />
+              <path d="M 500,510 L 500,430" />
             </g>
 
-            {/* pool orbs */}
-            <Orb x={500} y={150} r={26} delay={0} variant={1} />
-            <Orb x={410} y={230} r={22} delay={14} variant={2} />
-            <Orb x={590} y={230} r={22} delay={28} variant={3} />
-            <Orb x={410} y={390} r={22} delay={42} variant={2} />
-            <Orb x={590} y={390} r={22} delay={7} variant={1} />
-            <Orb x={500} y={470} r={26} delay={35} variant={3} />
+            {/* pool orbs — even hexagon */}
+            <Orb x={500} y={180} r={25} delay={0} variant={1} />
+            <Orb x={608} y={242} r={25} delay={28} variant={3} />
+            <Orb x={608} y={368} r={25} delay={7} variant={2} />
+            <Orb x={500} y={430} r={25} delay={35} variant={1} />
+            <Orb x={392} y={368} r={25} delay={42} variant={2} />
+            <Orb x={392} y={242} r={25} delay={14} variant={3} />
             {/* bull / bear */}
-            <Orb x={200} y={310} r={40} tone="bull" delay={21} variant={1} />
-            <Orb x={800} y={310} r={40} tone="bear" delay={49} variant={2} />
+            <Orb x={170} y={305} r={42} tone="bull" delay={21} variant={1} />
+            <Orb x={830} y={305} r={42} tone="bear" delay={49} variant={2} />
             {/* judges */}
-            <Orb x={500} y={64} r={30} tone="judge" delay={30} variant={3} />
-            <Orb x={500} y={556} r={30} tone="judge" delay={12} variant={1} />
+            <Orb x={500} y={70} r={30} tone="judge" delay={30} variant={3} />
+            <Orb x={500} y={540} r={30} tone="judge" delay={12} variant={1} />
 
             {/* labels */}
-            <text x={200} y={372} className="hiw-l hiw-l-big" textAnchor="middle">BULL</text>
-            <text x={200} y={390} className="hiw-l hiw-l-sm" textAnchor="middle">argues BUY &middot; own prompt</text>
-            <text x={800} y={372} className="hiw-l hiw-l-big" textAnchor="middle">BEAR</text>
-            <text x={800} y={390} className="hiw-l hiw-l-sm" textAnchor="middle">argues SELL &middot; own prompt</text>
-            <text x={500} y={22} className="hiw-l hiw-l-mid" textAnchor="middle" fill="#b98bff">MACRO JUDGE &middot; outside the pool</text>
-            <text x={500} y={604} className="hiw-l hiw-l-mid" textAnchor="middle" fill="#b98bff">META JUDGE &middot; outside the pool</text>
-            <text x={500} y={306} className="hiw-l hiw-l-sm" textAnchor="middle" opacity="0.7">rotating 6-model pool</text>
+            <text x={170} y={368} className="hiw-l hiw-l-big" textAnchor="middle">BULL</text>
+            <text x={170} y={386} className="hiw-l hiw-l-sm" textAnchor="middle">argues BUY &middot; own prompt</text>
+            <text x={830} y={368} className="hiw-l hiw-l-big" textAnchor="middle">BEAR</text>
+            <text x={830} y={386} className="hiw-l hiw-l-sm" textAnchor="middle">argues SELL &middot; own prompt</text>
+            <text x={500} y={28} className="hiw-l hiw-l-mid" textAnchor="middle" fill="#b98bff">MACRO JUDGE &middot; outside the pool</text>
+            <text x={500} y={600} className="hiw-l hiw-l-mid" textAnchor="middle" fill="#b98bff">META JUDGE &middot; outside the pool</text>
           </svg>
 
           <div className="hiw-legend">
