@@ -532,3 +532,7 @@ html[data-theme="light"] .hiw-flow, html[data-theme="light"] .hiw-note {
 .hiw a, .hiw button, .hiw [role="button"], .menu-overlay a, .menu-overlay button, .menu-overlay [role="button"], .header-menu-btn { cursor: pointer !important; }
 /* bulletproof internal scroll */
 .hiw-scroll { -webkit-overflow-scrolling: touch; height: 100%; }
+
+/* make the overlay ITSELF the scroll container (bulletproof) */
+.hiw { overflow-y: auto !important; overflow-x: hidden !important; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+.hiw-scroll { position: static !important; inset: auto !important; height: auto !important; min-height: 100vh; }
