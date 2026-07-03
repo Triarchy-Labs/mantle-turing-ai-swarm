@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 /* ── data (from README) ─────────────────────────────── */
 const POOL = [
@@ -15,23 +15,23 @@ const JUDGES = [
 ];
 
 const MODULES = [
-  { crate: 'ouroboros-brain', loc: '3,975', desc: 'LLM consensus: multi-model debate, 15-factor judge, decision memory, circuit breaker, 5 pre-trade filters.' },
-  { crate: 'titan-core', loc: '4,532', desc: 'Neural execution brain: 8-gate entry, trailing SL, RiskMatrix, ConfidenceEngine, 5-phase Auto-Ramp.' },
-  { crate: 'hive-intel', loc: '12,634', desc: '40+ cognitive modules, local ML <1µs, 4-state HMM regime, hybrid recall, affective memory.' },
-  { crate: 'mantle-chain', loc: '851', desc: 'Alloy 2.0 on-chain: ERC-8004 registry, wallet signer + live tx broadcast, DexScreener, Merchant Moe / Agni.' },
-  { crate: 'swarm-engine', loc: '1,499', desc: 'Main orchestrator: 24-stage pipeline + telemetry HTTP server + live chain broadcast.' },
-  { crate: 'turing-consensus', loc: '397', desc: 'PolicyGovernor: multi-voter consensus engine for trade decisions.' },
-  { crate: 'turing-risk', loc: '560', desc: 'Regime-aware Kelly sizing, KillSwitch, ATR stops, bucket-cap risk management.' },
-  { crate: 'turing-memory', loc: '124', desc: 'HyperEdge graph + sled DB persistent on-chain memory.' },
+  { num: '001', crate: 'ouroboros-brain', title: 'LLM Consensus', tags: 'DEBATE • JUDGE • RISK', loc: '3,975', desc: 'Multi-model debate, 15-factor judge, decision memory, circuit breaker, 5 pre-trade filters.' },
+  { num: '002', crate: 'titan-core', title: 'Neural Execution', tags: 'GATES • STOPS • RAMP', loc: '4,532', desc: '8-gate entry, trailing SL, RiskMatrix, ConfidenceEngine, 5-phase Auto-Ramp.' },
+  { num: '003', crate: 'hive-intel', title: 'Collective Intel', tags: 'ML • MEMORY • REGIME', loc: '12,634', desc: '40+ cognitive modules, local ML under 1µs, 4-state HMM regime, hybrid recall, affective memory.' },
+  { num: '004', crate: 'mantle-chain', title: 'On-Chain Adapter', tags: 'ALLOY • ERC-8004 • DEX', loc: '851', desc: 'Alloy 2.0: ERC-8004 registry, wallet signer + live tx broadcast, DexScreener, Merchant Moe / Agni.' },
+  { num: '005', crate: 'swarm-engine', title: 'Orchestrator', tags: 'PIPELINE • TELEMETRY', loc: '1,499', desc: '24-stage decision pipeline + telemetry HTTP server + live chain broadcast.' },
+  { num: '006', crate: 'turing-consensus', title: 'PolicyGovernor', tags: 'VOTING • CONSENSUS', loc: '397', desc: 'Multi-voter consensus engine for trade decisions.' },
+  { num: '007', crate: 'turing-risk', title: 'Risk Engine', tags: 'KELLY • KILL-SWITCH • ATR', loc: '560', desc: 'Regime-aware Kelly sizing, KillSwitch, ATR stops, bucket-cap risk management.' },
+  { num: '008', crate: 'turing-memory', title: 'Persistent Memory', tags: 'GRAPH • SLED • ON-CHAIN', loc: '124', desc: 'HyperEdge graph + sled DB persistent on-chain memory.' },
 ];
 
 const ROADMAP = [
-  { t: 'Connect any wallet', d: 'Plug in any crypto wallet, non-custodial. The agent signs, you stay in control.' },
-  { t: 'Connect exchanges', d: 'Route through your CEX / DEX accounts, not just Merchant Moe.' },
-  { t: 'Auto portfolio', d: 'Auto-build and rebalance a portfolio, sized by the same risk engine.' },
-  { t: 'Live risk tracking', d: 'Your positions watched live by our modules and agents, 24/7.' },
-  { t: 'Human jurors', d: 'Plug a human approver or analyst into the consensus loop when a use-case needs it.' },
-  { t: 'Local-only mode', d: 'Run the full consensus on local models, zero external API, fully private.' },
+  { num: 'R1', title: 'Connect any wallet', tags: 'NON-CUSTODIAL', desc: 'Plug in any crypto wallet. The agent signs, you stay in control.' },
+  { num: 'R2', title: 'Connect exchanges', tags: 'CEX • DEX', desc: 'Route through your CEX / DEX accounts, not just Merchant Moe.' },
+  { num: 'R3', title: 'Auto portfolio', tags: 'REBALANCE', desc: 'Auto-build and rebalance a portfolio, sized by the same risk engine.' },
+  { num: 'R4', title: 'Live risk tracking', tags: '24/7 AGENTS', desc: 'Your positions watched live by our modules and agents.' },
+  { num: 'R5', title: 'Human jurors', tags: 'HYBRID', desc: 'Plug a human approver into the consensus loop when a use-case needs it.' },
+  { num: 'R6', title: 'Local-only mode', tags: 'PRIVATE', desc: 'Run the full consensus on local models, zero external API, fully private.' },
 ];
 
 /* ── orb with glowing eyes (brand mark) ─────────────── */
@@ -51,7 +51,6 @@ function Orb({ x, y, r, tone = 'cyan', delay = 0, variant = 1 }: { x: number; y:
 }
 
 export default function HowItWorks({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const [hover, setHover] = useState<string | null>(null);
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
@@ -156,11 +155,14 @@ export default function HowItWorks({ open, onClose }: { open: boolean; onClose: 
         {/* ── MODULES ── */}
         <section className="hiw-block">
           <h2 className="hiw-h2">The engine &mdash; 12 Rust crates, 25,365 lines</h2>
-          <div className="hiw-cards">
+          <div className="hiw-grid">
             {MODULES.map(m => (
-              <article key={m.crate} className={`hiw-card ${hover === m.crate ? 'hot' : ''}`} onMouseEnter={() => setHover(m.crate)} onMouseLeave={() => setHover(null)}>
-                <div className="hiw-card-top"><span className="hiw-crate">{m.crate}</span><span className="hiw-loc">{m.loc} LOC</span></div>
-                <p className="hiw-card-desc">{m.desc}</p>
+              <article key={m.crate} className="bento-card hiw-mod">
+                <div className="lusion-dot"></div>
+                <div className="lusion-top-meta"><div>{m.num}</div><div>{m.crate}</div></div>
+                <div className="hiw-mod-body"><p className="hiw-mod-desc">{m.desc}</p></div>
+                <div className="lusion-card-tags">{m.tags} &nbsp;&middot;&nbsp; {m.loc} LOC</div>
+                <h2 className="lusion-card-title">{m.title}</h2>
               </article>
             ))}
           </div>
@@ -169,11 +171,14 @@ export default function HowItWorks({ open, onClose }: { open: boolean; onClose: 
         {/* ── ROADMAP ── */}
         <section className="hiw-block">
           <h2 className="hiw-h2">On the roadmap</h2>
-          <div className="hiw-cards">
+          <div className="hiw-grid">
             {ROADMAP.map(r => (
-              <article key={r.t} className="hiw-card hiw-card-plan">
-                <div className="hiw-card-top"><span className="hiw-crate">{r.t}</span><span className="hiw-soon">planned</span></div>
-                <p className="hiw-card-desc">{r.d}</p>
+              <article key={r.num} className="bento-card hiw-mod hiw-plan">
+                <div className="lusion-dot"></div>
+                <div className="lusion-top-meta"><div>{r.num}</div><div>PLANNED</div></div>
+                <div className="hiw-mod-body"><p className="hiw-mod-desc">{r.desc}</p></div>
+                <div className="lusion-card-tags">{r.tags}</div>
+                <h2 className="lusion-card-title">{r.title}</h2>
               </article>
             ))}
           </div>

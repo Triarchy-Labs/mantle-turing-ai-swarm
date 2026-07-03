@@ -472,3 +472,14 @@ html[data-theme="light"] .menu-foot > span:not(.menu-foot-links) {
   background: linear-gradient(100deg, rgba(5,22,26,0.5) 0%, rgba(5,22,26,0.5) 43%, #0d8fd0 48%, #2340c0 50%, #0d8fd0 52%, rgba(5,22,26,0.5) 57%, rgba(5,22,26,0.5) 100%);
   background-size: 240% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
 }
+
+/* ── HowItWorks cards = real dashboard bento style ── */
+.hiw-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 1vw; }
+.hiw-mod { min-height: clamp(260px, 20vw, 340px); }
+.hiw-mod-body { margin-top: 4rem; flex: 1; display: flex; align-items: flex-start; }
+.hiw-mod-desc { color: rgba(234,243,246,0.6); font: 400 clamp(14px,1vw,17px)/1.55 var(--font-body); margin: 0; }
+.hiw-mod .lusion-card-tags { margin-bottom: .7rem; }
+.hiw-plan { border-style: dashed !important; }
+html[data-theme="light"] .hiw-mod-desc { color: rgba(5,22,26,0.66); }
+.hiw-h2 { font-size: clamp(26px,3vw,46px); margin-bottom: 2rem; letter-spacing: -0.02em; }
+@media (max-width: 900px) { .hiw-grid { grid-template-columns: 1fr; } .hiw-mod-body { margin-top: 3rem; } }
