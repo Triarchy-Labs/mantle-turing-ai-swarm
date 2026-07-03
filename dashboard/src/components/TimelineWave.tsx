@@ -2,20 +2,20 @@ import { useState } from 'react';
 
 /* Each milestone is framed as an EXTENSION of something already running under the hood. */
 const MILES = [
-  { x: 70, when: 'LIVE · NOW', tag: 'MANTLE MAINNET', title: 'Autonomous engine, live', now: true,
+  { x: 60, when: 'LIVE · NOW', tag: 'MANTLE MAINNET', title: 'Autonomous engine, live', now: true,
     desc: 'Multi-model consensus, a 15-factor judge and every verdict written on-chain to ERC-8004 — running today. Everything ahead builds on this, it does not replace it.' },
-  { x: 255, when: 'Q4 2026', tag: 'NON-CUSTODIAL', title: 'Connect any wallet',
+  { x: 225, when: 'Q4 2026', tag: 'NON-CUSTODIAL', title: 'Connect any wallet',
     desc: 'The on-chain signer already runs on Alloy 2.0. We open it up: a scoped signing key with spend and session caps you set and can revoke. Custody never leaves you.' },
-  { x: 445, when: 'Q1 2027', tag: 'CEX · DEX', title: 'Connect exchanges',
-    desc: 'Today execution routes through Merchant Moe / Agni. We make the router pluggable, so the same consensus settles trades through your own exchange accounts.' },
-  { x: 625, when: 'Q2 2027', tag: 'PORTFOLIO', title: 'Auto portfolio',
+  { x: 405, when: 'Q4 2026 – Q1 2027', tag: 'BYBIT · FIRST CEX', title: 'Bybit integration',
+    desc: 'Bybit becomes the first centralised exchange the swarm can act through, alongside the on-chain Merchant Moe / Agni routing it already uses. Mantle stays the core; Bybit extends the reach.' },
+  { x: 585, when: 'Q1 2027', tag: 'CEX · DEX', title: 'Connect your exchanges',
+    desc: 'We make the router fully pluggable, so the same consensus can settle approved trades through your own exchange accounts, wherever your liquidity already lives.' },
+  { x: 760, when: 'Q2 2027', tag: 'PORTFOLIO', title: 'Auto portfolio',
     desc: 'The Kelly engine and BucketCap already size and cap every position. We lift them from single trades to a whole book, rebalanced under the same risk gates.' },
-  { x: 805, when: 'Q2–Q3 2027', tag: '24/7 GUARDIAN', title: 'Live risk tracking',
-    desc: 'Regime detection, the unstuck recovery ladder and the kill-switch already guard open trades. We turn them into a live guardian over your entire portfolio.' },
-  { x: 985, when: 'Q3 2027', tag: 'HUMAN-IN-THE-LOOP', title: 'Human jurors',
-    desc: 'PolicyGovernor is already a multi-voter consensus. We add a seat for a human analyst — the swarm argues and scores the case, a person casts the final vote.' },
-  { x: 1140, when: 'Q4 2027', tag: 'FULLY PRIVATE', title: 'Local-only mode',
-    desc: 'Much of the intelligence already runs on local models in microseconds. We close the loop: the whole stack on-device, zero external API, for private desks.' },
+  { x: 935, when: 'Q2–Q3 2027', tag: '24/7 GUARDIAN', title: 'Live risk tracking',
+    desc: 'Regime detection, the unstuck ladder and the kill-switch already guard open trades. We turn them into a live guardian over your entire portfolio.' },
+  { x: 1080, when: 'Q3–Q4 2027', tag: 'HYBRID · PRIVATE', title: 'Human jurors & local-only',
+    desc: 'PolicyGovernor already runs a multi-voter consensus — we add a seat for a human analyst. And since much of the intelligence is already local, the whole stack can run on-device, zero external API.' },
 ];
 
 const W = 1200, H = 320, MID = 210, AMP = 22;

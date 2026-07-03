@@ -4,8 +4,8 @@ import TimelineWave from './TimelineWave';
 const ITEMS: SectionItem[] = [
   { num: 'R1', tag: 'NON-CUSTODIAL', size: 'hs-wide', title: 'Connect any wallet',
     body: 'The on-chain signer already runs on Alloy 2.0. We open it up so you bring your own wallet: the agent gets only a scoped signing key with spend and session limits you set and can revoke at any time. Custody never leaves you.' },
-  { num: 'R2', tag: 'CEX · DEX', size: 'hs-med', title: 'Connect exchanges',
-    body: 'Today the swarm routes through Merchant Moe and Agni. We make the router pluggable, so the same consensus can settle approved trades through your own CEX or DEX accounts, wherever your liquidity already lives.' },
+  { num: 'R2', tag: 'BYBIT · CEX · DEX', size: 'hs-med', title: 'Connect exchanges',
+    body: 'Today the swarm routes through Merchant Moe and Agni on-chain. Bybit becomes the first centralised exchange we plug in — end of 2026 — and from there the router opens to your own CEX / DEX accounts. Mantle stays the core; the exchanges extend the reach.' },
   { num: 'R3', tag: 'REBALANCE', size: 'hs-med', title: 'Auto portfolio',
     body: 'The Kelly engine and BucketCap already size and cap every position. We lift them from single trades to a whole book — building and rebalancing a portfolio under the exact same risk gates.' },
   { num: 'R4', tag: '24/7 AGENTS', size: 'hs-wide', title: 'Live risk tracking',

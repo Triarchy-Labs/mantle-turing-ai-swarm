@@ -391,6 +391,10 @@ export default function App() {
 				</a>
 
 				<div className="header-right-container" style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
+					<div className="header-quick">
+						<button className="hq-btn" onClick={() => setHowOpen(true)}>How it works</button>
+						<button className="hq-btn" onClick={() => setMissionOpen(true)}>Mission</button>
+					</div>
 					<div className="header-right-stats">
 						<span className="stats-label">{telem.connected ? (telem.liveMode ? 'LIVE TX' : 'CONNECTED') : 'RECONNECTING'}</span>
 					</div>
@@ -439,7 +443,19 @@ export default function App() {
 									<MetricPill label="CIRCUIT" value={telem.riskState?.circuit_breaker ?? 'N/A'} onHoverChange={setGlobalPillHover} />
 								</div>
 							</div>
-							<div className="hero-bottom-right">
+							<div className="hero-bottom-right" style={{ display: 'flex', justifyContent: 'flex-end' }}>
+								<div className="orient">
+									<div className="orient-kicker">◆ NEW HERE? START HERE</div>
+									<p className="orient-lead">Not one bot — a <b>system of agents</b> kept in equilibrium by math, memory and on-chain proof. It debates every signal, refuses far more than it trades, and logs every decision on Mantle.</p>
+									<p className="orient-now">Right now you can <b>watch it decide live and verify every move on-chain.</b> Connecting your own wallet is on the roadmap.</p>
+									<div className="orient-paths">
+										<button onClick={() => setHowOpen(true)}>How it works <span>↗</span></button>
+										<button onClick={() => setDocsOpen(true)}>How to use <span>↗</span></button>
+										<button onClick={() => setRetailOpen(true)}>For retail</button>
+										<button onClick={() => setInstOpen(true)}>For institutions</button>
+										<button onClick={() => setMissionOpen(true)}>Why it matters</button>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
