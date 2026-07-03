@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import MenuOverlay from './components/MenuOverlay';
 import HowItWorks from './components/HowItWorks';
 import MissionPage from './components/MissionPage';
+import BootScreen from './components/BootScreen';
 import RetailPage from './components/RetailPage';
 import InstitutionsPage from './components/InstitutionsPage';
 import DocsPage from './components/DocsPage';
@@ -363,6 +364,7 @@ export default function App() {
 
 	return (
 		<>
+			<BootScreen />
 			{/* GPGPU Particle Background */}
 			<WebGLErrorBoundary fallback={null}>
 				<LiquidGlassShader theme={theme} mode={logoFormed ? 1 : 0} />
