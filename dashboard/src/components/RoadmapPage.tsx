@@ -5,9 +5,9 @@ const ITEMS: SectionItem[] = [
   { num: 'R1', tag: 'NON-CUSTODIAL', size: 'hs-wide', title: 'Connect any wallet',
     body: 'The on-chain signer already runs on Alloy 2.0. We open it up so you bring your own wallet: the agent gets only a scoped signing key with spend and session limits you set and can revoke at any time. Custody never leaves you.' },
   { num: 'R2', tag: 'BYBIT · CEX · DEX', size: 'hs-med', title: 'Connect exchanges',
-    body: 'Today the swarm routes through Merchant Moe and Agni on-chain. Bybit becomes the first centralised exchange we plug in — end of 2026 — and from there the router opens to your own CEX / DEX accounts. Mantle stays the core; the exchanges extend the reach.' },
+    body: 'Today the swarm routes through Merchant Moe and Agni on-chain. Bybit becomes the first centralised exchange we plug in, end of 2026, and from there the router opens to your own CEX / DEX accounts. Mantle stays the core; the exchanges extend the reach.' },
   { num: 'R3', tag: 'REBALANCE', size: 'hs-med', title: 'Auto portfolio',
-    body: 'The Kelly engine and BucketCap already size and cap every position. We lift them from single trades to a whole book — building and rebalancing a portfolio under the exact same risk gates.' },
+    body: 'The Kelly engine and BucketCap already size and cap every position. We lift them from single trades to a whole book, building and rebalancing a portfolio under the exact same risk gates.' },
   { num: 'R4', tag: '24/7 AGENTS', size: 'hs-wide', title: 'Live risk tracking',
     body: 'Regime detection, the three-stage unstuck ladder and the kill-switch already guard open trades. We turn them into a live guardian over your entire portfolio, catching regime shifts and limit breaches the moment they happen.' },
   { num: 'R5', tag: 'HYBRID', size: 'hs-half', title: 'Human jurors',
@@ -23,7 +23,7 @@ export default function RoadmapPage({ open, onClose }: { open: boolean; onClose:
       onClose={onClose}
       kicker="◆ ROADMAP"
       title="From an autonomous engine to your whole portfolio."
-      sub={<>Nothing here is a fresh promise — every step turns something already running under the hood outward, toward you. <b>Honest and phased, not everything at once.</b></>}
+      sub={<>Nothing here is a fresh promise. Every step turns something already running under the hood outward, toward you. <b>Honest and phased, not everything at once.</b></>}
       heading="What’s next"
       items={ITEMS}
       note={<><b>One principle holds across every step:</b> the swarm may act, but custody, limits and the final say stay with you.</>}

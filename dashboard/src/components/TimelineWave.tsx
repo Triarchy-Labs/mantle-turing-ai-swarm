@@ -3,7 +3,7 @@ import { useState } from 'react';
 /* Each milestone is framed as an EXTENSION of something already running under the hood. */
 const MILES = [
   { x: 60, when: 'LIVE · NOW', tag: 'MANTLE MAINNET', title: 'Autonomous engine, live', now: true,
-    desc: 'Multi-model consensus, a 15-factor judge and every verdict written on-chain to ERC-8004 — running today. Everything ahead builds on this, it does not replace it.' },
+    desc: 'Multi-model consensus, a 15-factor judge and every verdict written on-chain to ERC-8004, running today. Everything ahead builds on this, it does not replace it.' },
   { x: 225, when: 'Q4 2026', tag: 'NON-CUSTODIAL', title: 'Connect any wallet',
     desc: 'The on-chain signer already runs on Alloy 2.0. We open it up: a scoped signing key with spend and session caps you set and can revoke. Custody never leaves you.' },
   { x: 405, when: 'Q4 2026 – Q1 2027', tag: 'BYBIT · FIRST CEX', title: 'Bybit integration',
@@ -15,7 +15,7 @@ const MILES = [
   { x: 935, when: 'Q2–Q3 2027', tag: '24/7 GUARDIAN', title: 'Live risk tracking',
     desc: 'Regime detection, the unstuck ladder and the kill-switch already guard open trades. We turn them into a live guardian over your entire portfolio.' },
   { x: 1080, when: 'Q3–Q4 2027', tag: 'HYBRID · PRIVATE', title: 'Human jurors & local-only',
-    desc: 'PolicyGovernor already runs a multi-voter consensus — we add a seat for a human analyst. And since much of the intelligence is already local, the whole stack can run on-device, zero external API.' },
+    desc: 'PolicyGovernor already runs a multi-voter consensus, and we add a seat for a human analyst. And since much of the intelligence is already local, the whole stack can run on-device, zero external API.' },
 ];
 
 const W = 1200, H = 320, MID = 210, AMP = 22;
