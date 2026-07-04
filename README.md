@@ -122,21 +122,20 @@ Market Data
 
 | # | Factor | Source | Weight |
 |---|--------|--------|--------|
-| 1 | Price Trend | Market data | ±2.0 |
+| 1 | Price Trend (contrarian) | Market data | ±2.0 |
 | 2 | Funding Rate | On-chain | ±1.5 |
 | 3 | OI Change | Market data | ±0.5 |
-| 4 | Volume Surge | Market data | 1.3x multiplier |
-| 5 | LLM Sentiment | Debate result | ±0.5 |
-| 6 | Alpha Intel | Whale tracking | ±1.5 |
-| 7 | ML Prediction | Local ML | ±1.5 |
-| 8 | Macro Bias | LLM judge | ±1.0 |
+| 4 | Volume Surge | Market data | ×1.3 multiplier |
+| 5 | LLM Sentiment | Bull/Bear debate | ±0.5 |
+| 6 | Alpha Station (squeeze) | Squeeze detector | +1.0 |
+| 7 | ML Prediction | Local ML (<1µs) | dir × conf |
+| 8 | Macro Bias | LLM macro judge | ±1.0 |
 | 9 | MTF 4H Trend | EMA20/50 + RSI | ±1.5 |
-| 10 | Funding Extremes | Alpha Station | ±1.5 |
-| 11 | OI Divergence | Alpha Station | ±0.8 |
-| 12 | Liquidation Magnets | Heatmap | ±1.0 |
-| 13 | Whale Footprints | Whale alerts | ±2.0 |
+| 10–13 | Hyper Reader | Funding · OI · Liquidations · Whale | combined |
 | 14 | HiveMind Memory | Pattern recall | ±3.0 |
-| 15 | Meta Judge | Independent LLM | ±1.0 |
+| 15 | Macro Guard | FOMC/CPI event penalty | −2.0 / −0.5 / 0 |
+
+> Source of truth: `crates/ouroboros-brain/src/judge.rs` (`chief_judge_v2`). Thresholds in `config/thresholds.toml`.
 
 /// MEMORY STACK (5 Layers)
 
