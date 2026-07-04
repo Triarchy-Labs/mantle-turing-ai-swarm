@@ -29,10 +29,10 @@ export default function MissionPage({ open, onClose }: { open: boolean; onClose:
       <button className="hiw-close" onClick={onClose} aria-label="Close">&times;</button>
 
       <div className="hiw-scroll" data-lenis-prevent>
-        <header className="hiw-head">
-          <div className="hiw-kicker">&#9670; MISSION &middot; WHY IT MATTERS</div>
-          <h1 className="hiw-title">Institutional discipline, in everyone&rsquo;s hands.</h1>
-          <p className="hiw-sub">The discipline and verifiability that usually live inside institutions should not stay locked there. We keep them institutional-grade and open them up, so the same standard is <b>accessible, auditable and safe for everyone.</b></p>
+        <header className="hiw-head mission-vision">
+          <div className="hiw-kicker">TRIARCHY LABS</div>
+          <h1 className="hiw-title mission-hero">In 1843, Ada Lovelace imagined a machine that could compose music, <b>not just numbers.</b> A dream on paper, <b>180 years ago.</b></h1>
+          <p className="hiw-sub">It is incredible to watch that dream become real in our lifetime. Everything we built, the design, the code, the <b>membrane between AI and human,</b> reaches to be worthy of the ambition that gave it life. We are entering a new era of autonomous, on-chain infrastructure, and we are proud to stand at the very start of it, under the <b>Mantle flag.</b></p>
         </header>
 
         <section className="hiw-block">

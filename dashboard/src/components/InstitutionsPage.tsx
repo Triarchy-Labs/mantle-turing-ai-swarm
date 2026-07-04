@@ -18,7 +18,7 @@ export default function InstitutionsPage({ open, onClose }: { open: boolean; onC
     <SectionPage
       open={open}
       onClose={onClose}
-      kicker="◆ FOR INSTITUTIONS"
+      kicker="FOR INSTITUTIONS"
       title="Autonomous execution you can actually audit."
       sub={<>Consensus that removes single-model risk, a quantitative judge instead of a black box, and an on-chain trail for every decision. <b>Verifiable, controllable, and built for compliance.</b></>}
       heading="Why a desk can trust it"

@@ -18,7 +18,7 @@ export default function DocsPage({ open, onClose }: { open: boolean; onClose: ()
     <SectionPage
       open={open}
       onClose={onClose}
-      kicker="◆ DOCS · HOW TO USE"
+      kicker="DOCS · HOW TO USE"
       title="A glass box, not a black box."
       sub={<>Every panel on the dashboard is readable, and if anything is unclear you can simply ask the built-in assistant. <b>Here is how to actually use it.</b></>}
       heading="Using the console"

@@ -455,7 +455,7 @@ export default function App() {
 								) : (
 									<div className="orient open">
 										<button className="orient-close" onClick={() => setHelpOpen(false)} aria-label="Close">&times;</button>
-										<div className="orient-kicker">◆ NEW HERE? START HERE</div>
+										<div className="orient-kicker">NEW HERE? START HERE</div>
 										<p className="orient-lead">Not one bot, but a <b>system of agents</b> kept in equilibrium by math, memory and on-chain proof. It debates every signal, refuses far more than it trades, and logs every decision on Mantle.</p>
 										<p className="orient-now">Right now you can <b>watch it decide live and verify every move on-chain.</b> Connecting your own wallet is on the roadmap.</p>
 										<div className="orient-paths">

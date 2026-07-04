@@ -18,7 +18,7 @@ export default function RetailPage({ open, onClose }: { open: boolean; onClose: 
     <SectionPage
       open={open}
       onClose={onClose}
-      kicker="◆ FOR RETAIL"
+      kicker="FOR RETAIL"
       title="Institutional-grade trading, without the institution."
       sub={<>Most people lose money to casino-style trading. This is the opposite: a disciplined agent that protects your savings, explains itself in plain language, and <b>can’t be scammed by a black box.</b></>}
       heading="What you actually get"

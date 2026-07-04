@@ -41,7 +41,7 @@ export default function MenuOverlay({ open, onClose, onOpenHowItWorks, onOpenMis
 
         <div className="menu-grid">
           <div className="menu-left">
-            <div className="menu-accent">&#9670; Explore the system</div>
+            <div className="menu-accent">Explore the system</div>
             <h2 className="menu-headline">Autonomous intelligence<br />you can audit.</h2>
             <div className="menu-rule" />
             <a className="menu-contact" href="mailto:y4motion@gmail.com">y4motion@gmail.com</a>

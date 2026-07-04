@@ -32,7 +32,7 @@ export default function RoadmapPage({ open, onClose }: { open: boolean; onClose:
     <SectionPage
       open={open}
       onClose={onClose}
-      kicker="◆ ROADMAP"
+      kicker="ROADMAP"
       title="From an autonomous engine to your whole portfolio."
       sub={<>Nothing here is a fresh promise. Every step turns something already running under the hood outward, toward you. <b>Honest and phased, not everything at once.</b></>}
       heading="What’s next"
@@ -43,7 +43,7 @@ export default function RoadmapPage({ open, onClose }: { open: boolean; onClose:
           <TimelineWave />
 
           <section className="hiw-block">
-            <div className="hiw-kicker">◆ NEW FRONTIERS · EXPLORING</div>
+            <div className="hiw-kicker">NEW FRONTIERS · EXPLORING</div>
             <h2 className="hiw-h2">Bigger bets, beyond the core path</h2>
             <div className="hiw-grid">
               {FRONTIERS.map(f => (

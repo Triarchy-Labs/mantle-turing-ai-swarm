@@ -108,7 +108,7 @@ export default function HowItWorks({ open, onClose }: { open: boolean; onClose: 
 
       <div className="hiw-scroll" data-lenis-prevent>
         <header className="hiw-head">
-          <div className="hiw-kicker">&#9670; UNDER THE HOOD</div>
+          <div className="hiw-kicker">UNDER THE HOOD</div>
           <h1 className="hiw-title">How the swarm actually decides</h1>
           <p className="hiw-sub">A bull and a bear debate every signal across a rotating pool of models. Two independent judges score it. No consensus means no trade, so out of thousands of verdicts, only a rare few ever become trades. <b>The swarm is built to refuse, not to gamble.</b></p>
         </header>
