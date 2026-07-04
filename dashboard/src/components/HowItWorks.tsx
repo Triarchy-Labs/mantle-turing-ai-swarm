@@ -33,26 +33,26 @@ const BEAR_CAPS = [
 
 const MODULES = [
   { num: '001', crate: 'ouroboros-brain', title: 'LLM Consensus', tags: 'DEBATE • JUDGE • RISK', loc: '3,975', size: 'hs-wide', desc: 'Multi-model debate, 15-factor judge, decision memory, circuit breaker, 5 pre-trade filters.',
-    full: 'The swarm’s decision core. A bull model and a bear model argue opposite cases — but that debate is only one input. A separate judge folds 15 signals into a single score: price trend (contrarian, it fades the crowd at extremes), funding rate, open interest, volume surges, an ML prediction, macro bias, the 4-hour trend, liquidations and whale activity, memory of past decisions, and a penalty for high-impact events like FOMC / CPI. A trade is allowed only if that combined score clears a threshold — otherwise it holds. Decision memory, a circuit breaker and five pre-trade filters can still veto it. Nothing reaches your capital on a single model’s opinion.' },
+    full: 'The swarm’s decision core. A bull model and a bear model argue opposite cases, but that debate is only one input. A separate judge folds 15 signals into a single score: price trend (contrarian, it fades the crowd at extremes), funding rate, open interest, volume surges, an ML prediction, macro bias, the 4-hour trend, liquidations and whale activity, memory of past decisions, and a penalty for high-impact events like FOMC / CPI. A trade is allowed only if that combined score clears a threshold, otherwise it holds. Decision memory, a circuit breaker and five pre-trade filters can still veto it. Nothing reaches your capital on a single model’s opinion.' },
   { num: '002', crate: 'titan-core', title: 'Neural Execution', tags: 'GATES • STOPS • RAMP', loc: '4,532', size: 'hs-med', desc: '8-gate entry, trailing SL, RiskMatrix, ConfidenceEngine, 5-phase Auto-Ramp.',
     full: 'This is how an approved trade is actually placed, and defended. Entry runs a gauntlet of eight independent gates (daily-loss limit, per-symbol loss streak, position and duplicate caps, correlation buckets, order-book imbalance, BTC alignment and total exposure); a single failure rejects the trade. Once open, a server-side trailing stop follows price on ATR, snaps to breakeven the moment you are green and never widens, while a three-stage unstuck routine trims or evacuates anything that drifts too far underwater. Capital itself only scales through the five-phase Auto-Ramp (SEED to APEX), and it grows solely on real, sustained profit, never on a hunch.' },
   { num: '003', crate: 'hive-intel', title: 'Collective Intel', tags: 'ML • MEMORY • REGIME', loc: '12,634', size: 'hs-med', desc: '40+ cognitive modules, local ML under 1µs, 4-state HMM regime, hybrid recall, affective memory.',
-    full: 'The swarm’s market awareness. More than 40 lightweight models read the market in real time and classify whether it is trending, ranging or volatile, so the agents adapt their behaviour to conditions instead of trading the same way in every market. Most of this runs locally in microseconds, with no dependence on an external API.' },
+    full: 'The swarm’s market awareness, spread across around forty cognitive modules. A real 4-state Hidden Markov Model (Gaussian emissions, sticky transitions, Viterbi decoding) reads whether the market is trending up, trending down, ranging or volatile, so the agents adapt to conditions instead of trading the same way in every market. A local logistic-regression model infers in under a microsecond with zero external calls, hybrid recall blends embedding similarity with outcome-weighted memory (losers deliberately kept in), and an affective layer tracks confidence and risk appetite from recent drawdown.' },
   { num: '004', crate: 'mantle-chain', title: 'On-Chain Adapter', tags: 'ALLOY • ERC-8004 • DEX', loc: '851', size: 'hs-wide', desc: 'Alloy 2.0: ERC-8004 registry, wallet signer + live tx broadcast, DexScreener, Merchant Moe / Agni.',
-    full: 'The bridge to the blockchain. It signs and broadcasts every trade on Mantle, reads live prices from the on-chain DEXs (Merchant Moe / Agni), and — crucially — writes every AI verdict into a public ERC-8004 registry. Anyone can open Mantlescan and independently verify what the agent decided and did. Nothing is hidden off-chain.' },
+    full: 'The bridge to the chain, built on Alloy. It signs and broadcasts every trade on Mantle Mainnet (chain 5000), routes through the on-chain DEXs (Merchant Moe / Agni) and reads live DexScreener price feeds. Crucially, it writes every AI verdict into a public ERC-8004 registry whose reputation is minted strictly from realized PnL, so the record cannot be faked. Open Mantlescan and verify what the agent decided and did yourself; nothing is hidden off-chain.' },
   { num: '005', crate: 'swarm-engine', title: 'Orchestrator', tags: 'PIPELINE • TELEMETRY', loc: '1,499', size: 'hs-tri', desc: '24-stage decision pipeline + telemetry HTTP server + live chain broadcast.',
-    full: 'The conductor. It runs each decision through a fixed 24-stage pipeline — from reading the market to logging on-chain — in exactly the same order every time, and streams the whole process live so you can watch it happen on the dashboard second by second. The full process, fully observable.' },
+    full: 'The conductor. It runs every decision through the same fixed 24-stage pipeline, from reading the market through debate, judging, risk gates and execution to on-chain logging, in exactly that order each time. A built-in telemetry server streams the full live state (verdicts, regime, pipeline, paper PnL) over HTTP, which is exactly what this dashboard reads, so the whole process is observable second by second with nothing happening off-screen.' },
   { num: '006', crate: 'turing-consensus', title: 'PolicyGovernor', tags: 'VOTING • CONSENSUS', loc: '397', size: 'hs-tri', desc: 'Multi-voter consensus engine for trade decisions.',
-    full: 'The final vote. Before any trade is committed, several independent voters have to agree under one explicit policy. A single loud model cannot force a trade through — it takes real consensus, which is why the large majority of signals are rejected rather than traded.' },
+    full: 'The final vote. A PolicyGovernor collects independent votes from separate agents, signal, trend and regime, and only lets a trade through when they reach a majority (a threshold of three aligned votes). No single agent can force a trade on its own, which is a big part of why the large majority of signals are refused rather than traded.' },
   { num: '007', crate: 'turing-risk', title: 'Risk Engine', tags: 'KELLY • KILL-SWITCH • ATR', loc: '560', size: 'hs-tri', desc: 'Regime-aware Kelly sizing, KillSwitch, ATR stops, bucket-cap risk management.',
-    full: 'The safety layer. It decides how much to risk on each trade using a proven sizing method, tightens or loosens stops based on current volatility, caps total exposure per bucket, and carries a KillSwitch that can halt everything instantly if conditions turn dangerous. It is built to protect capital first.' },
-  { num: '008', crate: 'turing-memory', title: 'Persistent Memory', tags: 'GRAPH • SLED • ON-CHAIN', loc: '124', size: 'hs-full', desc: 'HyperEdge graph + sled DB persistent on-chain memory — every decision the swarm makes is remembered and provable.',
-    full: 'The swarm’s long-term memory. Every decision, outcome and lesson is stored in a persistent graph and anchored on-chain, so the system can learn from its own history and nothing can be quietly rewritten after the fact. What the agent did last month is still provable today.' },
+    full: 'The safety layer, a full risk gate. Position size comes from a regime-aware Kelly formula (dampened by win rate, average loss and the current regime), stops and targets are set from volatility at 1.5x the 14-period ATR with a 2:1 reward-to-risk, exposure is capped per correlation bucket, and a KillSwitch halts all new trades the instant exposure turns critical. Capital protection comes first, by construction.' },
+  { num: '008', crate: 'turing-memory', title: 'Persistent Memory', tags: 'GRAPH • SLED • ON-CHAIN', loc: '124', size: 'hs-full', desc: 'HyperEdge graph + sled DB persistent on-chain memory, every decision the swarm makes is remembered and provable.',
+    full: 'The swarm’s long-term memory, held as a HyperGraph in an embedded sled database. Experiences are crystallized into typed edges (what happened, to which asset, when), so the system can recall its own history at speed. It even watches a folder of markdown knowledge “tomes” and synthesizes new strategy overrides straight into the graph. Paired with the on-chain verdict log, what the agent learned stays both queryable and provable.' },
 ];
 
 const ROADMAP = [
   { num: 'R1', title: 'Connect any wallet', tags: 'NON-CUSTODIAL', size: 'hs-wide', desc: 'Plug in any crypto wallet. The agent signs, you stay in control.',
-    full: 'Bring your own wallet and keep full custody of your funds. The agent is granted only a scoped signing key with spend and session limits it cannot exceed — you can revoke it at any moment. The swarm decides, but the keys stay yours.' },
+    full: 'Bring your own wallet and keep full custody of your funds. The agent is granted only a scoped signing key with spend and session limits it cannot exceed, you can revoke it at any moment. The swarm decides, but the keys stay yours.' },
   { num: 'R2', title: 'Connect exchanges', tags: 'CEX • DEX', size: 'hs-med', desc: 'Route through your CEX / DEX accounts, not just Merchant Moe.',
     full: 'Extend the same consensus engine beyond a single DEX. Route approved trades through your own centralised or decentralised exchange accounts, so the swarm can act wherever your liquidity already lives.' },
   { num: 'R3', title: 'Auto portfolio', tags: 'REBALANCE', size: 'hs-med', desc: 'Auto-build and rebalance a portfolio, sized by the same risk engine.',
@@ -102,7 +102,7 @@ export default function HowItWorks({ open, onClose }: { open: boolean; onClose: 
         <header className="hiw-head">
           <div className="hiw-kicker">&#9670; UNDER THE HOOD</div>
           <h1 className="hiw-title">How the swarm actually decides</h1>
-          <p className="hiw-sub">A bull and a bear debate every signal across a rotating pool of models. Two independent judges score it. No consensus means no trade &mdash; so out of thousands of verdicts, only a rare few ever become trades. <b>The swarm is built to refuse, not to gamble.</b></p>
+          <p className="hiw-sub">A bull and a bear debate every signal across a rotating pool of models. Two independent judges score it. No consensus means no trade, so out of thousands of verdicts, only a rare few ever become trades. <b>The swarm is built to refuse, not to gamble.</b></p>
         </header>
 
         {/* ── DEBATE DIAGRAM ── */}
@@ -124,7 +124,7 @@ export default function HowItWorks({ open, onClose }: { open: boolean; onClose: 
               <path d="M500,546 Q292.1,448.2 150,305" />
               <path d="M150,305 Q292.1,161.8 500,64" />
             </g>
-            {/* rotating 6-model pool — one clean ring, equal-radius arcs */}
+            {/* rotating 6-model pool, one clean ring, equal-radius arcs */}
             <g className="hiw-ring" fill="none" stroke="#00e5ff" strokeWidth="1.3">
               <path d="M500,170 A135,135 0 0,1 617,237" />
               <path d="M617,237 A135,135 0 0,1 617,373" />
@@ -139,14 +139,14 @@ export default function HowItWorks({ open, onClose }: { open: boolean; onClose: 
               <path d="M500,516 L500,466" />
             </g>
 
-            {/* pool orbs — even ring */}
+            {/* pool orbs, even ring */}
             <Orb x={500} y={170} r={26} delay={0} variant={1} />
             <Orb x={617} y={237} r={26} delay={28} variant={3} />
             <Orb x={617} y={373} r={26} delay={7} variant={2} />
             <Orb x={500} y={440} r={26} delay={35} variant={1} />
             <Orb x={383} y={373} r={26} delay={42} variant={2} />
             <Orb x={383} y={237} r={26} delay={14} variant={3} />
-            {/* bull / bear — hover reveals the factors each side brings */}
+            {/* bull / bear, hover reveals the factors each side brings */}
             <g className="hiw-node" onMouseEnter={() => setSide('bull')} onMouseLeave={() => setSide(null)}>
               <circle cx={150} cy={305} r={66} fill="transparent" />
               <Orb x={150} y={305} r={44} tone="bull" delay={21} variant={1} />
@@ -167,7 +167,7 @@ export default function HowItWorks({ open, onClose }: { open: boolean; onClose: 
             <text x={500} y={20} className="hiw-l hiw-l-mid" textAnchor="middle" fill="#b98bff">MACRO JUDGE &middot; outside the pool</text>
             <text x={500} y={606} className="hiw-l hiw-l-mid" textAnchor="middle" fill="#b98bff">META JUDGE &middot; outside the pool</text>
 
-            {/* hover capsules — the judge factors each side brings (numbers = judge.rs factor #) */}
+            {/* hover capsules, the judge factors each side brings (numbers = judge.rs factor #) */}
             <g className={`hiw-caps bull ${side === 'bull' ? 'on' : ''}`}>
               {BULL_CAPS.map((c, i) => (
                 <g key={c.n} transform={`translate(272,${172 + i * 72})`}>
