@@ -457,7 +457,7 @@ html[data-theme="light"] .hiw-card:hover .hiw-crate { color: #2d6f8a; }
 
 /* ── footer: neon flows THROUGH the words (dark cyan -> blue) ── */
 .menu-foot::before { display: none; }
-.menu-foot > span:not(.menu-foot-links) {
+.menu-foot > span {
   background: linear-gradient(100deg,
     rgba(234,243,246,0.38) 0%, rgba(234,243,246,0.38) 43%,
     #12b8ff 48%, #2f57ff 50%, #12b8ff 52%,
@@ -465,10 +465,17 @@ html[data-theme="light"] .hiw-card:hover .hiw-crate { color: #2d6f8a; }
   background-size: 240% 100%;
   -webkit-background-clip: text; background-clip: text;
   color: transparent; -webkit-text-fill-color: transparent;
-  animation: footShimmer 7s linear infinite;
+  animation: footShimmer 9s linear infinite;
 }
+/* stagger so the highlight sweeps left to right, not all at once */
+.menu-foot > span:nth-child(1) { animation-delay: 0s; }
+.menu-foot > span:nth-child(2) { animation-delay: .6s; }
+.menu-foot > span:nth-child(3) { animation-delay: 1.2s; }
+/* let the twitter / mantle links catch the same shimmer */
+.menu-foot-links a { color: inherit; -webkit-text-fill-color: transparent; }
+.menu-foot-links a:hover { color: var(--accent); -webkit-text-fill-color: var(--accent); }
 @keyframes footShimmer { from { background-position: 190% 0; } to { background-position: -40% 0; } }
-html[data-theme="light"] .menu-foot > span:not(.menu-foot-links) {
+html[data-theme="light"] .menu-foot > span {
   background: linear-gradient(100deg, rgba(5,22,26,0.5) 0%, rgba(5,22,26,0.5) 43%, #0d8fd0 48%, #2340c0 50%, #0d8fd0 52%, rgba(5,22,26,0.5) 57%, rgba(5,22,26,0.5) 100%);
   background-size: 240% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
 }
