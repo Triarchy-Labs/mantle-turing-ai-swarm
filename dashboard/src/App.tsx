@@ -541,7 +541,6 @@ export default function App() {
 					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
 						<div className="lusion-card-tags" style={{ fontSize: '2.4rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>AI • LLM • EXECUTION</div>
 						<h2 className="lusion-card-title"><TextReveal>Swarm Agent AI</TextReveal></h2>
-						<div className="ask-hint"><span className="ask-hint-dot" />Not sure what you’re looking at? <b>Just ask it, right here.</b></div>
 					</div>
 				</div>
 

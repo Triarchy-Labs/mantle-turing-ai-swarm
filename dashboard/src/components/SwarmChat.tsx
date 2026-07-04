@@ -333,9 +333,9 @@ export default function SwarmChat({ telem, orbState }: SwarmChatProps) {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Model names */}
-      <div style={{ textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: 'clamp(10px, 1.6rem, 16px)', opacity: 0.3, letterSpacing: '0.06em', padding: '0.3rem 0' }}>
-        8 models · 7 vendors · 20B–550B params · multi-agent consensus
+      {/* Invite to ask */}
+      <div style={{ textAlign: 'center', fontFamily: 'var(--font-ui)', fontSize: 'clamp(10px, 1.6rem, 16px)', letterSpacing: '0.02em', padding: '0.3rem 0', color: 'rgba(234,243,246,0.45)' }}>
+        Not sure what you’re looking at? <b style={{ color: 'var(--accent)', fontWeight: 600 }}>Just ask it, right here.</b>
       </div>
 
       {/* Input */}
