@@ -321,8 +321,11 @@ export default function App() {
 		setBackTo(from ?? null);
 	};
 	const closeOverlays = () => { Object.keys(OV).forEach(k => OV[k].set(false)); setBackTo(null); };
-	const goBack = () => { if (backTo) goTo(backTo); };
-	const backLabel = backTo ? OV[backTo].label : undefined;
+	const goBack = () => {
+		if (backTo === 'menu') { closeOverlays(); setMenuOpen(true); }
+		else if (backTo) goTo(backTo);
+	};
+	const backLabel = backTo === 'menu' ? 'Menu' : backTo ? OV[backTo].label : undefined;
 
 	// Orb state cycling
 	useEffect(() => {
@@ -395,7 +398,7 @@ export default function App() {
 			<div className="vignette-overlay" style={{ position: 'fixed', inset: 0, background: 'radial-gradient(circle at center, transparent 30%, rgba(4,4,6,0.8) 100%)', zIndex: -98, pointerEvents: 'none' }} />
 
 			{/* ═══ HEADER ═══ */}
-			<MenuOverlay open={menuOpen} onClose={() => setMenuOpen(false)} onOpenHowItWorks={() => goTo('how')} onOpenMission={() => goTo('mission')} onOpenRetail={() => goTo('retail')} onOpenInstitutions={() => goTo('inst')} onOpenDocs={() => goTo('docs')} onOpenRoadmap={() => goTo('roadmap')} />
+			<MenuOverlay open={menuOpen} onClose={() => setMenuOpen(false)} onOpenHowItWorks={() => goTo('how', 'menu')} onOpenMission={() => goTo('mission', 'menu')} onOpenRetail={() => goTo('retail', 'menu')} onOpenInstitutions={() => goTo('inst', 'menu')} onOpenDocs={() => goTo('docs', 'menu')} onOpenRoadmap={() => goTo('roadmap', 'menu')} />
 			<HowItWorks open={howOpen} onClose={closeOverlays} onBack={backTo ? goBack : undefined} backLabel={backLabel} />
 			<MissionPage open={missionOpen} onClose={closeOverlays} onBack={backTo ? goBack : undefined} backLabel={backLabel} />
 			<RetailPage open={retailOpen} onClose={closeOverlays} onBack={backTo ? goBack : undefined} backLabel={backLabel} onCross={() => goTo('docs', 'retail')} />
@@ -413,8 +416,8 @@ export default function App() {
 
 				<div className="header-right-container" style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
 					<div className="header-quick">
-						<button className="hq-btn" onClick={() => setHowOpen(true)}>How it works</button>
-						<button className="hq-btn" onClick={() => setMissionOpen(true)}>Mission</button>
+						<button className="hq-btn" onClick={() => goTo('how')}>How it works</button>
+						<button className="hq-btn" onClick={() => goTo('mission')}>Mission</button>
 					</div>
 					<div className="header-right-stats">
 						<span className="stats-label">{telem.connected ? (telem.liveMode ? 'LIVE TX' : 'CONNECTED') : 'RECONNECTING'}</span>
@@ -477,11 +480,11 @@ export default function App() {
 										<p className="orient-lead">Not one bot, but a <b>system of agents</b> kept in equilibrium by math, memory and on-chain proof. It debates every signal, refuses far more than it trades, and logs every decision on Mantle.</p>
 										<p className="orient-now">Right now you can <b>watch it decide live and verify every move on-chain.</b> Connecting your own wallet is on the roadmap.</p>
 										<div className="orient-paths">
-											<button onClick={() => setHowOpen(true)}>How it works <span>↗</span></button>
-											<button onClick={() => setDocsOpen(true)}>How to use <span>↗</span></button>
-											<button onClick={() => setRetailOpen(true)}>For retail</button>
-											<button onClick={() => setInstOpen(true)}>For institutions</button>
-											<button onClick={() => setMissionOpen(true)}>Why it matters</button>
+											<button onClick={() => goTo('how')}>How it works <span>↗</span></button>
+											<button onClick={() => goTo('docs')}>How to use <span>↗</span></button>
+											<button onClick={() => goTo('retail')}>For retail</button>
+											<button onClick={() => goTo('inst')}>For institutions</button>
+											<button onClick={() => goTo('mission')}>Why it matters</button>
 										</div>
 									</div>
 								)}
