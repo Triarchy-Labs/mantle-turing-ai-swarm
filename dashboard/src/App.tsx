@@ -298,6 +298,7 @@ export default function App() {
 	const [configValues, setConfigValues] = useState({ lossKill: 3.0, maxCap: 100 });
 	const [showTxLogs, setShowTxLogs] = useState(true);
 	const [menuOpen, setMenuOpen] = useState(false);
+	const [helpOpen, setHelpOpen] = useState(false);
 	const [howOpen, setHowOpen] = useState(false);
 	const [missionOpen, setMissionOpen] = useState(false);
 	const [retailOpen, setRetailOpen] = useState(false);
@@ -446,18 +447,26 @@ export default function App() {
 								</div>
 							</div>
 							<div className="hero-bottom-right" style={{ display: 'flex', justifyContent: 'flex-end' }}>
-								<div className="orient">
-									<div className="orient-kicker">◆ NEW HERE? START HERE</div>
-									<p className="orient-lead">Not one bot — a <b>system of agents</b> kept in equilibrium by math, memory and on-chain proof. It debates every signal, refuses far more than it trades, and logs every decision on Mantle.</p>
-									<p className="orient-now">Right now you can <b>watch it decide live and verify every move on-chain.</b> Connecting your own wallet is on the roadmap.</p>
-									<div className="orient-paths">
-										<button onClick={() => setHowOpen(true)}>How it works <span>↗</span></button>
-										<button onClick={() => setDocsOpen(true)}>How to use <span>↗</span></button>
-										<button onClick={() => setRetailOpen(true)}>For retail</button>
-										<button onClick={() => setInstOpen(true)}>For institutions</button>
-										<button onClick={() => setMissionOpen(true)}>Why it matters</button>
+								{!helpOpen ? (
+									<button className="orient-trigger" onClick={() => setHelpOpen(true)} aria-label="New here? Start here">
+										<span className="ot-q">?</span>
+										<span className="ot-label">New here?</span>
+									</button>
+								) : (
+									<div className="orient open">
+										<button className="orient-close" onClick={() => setHelpOpen(false)} aria-label="Close">&times;</button>
+										<div className="orient-kicker">◆ NEW HERE? START HERE</div>
+										<p className="orient-lead">Not one bot, but a <b>system of agents</b> kept in equilibrium by math, memory and on-chain proof. It debates every signal, refuses far more than it trades, and logs every decision on Mantle.</p>
+										<p className="orient-now">Right now you can <b>watch it decide live and verify every move on-chain.</b> Connecting your own wallet is on the roadmap.</p>
+										<div className="orient-paths">
+											<button onClick={() => setHowOpen(true)}>How it works <span>↗</span></button>
+											<button onClick={() => setDocsOpen(true)}>How to use <span>↗</span></button>
+											<button onClick={() => setRetailOpen(true)}>For retail</button>
+											<button onClick={() => setInstOpen(true)}>For institutions</button>
+											<button onClick={() => setMissionOpen(true)}>Why it matters</button>
+										</div>
 									</div>
-								</div>
+								)}
 							</div>
 						</div>
 					</div>
