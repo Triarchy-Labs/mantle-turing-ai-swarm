@@ -29,7 +29,7 @@ export default function SectionPage({ open, onClose, onBack, backLabel, crossLin
 
   return createPortal(
     <div className={`hiw ${open ? 'open' : ''}`} aria-hidden={!open}>
-      {onBack && <button className="hiw-back" onClick={onBack} aria-label="Back">&larr; {backLabel}</button>}
+      {onBack && <button className="hiw-back" onClick={onBack} aria-label="Back">&larr;<span className="hiw-back-tip">{backLabel}</span></button>}
       <button className="hiw-close" onClick={onClose} aria-label="Close">&times;</button>
 
       <div className="hiw-scroll" data-lenis-prevent>
