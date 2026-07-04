@@ -679,12 +679,12 @@ html[data-theme="light"] .hiw-cap-num { fill: #1f6d88; }
 .tl-tick { stroke: rgba(255,255,255,0.12); stroke-width: 1; stroke-dasharray: 2 4; }
 .tl-dot { fill: #04121a; stroke: #00e5ff; stroke-width: 2; filter: drop-shadow(0 0 7px rgba(0,229,255,0.75)); transition: r .28s cubic-bezier(.16,1,.3,1); }
 .tl-node.on .tl-dot { fill: #00e5ff; }
-.tl-node.now .tl-dot { stroke: #7fffd4; filter: drop-shadow(0 0 9px rgba(127,255,212,0.9)); }
+.tl-node.now .tl-dot { stroke: #7fefff; filter: drop-shadow(0 0 9px rgba(0,229,255,0.9)); }
 .tl-when { fill: rgba(234,243,246,0.5); font: 600 12px var(--font-mono); letter-spacing: .05em; transition: fill .25s; }
 .tl-node.on .tl-when { fill: #7fefff; }
-.tl-node.now .tl-when { fill: #7fffd4; }
+.tl-node.now .tl-when { fill: #7fefff; }
 
-.tl-pulse { fill: none; stroke: #7fffd4; stroke-width: 2; animation: tlPulse 2.6s ease-out infinite; }
+.tl-pulse { fill: none; stroke: #7fefff; stroke-width: 2; animation: tlPulse 2.6s ease-out infinite; }
 @keyframes tlPulse { 0% { r: 6; opacity: .7; } 100% { r: 24; opacity: 0; } }
 
 .tl-card { pointer-events: none; background: rgba(3,10,14,0.94); border: 1px solid rgba(0,229,255,0.32); border-radius: 13px; padding: 12px 15px; box-shadow: 0 18px 46px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.05); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
@@ -776,15 +776,15 @@ html[data-theme="light"] .orient-paths button:first-child { color: #eefbff; }
 /* ═══════════ NEW FRONTIERS — drifting "in dev" capsules around the diagram ═══════════ */
 .hiw-diagram { position: relative; width: fit-content; max-width: 100%; margin: clamp(8px,1.5vw,24px) auto clamp(26px,3.5vw,50px); }
 .hiw-diagram .hiw-svg { margin: 0; }
-.nf-cap { position: absolute; z-index: 4; width: clamp(170px, 19vw, 210px); padding: 9px 13px; border: 1px dashed rgba(0,229,255,0.34); border-radius: 14px; background: rgba(3,12,18,0.5); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); animation: nfDrift 8s ease-in-out infinite; transition: border-color .3s, background .3s, box-shadow .3s; }
-.nf-cap:hover { animation-play-state: paused; border-style: solid; border-color: rgba(0,229,255,0.6); background: rgba(3,12,18,0.92); box-shadow: 0 16px 42px rgba(0,0,0,0.55); z-index: 6; }
+.nf-cap { position: absolute; z-index: 4; width: clamp(196px, 20vw, 238px); padding: 14px 18px; border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; background: rgba(0,0,0,0.2); -webkit-backdrop-filter: blur(22px); backdrop-filter: blur(22px); animation: nfDrift 8s ease-in-out infinite; transition: border-color .3s, background .3s, box-shadow .3s; }
+.nf-cap:hover { animation-play-state: paused; border-color: rgba(0,229,255,0.5); background: #000; box-shadow: 0 18px 46px rgba(0,0,0,0.6); z-index: 6; }
 .nf-head { display: flex; align-items: center; gap: .5rem; color: rgba(234,243,246,0.9); font: 700 clamp(11px,0.85vw,13px) var(--font-mono); letter-spacing: .05em; }
 .nf-dot { width: 6px; height: 6px; flex: none; border-radius: 50%; background: #00e5ff; box-shadow: 0 0 8px #00e5ff; animation: nfPulse 2.2s ease-in-out infinite; }
 .nf-body { max-height: 0; overflow: hidden; opacity: 0; transition: max-height .45s cubic-bezier(.16,1,.3,1), opacity .35s ease, margin-top .35s ease; }
 .nf-cap:hover .nf-body { max-height: 200px; opacity: 1; margin-top: .6rem; }
 .nf-body p { margin: 0 0 .6rem; color: rgba(234,243,246,0.72); font: 400 clamp(11px,0.82vw,13px)/1.5 var(--font-body); }
-.nf-tag { display: inline-block; color: #7fffd4; font: 700 9px var(--font-mono); letter-spacing: .16em; border: 1px solid rgba(127,255,212,0.4); border-radius: 6px; padding: 3px 7px; }
-html[data-theme="light"] .nf-cap { background: rgba(255,255,255,0.55); border-color: rgba(45,111,138,0.4); }
+.nf-tag { display: inline-block; color: #00e5ff; font: 700 9px var(--font-mono); letter-spacing: .16em; border: 1px solid rgba(0,229,255,0.4); border-radius: 6px; padding: 3px 7px; }
+html[data-theme="light"] .nf-cap { background: rgba(255,255,255,0.25); border-color: rgba(0,0,0,0.06); }
 html[data-theme="light"] .nf-head { color: rgba(5,22,26,0.9); }
 html[data-theme="light"] .nf-body p { color: rgba(5,22,26,0.72); }
 .nf-tl { top: 4%; left: 1%; animation-delay: 0s; }
