@@ -752,16 +752,16 @@ export default function App() {
 											<span className="stage-bubble-label">{tip.label}</span>
 											<p className="stage-bubble-desc">{tip.d}</p>
 										</div>
-										<div role="list" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem', marginTop: '0.3rem' }}>
+										<div role="list" style={{ display: 'flex', flexWrap: 'wrap', gap: '1.2rem', marginTop: '0.6rem' }}>
 											{pipelineStages.map((s, idx) => {
 												const st = idx < effectiveStage ? 'done' : idx === effectiveStage ? 'active' : 'pending';
 												return (
 													<div key={s.n} role="listitem"
 														onMouseEnter={() => setHoverStage(idx)} onMouseLeave={() => setHoverStage(null)}
-														className={`pipeline-stage ${st === 'active' ? 'active' : ''} ${hoverStage === idx ? 'hover' : ''}`} style={{ flex: '1 1 calc(25% - 0.6rem)', padding: '0.5rem 0.8rem', cursor: 'pointer' }}>
+														className={`pipeline-stage ${st === 'active' ? 'active' : ''} ${hoverStage === idx ? 'hover' : ''}`} style={{ flex: '1 1 calc(25% - 0.9rem)', padding: '1.1rem 1.4rem', cursor: 'pointer' }}>
 														<div style={{ display: 'flex', gap: '6px', fontSize: '2.4rem', alignItems: 'center' }}>
-															<span style={{ color: st === 'done' ? 'var(--accent-hover)' : st === 'active' ? 'var(--accent)' : 'var(--foreground)', opacity: st === 'pending' ? 0.25 : 0.5, fontSize: '1.4rem' }}>{s.n}</span>
-															<span style={{ color: st === 'done' ? 'var(--accent-hover)' : st === 'active' ? '#fff' : 'var(--foreground)', opacity: st === 'pending' ? 0.3 : 1, fontWeight: st === 'active' ? 700 : 400, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontSize: '1.5rem' }}>{s.label}</span>
+															<span style={{ color: st === 'done' ? 'var(--accent-hover)' : st === 'active' ? 'var(--accent)' : 'var(--foreground)', opacity: st === 'pending' ? 0.25 : 0.5, fontSize: '1.6rem' }}>{s.n}</span>
+															<span style={{ color: st === 'done' ? 'var(--accent-hover)' : st === 'active' ? '#fff' : 'var(--foreground)', opacity: st === 'pending' ? 0.3 : 1, fontWeight: st === 'active' ? 700 : 400, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontSize: '1.75rem' }}>{s.label}</span>
 														</div>
 													</div>
 												);
