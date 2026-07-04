@@ -105,6 +105,7 @@ export default function HowItWorks({ open, onClose, onBack, backLabel }: { open:
   return createPortal(
     <div className={`hiw ${open ? 'open' : ''}`} aria-hidden={!open}>
       {onBack && <button className="hiw-back" onClick={onBack} aria-label="Back">&larr;<span className="hiw-back-tip">{backLabel}</span></button>}
+      <div className="hiw-brand"><button className="hiw-brand-home" onClick={onClose}>TRIARCHY</button><span className="hiw-brand-div">|</span><a className="hiw-brand-hex" href="https://github.com/Triarchy-Labs/mantle-turing-ai-swarm" target="_blank" rel="noreferrer" aria-label="GitHub">⬡</a></div>
       <button className="hiw-close" onClick={onClose} aria-label="Close">&times;</button>
 
       <div className="hiw-scroll" data-lenis-prevent>

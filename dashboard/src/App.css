@@ -851,3 +851,15 @@ html[data-theme="light"] .hiw-back-tip { background: rgba(255,255,255,0.96); bor
 .hiw-cross span { color: var(--accent); }
 .hiw-cross:hover { background: rgba(0,229,255,0.14); border-color: rgba(0,229,255,0.5); transform: translateY(-2px); }
 html[data-theme="light"] .hiw-cross { color: #05161a; }
+
+/* ═══════════ overlay brand (TRIARCHY → home · hex → GitHub), every section ═══════════ */
+.hiw-brand { position: fixed; top: 24px; left: 40px; z-index: 3; display: flex; align-items: center; gap: 1rem; }
+.hiw-brand-home { background: none; border: 0; cursor: pointer; color: #eaf3f6; font: 700 clamp(15px,1.35vw,19px) var(--font-ui); letter-spacing: .3em; padding: 0 0 0 .1em; transition: color .2s; }
+.hiw-brand-home:hover { color: var(--accent); }
+.hiw-brand-div { color: rgba(255,255,255,0.2); font-size: 18px; }
+.hiw-brand-hex { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.15); color: rgba(234,243,246,0.6); font-size: 15px; text-decoration: none; transition: color .25s, border-color .25s, transform .35s cubic-bezier(.16,1,.3,1); }
+.hiw-brand-hex:hover { color: var(--accent); border-color: rgba(0,229,255,0.5); transform: rotate(30deg); }
+html[data-theme="light"] .hiw-brand-home { color: #05161a; }
+html[data-theme="light"] .hiw-brand-div { color: rgba(0,0,0,0.2); }
+html[data-theme="light"] .hiw-brand-hex { color: rgba(5,22,26,0.6); border-color: rgba(0,0,0,0.15); }
+@media (max-width: 640px) { .hiw-brand { top: 18px; left: 18px; gap: .6rem; } .hiw-brand-div { display: none; } }

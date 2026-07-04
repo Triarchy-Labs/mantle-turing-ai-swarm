@@ -406,13 +406,13 @@ export default function App() {
 			<DocsPage open={docsOpen} onClose={closeOverlays} onBack={backTo ? goBack : undefined} backLabel={backLabel} onCross={() => goTo('how', 'docs')} />
 			<RoadmapPage open={roadmapOpen} onClose={closeOverlays} onBack={backTo ? goBack : undefined} backLabel={backLabel} onCross={() => goTo('how', 'roadmap')} />
 			<header className="header" role="banner" aria-label="Mantle AI Swarm Dashboard">
-				<a href="/" className="triarchy-logo-wrapper" title="Triarchy Labs">
-					<span className="triarchy-logo-text">TRIARCHY</span>
+				<div className="triarchy-logo-wrapper" title="Triarchy Labs">
+					<a href="/" className="triarchy-logo-text" style={{ textDecoration: 'none' }}>TRIARCHY</a>
 					<span className="triarchy-logo-divider">|</span>
-					<div className="triarchy-logo-btn">
+					<a href="https://github.com/Triarchy-Labs/mantle-turing-ai-swarm" target="_blank" rel="noreferrer" className="triarchy-logo-btn" aria-label="GitHub" style={{ textDecoration: 'none' }}>
 						<span className="triarchy-logo-glyph">⬡</span>
-					</div>
-				</a>
+					</a>
+				</div>
 
 				<div className="header-right-container" style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
 					<div className="header-quick">
