@@ -450,7 +450,7 @@ export default function App() {
 								{!helpOpen ? (
 									<button className="orient-trigger" onClick={() => setHelpOpen(true)} aria-label="New here? Start here">
 										<span className="ot-q">?</span>
-										<span className="ot-label">New here?</span>
+										<span className="ot-label">New here</span>
 									</button>
 								) : (
 									<div className="orient open">
