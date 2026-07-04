@@ -822,3 +822,18 @@ html[data-theme="light"] .orient-close { color: rgba(5,22,26,0.5); }
 .mission-vision .hiw-sub { max-width: 1000px; margin-left: auto; margin-right: auto; font-size: clamp(16px, 1.55vw, 21px); line-height: 1.6; }
 /* kickers: a touch bigger & more sweeping */
 .hiw-kicker { font-weight: 700; font-size: clamp(13px, 1.05vw, 16px); letter-spacing: .26em; }
+
+/* ═══════════ pipeline stage hover bubble ═══════════ */
+.stage-bubble { display: flex; flex-wrap: wrap; align-items: baseline; gap: .5rem 1.1rem; margin-top: .4rem; padding: 1.2rem 1.6rem; border: 1px solid rgba(0,229,255,0.28); border-radius: 1.2rem; background: rgba(0,229,255,0.05); }
+.stage-bubble-n { font-family: var(--font-mono); font-size: 1.6rem; font-weight: 700; color: var(--accent); }
+.stage-bubble-label { font-family: var(--font-mono); font-size: 1.7rem; letter-spacing: .05em; color: #fff; }
+.stage-bubble-desc { flex-basis: 100%; margin: .3rem 0 0; font-size: 1.7rem; line-height: 1.5; color: var(--foreground); opacity: .78; }
+html[data-theme="light"] .stage-bubble-label { color: #05161a; }
+.pipeline-stage { transition: background .2s, border-color .2s; }
+.pipeline-stage.hover { background: rgba(0,229,255,0.09); border-color: rgba(0,229,255,0.4); }
+
+/* "just ask" hint under the chat card */
+.ask-hint { display: flex; align-items: center; gap: .6rem; margin-top: .7rem; font-family: var(--font-ui); font-size: 1.9rem; color: rgba(234,243,246,0.55); }
+.ask-hint b { color: var(--accent); font-weight: 600; }
+.ask-hint-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); flex: none; animation: blink 2s ease infinite; }
+html[data-theme="light"] .ask-hint { color: rgba(5,22,26,0.6); }

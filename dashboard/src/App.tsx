@@ -19,30 +19,30 @@ import TextReveal from './components/TextReveal';
 import Lenis from 'lenis';
 /* ── Pipeline stages ── */
 const pipelineStages = [
-	{ n: '01', label: 'MARKET DATA INGESTION' },
-	{ n: '02', label: 'CORRELATION MATRIX' },
-	{ n: '03', label: 'REGIME DETECTION (HMM)' },
-	{ n: '04', label: 'SYNAPTIC AI DEBATE' },
-	{ n: '05', label: 'LOCAL ML PREDICTION' },
-	{ n: '06', label: 'HYBRID VECTOR RECALL' },
-	{ n: '07', label: 'WEIGHTED FACTOR JUDGE' },
-	{ n: '08', label: 'DECISION QUALITY (DQS)' },
-	{ n: '09', label: 'PRE-TRADE RISK GATE' },
-	{ n: '10', label: 'DNA CONFIDENCE ENGINE' },
-	{ n: '11', label: 'PATIENCE SIGNAL LOCK' },
-	{ n: '12', label: 'TITAN ENTRY PIPELINE' },
-	{ n: '13', label: 'SWARM CONSENSUS VOTE' },
-	{ n: '14', label: 'KELLY RISK SIZING' },
-	{ n: '15', label: 'PAPER TRADE EXEC' },
-	{ n: '16', label: 'DYNAMIC LEVERAGE (ATR)' },
-	{ n: '17', label: 'TRAILING SL ENGINE' },
-	{ n: '18', label: 'UNSTUCK RECOVERY' },
-	{ n: '19', label: 'AUTO-RAMP EVALUATION' },
-	{ n: '20', label: 'DEALLOW BAN SCANNER' },
-	{ n: '21', label: 'ANOMALY DETECTION' },
-	{ n: '22', label: 'DECISION JOURNAL' },
-	{ n: '23', label: 'ON-CHAIN TX COMMIT' },
-	{ n: '24', label: 'IPC STATE SYNC' },
+	{ n: '01', label: 'MARKET DATA INGESTION', d: 'Live DexScreener + Mantle RPC feeds: price, 24h change, volume, liquidity and buy/sell flow.' },
+	{ n: '02', label: 'CORRELATION MATRIX', d: 'Cross-asset correlation, so positions in related coins are not silently doubled up.' },
+	{ n: '03', label: 'REGIME DETECTION (HMM)', d: '4-state Hidden Markov Model: trending up, trending down, ranging or volatile.' },
+	{ n: '04', label: 'SYNAPTIC AI DEBATE', d: 'A bull and a bear argue the signal across a rotating 6-model pool from 7 vendors.' },
+	{ n: '05', label: 'LOCAL ML PREDICTION', d: 'On-device logistic-regression model, inference in under a microsecond, no external call.' },
+	{ n: '06', label: 'HYBRID VECTOR RECALL', d: 'Recall of similar past trades, blending embedding similarity with outcome-weighted memory.' },
+	{ n: '07', label: 'WEIGHTED FACTOR JUDGE', d: 'The 15-factor judge folds every signal (price, funding, OI, ML, macro, memory…) into one score.' },
+	{ n: '08', label: 'DECISION QUALITY (DQS)', d: 'A quality score on the decision itself before it is allowed to move forward.' },
+	{ n: '09', label: 'PRE-TRADE RISK GATE', d: 'Five institutional filters: drawdown, streak, correlation, cap and confidence.' },
+	{ n: '10', label: 'DNA CONFIDENCE ENGINE', d: 'Scores each coin from its own track record to set how aggressive to be, on a −5 to +5 scale.' },
+	{ n: '11', label: 'PATIENCE SIGNAL LOCK', d: 'A 15-minute lock that stops the agent from over-trading the same signal.' },
+	{ n: '12', label: 'TITAN ENTRY PIPELINE', d: 'Eight independent entry gates; any single failure rejects the trade.' },
+	{ n: '13', label: 'SWARM CONSENSUS VOTE', d: 'PolicyGovernor: signal, trend and regime must reach a majority before a trade passes.' },
+	{ n: '14', label: 'KELLY RISK SIZING', d: 'Regime-aware Kelly sizing, dampened by the pre-trade factor and current risk appetite.' },
+	{ n: '15', label: 'PAPER TRADE EXEC', d: 'A simulated fill with ATR stops and a circuit breaker before any real capital moves.' },
+	{ n: '16', label: 'DYNAMIC LEVERAGE (ATR)', d: 'Leverage set from volatility (ATR) with a penalty around high-impact macro events.' },
+	{ n: '17', label: 'TRAILING SL ENGINE', d: 'ATR trailing stop that locks to breakeven once green and never widens.' },
+	{ n: '18', label: 'UNSTUCK RECOVERY', d: 'Three-stage recovery for a stuck position: monitor, partial trim, full evacuation.' },
+	{ n: '19', label: 'AUTO-RAMP EVALUATION', d: 'Five-gate capital scaling (SEED→APEX) that grows only on real, sustained profit.' },
+	{ n: '20', label: 'DEALLOW BAN SCANNER', d: 'Bans underperforming symbols and lets them recover before they can be traded again.' },
+	{ n: '21', label: 'ANOMALY DETECTION', d: 'Z-score and IQR checks on the PnL history to catch outliers early.' },
+	{ n: '22', label: 'DECISION JOURNAL', d: 'Writes the decision into self-learning memory, later injected back into the prompts.' },
+	{ n: '23', label: 'ON-CHAIN TX COMMIT', d: 'Signs and logs the verdict and trade to the ERC-8004 registry on Mantle Mainnet.' },
+	{ n: '24', label: 'IPC STATE SYNC', d: 'Zero-copy shared-memory sync of state across all agents in the swarm.' },
 ];
 
 /* ── Debates & logs now come from useTelemetry hook ── */
@@ -292,6 +292,7 @@ export default function App() {
 	const uptime = telem.uptimeSecs;
 	const effectiveStage = analysisRunning ? activeStage : telem.pipelineStage;
 	const [expandedPipeline, setExpandedPipeline] = useState(false);
+	const [hoverStage, setHoverStage] = useState<number | null>(null);
 	const [isAutoRampFlipped, setIsAutoRampFlipped] = useState(false);
 	const [manualPhaseOverride, setManualPhaseOverride] = useState<number | null>(null);
 	const [overrideFlash, setOverrideFlash] = useState<number | null>(null);
@@ -540,6 +541,7 @@ export default function App() {
 					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
 						<div className="lusion-card-tags" style={{ fontSize: '2.4rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>AI • LLM • EXECUTION</div>
 						<h2 className="lusion-card-title"><TextReveal>Swarm Agent AI</TextReveal></h2>
+						<div className="ask-hint"><span className="ask-hint-dot" />Not sure what you’re looking at? <b>Just ask it, right here.</b></div>
 					</div>
 				</div>
 
@@ -721,22 +723,34 @@ export default function App() {
 									{expandedPipeline ? '▼ COLLAPSE STAGES' : '▶ EXPAND ALL 24 STAGES'}
 								</div>
 
-								{/* Expanded stage list */}
-								{expandedPipeline && (
-									<div role="list" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem', marginTop: '0.3rem' }}>
-										{pipelineStages.map((s, idx) => {
-											const st = idx < effectiveStage ? 'done' : idx === effectiveStage ? 'active' : 'pending';
-											return (
-												<div key={s.n} role="listitem" className={`pipeline-stage ${st === 'active' ? 'active' : ''}`} style={{ flex: '1 1 calc(25% - 0.6rem)', padding: '0.5rem 0.8rem' }}>
-													<div style={{ display: 'flex', gap: '6px', fontSize: '2.4rem', alignItems: 'center' }}>
-														<span style={{ color: st === 'done' ? 'var(--accent-hover)' : st === 'active' ? 'var(--accent)' : 'var(--foreground)', opacity: st === 'pending' ? 0.25 : 0.5, fontSize: '1.4rem' }}>{s.n}</span>
-														<span style={{ color: st === 'done' ? 'var(--accent-hover)' : st === 'active' ? '#fff' : 'var(--foreground)', opacity: st === 'pending' ? 0.3 : 1, fontWeight: st === 'active' ? 700 : 400, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontSize: '1.5rem' }}>{s.label}</span>
+								{/* Expanded stage list + hover description bubble */}
+								{expandedPipeline && (() => {
+									const tip = pipelineStages[hoverStage ?? effectiveStage] ?? pipelineStages[0];
+									return (
+									<>
+										<div className="stage-bubble">
+											<span className="stage-bubble-n">{tip.n}</span>
+											<span className="stage-bubble-label">{tip.label}</span>
+											<p className="stage-bubble-desc">{tip.d}</p>
+										</div>
+										<div role="list" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem', marginTop: '0.3rem' }}>
+											{pipelineStages.map((s, idx) => {
+												const st = idx < effectiveStage ? 'done' : idx === effectiveStage ? 'active' : 'pending';
+												return (
+													<div key={s.n} role="listitem"
+														onMouseEnter={() => setHoverStage(idx)} onMouseLeave={() => setHoverStage(null)}
+														className={`pipeline-stage ${st === 'active' ? 'active' : ''} ${hoverStage === idx ? 'hover' : ''}`} style={{ flex: '1 1 calc(25% - 0.6rem)', padding: '0.5rem 0.8rem', cursor: 'pointer' }}>
+														<div style={{ display: 'flex', gap: '6px', fontSize: '2.4rem', alignItems: 'center' }}>
+															<span style={{ color: st === 'done' ? 'var(--accent-hover)' : st === 'active' ? 'var(--accent)' : 'var(--foreground)', opacity: st === 'pending' ? 0.25 : 0.5, fontSize: '1.4rem' }}>{s.n}</span>
+															<span style={{ color: st === 'done' ? 'var(--accent-hover)' : st === 'active' ? '#fff' : 'var(--foreground)', opacity: st === 'pending' ? 0.3 : 1, fontWeight: st === 'active' ? 700 : 400, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontSize: '1.5rem' }}>{s.label}</span>
+														</div>
 													</div>
-												</div>
-											);
-										})}
-									</div>
-								)}
+												);
+											})}
+										</div>
+									</>
+									);
+								})()}
 
 							</div>
 						</div>
