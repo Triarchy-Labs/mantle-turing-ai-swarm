@@ -27,11 +27,14 @@ const FRONTIERS = [
     body: 'Open up the swarm’s own smart-money tracking and on-chain anomaly detection as a standalone feed: the same signals the judge already reads, surfaced for people who just want the intel.' },
 ];
 
-export default function RoadmapPage({ open, onClose }: { open: boolean; onClose: () => void }) {
+export default function RoadmapPage({ open, onClose, onBack, backLabel, onCross }: { open: boolean; onClose: () => void; onBack?: () => void; backLabel?: string; onCross?: () => void }) {
   return (
     <SectionPage
       open={open}
       onClose={onClose}
+      onBack={onBack}
+      backLabel={backLabel}
+      crossLink={onCross ? { label: 'See what runs today', onClick: onCross } : undefined}
       kicker="ROADMAP"
       title="From an autonomous engine to your whole portfolio."
       sub={<>Nothing here is a fresh promise. Every step turns something already running under the hood outward, toward you. <b>Honest and phased, not everything at once.</b></>}

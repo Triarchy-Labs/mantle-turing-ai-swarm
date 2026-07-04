@@ -306,6 +306,23 @@ export default function App() {
 	const [instOpen, setInstOpen] = useState(false);
 	const [docsOpen, setDocsOpen] = useState(false);
 	const [roadmapOpen, setRoadmapOpen] = useState(false);
+	const [backTo, setBackTo] = useState<string | null>(null);
+	const OV: Record<string, { set: (v: boolean) => void; label: string }> = {
+		how: { set: setHowOpen, label: 'How it works' },
+		mission: { set: setMissionOpen, label: 'Mission' },
+		retail: { set: setRetailOpen, label: 'For retail' },
+		inst: { set: setInstOpen, label: 'For institutions' },
+		docs: { set: setDocsOpen, label: 'How to use' },
+		roadmap: { set: setRoadmapOpen, label: 'Roadmap' },
+	};
+	const goTo = (id: string, from?: string) => {
+		Object.keys(OV).forEach(k => OV[k].set(false));
+		OV[id].set(true);
+		setBackTo(from ?? null);
+	};
+	const closeOverlays = () => { Object.keys(OV).forEach(k => OV[k].set(false)); setBackTo(null); };
+	const goBack = () => { if (backTo) goTo(backTo); };
+	const backLabel = backTo ? OV[backTo].label : undefined;
 
 	// Orb state cycling
 	useEffect(() => {
@@ -378,13 +395,13 @@ export default function App() {
 			<div className="vignette-overlay" style={{ position: 'fixed', inset: 0, background: 'radial-gradient(circle at center, transparent 30%, rgba(4,4,6,0.8) 100%)', zIndex: -98, pointerEvents: 'none' }} />
 
 			{/* ═══ HEADER ═══ */}
-			<MenuOverlay open={menuOpen} onClose={() => setMenuOpen(false)} onOpenHowItWorks={() => setHowOpen(true)} onOpenMission={() => setMissionOpen(true)} onOpenRetail={() => setRetailOpen(true)} onOpenInstitutions={() => setInstOpen(true)} onOpenDocs={() => setDocsOpen(true)} onOpenRoadmap={() => setRoadmapOpen(true)} />
-			<HowItWorks open={howOpen} onClose={() => setHowOpen(false)} />
-			<MissionPage open={missionOpen} onClose={() => setMissionOpen(false)} />
-			<RetailPage open={retailOpen} onClose={() => setRetailOpen(false)} />
-			<InstitutionsPage open={instOpen} onClose={() => setInstOpen(false)} />
-			<DocsPage open={docsOpen} onClose={() => setDocsOpen(false)} />
-			<RoadmapPage open={roadmapOpen} onClose={() => setRoadmapOpen(false)} />
+			<MenuOverlay open={menuOpen} onClose={() => setMenuOpen(false)} onOpenHowItWorks={() => goTo('how')} onOpenMission={() => goTo('mission')} onOpenRetail={() => goTo('retail')} onOpenInstitutions={() => goTo('inst')} onOpenDocs={() => goTo('docs')} onOpenRoadmap={() => goTo('roadmap')} />
+			<HowItWorks open={howOpen} onClose={closeOverlays} onBack={backTo ? goBack : undefined} backLabel={backLabel} />
+			<MissionPage open={missionOpen} onClose={closeOverlays} onBack={backTo ? goBack : undefined} backLabel={backLabel} />
+			<RetailPage open={retailOpen} onClose={closeOverlays} onBack={backTo ? goBack : undefined} backLabel={backLabel} onCross={() => goTo('docs', 'retail')} />
+			<InstitutionsPage open={instOpen} onClose={closeOverlays} onBack={backTo ? goBack : undefined} backLabel={backLabel} onCross={() => goTo('how', 'inst')} />
+			<DocsPage open={docsOpen} onClose={closeOverlays} onBack={backTo ? goBack : undefined} backLabel={backLabel} onCross={() => goTo('how', 'docs')} />
+			<RoadmapPage open={roadmapOpen} onClose={closeOverlays} onBack={backTo ? goBack : undefined} backLabel={backLabel} onCross={() => goTo('how', 'roadmap')} />
 			<header className="header" role="banner" aria-label="Mantle AI Swarm Dashboard">
 				<a href="/" className="triarchy-logo-wrapper" title="Triarchy Labs">
 					<span className="triarchy-logo-text">TRIARCHY</span>

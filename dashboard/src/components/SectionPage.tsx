@@ -4,9 +4,12 @@ import { createPortal } from 'react-dom';
 export type SectionItem = { num: string; tag: string; size: string; title: string; body: string; soon?: boolean };
 
 /* Reusable full-screen overlay page — same shell as How it works (portal, scroll, close, shader bg). */
-export default function SectionPage({ open, onClose, kicker, title, sub, heading, items, note, extra, footer }: {
+export default function SectionPage({ open, onClose, onBack, backLabel, crossLink, kicker, title, sub, heading, items, note, extra, footer }: {
   open: boolean;
   onClose: () => void;
+  onBack?: () => void;
+  backLabel?: string;
+  crossLink?: { label: string; onClick: () => void };
   kicker: string;
   title: ReactNode;
   sub: ReactNode;
@@ -26,6 +29,7 @@ export default function SectionPage({ open, onClose, kicker, title, sub, heading
 
   return createPortal(
     <div className={`hiw ${open ? 'open' : ''}`} aria-hidden={!open}>
+      {onBack && <button className="hiw-back" onClick={onBack} aria-label="Back">&larr; {backLabel}</button>}
       <button className="hiw-close" onClick={onClose} aria-label="Close">&times;</button>
 
       <div className="hiw-scroll" data-lenis-prevent>
@@ -56,6 +60,11 @@ export default function SectionPage({ open, onClose, kicker, title, sub, heading
 
         {note && <div className="hiw-note">{note}</div>}
         {extra}
+        {crossLink && (
+          <div className="hiw-cross-wrap">
+            <button className="hiw-cross" onClick={crossLink.onClick}>{crossLink.label} <span>&rarr;</span></button>
+          </div>
+        )}
         {footer && <footer className="hiw-foot">{footer}</footer>}
       </div>
     </div>,

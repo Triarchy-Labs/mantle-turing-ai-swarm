@@ -13,11 +13,11 @@ const ITEMS: SectionItem[] = [
     body: 'Soon you’ll connect your own wallet and the agent will get only a scoped signing key with spend and session limits you set and can revoke at any time. The swarm decides; you stay in control.' },
 ];
 
-export default function RetailPage({ open, onClose }: { open: boolean; onClose: () => void }) {
+export default function RetailPage({ open, onClose, onBack, backLabel, onCross }: { open: boolean; onClose: () => void; onBack?: () => void; backLabel?: string; onCross?: () => void }) {
   return (
     <SectionPage
       open={open}
-      onClose={onClose}
+      onClose={onClose} onBack={onBack} backLabel={backLabel} crossLink={onCross ? { label: 'New here? See how to use it', onClick: onCross } : undefined}
       kicker="FOR RETAIL"
       title="Institutional-grade trading, without the institution."
       sub={<>Most people lose money to casino-style trading. This is the opposite: a disciplined agent that protects your savings, explains itself in plain language, and <b>can’t be scammed by a black box.</b></>}

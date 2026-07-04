@@ -837,3 +837,14 @@ html[data-theme="light"] .stage-bubble-label { color: #05161a; }
 .ask-hint b { color: var(--accent); font-weight: 600; }
 .ask-hint-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); flex: none; animation: blink 2s ease infinite; }
 html[data-theme="light"] .ask-hint { color: rgba(5,22,26,0.6); }
+
+/* ═══════════ overlay back button + cross-link CTA ═══════════ */
+.hiw-back { position: fixed; top: 30px; left: 36px; z-index: 3; background: none; border: 0; color: rgba(234,243,246,0.6); font: 600 clamp(13px,1.1vw,15px) var(--font-ui); letter-spacing: .02em; cursor: pointer; display: inline-flex; align-items: center; gap: .45rem; transition: color .2s, transform .2s; }
+.hiw-back:hover { color: var(--accent); transform: translateX(-3px); }
+html[data-theme="light"] .hiw-back { color: rgba(5,22,26,0.6); }
+
+.hiw-cross-wrap { display: flex; justify-content: center; margin-top: clamp(30px,4vw,54px); }
+.hiw-cross { display: inline-flex; align-items: center; gap: .5rem; padding: 1rem 1.9rem; border-radius: 999px; background: rgba(0,229,255,0.06); border: 1px solid rgba(0,229,255,0.28); color: #eaf3f6; font: 600 clamp(13px,1.1vw,15px) var(--font-ui); cursor: pointer; transition: background .2s, border-color .2s, transform .2s; }
+.hiw-cross span { color: var(--accent); }
+.hiw-cross:hover { background: rgba(0,229,255,0.14); border-color: rgba(0,229,255,0.5); transform: translateY(-2px); }
+html[data-theme="light"] .hiw-cross { color: #05161a; }

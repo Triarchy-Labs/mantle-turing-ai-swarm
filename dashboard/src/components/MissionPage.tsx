@@ -15,7 +15,7 @@ const MISSION = [
     body: 'On-chain reputation and reproducible reasoning contribute to a shared, open standard for trustworthy autonomous agents, a benefit to the whole ecosystem, not just our own returns.' },
 ];
 
-export default function MissionPage({ open, onClose }: { open: boolean; onClose: () => void }) {
+export default function MissionPage({ open, onClose, onBack, backLabel }: { open: boolean; onClose: () => void; onBack?: () => void; backLabel?: string }) {
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
@@ -26,6 +26,7 @@ export default function MissionPage({ open, onClose }: { open: boolean; onClose:
 
   return createPortal(
     <div className={`hiw ${open ? 'open' : ''}`} aria-hidden={!open}>
+      {onBack && <button className="hiw-back" onClick={onBack} aria-label="Back">&larr; {backLabel}</button>}
       <button className="hiw-close" onClick={onClose} aria-label="Close">&times;</button>
 
       <div className="hiw-scroll" data-lenis-prevent>

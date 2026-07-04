@@ -13,11 +13,11 @@ const ITEMS: SectionItem[] = [
     body: 'The On-chain Activity panel links every trade and verdict straight to Mantlescan and the ERC-8004 registry. Click through and confirm it yourself. The dashboard is a window, the chain is the source of truth.' },
 ];
 
-export default function DocsPage({ open, onClose }: { open: boolean; onClose: () => void }) {
+export default function DocsPage({ open, onClose, onBack, backLabel, onCross }: { open: boolean; onClose: () => void; onBack?: () => void; backLabel?: string; onCross?: () => void }) {
   return (
     <SectionPage
       open={open}
-      onClose={onClose}
+      onClose={onClose} onBack={onBack} backLabel={backLabel} crossLink={onCross ? { label: 'Go deeper: under the hood', onClick: onCross } : undefined}
       kicker="DOCS · HOW TO USE"
       title="A glass box, not a black box."
       sub={<>Every panel on the dashboard is readable, and if anything is unclear you can simply ask the built-in assistant. <b>Here is how to actually use it.</b></>}

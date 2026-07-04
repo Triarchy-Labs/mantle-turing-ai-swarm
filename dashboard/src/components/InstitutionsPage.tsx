@@ -13,11 +13,11 @@ const ITEMS: SectionItem[] = [
     body: 'Add a human approver as an extra juror in the consensus when a mandate requires it, or run the entire stack on local models with zero external API for privacy-sensitive deployments.' },
 ];
 
-export default function InstitutionsPage({ open, onClose }: { open: boolean; onClose: () => void }) {
+export default function InstitutionsPage({ open, onClose, onBack, backLabel, onCross }: { open: boolean; onClose: () => void; onBack?: () => void; backLabel?: string; onCross?: () => void }) {
   return (
     <SectionPage
       open={open}
-      onClose={onClose}
+      onClose={onClose} onBack={onBack} backLabel={backLabel} crossLink={onCross ? { label: 'See exactly how it decides', onClick: onCross } : undefined}
       kicker="FOR INSTITUTIONS"
       title="Autonomous execution you can actually audit."
       sub={<>Consensus that removes single-model risk, a quantitative judge instead of a black box, and an on-chain trail for every decision. <b>Verifiable, controllable, and built for compliance.</b></>}

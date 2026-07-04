@@ -89,7 +89,7 @@ function Orb({ x, y, r, tone = 'cyan', delay = 0, variant = 1 }: { x: number; y:
   );
 }
 
-export default function HowItWorks({ open, onClose }: { open: boolean; onClose: () => void }) {
+export default function HowItWorks({ open, onClose, onBack, backLabel }: { open: boolean; onClose: () => void; onBack?: () => void; backLabel?: string }) {
   const [openCards, setOpenCards] = useState<Record<string, boolean>>({});
   const toggle = (k: string) => setOpenCards(o => ({ ...o, [k]: !o[k] }));
   const [side, setSide] = useState<'bull' | 'bear' | null>(null);
@@ -104,6 +104,7 @@ export default function HowItWorks({ open, onClose }: { open: boolean; onClose: 
 
   return createPortal(
     <div className={`hiw ${open ? 'open' : ''}`} aria-hidden={!open}>
+      {onBack && <button className="hiw-back" onClick={onBack} aria-label="Back">&larr; {backLabel}</button>}
       <button className="hiw-close" onClick={onClose} aria-label="Close">&times;</button>
 
       <div className="hiw-scroll" data-lenis-prevent>
