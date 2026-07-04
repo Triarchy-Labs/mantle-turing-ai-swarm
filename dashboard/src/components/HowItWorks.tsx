@@ -65,6 +65,14 @@ const ROADMAP = [
     full: 'Run the entire debate and judging stack on local models, with no external API calls at all. For privacy-sensitive or self-hosted deployments, the swarm never has to depend on third-party gateways to reach a decision.' },
 ];
 
+/* ── New Frontiers — in-development ideas drifting around the diagram ── */
+const NEW_FRONTIERS = [
+  { pos: 'nf-tl', title: '$OUROBOROS', desc: 'An accountability token: the agent stakes a bond that gets slashed if it breaks its own risk limits. Reputation earned from real PnL, not hype.' },
+  { pos: 'nf-tr', title: 'TELEGRAM', desc: 'Trade and ask from Telegram. The agent sends not just the trade, but why: the bull vs bear case and the judge’s score, right in chat.' },
+  { pos: 'nf-br', title: 'PORTFOLIO', desc: 'From single trades to a managed book, built and rebalanced live under the same Kelly sizing and risk gates.' },
+  { pos: 'nf-bl', title: 'MARKETPLACE', desc: 'Publish a verifiable agent others can follow, with its on-chain ERC-8004 reputation as the trust layer.' },
+];
+
 /* ── orb with glowing eyes (brand mark) ─────────────── */
 function Orb({ x, y, r, tone = 'cyan', delay = 0, variant = 1 }: { x: number; y: number; r: number; tone?: 'cyan' | 'bull' | 'bear' | 'judge'; delay?: number; variant?: 1 | 2 | 3 }) {
   const col = tone === 'bear' ? '#ff9a52' : tone === 'judge' ? '#b98bff' : '#00e5ff';
@@ -107,6 +115,7 @@ export default function HowItWorks({ open, onClose }: { open: boolean; onClose: 
 
         {/* ── DEBATE DIAGRAM ── */}
         <section className="hiw-stage">
+          <div className="hiw-diagram">
           <svg viewBox="0 0 1000 620" className="hiw-svg" preserveAspectRatio="xMidYMid meet">
             <defs>
               <radialGradient id="orbGrad-cyan"><stop offset="0" stopColor="#0a2a34" /><stop offset="1" stopColor="#03141a" /></radialGradient>
@@ -189,6 +198,18 @@ export default function HowItWorks({ open, onClose }: { open: boolean; onClose: 
               ))}
             </g>
           </svg>
+
+          {/* New Frontiers capsules drifting in the diagram's empty air */}
+          {NEW_FRONTIERS.map((c) => (
+            <div key={c.title} className={`nf-cap ${c.pos}`}>
+              <div className="nf-head"><i className="nf-dot" />{c.title}</div>
+              <div className="nf-body">
+                <p>{c.desc}</p>
+                <span className="nf-tag">IN DEV &middot; NOW</span>
+              </div>
+            </div>
+          ))}
+          </div>
 
           <div className="hiw-legend">
             <span><i className="dot c" /> 6-model debate pool &mdash; 7 vendors, rotates on failure</span>
