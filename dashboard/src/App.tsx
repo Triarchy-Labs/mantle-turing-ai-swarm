@@ -454,8 +454,8 @@ export default function App() {
 						<div className="hero-bottom-layout">
 							<div className="hero-bottom-left">
 								<p className="mdx-two-tone-text">
-									Autonomous AI swarm operating on Mantle L2.<br/>
-									<span className="faded">We don't just execute trades — we shape the on-chain future.</span>
+									Built to refuse, not to gamble.<br/>
+									<span className="faded">A swarm of AI agents decides every entry and exit on its own, and proves each one on-chain. Soon it works in tandem with you: it proposes, you approve. <span className="hero-soon">roadmap</span></span>
 								</p>
 								<div 
 									className="metrics-pills" 
@@ -466,6 +466,11 @@ export default function App() {
 									<MetricPill label="TRADES" value={telem.totalTrades.toString()} onHoverChange={setGlobalPillHover} />
 									<MetricPill label="CIRCUIT" value={telem.riskState?.circuit_breaker ?? 'N/A'} onHoverChange={setGlobalPillHover} />
 								</div>
+								<div className="hero-cta-row">
+									<button className="hero-cta-primary" onClick={() => document.getElementById('ai-console')?.scrollIntoView({ behavior: 'smooth', block: 'center' })}>Ask the swarm <span>&#8594;</span></button>
+									<button className="hero-cta-ghost" onClick={() => goTo('how')}>How it works</button>
+								</div>
+								<div className="hero-now-soon">Live now: watch it trade &amp; verify on-chain &middot; Connect your wallet, soon</div>
 							</div>
 							<div className="hero-bottom-right" style={{ display: 'flex', justifyContent: 'flex-end' }}>
 								{!helpOpen ? (

@@ -870,3 +870,15 @@ html[data-theme="light"] .hiw-brand-home { color: #05161a; }
 html[data-theme="light"] .hiw-brand-div { color: rgba(0,0,0,0.2); }
 html[data-theme="light"] .hiw-brand-hex { color: rgba(5,22,26,0.6); border-color: rgba(0,0,0,0.15); }
 @media (max-width: 640px) { .hiw-brand { top: 18px; left: 18px; gap: .6rem; } .hiw-brand-div { display: none; } }
+
+/* ═══════════ hero front-door: benefit CTA + now/soon + roadmap tag ═══════════ */
+.hero-soon { display: inline-block; color: var(--accent); font: 700 0.62em var(--font-mono); letter-spacing: .12em; text-transform: uppercase; border: 1px solid rgba(0,229,255,0.32); border-radius: 5px; padding: .1em .5em; margin-left: .4rem; vertical-align: middle; opacity: .9; }
+.hero-cta-row { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 2rem; }
+.hero-cta-primary { display: inline-flex; align-items: center; gap: .55rem; padding: 1.1rem 2.2rem; border-radius: 999px; background: var(--accent); color: #021018; border: 0; cursor: pointer; font: 700 1.7rem var(--font-ui); letter-spacing: .01em; transition: transform .2s, box-shadow .2s; }
+.hero-cta-primary span { font-size: 1.1em; }
+.hero-cta-primary:hover { transform: translateY(-2px); box-shadow: 0 1.4rem 3.8rem var(--accent-glow); }
+.hero-cta-ghost { padding: 1.1rem 2rem; border-radius: 999px; background: transparent; color: rgba(234,243,246,0.85); border: 1px solid rgba(255,255,255,0.14); cursor: pointer; font: 600 1.7rem var(--font-ui); transition: color .2s, border-color .2s; }
+.hero-cta-ghost:hover { color: var(--accent); border-color: rgba(0,229,255,0.45); }
+.hero-now-soon { margin-top: 1.1rem; color: rgba(234,243,246,0.45); font: 500 1.4rem var(--font-mono); letter-spacing: .02em; }
+html[data-theme="light"] .hero-cta-ghost { color: rgba(5,22,26,0.8); border-color: rgba(0,0,0,0.15); }
+html[data-theme="light"] .hero-now-soon { color: rgba(5,22,26,0.5); }
