@@ -16,6 +16,12 @@ interface IRiskOracle {
     function riskOf(bytes32 marketHash) external view returns (uint256);
 }
 
+/// @notice Optional accountability sink (e.g. the $OUROBOROS bond). Called when a verdict is
+///         proven fraudulent so a staked bond can be slashed and the challenger rewarded.
+interface ISlasher {
+    function onViolation(uint256 agentId, address challenger) external;
+}
+
 /**
  * @title DecisionVerifier
  * @notice The gate that makes "the chain won't let the swarm misbehave" literal: a trade
@@ -39,6 +45,7 @@ contract DecisionVerifier is EIP712, Ownable {
 
     IAgentRegistry public immutable registry;
     IRiskOracle public riskOracle; // optional; when unset, the oracle re-check is skipped
+    ISlasher public slasher;       // optional; slashes a staked bond on a proven violation
     uint256 public riskSlack;      // tolerance (in risk units) for oracle noise on challenges
 
     bytes32 public constant SIGNED_VERDICT_TYPEHASH = keccak256(
@@ -63,6 +70,7 @@ contract DecisionVerifier is EIP712, Ownable {
     event AgentViolation(uint256 indexed agentId, bytes32 indexed marketHash, uint256 oracleRisk, uint256 signedRisk, uint256 nonce);
     event RiskOracleUpdated(address indexed oracle);
     event RiskSlackUpdated(uint256 slack);
+    event SlasherUpdated(address indexed slasher);
 
     constructor(address registry_) EIP712("OuroborosDecisionVerifier", "1") Ownable(msg.sender) {
         require(registry_ != address(0), "registry=0");
@@ -77,6 +85,11 @@ contract DecisionVerifier is EIP712, Ownable {
     function setRiskSlack(uint256 slack) external onlyOwner {
         riskSlack = slack;
         emit RiskSlackUpdated(slack);
+    }
+
+    function setSlasher(address slasher_) external onlyOwner {
+        slasher = ISlasher(slasher_);
+        emit SlasherUpdated(slasher_);
     }
 
     /// @notice EIP-712 digest for a verdict — sign THIS off-chain with the agent controller key.
@@ -130,5 +143,10 @@ contract DecisionVerifier is EIP712, Ownable {
 
         usedNonce[v.agentId][v.nonce] = true; // burn so the dishonest verdict can't execute
         emit AgentViolation(v.agentId, v.marketHash, oracleRisk, v.riskScore, v.nonce);
+
+        // Slash the agent's bond and reward the challenger, if an accountability sink is wired.
+        if (address(slasher) != address(0)) {
+            slasher.onViolation(v.agentId, msg.sender);
+        }
     }
 }
