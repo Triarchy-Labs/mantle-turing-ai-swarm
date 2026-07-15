@@ -15,3 +15,4 @@ pub mod onchain;
 pub mod wallet;
 pub mod dex;
 pub mod attestor;
+pub mod verifier;
