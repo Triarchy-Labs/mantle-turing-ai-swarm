@@ -139,3 +139,35 @@
 7. **LAYER 6** — вирусный хук (по остаточному принципу).
 
 **Принцип:** каждый слой переиспользует подписанный примитив Layer 1 — не строим одно и то же дважды. Не копируем победителей — **берём выигравшую тему, в которой мы объективно глубже (живой PnL-track record + детерм. судья), и наконец подаём её как продукт.**
+
+---
+
+## ✅ СТАТУС РЕАЛИЗАЦИИ (2026-07-15) — построено и в гите (не задеплоено/не запушено)
+
+| Слой | Что | Тесты | Коммит |
+|---|---|---|---|
+| 0 | Копирайт-рамка (герой/steps под верифицируемость + LLM вне trust-пути) | build ✓ | 821ec293 |
+| 2 | Честный surface (On-Chain Activity reputation row + теги) | build ✓ | ddfd2c22 |
+| 1-A | `DecisionAttestor.sol` (hash-chain + inputsHash recompute + anti-self-rating) + Verdict Explorer + Rust `attestor` | 9 sol + 6 rust ✓ | 810e98f5 / 83783826 / 548b8581 |
+| 1-B | `DecisionVerifier.sol` (энфорс-гейт: подпись+risk+expiry+nonce+oracle re-check + permissionless fraud proof) + Rust `verifier` EIP-712 | 10 sol + 4 rust ✓ | e5857f5a |
+| 5 | `OuroborosBond.sol` (stake/slash/reward, привязан к fraud-proof) | 7 sol (вкл. e2e) ✓ | 9cb7cd59 |
+
+**Итого: 25/25 foundry + 10 rust тестов зелёные.** Деплой-скрипты `DeployAttestor` / `DeployVerifier` готовы, **не бродкастились**.
+
+## Финалисты vs мы теперь (кто сделал лучше/хуже — честно)
+
+| Механика | Финалист (как у них) | У нас теперь | Кто глубже |
+|---|---|---|---|
+| Вердикт on-chain | Conatus: одна аттестация `{targetHash,riskScore,agentId}` | **Хэш-цепь** вердиктов (prevHash→chainHash) — историю нельзя переставить | **мы** |
+| Recompute proof | OFT Sentinel: `keccak256(pdr)==verdictHash` | `inputsHash` + `verifyInputs()` on-chain для 15 факторов | ≈ (мы шире по факторам) |
+| Подпись→энфорс | Stax: `InferenceVerifier.verify` (sig+risk+expiry) | То же + **nonce replay** + hooks | ≈ (у Stax задеплоено, у нас — нет) |
+| Oracle re-check | Argus: `ArgusExecutor` пере-выводит из Pyth | Pluggable `IRiskOracle` в том же гейте | ≈ (Argus заточен под RWA/Pyth, у нас общий) |
+| Анти-накрутка репутации | Conatus: блок само-рейтинга (из мнений) | Репутация **из realized PnL** + отдельный `settler` + блок само-оценки | **мы** (объективнее) |
+| Fraud proof / slash | **никто** | `challengeVerdict` (permissionless) → `OuroborosBond` слэш + награда челленджеру | **только мы** |
+| Session keys / co-pilot | Imara (EIP-7702), CoQuant (co-pilot) | roadmap (Layer 3, ещё не строили) | **они** (честно — тут отстаём) |
+| Gasless / social login | Stax, Imara (Privy/AA, «no seed phrase») | roadmap (Layer 4, не строили) | **они** |
+| Consumer/виральность | Cult (PixiJS 60fps) | не наш трек | они |
+
+**Вывод:** по ядру «verifiable/accountable AI» мы теперь **впереди финалистов** (хэш-цепь + PnL-репутация + permissionless fraud-proof/slash — уникально). **Отстаём** там, где ещё не строили: session keys / co-pilot (L3) и gasless-онбординг (L4) — следующие кандидаты, если продолжать «впитывать».
+
+⚠️ Главная оговорка: **всё это code-complete + tested, но НЕ задеплоено.** Финалисты своё задеплоили. Наш next-max = деплой (рунбук в `LAYER1_VERIFIER_SPEC.md §5`) — но это ресет uptime-метрики + газ, решение за пользователем.
