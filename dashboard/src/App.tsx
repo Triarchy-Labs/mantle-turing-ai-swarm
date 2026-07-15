@@ -507,8 +507,43 @@ export default function App() {
 					</div>
 				</section>
 
+				{/* ═══ HOW IT WORKS · 3 STEPS ═══ */}
+				<section className="steps-section" aria-label="How it works">
+				  <div className="steps-kicker">HOW IT WORKS</div>
+				  <div className="steps-grid">
+				    <div className="step-card"><span className="step-n">1</span><h3>Ask it in plain words</h3><p>Tell the swarm what you want. No charts, no jargon.</p></div>
+				    <div className="step-card"><span className="step-n">2</span><h3>It debates, refuses, or acts</h3><p>A bull and a bear argue every signal; it rejects far more than it trades, and shows you why.</p></div>
+				    <div className="step-card"><span className="step-n">3</span><h3>Verify, don&rsquo;t trust</h3><p>Every decision is signed on-chain, so you can check it yourself on Mantlescan.</p></div>
+				  </div>
+				</section>
+				
+				{/* ═══ UNDER THE HOOD (live terminal = proof) ═══ */}
+				<div className="under-hood-head">
+				  <div className="steps-kicker">UNDER THE HOOD</div>
+				  <h2 className="under-hood-title">Watch it decide, live.</h2>
+				  <p className="under-hood-sub">The full glass-box terminal, every gear the swarm turns in real time, nothing off-screen.</p>
+				</div>
+				
 				{/* ═══ BENTO GRID ═══ */}
 				<div className="bento-grid">
+					{/* SWARM AGENT CHAT CARD (Row 2, Left) */}
+					<div className="shape-choochoo" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+					<article id="ai-console" className="bento-card " role="region" aria-label="Swarm Agent Chat" style={{ flexGrow: 1, margin: 0 }}>
+						<div className="lusion-dot"></div>
+						<div className="lusion-top-meta">
+							<div>002</div>
+							<div>MULTI-LLM CONSENSUS</div>
+						</div>
+						<div className="bento-content" style={{ padding: 0, margin: '1vw -1.5vw -1.5vw -1.5vw', flex: 1, display: 'flex' }}>
+							<SwarmChat telem={telem} orbState={orbState} />
+						</div>
+						</article>
+					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
+						<div className="lusion-card-tags" style={{ fontSize: '2.4rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>AI • LLM • EXECUTION</div>
+						<h2 className="lusion-card-title"><TextReveal>Swarm Agent AI</TextReveal></h2>
+					</div>
+				</div>
+
 					{/* LIVE MARKET MONITORING CARD (Row 1) */}
 					<div className="shape-akari" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
 					<article className="bento-card " role="region" aria-label="Live Market Data" style={{ flexGrow: 1, margin: 0 }}>
@@ -548,24 +583,6 @@ export default function App() {
 					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
 						<div className="lusion-card-tags" style={{ fontSize: '2.4rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>DATA • ORACLE • ACTIVE</div>
 						<h2 className="lusion-card-title"><TextReveal>Live Market Feed</TextReveal></h2>
-					</div>
-				</div>
-
-					{/* SWARM AGENT CHAT CARD (Row 2, Left) */}
-					<div className="shape-choochoo" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-					<article id="ai-console" className="bento-card " role="region" aria-label="Swarm Agent Chat" style={{ flexGrow: 1, margin: 0 }}>
-						<div className="lusion-dot"></div>
-						<div className="lusion-top-meta">
-							<div>002</div>
-							<div>MULTI-LLM CONSENSUS</div>
-						</div>
-						<div className="bento-content" style={{ padding: 0, margin: '1vw -1.5vw -1.5vw -1.5vw', flex: 1, display: 'flex' }}>
-							<SwarmChat telem={telem} orbState={orbState} />
-						</div>
-						</article>
-					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
-						<div className="lusion-card-tags" style={{ fontSize: '2.4rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>AI • LLM • EXECUTION</div>
-						<h2 className="lusion-card-title"><TextReveal>Swarm Agent AI</TextReveal></h2>
 					</div>
 				</div>
 

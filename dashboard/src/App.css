@@ -882,3 +882,20 @@ html[data-theme="light"] .hiw-brand-hex { color: rgba(5,22,26,0.6); border-color
 .hero-now-soon { margin-top: 1.1rem; color: rgba(234,243,246,0.45); font: 500 1.4rem var(--font-mono); letter-spacing: .02em; }
 html[data-theme="light"] .hero-cta-ghost { color: rgba(5,22,26,0.8); border-color: rgba(0,0,0,0.15); }
 html[data-theme="light"] .hero-now-soon { color: rgba(5,22,26,0.5); }
+
+/* ═══════════ 3 steps + under-the-hood header (front door) ═══════════ */
+.steps-section { max-width: 1800px; margin: 0 auto; padding: clamp(4rem,8vh,10rem) 2vw 2rem; }
+.steps-kicker { color: var(--accent); font: 700 1.4rem var(--font-ui); letter-spacing: .3em; text-transform: uppercase; margin-bottom: 2.5rem; }
+.steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2vw; }
+.step-card { padding: 3rem 2.5rem; border: 1px solid rgba(255,255,255,0.06); border-radius: 1.5vw; background: rgba(0,0,0,0.2); -webkit-backdrop-filter: blur(22px); backdrop-filter: blur(22px); }
+.step-n { display: inline-grid; place-items: center; width: 4.4rem; height: 4.4rem; border-radius: 50%; border: 1px solid rgba(0,229,255,0.3); color: var(--accent); font: 700 2.2rem var(--font-mono); margin-bottom: 2rem; }
+.step-card h3 { font: 500 2.6rem/1.15 var(--font-heading); color: #eaf3f6; margin: 0 0 1rem; letter-spacing: -0.01em; }
+.step-card p { font: 400 1.7rem/1.55 var(--font-body); color: rgba(234,243,246,0.6); margin: 0; }
+.under-hood-head { max-width: 1800px; margin: 0 auto; padding: clamp(5rem,9vh,11rem) 2vw 0; text-align: center; }
+.under-hood-head .steps-kicker { margin-bottom: 1rem; }
+.under-hood-title { font: 500 clamp(3.4rem,5vw,6rem)/1.05 var(--font-heading); color: #eaf3f6; margin: .5rem 0 1rem; letter-spacing: -0.02em; }
+.under-hood-sub { font: 400 1.8rem/1.5 var(--font-body); color: rgba(234,243,246,0.55); max-width: 62rem; margin: 0 auto; }
+html[data-theme="light"] .step-card { background: rgba(255,255,255,0.25); border-color: rgba(0,0,0,0.06); }
+html[data-theme="light"] .step-card h3, html[data-theme="light"] .under-hood-title { color: #05161a; }
+html[data-theme="light"] .step-card p, html[data-theme="light"] .under-hood-sub { color: rgba(5,22,26,0.6); }
+@media (max-width: 900px) { .steps-grid { grid-template-columns: 1fr; } }
