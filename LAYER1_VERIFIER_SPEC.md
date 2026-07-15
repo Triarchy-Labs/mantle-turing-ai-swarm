@@ -88,3 +88,30 @@ function executeIfVerified(
 - Расширяем существующий `ERC8004Registry` (одна identity+reputation+verdicts) или отдельный `DecisionAttestor`? (склоняюсь к отдельному — не рискуем задеплоенным NFT).
 - Пишем вердикт **на каждый** цикл судьи или только на EXECUTED/REJECTED (газ vs полнота лога)?
 - Копию HowifWorks смягчить сейчас или ждём реализации A?
+
+---
+
+## 5. ✅ BUILT (2026-07-15) — Layer 1-A реализован (кроме деплоя + wire)
+
+**Готово и в гите (не запушено, не задеплоено):**
+- `contracts/src/DecisionAttestor.sol` — hash-chained verdict log + `inputsHash`/`verifyInputs` + settler-репутация с блоком само-оценки. **9 foundry-тестов зелёные.**
+- `contracts/script/DeployAttestor.s.sol` — деплой-скрипт (bound к v2 registry `0xEb27…`), **не бродкастился**.
+- `crates/mantle-chain/src/attestor.rs` — биндинги + `encode_record_verdict` + каноничный `inputs_hash` (сортированные ключи, fixed-point 1e6, order-independent). **6 unit-тестов зелёные.**
+- Фронт `Decision Journal` → Verdict Explorer: строки получают `→ verify on-chain` (tx) + `inputsHash`, **когда бэкенд их пришлёт** (сейчас деградирует честно). Телеметрия расширена опциональными полями.
+
+**Уточнение по «оверклейму»:** вердикты и сейчас пишутся on-chain, но как **непрозрачный JSON-блоб в calldata** самотранзакций (`onchain::encode_verdict_log`, magic `0xa100` — те самые ~2451 self-tx). DecisionAttestor делает их **структурными, queryable, hash-chained, recompute-verifiable** — усиление, а не затыкание.
+
+### Runbook деплоя (под твоё «жми» — газ, необратимо, ⚠️ метрики роя)
+1. **Деплой контракта** (нужен `DEPLOYER_PRIVATE_KEY` агента-owner в env):
+   ```
+   cd contracts
+   forge script script/DeployAttestor.s.sol:DeployAttestor \
+     --rpc-url https://rpc.mantle.xyz --broadcast --verify
+   ```
+   (по желанию `SETTLER_ADDRESS` = ОТДЕЛЬНЫЙ кошелёк, иначе сеттлмент репутации будет ревертить — self-block; запись вердиктов работает без сеттлера).
+2. **Прописать адрес attestor** в бэкенд (const/env) — куда слать `recordVerdict`.
+3. **Wire в swarm-engine** (⚠️ горячий путь): после `[JUDGE]`-вердикта в цикле — собрать `market_hash`/`inputs_hash`/score/action, отправить `encode_record_verdict` tx, положить `verdict_tx`+`inputs_hash`+`chain_hash` в соответствующий `log_entry` телеметрии.
+4. **Проверить**, что `/telemetry` отдаёт новые поля → Verdict Explorer на фронте автоматически зажигает `→ verify on-chain`.
+5. **Тогда** копия HowItWorks «writes every verdict on-chain» становится полностью правдой (и сильнее). До этого — либо смягчить, либо держать как есть (calldata-блоб технически уже пишет).
+
+⚠️ **Метрики:** шаг 3 = редеплой Render-бэкенда, а `uptime_secs`/`cycle` — in-memory (сбросятся). Плюс `recordVerdict` тратит газ каждый цикл. Решить: писать на КАЖДЫЙ вердикт или только EXECUTED/REJECTED (газ vs полнота). Деплой делать, когда не жалко ресетнуть uptime-хиро-метрику.
