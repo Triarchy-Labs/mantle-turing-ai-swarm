@@ -455,7 +455,7 @@ export default function App() {
 							<div className="hero-bottom-left">
 								<p className="mdx-two-tone-text">
 									Built to refuse, not to gamble.<br/>
-									<span className="faded">A swarm of AI agents decides every entry and exit on its own, and proves each one on-chain. Soon it works in tandem with you: it proposes, you approve. <span className="hero-soon">roadmap</span></span>
+									<span className="faded">A swarm of AI agents decides every entry and exit on its own, and every move is signed and verified on-chain before it can act. Soon it works in tandem with you: it proposes, you approve. <span className="hero-soon">roadmap</span></span>
 								</p>
 								<div 
 									className="metrics-pills" 
@@ -512,8 +512,8 @@ export default function App() {
 				  <div className="steps-kicker">HOW IT WORKS</div>
 				  <div className="steps-grid">
 				    <div className="step-card"><span className="step-n">1</span><h3>Ask it in plain words</h3><p>Tell the swarm what you want. No charts, no jargon.</p></div>
-				    <div className="step-card"><span className="step-n">2</span><h3>It debates, refuses, or acts</h3><p>A bull and a bear argue every signal; it rejects far more than it trades, and shows you why.</p></div>
-				    <div className="step-card"><span className="step-n">3</span><h3>Verify, don&rsquo;t trust</h3><p>Every decision is signed on-chain, so you can check it yourself on Mantlescan.</p></div>
+				    <div className="step-card"><span className="step-n">2</span><h3>It debates, refuses, or acts</h3><p>A bull and a bear argue every signal, but a deterministic score makes the call &mdash; it rejects far more than it trades, and shows you why.</p></div>
+				    <div className="step-card"><span className="step-n">3</span><h3>Verify, don&rsquo;t trust</h3><p>Every decision is signed and enforced on-chain, so you can verify any of them yourself on Mantlescan.</p></div>
 				  </div>
 				</section>
 				
