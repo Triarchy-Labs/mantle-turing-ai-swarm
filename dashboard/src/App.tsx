@@ -1066,7 +1066,7 @@ export default function App() {
 						</div>
 						</article>
 					<div className="lusion-external-info" style={{ padding: '0 0.5rem' }}>
-						<div className="lusion-card-tags" style={{ fontSize: '2.4rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>ALPHA • VERDICTS • HISTORY</div>
+						<div className="lusion-card-tags" style={{ fontSize: '2.4rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>DETERMINISTIC SCORE • VERDICTS • ON-CHAIN</div>
 						<h2 className="lusion-card-title"><TextReveal>Decision Journal</TextReveal></h2>
 					</div>
 				</div>
@@ -1103,6 +1103,10 @@ export default function App() {
 									{telem.liveMode ? '◉ LIVE TX' : '○ DRY-RUN'}
 								</span>
 							</div>
+							<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+								<span style={{ opacity: 0.5 }}>Reputation</span>
+								<span style={{ color: 'var(--accent)', fontWeight: 700 }}>Minted from realized PnL</span>
+							</div>
 							{telem.txHashes.length > 0 && (
 								<div style={{ paddingTop: '2vw', marginTop: 'auto' }}>
 									<div style={{ marginBottom: '1vw', opacity: 0.5, fontSize: '2.4rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Recent TXs</div>
@@ -1117,7 +1121,7 @@ export default function App() {
 						</article>
 					<div className="lusion-external-info" style={{ padding: '0 0.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginTop: '1.5rem' }}>
 						<div>
-							<div className="lusion-card-tags" style={{ fontSize: '2.4rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>MANTLE L2 • TX • VERIFIED</div>
+							<div className="lusion-card-tags" style={{ fontSize: '2.4rem', opacity: 0.5, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>MANTLE L2 • ERC-8004 • VERIFIED</div>
 							<h2 className="lusion-card-title"><TextReveal>On-Chain Activity</TextReveal></h2>
 						</div>
 						<button className="lusion-btn-glass" onClick={() => window.open(`https://mantlescan.xyz/address/0xEb271ece1aB2f72835556Ee67ad0BCA36a378a66`, '_blank')} aria-label="View On-Chain Agent NFT">
