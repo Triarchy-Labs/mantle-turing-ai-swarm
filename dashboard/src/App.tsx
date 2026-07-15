@@ -1051,6 +1051,14 @@ export default function App() {
 												{d.sym} <span style={{ opacity: 0.4, fontSize: '1.4rem', marginLeft: '0.5vw' }}>{d.time}</span>
 											</div>
 											<div style={{ fontSize: '1.5rem', opacity: 0.7, fontFamily: 'var(--font-mono)' }}>{d.reason}</div>
+											{d.txHash && (
+												<div style={{ display: 'flex', gap: '1vw', alignItems: 'center', marginTop: '0.2vw' }}>
+													<a href={`https://mantlescan.xyz/tx/${d.txHash}`} target="_blank" rel="noopener noreferrer" className="onchain-link" style={{ fontSize: '1.3rem' }}>&rarr; verify on-chain</a>
+													{d.inputsHash && (
+														<span title="keccak256 of the canonical 15-factor inputs — recompute to confirm the score was not tuned" style={{ opacity: 0.4, fontSize: '1.3rem', fontFamily: 'var(--font-mono)' }}>inputs {d.inputsHash.slice(0, 8)}…</span>
+													)}
+												</div>
+											)}
 										</div>
 										<span style={{ 
 											fontSize: '1.4rem', 

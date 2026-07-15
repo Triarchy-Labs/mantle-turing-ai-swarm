@@ -52,6 +52,12 @@ interface LogEntry {
   tag: string;
   message: string;
   level: string;
+  // Optional on-chain attestation fields (populated once the backend writes verdicts
+  // to DecisionAttestor). Absent until then — the UI degrades honestly.
+  verdict_tx?: string;
+  inputs_hash?: string;
+  chain_hash?: string;
+  score?: number;
 }
 
 interface TelemetryResponse {
@@ -111,6 +117,11 @@ export interface DecisionEntry {
   verdict: 'EXECUTED' | 'REJECTED' | 'HOLD';
   reason: string;
   time: string;
+  // On-chain proof (present once the verdict is attested to DecisionAttestor).
+  txHash?: string;      // Mantlescan tx of the recordVerdict() call
+  inputsHash?: string;  // keccak256 of the canonical 15-factor inputs — recompute to verify
+  chainHash?: string;   // tamper-evident chain tip for this verdict
+  score?: number;       // deterministic judge score
 }
 
 export interface MemoryEntry {
@@ -275,6 +286,10 @@ function mapResponse(resp: TelemetryResponse): TelemetryData {
         verdict: verdictStr,
         reason: scoreStr,
         time: new Date((l.timestamp || 0) * 1000).toLocaleTimeString('en-US', { hour12: false }),
+        txHash: l.verdict_tx,
+        inputsHash: l.inputs_hash,
+        chainHash: l.chain_hash,
+        score: l.score,
       };
     }),
     memoryStream: (resp as unknown as { memory_stream?: MemoryEntry[] }).memory_stream ?? [],
