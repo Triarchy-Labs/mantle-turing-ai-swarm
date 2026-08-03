@@ -108,12 +108,29 @@ mod tests {
         assert!(!prompts.macro_judge.system.is_empty());
     }
 
+    /// Guards the public claim we make about the swarm: "8 models across 7 vendors,
+    /// a rotating 6-model debate pool overseen by 2 independent judges". If the config
+    /// changes, this fails so the claim gets updated with it instead of silently drifting.
     #[test]
     fn test_load_models() {
         let path = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("config/models.toml");
         let models = load_models(&path).expect("Failed to load models.toml");
-        assert_eq!(models.debate_pool.len(), 3);
+
+        assert_eq!(models.debate_pool.len(), 6, "debate pool size backs the '6-model pool' claim");
         assert!(!models.macro_judge_model.id.is_empty());
         assert!(!models.meta_judge_model.id.is_empty());
+
+        // 6 pool + 2 judges = the "8 models" we state publicly.
+        let total = models.debate_pool.len() + 2;
+        assert_eq!(total, 8, "total model count backs the '8 models' claim");
+
+        // ...spread over the "7 vendors" we state publicly.
+        let vendors: std::collections::HashSet<&str> = models
+            .debate_pool
+            .iter()
+            .map(|m| m.vendor.as_str())
+            .chain([models.macro_judge_model.vendor.as_str(), models.meta_judge_model.vendor.as_str()])
+            .collect();
+        assert_eq!(vendors.len(), 7, "distinct vendors back the '7 vendors' claim, got {vendors:?}");
     }
 }

@@ -255,6 +255,27 @@ mod tests {
         }
     }
 
+    /// Tight thresholds used to exercise the gate LOGIC.
+    ///
+    /// `EntryConfig::default()` is deliberately wide (see its impl), wide enough that several
+    /// gates cannot fire at all — e.g. `imbalance_long_min: 0.0` can never reject, since a
+    /// ratio is never below zero. Binding these tests to the production defaults meant they
+    /// asserted nothing and silently failed. They now pin the gate behaviour itself, so a
+    /// regression in the logic is caught no matter how the live thresholds are tuned.
+    fn strict_config() -> EntryConfig {
+        EntryConfig {
+            max_positions_per_head: 3,
+            max_global_positions: 9,
+            max_loss_streak: 2,
+            total_exposure_cap_pct: 0.80,
+            btc_dead_zone: 0.0,
+            imbalance_reject_min: 0.0,
+            imbalance_reject_max: 999.0,
+            imbalance_long_min: 0.5,
+            imbalance_short_max: 2.0,
+        }
+    }
+
     #[test]
     fn test_g0_swarm_dead_rejected() {
         let mut ctx = make_valid_long_ctx();
@@ -292,7 +313,7 @@ mod tests {
     fn test_g2_loss_streak_exceeded() {
         let mut ctx = make_valid_long_ctx();
         ctx.symbol_loss_streak = 3; // >= max_loss_streak (2)
-        let result = EntryPipeline::evaluate(&ctx, &EntryConfig::default());
+        let result = EntryPipeline::evaluate(&ctx, &strict_config());
         match result {
             EntryVerdict::Rejected { gate, .. } => assert_eq!(gate, "G2_LOSS_STREAK"),
             _ => panic!("Expected G2 rejection"),
@@ -303,7 +324,7 @@ mod tests {
     fn test_g3_head_limit() {
         let mut ctx = make_valid_long_ctx();
         ctx.head_position_count = 3; // >= max_positions_per_head (3)
-        let result = EntryPipeline::evaluate(&ctx, &EntryConfig::default());
+        let result = EntryPipeline::evaluate(&ctx, &strict_config());
         match result {
             EntryVerdict::Rejected { gate, .. } => assert_eq!(gate, "G3_HEAD_LIMIT"),
             _ => panic!("Expected G3 head rejection"),
@@ -314,7 +335,7 @@ mod tests {
     fn test_g3_global_limit() {
         let mut ctx = make_valid_long_ctx();
         ctx.global_position_count = 9; // >= max_global (9)
-        let result = EntryPipeline::evaluate(&ctx, &EntryConfig::default());
+        let result = EntryPipeline::evaluate(&ctx, &strict_config());
         match result {
             EntryVerdict::Rejected { gate, .. } => assert_eq!(gate, "G3_GLOBAL_LIMIT"),
             _ => panic!("Expected G3 global rejection"),
@@ -347,7 +368,7 @@ mod tests {
     fn test_g5_imbalance_long_too_low() {
         let mut ctx = make_valid_long_ctx();
         ctx.imbalance_ratio = 0.3; // < imbalance_long_min (0.5)
-        let result = EntryPipeline::evaluate(&ctx, &EntryConfig::default());
+        let result = EntryPipeline::evaluate(&ctx, &strict_config());
         match result {
             EntryVerdict::Rejected { gate, .. } => assert_eq!(gate, "G5_IMBALANCE"),
             _ => panic!("Expected G5 rejection for LONG"),
@@ -360,7 +381,7 @@ mod tests {
         ctx.verdict = "SHORT".to_string();
         ctx.btc_score = -1.5; // align BTC for SHORT
         ctx.imbalance_ratio = 3.0; // > imbalance_short_max (2.0)
-        let result = EntryPipeline::evaluate(&ctx, &EntryConfig::default());
+        let result = EntryPipeline::evaluate(&ctx, &strict_config());
         match result {
             EntryVerdict::Rejected { gate, .. } => assert_eq!(gate, "G5_IMBALANCE"),
             _ => panic!("Expected G5 rejection for SHORT"),
@@ -383,7 +404,7 @@ mod tests {
         let mut ctx = make_valid_long_ctx();
         ctx.existing_total_margin = 75.0;
         ctx.new_margin_size = 10.0; // 75+10=85 > 80% of 100
-        let result = EntryPipeline::evaluate(&ctx, &EntryConfig::default());
+        let result = EntryPipeline::evaluate(&ctx, &strict_config());
         match result {
             EntryVerdict::Rejected { gate, .. } => assert_eq!(gate, "G7_EXPOSURE"),
             _ => panic!("Expected G7 rejection"),
