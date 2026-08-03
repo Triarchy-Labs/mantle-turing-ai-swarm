@@ -13,12 +13,14 @@ const NAV = [
 const REGISTRY = 'https://mantlescan.xyz/address/0xEb271ece1aB2f72835556Ee67ad0BCA36a378a66';
 const WALLET = 'https://mantlescan.xyz/address/0xF02332A7d92C86631Ea30d49D9778994B9277c79';
 
+const AGENT_NFT = 'https://mantlescan.xyz/token/0xEb271ece1aB2f72835556Ee67ad0BCA36a378a66?a=1';
+
 const PROOF = [
   { label: 'Live Dashboard', href: '/' },
   { label: 'GitHub', href: 'https://github.com/Triarchy-Labs/mantle-turing-ai-swarm' },
   { label: 'ERC-8004 Registry', href: REGISTRY },
-  { label: 'Agent NFT', href: REGISTRY },
-  { label: 'Mantlescan', href: WALLET },
+  { label: 'Agent NFT #1', href: AGENT_NFT },
+  { label: 'Agent Wallet', href: WALLET },
 ];
 
 export default function MenuOverlay({ open, onClose, onOpenHowItWorks, onOpenMission, onOpenRetail, onOpenInstitutions, onOpenDocs, onOpenRoadmap }: { open: boolean; onClose: () => void; onOpenHowItWorks?: () => void; onOpenMission?: () => void; onOpenRetail?: () => void; onOpenInstitutions?: () => void; onOpenDocs?: () => void; onOpenRoadmap?: () => void }) {
@@ -56,6 +58,8 @@ export default function MenuOverlay({ open, onClose, onOpenHowItWorks, onOpenMis
             {NAV.map((i, idx) => (
               <a key={i.label} className={`menu-link ${idx === 0 ? 'active' : ''}`} href={i.href}
                  onClick={(e) => {
+                   // Home has no target section; scroll back to the top instead of pushing a dead hash.
+                   if (i.label === 'Home') { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
                    if (i.label === 'How it works' && onOpenHowItWorks) { e.preventDefault(); onOpenHowItWorks(); }
                    if (i.label === 'Mission' && onOpenMission) { e.preventDefault(); onOpenMission(); }
                    if (i.label === 'For Retail' && onOpenRetail) { e.preventDefault(); onOpenRetail(); }
@@ -71,7 +75,12 @@ export default function MenuOverlay({ open, onClose, onOpenHowItWorks, onOpenMis
             <div className="menu-col-title">ON-CHAIN / PROOF</div>
             {PROOF.map((i) => (
               <a key={i.label} className="menu-link menu-link-sm" href={i.href}
-                 target={ext(i.href) ? '_blank' : undefined} rel="noreferrer" onClick={onClose}>{i.label}</a>
+                 target={ext(i.href) ? '_blank' : undefined} rel="noreferrer"
+                 onClick={(e) => {
+                   // The dashboard is this page; scroll to it rather than reloading.
+                   if (!ext(i.href)) { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+                   onClose();
+                 }}>{i.label}</a>
             ))}
             <div className="menu-col-title" style={{ marginTop: '2rem' }}>BUILT ON</div>
             <div className="menu-sub">Mantle L2 &middot; Chain 5000 &middot; ERC-8004</div>

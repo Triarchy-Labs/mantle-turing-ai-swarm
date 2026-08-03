@@ -61,7 +61,7 @@ const MetricPill = ({
 	isActive?: boolean,
 	onHoverChange: (isHovered: boolean) => void 
 }) => {
-	const pillRef = useRef<HTMLButtonElement>(null);
+	const pillRef = useRef<HTMLDivElement>(null);
 	const [circleStyle, setCircleStyle] = useState({ left: '50%', top: '50%' });
 	const [isLocalHover, setIsLocalHover] = useState(false);
 
@@ -86,7 +86,9 @@ const MetricPill = ({
 	};
 
 	return (
-		<button 
+		/* Presentational readout: it reacts to hover but has no action, so it is not a
+		   button — as one it put four focusable no-op controls in the tab order. */
+		<div
 			className={`metric-pill-btn ${isActive ? 'active' : ''} ${isLocalHover ? 'hovered' : ''}`}
 			ref={pillRef}
 			onMouseEnter={handleMouseEnter}
@@ -108,7 +110,7 @@ const MetricPill = ({
 				<span className="pill-label">{label} </span>
 				<span className="pill-val">{value}</span>
 			</div>
-		</button>
+		</div>
 	);
 };
 
@@ -363,13 +365,23 @@ export default function App() {
 	};
 
 	// CTA: Launch Synaptic Analysis mock
+	const launchTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+	useEffect(() => () => { if (launchTimerRef.current) clearInterval(launchTimerRef.current); }, []);
+
 	const handleLaunch = useCallback(() => {
 		if (analysisRunning) return;
 		setAnalysisRunning(true);
 		setActiveStage(0);
-		const t = setInterval(() => {
+		if (launchTimerRef.current) clearInterval(launchTimerRef.current);
+		launchTimerRef.current = setInterval(() => {
 			setActiveStage(prev => {
-				if (prev >= 23) { clearInterval(t); setAnalysisRunning(false); return 10; }
+				// Settle on the final stage, matching the load and per-cycle animations.
+				if (prev >= 24) {
+					if (launchTimerRef.current) clearInterval(launchTimerRef.current);
+					launchTimerRef.current = null;
+					setAnalysisRunning(false);
+					return 24;
+				}
 				return prev + 1;
 			});
 		}, 400);
@@ -430,7 +442,9 @@ export default function App() {
 						<span className={`theme-letter ${theme === 'dark' ? 'active' : ''}`}>D</span>
 						<span className={`theme-letter ${theme === 'light' ? 'active' : ''}`}>L</span>
 					</button>
-					<div className={`header-menu-btn ${menuOpen ? 'open' : ''}`} role="button" tabIndex={0} aria-label="Menu" aria-expanded={menuOpen} onClick={() => setMenuOpen(o => !o)}>
+					<div className={`header-menu-btn ${menuOpen ? 'open' : ''}`} role="button" tabIndex={0} aria-label="Menu" aria-expanded={menuOpen}
+						onClick={() => setMenuOpen(o => !o)}
+						onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setMenuOpen(o => !o); } }}>
 						<span className="bar"></span>
 						<span className="bar"></span>
 					</div>

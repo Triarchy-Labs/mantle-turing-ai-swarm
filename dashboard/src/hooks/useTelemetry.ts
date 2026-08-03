@@ -2,7 +2,8 @@
  * useTelemetry — Polls swarm-engine telemetry API and maps to dashboard state.
  * On backend outage: freezes the last known REAL data and flags as disconnected.
  * Never fabricates metrics — only real telemetry is ever displayed.
- * Endpoint: http://localhost:3402/
+ * Endpoint: VITE_TELEMETRY_URL, defaulting to the deployed swarm-engine (see below).
+ * Locally the engine serves on http://localhost:3402/.
  */
 import { useState, useEffect, useCallback, useRef } from 'react';
 
