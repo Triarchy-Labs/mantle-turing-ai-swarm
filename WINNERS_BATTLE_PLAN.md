@@ -151,8 +151,9 @@
 | 1-A | `DecisionAttestor.sol` (hash-chain + inputsHash recompute + anti-self-rating) + Verdict Explorer + Rust `attestor` | 9 sol + 6 rust ✓ | 810e98f5 / 83783826 / 548b8581 |
 | 1-B | `DecisionVerifier.sol` (энфорс-гейт: подпись+risk+expiry+nonce+oracle re-check + permissionless fraud proof) + Rust `verifier` EIP-712 | 10 sol + 4 rust ✓ | e5857f5a |
 | 5 | `OuroborosBond.sol` (stake/slash/reward, привязан к fraud-proof) | 7 sol (вкл. e2e) ✓ | 9cb7cd59 |
+| 3 | `AgentSessionKeys.sol` (bounded autonomy + co-pilot на одном мандате, approval привязан к verdictHash) | 14 sol ✓ | a9140e0b |
 
-**Итого: 25/25 foundry + 10 rust тестов зелёные.** Деплой-скрипты `DeployAttestor` / `DeployVerifier` готовы, **не бродкастились**.
+**Итого: 45/45 foundry + 10 rust тестов зелёные.** Деплой-скрипты `DeployAttestor` / `DeployVerifier` готовы, **не бродкастились**.
 
 ## Финалисты vs мы теперь (кто сделал лучше/хуже — честно)
 
@@ -164,10 +165,10 @@
 | Oracle re-check | Argus: `ArgusExecutor` пере-выводит из Pyth | Pluggable `IRiskOracle` в том же гейте | ≈ (Argus заточен под RWA/Pyth, у нас общий) |
 | Анти-накрутка репутации | Conatus: блок само-рейтинга (из мнений) | Репутация **из realized PnL** + отдельный `settler` + блок само-оценки | **мы** (объективнее) |
 | Fraud proof / slash | **никто** | `challengeVerdict` (permissionless) → `OuroborosBond` слэш + награда челленджеру | **только мы** |
-| Session keys / co-pilot | Imara (EIP-7702), CoQuant (co-pilot) | roadmap (Layer 3, ещё не строили) | **они** (честно — тут отстаём) |
+| Session keys / co-pilot | Imara (session keys), Stax (autopilot within bounds), CoQuant (co-pilot) — **у каждого по одному** | `AgentSessionKeys`: все три на одном мандате (AUTONOMOUS↔COPILOT без ре-гранта) + одобрение привязано к `verdictHash` | **мы** |
 | Gasless / social login | Stax, Imara (Privy/AA, «no seed phrase») | roadmap (Layer 4, не строили) | **они** |
 | Consumer/виральность | Cult (PixiJS 60fps) | не наш трек | они |
 
-**Вывод:** по ядру «verifiable/accountable AI» мы теперь **впереди финалистов** (хэш-цепь + PnL-репутация + permissionless fraud-proof/slash — уникально). **Отстаём** там, где ещё не строили: session keys / co-pilot (L3) и gasless-онбординг (L4) — следующие кандидаты, если продолжать «впитывать».
+**Вывод:** по ядру «verifiable/accountable AI» мы теперь **впереди финалистов** (хэш-цепь + PnL-репутация + permissionless fraud-proof/slash — уникально), и после Layer 3 — **впереди и по bounded autonomy / co-pilot**. **Остаётся не построенным** только gasless/social онбординг (L4, урок Stax) — следующий кандидат.
 
 ⚠️ Главная оговорка: **всё это code-complete + tested, но НЕ задеплоено.** Финалисты своё задеплоили. Наш next-max = деплой (рунбук в `LAYER1_VERIFIER_SPEC.md §5`) — но это ресет uptime-метрики + газ, решение за пользователем.
