@@ -8,7 +8,7 @@ const ITEMS: SectionItem[] = [
   { num: '03', tag: 'EXECUTION PIPELINE', size: 'hs-med', title: 'Watch it think, live',
     body: 'The Execution panel shows each decision moving through its 24 stages, from reading the market to logging on-chain. It is the real-time view of the process, and nothing happens off-screen.' },
   { num: '04', tag: 'RISK · AUTO-RAMP', size: 'hs-wide', title: 'See and steer the risk',
-    body: 'The Risk panel shows current exposure, the circuit-breaker state and the Auto-Ramp phase (SEED → APEX). You can see (and in full mode adjust) how aggressively capital scales. It only ramps up when the track record earns it.' },
+    body: 'The Risk panel shows current exposure, the circuit-breaker state and the Auto-Ramp phase (SEED → APEX), with the position cap and daily kill-switch each phase enforces. Promotion is earned, not chosen: it needs a positive 7-day PnL and a win rate above 45%.' },
   { num: '05', tag: 'ON-CHAIN ACTIVITY', size: 'hs-full', title: 'Trust nothing, check everything',
     body: 'The On-chain Activity panel links every trade and verdict straight to Mantlescan and the ERC-8004 registry. Click through and confirm it yourself. The dashboard is a window, the chain is the source of truth.' },
 ];

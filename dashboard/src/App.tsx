@@ -918,8 +918,9 @@ export default function App() {
 												const isPassed = phaseNum < currentPhase;
 												const isOverride = manualPhaseOverride === phaseNum;
 												
-												const limits = ['Max Cap: 10%', 'Max Cap: 25%', 'Max Cap: 50%', 'Max Cap: 75%', 'Max Cap: 100%'];
-												const reqs = ['Req: 2 Wins', 'Req: 3 Wins', 'Req: 5 Wins', 'Req: 10 Wins', 'Apex Mode'];
+												// Mirrors titan-core PHASES (auto_ramp.rs): max_position_pct + daily_loss_kill_pct.
+												const limits = ['Max Pos: 10%', 'Max Pos: 15%', 'Max Pos: 20%', 'Max Pos: 25%', 'Max Pos: 30%'];
+												const reqs = ['Kill: -3%/day', 'Kill: -4%/day', 'Kill: -5%/day', 'Kill: -6%/day', 'Kill: -8%/day'];
 												
 												return (
 													<div 
