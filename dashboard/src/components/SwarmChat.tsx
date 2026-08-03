@@ -346,7 +346,9 @@ export default function SwarmChat({ telem, orbState }: SwarmChatProps) {
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder={telem.connected ? "Ask the swarm anything..." : "AI Chat available when engine is live"}
+          // The chat runs through its own serverless endpoint, so it answers even when the
+          // telemetry engine is unreachable — it just has no live metrics to reason over.
+          placeholder={telem.connected ? "Ask the swarm anything..." : "Ask the swarm anything (live metrics offline)"}
           rows={1}
           disabled={isStreaming}
         />

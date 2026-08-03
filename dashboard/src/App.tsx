@@ -894,7 +894,7 @@ export default function App() {
 									<div className="lusion-top-meta">
 										<div>005</div>
 										<div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-											{manualPhaseOverride !== null && <span style={{ color: '#00a8cc', animation: 'blink 1s infinite' }}>OVERRIDE ACTIVE</span>}
+											{manualPhaseOverride !== null && <span style={{ color: '#00a8cc', animation: 'blink 1s infinite' }}>PREVIEW MODE</span>}
 											<span>SCALING</span>
 											<button onClick={() => setIsAutoRampFlipped(true)} style={{ background: 'none', border: 'none', color: 'var(--foreground)', opacity: 0.5, cursor: 'pointer', fontSize: 'clamp(10px, 1.4rem, 14px)', padding: '0 5px' }} title="Configure">⚙</button>
 										</div>
@@ -902,7 +902,7 @@ export default function App() {
 									<div className="bento-content" style={{ fontFamily: 'var(--font-mono)', display: 'flex', flexDirection: 'column', gap: '1.5rem', justifyContent: 'center', flex: 1 }}>
 										<div style={{ textAlign: 'center' }}>
 											<div style={{ fontSize: 'clamp(20px, 3.8rem, 38px)', fontWeight: 800, color: manualPhaseOverride ? '#00a8cc' : 'var(--accent)', textShadow: manualPhaseOverride ? '0 0 20px rgba(0,168,204,0.5)' : '0 0 20px var(--accent-glow)', letterSpacing: '0.05em', transition: 'color 0.3s' }}>
-												{overrideFlash !== null ? 'OVERRIDE...' : (manualPhaseOverride ? ['SEED', 'SPROUT', 'GROWTH', 'MATURE', 'APEX'][manualPhaseOverride - 1] : (telem.rampState?.phase_label ?? 'SEED'))}
+												{overrideFlash !== null ? 'PREVIEW...' : (manualPhaseOverride ? ['SEED', 'SPROUT', 'GROWTH', 'MATURE', 'APEX'][manualPhaseOverride - 1] : (telem.rampState?.phase_label ?? 'SEED'))}
 											</div>
 											<div style={{ fontSize: 'clamp(10px, 1.5rem, 15px)', opacity: 0.5, marginTop: '0.5rem', letterSpacing: '0.1em' }}>
 												PHASE {manualPhaseOverride || telem.rampState?.current_phase || 1} OF 5
@@ -936,7 +936,7 @@ export default function App() {
 															<div style={{ color: 'var(--accent)', marginBottom: '4px', fontWeight: 'bold' }}>{label}</div>
 															<div>{limits[i]}</div>
 															<div style={{ opacity: 0.7 }}>{reqs[i]}</div>
-															<div style={{ color: '#00a8cc', marginTop: '4px', opacity: 0.8 }}>Click to Override</div>
+															<div style={{ color: '#00a8cc', marginTop: '4px', opacity: 0.8 }}>Click to preview</div>
 														</div>
 														<div style={{ 
 															width: '100%', 
@@ -966,7 +966,7 @@ export default function App() {
 									<div className="lusion-dot" style={{ background: '#00a8cc', boxShadow: '0 0 10px #00a8cc' }}></div>
 									<div className="lusion-top-meta">
 										<div>CONFIG</div>
-										<div style={{ color: '#00a8cc' }}>SUPERVISOR</div>
+										<div style={{ color: '#00a8cc' }}>LOCAL PREVIEW</div>
 									</div>
 									<div className="bento-content" style={{ fontFamily: 'var(--font-mono)', display: 'flex', flexDirection: 'column', gap: '1.5rem', flex: 1, justifyContent: 'center' }}>
 										<div>
@@ -983,6 +983,9 @@ export default function App() {
 											</div>
 											<input type="range" min="10" max="100" step="5" value={configValues.maxCap} onChange={e => setConfigValues({...configValues, maxCap: parseInt(e.target.value)})} className="cyber-slider" />
 										</div>
+										<div style={{ fontSize: '1.4rem', opacity: 0.45, lineHeight: 1.5 }}>
+											Preview only. Live risk limits are enforced by the engine and are not set from this panel.
+										</div>
 										<button 
 											onClick={() => setIsAutoRampFlipped(false)}
 											style={{ 
@@ -998,14 +1001,14 @@ export default function App() {
 												fontWeight: 'bold'
 											}}
 										>
-											DEPLOY PARAMS
+											APPLY PREVIEW
 										</button>
 										{manualPhaseOverride !== null && (
 											<button 
 												onClick={() => { setManualPhaseOverride(null); setIsAutoRampFlipped(false); }}
 												style={{ background: 'transparent', border: '1px solid #00a8cc', color: '#00a8cc', padding: '0.5rem', fontFamily: 'var(--font-mono)', fontSize: '1.4rem', cursor: 'pointer' }}
 											>
-												RESET OVERRIDE
+												RESET PREVIEW
 											</button>
 										)}
 									</div>
