@@ -119,10 +119,13 @@ const NeuralLoom = ({ telem, hasPositions }: { telem: any, hasPositions: boolean
 	const [pings, setPings] = useState<{ id: number, x: number, y: number }[]>([]);
 	const [hoveredAnomaly, setHoveredAnomaly] = useState<string | null>(null);
 
+	// Signal classes the judge actually weighs (order-book imbalance, whale flow, news
+	// sentiment). These markers show WHAT is watched — they are not detection events, so
+	// they must not read as if something was just found.
 	const anomalies = [
-		{ id: 1, label: "LIQUIDITY IMBALANCE", top: `${(telem.cycle * 13) % 80 + 10}%`, left: `${(telem.cycle * 17) % 80 + 10}%` },
-		{ id: 2, label: "WHALE TX DETECTED", top: `${(telem.cycle * 23) % 80 + 10}%`, left: `${(telem.cycle * 29) % 80 + 10}%` },
-		{ id: 3, label: "NEWS SENTIMENT SPIKE", top: `${(telem.cycle * 31) % 80 + 10}%`, left: `${(telem.cycle * 37) % 80 + 10}%` },
+		{ id: 1, label: "WATCHING \u00b7 LIQUIDITY IMBALANCE", top: `${(telem.cycle * 13) % 80 + 10}%`, left: `${(telem.cycle * 17) % 80 + 10}%` },
+		{ id: 2, label: "WATCHING \u00b7 WHALE FLOW", top: `${(telem.cycle * 23) % 80 + 10}%`, left: `${(telem.cycle * 29) % 80 + 10}%` },
+		{ id: 3, label: "WATCHING \u00b7 NEWS SENTIMENT", top: `${(telem.cycle * 31) % 80 + 10}%`, left: `${(telem.cycle * 37) % 80 + 10}%` },
 	];
 
 	const handleMouseMove = useCallback((e: React.MouseEvent) => {
@@ -183,8 +186,11 @@ const NeuralLoom = ({ telem, hasPositions }: { telem: any, hasPositions: boolean
 						key={a.id}
 						className="loom-anomaly" 
 						style={{ top: a.top, left: a.left, opacity: 1, animation: 'none' }}
-						onMouseEnter={() => setHoveredAnomaly(a.label)}
-						onMouseLeave={() => setHoveredAnomaly(null)}
+						role="button" tabIndex={0} aria-label={a.label}
+						onPointerEnter={(e) => { if (e.pointerType !== 'touch') setHoveredAnomaly(a.label); }}
+						onPointerLeave={(e) => { if (e.pointerType !== 'touch') setHoveredAnomaly(null); }}
+						onClick={() => setHoveredAnomaly(prev => prev === a.label ? null : a.label)}
+						onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setHoveredAnomaly(prev => prev === a.label ? null : a.label); } }}
 					>
 						{hoveredAnomaly === a.label && (
 							<div className="anomaly-tooltip">
