@@ -158,11 +158,25 @@ export default function HowItWorks({ open, onClose, onBack, backLabel }: { open:
             <Orb x={383} y={373} r={26} delay={42} variant={2} />
             <Orb x={383} y={237} r={26} delay={14} variant={3} />
             {/* bull / bear, hover reveals the factors each side brings */}
-            <g className="hiw-node" onMouseEnter={() => setSide('bull')} onMouseLeave={() => setSide(null)}>
+            <g className="hiw-node" role="button" tabIndex={0}
+              aria-label="Show the judge factors the bull side contributes"
+              /* hover for pointer devices; tap and keyboard toggle it, so the factors are
+                 reachable on touch screens too, where they used to be unreachable */
+              onPointerEnter={(e) => { if (e.pointerType !== 'touch') setSide('bull'); }}
+              onPointerLeave={(e) => { if (e.pointerType !== 'touch') setSide(null); }}
+              onClick={() => setSide(s => s === 'bull' ? null : 'bull')}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSide(s => s === 'bull' ? null : 'bull'); } }}>
               <circle cx={150} cy={305} r={66} fill="transparent" />
               <Orb x={150} y={305} r={44} tone="bull" delay={21} variant={1} />
             </g>
-            <g className="hiw-node" onMouseEnter={() => setSide('bear')} onMouseLeave={() => setSide(null)}>
+            <g className="hiw-node" role="button" tabIndex={0}
+              aria-label="Show the judge factors the bear side contributes"
+              /* hover for pointer devices; tap and keyboard toggle it, so the factors are
+                 reachable on touch screens too, where they used to be unreachable */
+              onPointerEnter={(e) => { if (e.pointerType !== 'touch') setSide('bear'); }}
+              onPointerLeave={(e) => { if (e.pointerType !== 'touch') setSide(null); }}
+              onClick={() => setSide(s => s === 'bear' ? null : 'bear')}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSide(s => s === 'bear' ? null : 'bear'); } }}>
               <circle cx={850} cy={305} r={66} fill="transparent" />
               <Orb x={850} y={305} r={44} tone="bear" delay={49} variant={2} />
             </g>

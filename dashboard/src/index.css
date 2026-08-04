@@ -2618,6 +2618,16 @@ html[data-theme="light"] .log-terminal {
 	transform: translateX(-50%) translateY(-10px);
 }
 
+/* Touch screens never fire hover, so the phase figures (position cap, daily kill-switch)
+   were unreachable there. On tap the selected phase reveals its own tooltip. */
+@media (hover: none) {
+	.phase-step.show-tip .phase-tooltip {
+		opacity: 1;
+		visibility: visible;
+		transform: translateX(-50%) translateY(-10px);
+	}
+}
+
 .phase-tooltip::after {
 	content: '';
 	position: absolute;

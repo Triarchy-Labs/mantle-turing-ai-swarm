@@ -931,7 +931,7 @@ export default function App() {
 												return (
 													<div 
 														key={label} 
-														className="phase-step"
+														className={`phase-step ${manualPhaseOverride === phaseNum ? 'show-tip' : ''}`}
 														onClick={() => {
 															setOverrideFlash(phaseNum);
 															setTimeout(() => setOverrideFlash(null), 500);
