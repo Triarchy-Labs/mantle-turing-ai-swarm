@@ -432,7 +432,7 @@ export default function App() {
 						<button className="hq-btn" onClick={() => goTo('mission')}>Mission</button>
 					</div>
 					<div className="header-right-stats">
-						<span className="stats-label">{telem.connected ? (telem.liveMode ? 'LIVE TX' : 'CONNECTED') : 'RECONNECTING'}</span>
+						<span className="stats-label">{telem.connected ? (telem.liveMode ? 'LIVE TX' : 'CONNECTED') : (telem.offlineStreak >= 3 ? 'ENGINE OFFLINE' : 'RECONNECTING')}</span>
 					</div>
 					<button
 						className="theme-toggle-dl"
@@ -536,6 +536,12 @@ export default function App() {
 				  <div className="steps-kicker">UNDER THE HOOD</div>
 				  <h2 className="under-hood-title">Watch it decide, live.</h2>
 				  <p className="under-hood-sub">The full glass-box terminal, every gear the swarm turns in real time, nothing off-screen.</p>
+				  {telem.offlineStreak >= 3 && (
+				    <p className="under-hood-offline">
+				      <b>The engine is offline right now</b>, moving to new infrastructure, so the panels below sit idle rather than showing invented numbers. Everything the swarm already decided stays permanently verifiable{' '}
+				      <a href="https://mantlescan.xyz/address/0xEb271ece1aB2f72835556Ee67ad0BCA36a378a66" target="_blank" rel="noopener noreferrer">on-chain</a>, and the assistant above still answers.
+				    </p>
+				  )}
 				</div>
 				
 				{/* ═══ BENTO GRID ═══ */}

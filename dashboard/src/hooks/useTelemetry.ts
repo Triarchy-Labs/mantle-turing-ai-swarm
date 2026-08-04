@@ -7,6 +7,9 @@
  */
 import { useState, useEffect, useCallback, useRef } from 'react';
 
+// NOTE: the Render host below is retired — the engine is moving to new infrastructure.
+// Point the deployment at the new one by setting VITE_TELEMETRY_URL (no code change needed);
+// update this fallback once the new host is permanent.
 const TELEMETRY_URL = import.meta.env.VITE_TELEMETRY_URL || 'https://mantle-swarm-engine.onrender.com';
 
 // ── Telemetry API response types ──
@@ -173,6 +176,9 @@ export interface TelemetryData {
   totalTrades: number;
   balance: string;
   maxDrawdown: string;
+  /** Consecutive failed polls. 0 = healthy. Lets the UI tell a brief blip apart from a
+   *  prolonged outage (engine migration) instead of saying 'RECONNECTING' forever. */
+  offlineStreak: number;
 }
 
 const ROLE_COLORS: Record<string, string> = { bull: '#7dd4e0', bear: '#00f5ff', macro: '#00d4ff' };
@@ -207,6 +213,7 @@ const INITIAL_DATA: TelemetryData = {
   totalTrades: 0,
   balance: '—',
   maxDrawdown: '—',
+  offlineStreak: 0,
 };
 
 function formatPrice(price: number): string {
@@ -268,6 +275,7 @@ function mapResponse(resp: TelemetryResponse): TelemetryData {
 
   return {
     connected: true,
+    offlineStreak: 0,
     liveMode: resp.live_mode ?? false,
     cycle: resp.cycle,
     uptimeSecs: resp.uptime_secs,
@@ -330,7 +338,7 @@ export function useTelemetry(): TelemetryData {
       const resp = await fetch(TELEMETRY_URL, { signal: AbortSignal.timeout(timeout) });
       if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
       const json: TelemetryResponse = await resp.json();
-      setData(mapResponse(json));
+      setData({ ...mapResponse(json), offlineStreak: 0 });
 
       if (failCountRef.current > 0) {
         console.info('[telemetry] Backend reconnected');
@@ -343,7 +351,7 @@ export function useTelemetry(): TelemetryData {
       failCountRef.current++;
       // Honest offline state: keep the last known REAL data on screen, flag as
       // disconnected. No fabricated metrics, debates, or tx hashes — ever.
-      setData(prev => ({ ...prev, connected: false, liveMode: false }));
+      setData(prev => ({ ...prev, connected: false, liveMode: false, offlineStreak: failCountRef.current }));
     }
   }, []);
 
