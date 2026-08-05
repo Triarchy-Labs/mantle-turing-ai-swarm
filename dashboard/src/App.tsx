@@ -537,6 +537,20 @@ export default function App() {
 				  </div>
 				</section>
 				
+				{/* ═══ ACCOUNTABILITY LAYER (the product thesis) ═══ */}
+				<section className="steps-section acc-section" aria-label="Accountability layer">
+				  <div className="steps-kicker">THE ACCOUNTABILITY LAYER</div>
+				  <h2 className="under-hood-title">The chain won&rsquo;t let it misbehave.</h2>
+				  <p className="under-hood-sub">Four contracts turn every claim this swarm makes into something you can verify, challenge, and punish. Built and tested; mainnet deployment is next.</p>
+				  <div className="acc-grid">
+				    <div className="acc-card"><div className="acc-tag">DecisionAttestor</div><h3>A verdict log that can&rsquo;t be rewritten</h3><p>Every verdict is written on-chain in a hash chain, so history can&rsquo;t be reordered or backfilled, and anyone can recompute the deterministic score from the committed inputs.</p></div>
+				    <div className="acc-card"><div className="acc-tag">DecisionVerifier</div><h3>No valid signature, no trade</h3><p>A trade executes only if the agent&rsquo;s signed, risk-checked verdict verifies on-chain: within your risk bound, unexpired, and confirmed by an independent oracle re-check.</p></div>
+				    <div className="acc-card"><div className="acc-tag">OuroborosBond</div><h3>Fraud proofs with teeth</h3><p>Anyone can prove on-chain that the agent under-reported risk. The staked bond is slashed and the challenger who caught it gets paid. None of the hackathon winners shipped this.</p></div>
+				    <div className="acc-card"><div className="acc-tag">AgentSessionKeys</div><h3>Your mandate, your limits</h3><p>A revocable mandate with hard caps, switchable between autonomous and co-pilot, where approving a trade approves that exact verified decision and nothing else.</p></div>
+				  </div>
+				  <div className="acc-foot"><span className="acc-status">45/45 contract tests passing</span><a className="acc-link" href="https://github.com/Triarchy-Labs/mantle-turing-ai-swarm/tree/main/contracts/src" target="_blank" rel="noopener noreferrer">Read the contracts &rarr;</a></div>
+				</section>
+
 				{/* ═══ UNDER THE HOOD (live terminal = proof) ═══ */}
 				<div className="under-hood-head">
 				  <div className="steps-kicker">UNDER THE HOOD</div>

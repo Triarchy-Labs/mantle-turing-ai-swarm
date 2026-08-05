@@ -906,3 +906,19 @@ html[data-theme="light"] .step-card { background: rgba(255,255,255,0.25); border
 html[data-theme="light"] .step-card h3, html[data-theme="light"] .under-hood-title { color: #05161a; }
 html[data-theme="light"] .step-card p, html[data-theme="light"] .under-hood-sub { color: rgba(5,22,26,0.6); }
 @media (max-width: 900px) { .steps-grid { grid-template-columns: 1fr; } }
+
+/* ── Accountability Layer section ── */
+.acc-section { text-align: center; }
+.acc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-top: 3.6rem; text-align: left; }
+@media (max-width: 1100px) { .acc-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px) { .acc-grid { grid-template-columns: 1fr; } }
+.acc-card { border: 1px solid rgba(255,255,255,0.09); border-radius: 2px; padding: 2.2rem 2rem; background: rgba(255,255,255,0.02); }
+.acc-tag { font-family: var(--font-mono); font-size: 1.3rem; letter-spacing: 0.12em; color: var(--accent); text-transform: uppercase; margin-bottom: 1.1rem; }
+.acc-card h3 { font-size: 1.9rem; line-height: 1.25; margin: 0 0 0.9rem; }
+.acc-card p { font-size: 1.5rem; line-height: 1.55; opacity: 0.65; margin: 0; }
+.acc-foot { display: flex; gap: 2.4rem; justify-content: center; align-items: center; margin-top: 2.6rem; font-family: var(--font-mono); font-size: 1.4rem; }
+.acc-status { color: var(--accent); letter-spacing: 0.08em; }
+.acc-link { color: inherit; opacity: 0.6; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.2); transition: opacity 0.2s; }
+.acc-link:hover { opacity: 1; }
+html[data-theme="light"] .acc-card { border-color: rgba(0,0,0,0.1); background: rgba(0,0,0,0.02); }
+html[data-theme="light"] .acc-link { border-bottom-color: rgba(0,0,0,0.2); }
